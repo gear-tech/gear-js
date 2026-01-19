@@ -4,3 +4,7 @@ export interface PaginatedResponse<T> {
   limit: number;
   offset: number;
 }
+
+export type PropsWithClassName = {
+  className?: string;
+};

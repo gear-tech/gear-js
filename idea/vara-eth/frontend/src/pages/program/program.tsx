@@ -5,10 +5,9 @@ import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Badge, Balance, Button, HashLink, UploadIdlButton, Navigation, NotFound, Tooltip } from '@/components';
+import { Badge, Balance, Button, HashLink, UploadIdlButton, NotFound, Tooltip } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
-import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
 import { formatBalance, formatDate, formatNumber } from '@/shared/utils';
@@ -52,24 +51,16 @@ const Program = () => {
 
   if (isLoading || isProgramStateLoading || !isApiReady) {
     return (
-      <>
-        <Navigation search={<Search />} />
-        <div className={styles.container}>
-          <div className={styles.card}>
-            <div>Loading...</div>
-          </div>
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div>Loading...</div>
         </div>
-      </>
+      </div>
     );
   }
 
   if (error || !programState) {
-    return (
-      <>
-        <Navigation search={<Search />} />
-        <NotFound entity="program" id={programId} />
-      </>
-    );
+    return <NotFound entity="program" id={programId} />;
   }
 
   const serviceListContent = () => {
@@ -84,69 +75,66 @@ const Program = () => {
   };
 
   return (
-    <>
-      <Navigation search={<Search />} />
-      <div className={styles.container}>
-        <div className={styles.card}>
-          <div className={styles.header}>
-            <div className={styles.leftSide}>
-              <Button variant="icon" onClick={() => navigate(routes.programs)}>
-                <ArrowLeftSVG className={styles.arrowLeft} />
-              </Button>
-              <HashLink hash={programId} />
-              <Tooltip value="View on Etherscan">
-                {/* TODO: support mainnet */}
-                <a
-                  href={`https://hoodi.etherscan.io/address/${programId}`}
-                  target={'_blank'}
-                  rel={'noreferrer'}
-                  className={styles.link}>
-                  <EtherscanSvg />
-                </a>
-              </Tooltip>
-            </div>
-            {isActive && (isInitialized ? <Badge>Active</Badge> : <Badge color="secondary">Uninitialized</Badge>)}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div className={styles.leftSide}>
+            <Button variant="icon" onClick={() => navigate(routes.programs)}>
+              <ArrowLeftSVG className={styles.arrowLeft} />
+            </Button>
+            <HashLink hash={programId} />
+            <Tooltip value="View on Etherscan">
+              {/* TODO: support mainnet */}
+              <a
+                href={`https://hoodi.etherscan.io/address/${programId}`}
+                target={'_blank'}
+                rel={'noreferrer'}
+                className={styles.link}>
+                <EtherscanSvg />
+              </a>
+            </Tooltip>
           </div>
-
-          {programName && <div className={styles.name}>{programName}</div>}
-
-          <div className={styles.properties}>
-            {codeId && (
-              <>
-                <div className={styles.property}>CODE ID</div>
-                <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
-              </>
-            )}
-            <div>PROGRAM BALANCE</div>
-            <div>
-              <Balance value={formatNumber(programState?.balance || 0, 4)} units="ETH" />
-            </div>
-            <div>EXECUTABLE BALANCE</div>
-            <div className={styles.property}>
-              <Balance value={executableBalance} units="WVARA" />
-              <Button
-                size="xs"
-                onClick={onTopUp}
-                isLoading={executableBalanceTopUp.isPending || approveWrappedVara.isPending}
-                variant="secondary">
-                Top up
-              </Button>
-            </div>
-            {blockHash && (
-              <>
-                <div>BLOCK HASH</div>
-                <div className={styles.blockHash}>
-                  <HashLink hash={blockHash} />
-                  {formattedCreatedAt}
-                </div>
-              </>
-            )}
-          </div>
+          {isActive && (isInitialized ? <Badge>Active</Badge> : <Badge color="secondary">Uninitialized</Badge>)}
         </div>
 
-        <div className={styles.card}>{serviceListContent()}</div>
+        {programName && <div className={styles.name}>{programName}</div>}
+
+        <div className={styles.properties}>
+          {codeId && (
+            <>
+              <div className={styles.property}>CODE ID</div>
+              <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
+            </>
+          )}
+          <div>PROGRAM BALANCE</div>
+          <div>
+            <Balance value={formatNumber(programState?.balance || 0, 4)} units="ETH" />
+          </div>
+          <div>EXECUTABLE BALANCE</div>
+          <div className={styles.property}>
+            <Balance value={executableBalance} units="WVARA" />
+            <Button
+              size="xs"
+              onClick={onTopUp}
+              isLoading={executableBalanceTopUp.isPending || approveWrappedVara.isPending}
+              variant="secondary">
+              Top up
+            </Button>
+          </div>
+          {blockHash && (
+            <>
+              <div>BLOCK HASH</div>
+              <div className={styles.blockHash}>
+                <HashLink hash={blockHash} />
+                {formattedCreatedAt}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </>
+
+      <div className={styles.card}>{serviceListContent()}</div>
+    </div>
   );
 };
 
