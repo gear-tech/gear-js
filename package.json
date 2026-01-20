@@ -110,7 +110,6 @@
     "rollup": "^4.53.3",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.83.4",
-    "storybook": "8",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
