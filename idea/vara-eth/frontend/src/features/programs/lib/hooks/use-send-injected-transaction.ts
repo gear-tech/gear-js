@@ -24,7 +24,7 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
 
-    // would be better to return non-encoded payload from schema,
+    // TODO: would be better to return non-encoded payload from schema,
     // but for now to not change gear idea implementation we have to decode encoded value here
     const args: unknown[] = sailsMessage.decodePayload(payload);
 

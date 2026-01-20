@@ -7,10 +7,10 @@ import { z } from 'zod';
 
 import { Button, ExpandableItem } from '@/components';
 import { Fields } from '@/features/sails';
-import { ISailsFuncArg } from '@/features/sails/types';
+import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
 import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
 
-import { PayloadValue, useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
+import { useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
 
 import styles from './message-form.module.scss';
 
