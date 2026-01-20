@@ -1,3 +1,3 @@
-import { useConstructor, useService, useSetPayloadValue } from './payload';
+import { useSetPayloadValue } from './payload';
 
-export { useConstructor, useService, useSetPayloadValue };
+export { useSetPayloadValue };
