@@ -10,7 +10,7 @@ type SendMessageParams = {
   serviceName: string;
   messageName: string;
   isQuery: boolean;
-  args: unknown[];
+  payload: HexString;
 };
 
 const useSendProgramMessage = (programId: HexString, idl: string) => {
@@ -18,16 +18,20 @@ const useSendProgramMessage = (programId: HexString, idl: string) => {
   const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
+  const sendMessage = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {
     if (!mirrorContract || !sails) return;
 
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
-    const _payload = sailsMessage.encodePayload(...args);
 
-    const tx = await mirrorContract.sendMessage(_payload);
+    // would be better to return non-encoded payload from schema,
+    // but for now to not change gear idea implementation we have to decode encoded value here
+    const args: unknown[] = sailsMessage.decodePayload(payload);
+
+    const tx = await mirrorContract.sendMessage(payload);
     const response = await tx.send();
     const receipt = await tx.getReceipt();
+
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -45,9 +49,9 @@ const useSendProgramMessage = (programId: HexString, idl: string) => {
     const { waitForReply } = await tx.setupReplyListener();
     const reply = await waitForReply();
 
-    const { payload, replyCode, blockNumber, txHash } = reply;
+    const { replyCode, blockNumber, txHash } = reply;
 
-    const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
+    const result: Record<string, unknown> = sailsMessage.decodeResult(reply.payload);
 
     addMyActivity({
       type: TransactionTypes.programReply,
@@ -61,6 +65,7 @@ const useSendProgramMessage = (programId: HexString, idl: string) => {
       params: { payload: JSON.stringify(result) },
       value: String(reply.value),
     });
+
     return response;
   };
 
