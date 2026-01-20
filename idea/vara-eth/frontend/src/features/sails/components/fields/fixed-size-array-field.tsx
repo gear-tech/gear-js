@@ -1,9 +1,8 @@
 import { JSX } from 'react';
 import { ISailsTypeDef } from 'sails-js-types';
 
-import { Fieldset } from '@/components';
-
 import { getLabel, getNestedName } from '../../utils';
+import { Fieldset } from '../fieldset';
 
 type Props = {
   def: ISailsTypeDef;
@@ -20,7 +19,7 @@ function FixedSizeArrayField({ def, name, label, renderField }: Props) {
       .fill(arrayDef)
       .map((field, index) => renderField(field.def, '', getNestedName(name, index.toString())));
 
-  return <Fieldset legend={getLabel(label, def)}> {renderFields()}</Fieldset>;
+  return <Fieldset legend={getLabel(label, def)}>{renderFields()}</Fieldset>;
 }
 
 export { FixedSizeArrayField };

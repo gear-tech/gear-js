@@ -1,7 +1,8 @@
-import { Select } from '@gear-js/ui';
 import { useState, JSX } from 'react';
 import { Sails } from 'sails-js';
 import { ISailsTypeDef } from 'sails-js-types';
+
+import { Select } from '@/components/form/select';
 
 import { useSetPayloadValue } from '../../hooks';
 import { getNestedName, getDefaultValue } from '../../utils';

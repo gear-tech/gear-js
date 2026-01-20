@@ -1,9 +1,8 @@
 import { JSX } from 'react';
 import { ISailsTypeDef } from 'sails-js-types';
 
-import { Fieldset } from '@/components';
-
 import { getLabel, getNestedName } from '../../utils';
+import { Fieldset } from '../fieldset';
 
 type Props = {
   def: ISailsTypeDef;
