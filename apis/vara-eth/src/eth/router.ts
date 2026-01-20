@@ -163,14 +163,14 @@ export class RouterClient<
     });
   }
 
-  async validators(): Promise<readonly Hex[]> {
+  async validators(): Promise<Address[]> {
     const validators = await this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
       functionName: 'validators',
     });
 
-    return validators.map((addr) => addr.toLowerCase() as Hex);
+    return validators.map((addr) => addr.toLowerCase() as Address);
   }
 
   async validatorsAggregatedPublicKey(): Promise<any> {

@@ -10,7 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Validator pool provider (`VaraEthValidatorWsPool` class) in https://github.com/gear-tech/gear-js/pull/2262
 - Selection of the next validator in the pool in https://github.com/gear-tech/gear-js/pull/2262
+- `InjectedTxPromise` class for handling promise replies from injected transactions and validating promise signature in https://github.com/gear-tech/gear-js/pull/2281
 
+### Changed
+
+- Renamed `Injected` class to `InjectedTx` (with backward-compatible alias) in https://github.com/gear-tech/gear-js/pull/2281
+- Refactored injected transaction code into separate modules (`tx.ts` and `promise.ts`) in https://github.com/gear-tech/gear-js/pull/2281
+- Updated `IInjectedTransactionPromise` interface: flattened reply structure, changed `value` from `number` to `bigint`, changed `code` to `Hex` in https://github.com/gear-tech/gear-js/pull/2281
 
 ## [0.1.0]
 

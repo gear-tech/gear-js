@@ -8,3 +8,6 @@ repository.workspace = true
 
 [dependencies]
 ethexe-common.workspace = true
+gear-core.workspace = true
+gear-core-errors.workspace = true
+hex.workspace = true

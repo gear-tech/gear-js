@@ -121,7 +121,7 @@ export class MirrorClient<
           txHash: receipt.transactionHash,
           blockNumber: Number(receipt.blockNumber),
           message: message,
-          waitForReply: () => this.waitForReply(message.id),
+          waitForReply: () => this.waitForReply(message.id, receipt.blockNumber),
         };
       },
     });
@@ -252,7 +252,7 @@ export class MirrorClient<
     });
   }
 
-  async waitForReply(messageId: Hex) {
+  async waitForReply(messageId: Hex, fromBlockNumber?: bigint) {
     const id = messageId.toLowerCase();
 
     let _resolve: (value: Reply) => void | Promise<void>;
@@ -289,6 +289,7 @@ export class MirrorClient<
           }
         }
       },
+      fromBlock: fromBlockNumber,
     });
 
     try {

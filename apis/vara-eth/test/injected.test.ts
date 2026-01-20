@@ -1,11 +1,20 @@
-import { createPublicClient, createWalletClient, webSocket, zeroAddress } from 'viem';
+import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
 
-import { EthereumClient, VaraEthApi, getMirrorClient, WsVaraEthProvider, Injected, IInjectedTransaction } from '../src';
+import {
+  InjectedTxPromise,
+  EthereumClient,
+  VaraEthApi,
+  getMirrorClient,
+  WsVaraEthProvider,
+  InjectedTx,
+  IInjectedTransaction,
+} from '../src';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
+import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
@@ -42,6 +51,8 @@ describe('Injected Transactions', () => {
     let injectedTxHash: string;
     let injectedTxSignature: string;
     let injectedMessageId: string;
+    let injectedPromiseHash: string;
+    let injectedPromiseSignature: string;
 
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
 
@@ -56,6 +67,29 @@ describe('Injected Transactions', () => {
 
     const PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 
+    const PROMISE: InjectedTransactionPromiseRaw = {
+      data: {
+        txHash: '0x8e1dda533d36d8374621199611afdddb892b6c8fc9ae84e0db73b394d6322059',
+        reply: {
+          payload: '0x000102',
+          value: 256,
+          code: '0x00010000',
+        },
+      },
+      signature:
+        '0x75c0831b0289e9c8f3d8e9e9400e45323818ee3ac88f1bdfb943198c6e5822a23f0673331777cbc2bc2c3220c0be158b5b596b2da3e1f95501727ef73a9328041c',
+    };
+
+    const getAndValidateValueByRegexp = (str: string, regexp: string) => {
+      const value = str.match(regexp)?.[1];
+
+      if (!value) {
+        throw new Error(`Failed to get value by regexp ${regexp}`);
+      }
+
+      return value;
+    };
+
     beforeAll(() => {
       const result = execSync(`cargo run --manifest-path ${INJECTED_TEST_PROGRAM_MANIFEST_PATH}`, {
         stdio: 'pipe',
@@ -63,41 +97,63 @@ describe('Injected Transactions', () => {
 
       const resultStr = result.toString();
 
-      const hash = resultStr.match('hash: <(0x[0-9a-f]{64})>')?.[1];
-      if (!hash) {
-        throw new Error('Hash not found in `injected` stdout');
-      }
-      const signature = resultStr.match('signature: <(0x[0-9a-f]*)>')?.[1];
-      if (!signature) {
-        throw new Error('Signature not found in `injected` stdout');
-      }
-      const messageId = resultStr.match('message_id: <(0x[0-9a-f]{64})>')?.[1];
-      if (!messageId) {
-        throw new Error('Message id not found in `injected` stdout');
-      }
+      const hash = getAndValidateValueByRegexp(resultStr, 'hash: <(0x[0-9a-f]{64})>');
+      const signature = getAndValidateValueByRegexp(resultStr, 'signature: <(0x[0-9a-f]*)>');
+      const messageId = getAndValidateValueByRegexp(resultStr, 'message_id: <(0x[0-9a-f]{64})>');
+      const promiseHash = getAndValidateValueByRegexp(resultStr, 'promise_hash: <(0x[0-9a-f]{64})>');
+      const promiseSig = getAndValidateValueByRegexp(resultStr, 'promise_signature: <(0x[0-9a-f]*)>');
+
       injectedTxHash = hash;
       injectedTxSignature = signature;
       injectedMessageId = messageId;
+
+      injectedPromiseHash = promiseHash;
+      injectedPromiseSignature = promiseSig;
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
-      const injected = new Injected(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, ethereumClient, TX);
       expect(injected.hash).toBe(injectedTxHash);
     });
 
     test('should create a correct message id', () => {
-      const injected = new Injected(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, ethereumClient, TX);
       expect(injected.messageId).toBe(injectedMessageId);
     });
 
     test('should create a correct signature', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY);
 
-      const injected = new Injected(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, ethereumClient, TX);
 
       const signature = await account.sign({ hash: injected.hash });
 
       expect(signature).toBe(injectedTxSignature);
+    });
+
+    test('should create a correct promise hash', () => {
+      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+
+      expect(promise.hash).toBe(injectedPromiseHash);
+    });
+
+    test('should create correct promise signature', async () => {
+      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+
+      const account = privateKeyToAccount(PRIVATE_KEY);
+
+      const signature = await account.signMessage({ message: { raw: promise.hash } });
+
+      expect(signature).toBe(injectedPromiseSignature);
+    });
+
+    test('should correctly recover account from signature', async () => {
+      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+      const account = privateKeyToAccount(PRIVATE_KEY);
+
+      const address = await recoverMessageAddress({ message: { raw: promise.hash }, signature: PROMISE.signature });
+
+      expect(address).toBe(account.address);
     });
   });
 
@@ -194,7 +250,9 @@ describe('Injected Transactions', () => {
 
     let messageId: Hex;
 
-    let testTx: Injected;
+    let testTx: InjectedTx;
+
+    let promise: InjectedTxPromise;
 
     test('should set recipient to null by default', async () => {
       testTx = await api.createInjectedTransaction({
@@ -286,13 +344,23 @@ describe('Injected Transactions', () => {
 
       const tx = await api.createInjectedTransaction(injected);
 
+      expect(tx.recipient).not.toBe(zeroAddress);
+
       const result = await tx.sendAndWaitForPromise();
 
       expect(result).toHaveProperty('txHash');
-      expect(result).toHaveProperty(['reply', 'code'], '0x00010000');
-      expect(result).toHaveProperty(['reply', 'payload'], '0x1c436f756e74657224496e6372656d656e7402000000');
-      expect(result).toHaveProperty(['reply', 'value'], 0);
+      expect(result).toHaveProperty('code', '0x00010000');
+      expect(result).toHaveProperty('payload', '0x1c436f756e74657224496e6372656d656e7402000000');
+      expect(result).toHaveProperty('value', 0n);
       expect(result).toHaveProperty('signature');
+
+      promise = result;
+    });
+
+    test('should validate promise signature', async () => {
+      expect(promise).toBeDefined();
+
+      await expect(promise.validateSignature()).resolves.not.toThrow();
     });
   });
 });

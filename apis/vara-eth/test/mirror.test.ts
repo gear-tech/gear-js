@@ -199,10 +199,6 @@ describe('balance', () => {
     async () => {
       const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 
-      const { status } = await tx.sendAndWaitForReceipt();
-
-      expect(status).toBe('success');
-
       let newStateHash: Hex | undefined = undefined;
 
       const currentStateHash = await mirror.stateHash();
@@ -210,6 +206,10 @@ describe('balance', () => {
       const unwatch = mirror.watchStateChangedEvent((stateHash) => {
         newStateHash = stateHash;
       });
+
+      const { status } = await tx.sendAndWaitForReceipt();
+
+      expect(status).toBe('success');
 
       while (!newStateHash) {
         await waitNBlocks(1);
