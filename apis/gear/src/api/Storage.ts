@@ -1,10 +1,15 @@
 import { Bytes, Option, u32 } from '@polkadot/types';
 import { u8aToNumber } from '@polkadot/util';
 import { H256 } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { ITuple } from '@polkadot/types-codec/types';
 
-import { GearCoreProgram, GearCoreProgramActiveProgram, IGearPages, PausedProgramBlockAndHash } from '../types';
+import {
+  GearCoreProgram,
+  GearCoreProgramActiveProgram,
+  IGearPages,
+  PausedProgramBlockAndHash,
+  HexString,
+} from '../types';
 import {
   PausedProgramDoesNotExistError,
   ProgramDoesNotExistError,

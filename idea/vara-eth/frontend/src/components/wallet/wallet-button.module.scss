@@ -1,3 +1,11 @@
-.connect {
-  min-width: 168px;
+.button {
+  min-height: 48px;
+  padding-block: 6px !important; // override default padding
+
+  flex-direction: column;
+}
+
+.chain {
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
 }

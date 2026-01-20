@@ -19,6 +19,7 @@ const Routing = () => {
       <Route path={routes.codes} element={<Codes />} />
       <Route path={routes.code} element={<Code />} />
       <Route path={routes.user} element={<User />} />
+      <Route path={routes.notFound} element={<NotFound />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

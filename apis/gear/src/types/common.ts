@@ -18,3 +18,5 @@ export interface Proof extends Struct {
   leaf_index: u64;
   leaf: H256;
 }
+
+export type HexString = `0x${string}`;

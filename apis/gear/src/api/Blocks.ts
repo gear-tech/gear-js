@@ -4,13 +4,13 @@ import { Compact, GenericExtrinsic, u64, Vec } from '@polkadot/types';
 import { isHex, isNumber, isU8a } from '@polkadot/util';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { HeaderExtended } from '@polkadot/api-derive/types';
-import { HexString } from '@polkadot/util/types';
 import { Observable } from 'rxjs';
 import { PromiseResult } from '@polkadot/api/types';
 
-import { CreateType } from '../metadata';
-import { GearApi } from '../GearApi';
 import { GetBlockError } from '../errors';
+import { CreateType } from '../metadata';
+import { HexString } from '../types';
+import { GearApi } from '../GearApi';
 
 export class GearBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;

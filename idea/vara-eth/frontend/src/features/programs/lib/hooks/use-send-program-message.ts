@@ -4,9 +4,6 @@ import { HexString } from '@vara-eth/api';
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
-// TODO: use idl from the program
-import counterIdl from '../../../../../../../../apis/vara-eth/programs/counter-idl/counter.idl?raw';
-
 import { useSails } from './use-sails';
 
 type SendMessageParams = {
@@ -16,8 +13,8 @@ type SendMessageParams = {
   args: unknown[];
 };
 
-const useSendProgramMessage = (programId: HexString) => {
-  const { data: sails } = useSails(counterIdl);
+const useSendProgramMessage = (programId: HexString, idl: string) => {
+  const { data: sails } = useSails(idl);
   const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
@@ -67,12 +64,10 @@ const useSendProgramMessage = (programId: HexString) => {
     return response;
   };
 
-  const { mutate: sendMessageMutation, isPending } = useMutation({
+  return useMutation({
     mutationKey: ['sendMessage', programId],
     mutationFn: sendMessage,
   });
-
-  return { sendMessage: sendMessageMutation, isPending };
 };
 
 export { useSendProgramMessage };

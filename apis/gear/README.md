@@ -556,6 +556,250 @@ const unsubscribe = await api.query.system.events((events) => {
 unsubscribe();
 ```
 
+## RPC Subscriptions
+
+The API provides specialized RPC subscriptions for real-time tracking of specific blockchain events. These subscriptions are more efficient than polling and allow you to listen for specific event types with filtering capabilities.
+
+### Subscribe to User Message Sent Events
+
+Subscribe to messages sent from programs to users with optional filtering:
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Basic subscription - listen to all user message sent events
+const unsubscribe = await api.message.subscribeUserMessageSent(
+  {}, // empty filter means listen to all events
+  (item) => {
+    console.log('Message sent:', {
+      id: item.id,
+      source: item.source,
+      destination: item.destination,
+      payload: item.payload,
+      value: item.value.toString(),
+      block: item.block,
+      index: item.index,
+    });
+  }
+);
+
+// Later: unsubscribe to stop receiving events
+unsubscribe();
+```
+
+#### Filtering by Source or Destination
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Listen only to messages from a specific program
+const unsubscribe = await api.message.subscribeUserMessageSent(
+  {
+    source: '0x...', // program ID to listen for
+  },
+  (item) => {
+    console.log('Message from program:', item);
+  }
+);
+```
+
+#### Filtering by Payload
+
+The API allows filtering by message payload using `PayloadFilter`:
+
+```typescript
+import { GearApi, PayloadFilter } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Create payload filters
+const filter1 = new PayloadFilter('0xdeadbeef');
+
+const unsubscribe = await api.message.subscribeUserMessageSent(
+  {
+    destination: '0x...', // listen to messages sent to this address
+    payloadFilters: [filter1],
+  },
+  (item) => {
+    console.log('Filtered message:', item);
+  }
+);
+```
+
+#### Filtering by Block Range
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Listen to events starting from a specific block
+const unsubscribe = await api.message.subscribeUserMessageSent(
+  {
+    fromBlock: 12345, // start listening from block 12345
+    finalizedOnly: true, // only process finalized blocks
+  },
+  (item) => {
+    console.log('Event from block:', item.block);
+  }
+);
+```
+
+#### Full Example with All Filters
+
+```typescript
+import { GearApi, PayloadFilter } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+const payloadFilter = new PayloadFilter('0xcafebabe');
+
+const unsubscribe = await api.message.subscribeUserMessageSent(
+  {
+    source: '0x...', // program sending the message
+    destination: '0x...', // user receiving the message
+    payloadFilters: [payloadFilter],
+    fromBlock: 1000,
+    finalizedOnly: true,
+  },
+  async (item) => {
+    console.log('Received message:', {
+      id: item.id,
+      block: item.block,
+      index: item.index,
+      source: item.source,
+      destination: item.destination,
+      payload: item.payload,
+      value: item.value.toString(),
+      // Reply details are optional and only present if the message includes reply info
+      reply: item.reply ? {
+        to: item.reply.to,
+        code: item.reply.code,
+        codeDescription: item.reply.codeDescription,
+      } : undefined,
+    });
+
+    // You can perform async operations in the callback
+    await processingFunction(item);
+  }
+);
+
+// Cleanup when done
+unsubscribe();
+```
+
+### Subscribe to Program State Changes
+
+Monitor changes to program state across the blockchain:
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Listen to all program state changes
+const unsubscribe = await api.program.subscribeToStateChanges(
+  null, // null means listen to all programs
+  (blockHash, programIds) => {
+    console.log('Program state changed in block:', blockHash);
+    console.log('Affected programs:', programIds);
+  }
+);
+
+// Later: unsubscribe
+unsubscribe();
+```
+
+#### Filter by Specific Programs
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+// Listen only to state changes of specific programs
+const programIds = [
+  '0x...', // program ID 1
+  '0x...', // program ID 2
+];
+
+const unsubscribe = await api.program.subscribeToStateChanges(
+  programIds,
+  (blockHash, changedProgramIds) => {
+    console.log(`Programs updated in block ${blockHash}:`, changedProgramIds);
+
+    // Process each updated program
+    changedProgramIds.forEach(async (programId) => {
+      const exists = await api.program.exists(programId);
+      console.log(`Program ${programId} exists: ${exists}`);
+    });
+  }
+);
+```
+
+#### Full Example
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+const myPrograms = ['0x...', '0x...'];
+
+const unsubscribe = await api.program.subscribeToStateChanges(
+  myPrograms,
+  async (blockHash, programIds) => {
+    console.log(`Block: ${blockHash}`);
+    console.log(`Updated programs: ${programIds.join(', ')}`);
+
+    // You can perform async operations in the callback
+    for (const programId of programIds) {
+      const codeId = await api.program.codeId(programId);
+      console.log(`Program ${programId} code ID: ${codeId}`);
+    }
+  }
+);
+
+// Cleanup when done
+unsubscribe();
+```
+
+### Difference Between Event Subscriptions and RPC Subscriptions
+
+| Feature | Events (`api.query.system.events`) | RPC Subscriptions | 
+|---------|-----------------------------------|-------------------|
+| **Data Type** | All blockchain events | Specific to Gear messages/programs |
+| **Filtering** | Client-side filtering | Server-side filtering (more efficient) |
+| **Performance** | Less efficient for specific types | More efficient with targeted data |
+| **Use Case** | Monitor all system activity | Track specific programs or messages |
+| **Payload Details** | Limited message details | Complete message structure with reply info |
+
+### Error Handling
+
+```typescript
+import { GearApi, RpcMethodNotSupportedError } from '@gear-js/api';
+
+const api = await GearApi.create();
+
+try {
+  const unsubscribe = await api.message.subscribeUserMessageSent(
+    { source: '0x...' },
+    (item) => console.log(item)
+  );
+} catch (error) {
+  if (error instanceof RpcMethodNotSupportedError) {
+    console.error('The node does not support subscriptions:', error.message);
+    // Fallback to event polling or other method
+  } else {
+    console.error('Subscription error:', error);
+  }
+}
+```
+
 ### Filter Specific Events
 
 Filter and handle specific event types:
@@ -1018,4 +1262,3 @@ const unsubscribe = await program.on('programExited', (inheritorId) => {
 // Later, when you want to stop listening
 unsubscribe();
 ```
-

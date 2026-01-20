@@ -1,3 +1,20 @@
+## [Unreleased]
+
+### Added
+- `api.message.subscribeUserMessageSent()` method for real-time subscription to user message sent events with server-side filtering support (https://github.com/gear-tech/gear-js/pull/2143)
+- `api.program.subscribeToStateChanges()` method for real-time subscription to program state change events (https://github.com/gear-tech/gear-js/pull/2143)
+- `PayloadFilter` class for filtering messages by payload byte patterns at specific offsets (https://github.com/gear-tech/gear-js/pull/2143)
+- `RpcMethodNotSupportedError` for proper error handling when RPC methods are not available on the node (https://github.com/gear-tech/gear-js/pull/2143)
+- New RPC methods: `gear_subscribeProgramStateChanges` and `gear_subscribeUserMessageSent` (https://github.com/gear-tech/gear-js/pull/2143)
+
+### Changed
+- Migrated RPC and type definitions from JSON to TypeScript for better type safety (https://github.com/gear-tech/gear-js/pull/2143)
+- Made all public API properties readonly (`program`, `message`, `balance`, `blocks`, etc.) (https://github.com/gear-tech/gear-js/pull/2143)
+- Improved test suite with enhanced messaging functionality tests (https://github.com/gear-tech/gear-js/pull/2143)
+
+### Breaking Changes
+- Removed `GearClaimValue` class and `api.claimValueFromMailbox.submit()` method. Use `api.mailbox.claimValue()` instead (https://github.com/gear-tech/gear-js/pull/2143)
+
 ## [0.44.2]
 
 - Updated `GearEthBridge` events (https://github.com/gear-tech/gear-js/pull/2103)

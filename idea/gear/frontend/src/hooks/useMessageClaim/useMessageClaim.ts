@@ -50,7 +50,7 @@ const useMessageClaim = () => {
       if (!account) throw new Error('Account not found');
       const { address, signer } = account;
 
-      await api.claimValueFromMailbox.signAndSend(address, { signer }, ({ status, events }) => {
+      await api.mailbox.signAndSend(address, { signer }, ({ status, events }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
@@ -83,9 +83,9 @@ const useMessageClaim = () => {
 
         const { address, signer } = account!;
 
-        api.claimValueFromMailbox.submit(messageId);
+        api.mailbox.claimValue(messageId);
 
-        const { partialFee } = await api.claimValueFromMailbox.paymentInfo(address, { signer });
+        const { partialFee } = await api.mailbox.paymentInfo(address, { signer });
 
         const handleConfirm = () => signAndSend({ reject, resolve });
 

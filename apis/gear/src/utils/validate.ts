@@ -1,7 +1,6 @@
 import { BN, u8aToBigInt } from '@polkadot/util';
 import { u128, u64 } from '@polkadot/types';
-import { GearCoreMessageUserUserStoredMessage } from '../types';
-import { HexString } from '@polkadot/util/types';
+import { HexString, GearCoreMessageUserUserStoredMessage } from '../types';
 
 import { GasLimit, Value } from '../types/common';
 import { GearApi } from '../GearApi';

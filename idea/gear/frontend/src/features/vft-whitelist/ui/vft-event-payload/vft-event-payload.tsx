@@ -46,7 +46,7 @@ function VftEventPayload({ name, decoded, programId }: Props) {
 
   useErrorAlert(error);
 
-  const [isRaw, setIsRaw] = useState(false);
+  const [isParsed, setIsParsed] = useState(true);
 
   const parse = useCallback(
     (payload: { value: bigint | string | number }) => ({
@@ -86,8 +86,11 @@ function VftEventPayload({ name, decoded, programId }: Props) {
 
   return (
     <>
-      {parsed && <Checkbox label="Raw" checked={isRaw} onChange={() => setIsRaw((prevValue) => !prevValue)} />}
-      <PreformattedBlock text={isRaw ? decoded : (parsed ?? decoded)} />
+      {parsed && (
+        <Checkbox label="Parsed payload" checked={isParsed} onChange={() => setIsParsed((prevValue) => !prevValue)} />
+      )}
+
+      <PreformattedBlock text={isParsed ? (parsed ?? decoded) : decoded} />
     </>
   );
 }

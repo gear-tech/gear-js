@@ -662,6 +662,13 @@ export interface GearCoreMessageUserUserStoredMessage extends Struct {
   readonly destination: GprimitivesActorId;
   readonly payload: Bytes;
   readonly value: Compact<u128>;
+  toJSON(): {
+    id: `0x${string}`;
+    source: `0x${string}`;
+    destination: `0x${string}`;
+    payload: `0x${string}`;
+    value: number | string;
+  };
 }
 export interface GearCommonStoragePrimitivesInterval extends Struct {
   readonly start: u32;

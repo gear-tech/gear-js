@@ -1,54 +1,96 @@
-import { useState } from 'react';
-import { generatePath, useLocation, useNavigate } from 'react-router-dom';
-import { isAddress } from 'viem';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { HexString } from '@vara-eth/api';
+import { getBytecode } from '@wagmi/core';
+import { useForm } from 'react-hook-form';
+import { generatePath, useNavigate } from 'react-router-dom';
+import { isAddress, isHash } from 'viem';
+import { useConfig } from 'wagmi';
+import { z } from 'zod';
 
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
 import { routes } from '@/shared/config';
+import { noop } from '@/shared/utils';
+
+import { getIndexerEntity, INDEXER_ENTITY } from '../lib';
 
 import styles from './search.module.scss';
 
+const FIELD_NAME = 'value';
+const DEFAULT_VALUES = { [FIELD_NAME]: '' };
+
+const SCHEMA = z.object({
+  [FIELD_NAME]: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
+});
+
+type Values = typeof DEFAULT_VALUES;
+type FormattedValues = z.infer<typeof SCHEMA>;
+
 const Search = () => {
-  const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
-  const isHomePage = location.pathname === routes.home;
+  const config = useConfig();
 
-  const onSearch = () => {
-    if (!search) {
-      return;
-    }
+  const { formState, register, ...form } = useForm<Values, unknown, FormattedValues>({
+    defaultValues: DEFAULT_VALUES,
+    resolver: zodResolver(SCHEMA),
+  });
 
-    if (isAddress(search)) {
-      void navigate(generatePath(routes.user, { userId: search }));
-      return;
-    }
+  const { errors, isSubmitting } = formState;
+  const error = errors[FIELD_NAME]?.message;
 
-    void navigate(generatePath(routes.notFound));
+  const isWalletAddress = async (value: HexString) => {
+    if (!isAddress(value)) return false;
+
+    return getBytecode(config, { address: value })
+      .then((result) => !result)
+      .catch((_error) => {
+        console.error(
+          "Can't determine whether address is a contract during search request. Assuming it might be.",
+          _error,
+        );
+
+        return false;
+      });
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearch();
+  const handleSubmit = async ({ value }: FormattedValues) => {
+    if (await isWalletAddress(value)) return navigate(generatePath(routes.user, { userId: value }));
+
+    // TODO: implement indexer error type and noop only 404 to handle other errors
+    const { type } = (await getIndexerEntity(value).catch(noop)) || {};
+
+    switch (type) {
+      case INDEXER_ENTITY.PROGRAM:
+        return navigate(generatePath(routes.program, { programId: value }));
+
+      case INDEXER_ENTITY.CODE:
+        return navigate(generatePath(routes.code, { codeId: value }));
+
+      default:
+        return navigate(generatePath(routes.notFound), { state: value });
     }
   };
 
   return (
-    <div className={styles.wrapper}>
+    <form className={styles.wrapper} onSubmit={form.handleSubmit(handleSubmit)}>
       <input
-        className={styles.input}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
         type="text"
-        placeholder="Search by block number, code id, program id, wallet address..."
-        onKeyDown={onKeyDown}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus={isHomePage}
+        placeholder="Search by code id, program id, wallet address..."
+        className={styles.input}
+        aria-invalid={Boolean(error)}
+        {...register(FIELD_NAME)}
       />
-      <Button variant="icon" onClick={onSearch}>
+
+      {error && <span className={styles.error}>{error}</span>}
+
+      <Button type="submit" variant="icon" isLoading={isSubmitting}>
         <SearchSVG />
       </Button>
-    </div>
+    </form>
   );
 };
 
