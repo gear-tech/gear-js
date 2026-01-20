@@ -32,7 +32,8 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
     });
 
     const response = await tx.sendAndWaitForPromise();
-    const { reply, txHash } = response;
+
+    const promise = response;
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -43,12 +44,12 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
       serviceName,
       messageName,
       ...unpackReceipt(),
-      hash: txHash,
+      hash: promise.txHash,
       to: programId,
       params: { payload: `${messageName} (${params.join(', ')})` },
     });
 
-    const { payload, value, code } = reply;
+    const { payload, value, code } = promise;
 
     const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
 
@@ -56,7 +57,8 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
       type: TransactionTypes.programReply,
       serviceName,
       messageName,
-      replyCode: 'Success' in code ? 'Success' : 'Error',
+      // TODO: fix this once code is of type ReplyCode
+      replyCode: code.startsWith('0x00') ? 'Success' : 'Error',
       ...unpackReceipt(),
       from: programId,
       params: { payload: JSON.stringify(result) },
