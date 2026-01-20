@@ -1,22 +1,27 @@
 import { useAppKit } from '@reown/appkit/react';
-import { useAccount } from 'wagmi';
+import { useAccount, useEnsName } from 'wagmi';
 
 import { Button } from '@/components';
+import { getTruncatedText } from '@/shared/utils';
 
 import styles from './wallet-button.module.scss';
 
 const WalletButton = () => {
-  const ethAccount = useAccount();
   const { open } = useAppKit();
-  const isConnected = Boolean(ethAccount.chainId);
 
-  return isConnected ? (
-    <>
-      <Button onClick={() => open()}>{ethAccount.address}</Button>
-    </>
-  ) : (
-    <Button onClick={() => open()} className={styles.connect}>
-      Connect wallet
+  const ethAccount = useAccount();
+  const name = useEnsName({ address: ethAccount.address });
+
+  return (
+    <Button onClick={() => open()} className={styles.button}>
+      {ethAccount.address ? (
+        <>
+          {name.data || getTruncatedText(ethAccount.address)}
+          <span className={styles.chain}>Hoodi</span>
+        </>
+      ) : (
+        'Connect Wallet'
+      )}
     </Button>
   );
 };
