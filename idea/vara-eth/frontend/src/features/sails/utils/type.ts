@@ -52,8 +52,8 @@ const getType = (def: ISailsTypeDef): string => {
     if (!def.asEnum.isNesting) return JSON.stringify({ _enum: def.asEnum.variants.map((v) => v.name) });
 
     const result = def.asEnum.variants.map((variant) => [variant.name, variant.def ? getType(variant.def) : 'Null']);
-    const _enum = Object.fromEntries(result) as Record<string, string>;
-    return JSON.stringify({ _enum });
+
+    return JSON.stringify({ _enum: Object.fromEntries(result) as Record<string, string> });
   }
 
   throw new Error('Unknown type: ' + JSON.stringify(def));

@@ -8,7 +8,7 @@ import { useSails } from './use-sails';
 
 type InitProgramParams = {
   ctorName: string;
-  args: unknown[];
+  payload: HexString;
 };
 
 const useInitProgram = (programId: HexString, idl: string) => {
@@ -16,12 +16,12 @@ const useInitProgram = (programId: HexString, idl: string) => {
   const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const initProgram = async ({ ctorName, args }: InitProgramParams) => {
+  const initProgram = async ({ ctorName, payload }: InitProgramParams) => {
     if (!mirrorContract || !sails) return;
 
-    const payload = sails.ctors[ctorName]?.encodePayload(...args);
-
-    if (!payload) return;
+    // TODO: would be better to return non-encoded payload from schema,
+    // but for now to not change gear idea implementation we have to decode encoded value here
+    const args: unknown[] = sails.ctors[ctorName]?.decodePayload(payload);
 
     const tx = await mirrorContract.sendMessage(payload);
 

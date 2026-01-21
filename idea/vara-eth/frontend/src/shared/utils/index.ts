@@ -3,7 +3,7 @@ import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
 export { clsx as cx } from 'clsx';
 
 export { fetchWithGuard } from './fetch-with-guard';
-export { isUndefined } from './is';
+export { isUndefined, isString } from './is';
 
 const noop = () => {};
 
@@ -60,7 +60,6 @@ const formatDate = (rawDate: string | number) => {
   return `${formatedDate} ${time}`;
 };
 
-const isString = (value: unknown): value is string => typeof value === 'string';
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 const getTruncatedText = (value: string, prefixLength = 8): string => {
@@ -68,13 +67,15 @@ const getTruncatedText = (value: string, prefixLength = 8): string => {
   return `${value.slice(0, prefixLength + 2)}...${value.slice(-prefixLength)}`;
 };
 
+const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length > 0;
+
 export {
   noop,
   copyToClipboard,
   formatBalance,
   formatNumber,
   formatDate,
-  isString,
   getPreformattedText,
   getTruncatedText,
+  isAnyKey,
 };

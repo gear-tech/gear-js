@@ -10,7 +10,7 @@ type SendMessageParams = {
   serviceName: string;
   messageName: string;
   isQuery: boolean;
-  args: unknown[];
+  payload: HexString;
 };
 
 const useSendInjectedTransaction = (programId: HexString, idl: string) => {
@@ -18,22 +18,24 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
-  const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
+  const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {
     if (!sails || !api) return;
 
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
-    const _payload = sailsMessage.encodePayload(...args);
+
+    // TODO: would be better to return non-encoded payload from schema,
+    // but for now to not change gear idea implementation we have to decode encoded value here
+    const args: unknown[] = sailsMessage.decodePayload(payload);
 
     const tx = await api.createInjectedTransaction({
       destination: programId,
-      payload: _payload,
+      payload,
       value: 0n,
     });
 
     const response = await tx.sendAndWaitForPromise();
 
-    const promise = response;
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -44,14 +46,14 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
       serviceName,
       messageName,
       ...unpackReceipt(),
-      hash: promise.txHash,
+      hash: response.txHash,
       to: programId,
       params: { payload: `${messageName} (${params.join(', ')})` },
     });
 
-    const { payload, value, code } = promise;
+    const { value, code } = response;
 
-    const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
+    const result: Record<string, unknown> = sailsMessage.decodeResult(response.payload);
 
     addMyActivity({
       type: TransactionTypes.programReply,
@@ -64,6 +66,7 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
       params: { payload: JSON.stringify(result) },
       value: String(value),
     });
+
     return response;
   };
 

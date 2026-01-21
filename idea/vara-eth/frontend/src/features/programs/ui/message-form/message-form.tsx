@@ -3,12 +3,14 @@ import { HexString } from '@vara-eth/api';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
+import { z } from 'zod';
 
-import { Button, Input, ExpandableItem } from '@/components';
+import { Button, ExpandableItem } from '@/components';
+import { Fields } from '@/features/sails';
+import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
+import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
 
-import { PayloadValue, useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
-import { ISailsFuncArg } from '../../lib/types';
-import { getDefaultPayloadValue, getPayloadSchema } from '../../lib/utils';
+import { useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
 
 import styles from './message-form.module.scss';
 
@@ -23,37 +25,50 @@ type Props = {
   isOffchain: boolean;
 };
 
-type Values = {
-  [k: string]: PayloadValue;
-};
+type Values = { payload: PayloadValue };
+type FormattedValues = { payload: HexString };
 
 const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, idl, isOffchain }: Props) => {
   const { mutate: sendInjectedTransaction, isPending: isPendingInjectedTransaction } = useSendInjectedTransaction(
     programId,
     idl,
   );
+
   const { mutate: sendMessage, isPending: isPendingMessage } = useSendProgramMessage(programId, idl);
 
-  const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
+  const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), [sails, args]);
 
-  const schema = useMemo(() => getPayloadSchema(sails, args), [sails, args]);
+  const encodePayload = useMemo(
+    () => sails.services[serviceName][isQuery ? 'queries' : 'functions'][messageName].encodePayload,
+    [sails, serviceName, messageName, isQuery],
+  );
 
-  const form = useForm<Values, unknown, unknown[]>({ values: defaultValues, resolver: zodResolver(schema) });
+  const schema = useMemo(
+    () => z.object({ payload: getPayloadSchema(sails, args, encodePayload) }),
+    [sails, args, encodePayload],
+  );
 
-  const resetForm = () => {
-    form.reset(defaultValues);
-  };
-
-  const handleSubmitForm = form.handleSubmit((formValues) => {
-    const send = isOffchain ? sendInjectedTransaction : sendMessage;
-    send({ serviceName, messageName, args: formValues, isQuery }, { onSuccess: resetForm });
+  const form = useForm<Values, unknown, FormattedValues>({
+    values: defaultValues,
+    resolver: zodResolver(schema),
   });
 
-  const formName = `${serviceName}-${messageName}-form`;
+  const resetForm = () => {
+    const values = form.getValues();
+    const resetValue = { payload: getResetPayloadValue(values.payload) };
+
+    form.reset(resetValue);
+  };
+
+  const handleSubmitForm = form.handleSubmit(({ payload }) => {
+    const send = isOffchain ? sendInjectedTransaction : sendMessage;
+
+    send({ serviceName, messageName, isQuery, payload }, { onSuccess: resetForm });
+  });
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmitForm} id={formName}>
+      <form onSubmit={handleSubmitForm}>
         <ExpandableItem
           key={messageName}
           header={messageName}
@@ -62,19 +77,13 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
             <Button
               type="submit"
               variant="default"
-              form={formName}
               size="xs"
               isLoading={isPendingInjectedTransaction || isPendingMessage}
               className={styles.button}>
               {isQuery ? 'Read' : 'Write'}
             </Button>
           }>
-          {args.map((param) => {
-            return (
-              // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields
-              <Input key={param.name} name={param.name} placeholder="0x" />
-            );
-          })}
+          <Fields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>

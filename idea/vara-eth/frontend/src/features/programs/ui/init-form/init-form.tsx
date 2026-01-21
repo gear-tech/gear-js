@@ -3,12 +3,14 @@ import { HexString } from '@vara-eth/api';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
+import { z } from 'zod';
 
-import { Button, Input, ExpandableItem } from '@/components';
+import { Button, ExpandableItem } from '@/components';
+import { Fields } from '@/features/sails';
+import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
+import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
 
-import { PayloadValue, useInitProgram } from '../../lib';
-import { ISailsFuncArg } from '../../lib/types';
-import { getDefaultPayloadValue, getPayloadSchema } from '../../lib/utils';
+import { useInitProgram } from '../../lib';
 
 type Props = {
   programId: HexString;
@@ -19,29 +21,34 @@ type Props = {
   idl: string;
 };
 
-type Values = {
-  [k: string]: PayloadValue;
-};
+type Values = { payload: PayloadValue };
+type FormattedValues = { payload: HexString };
 
 const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
   const { initProgram, isPending: isInitPending } = useInitProgram(programId, idl);
 
-  const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
+  const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), [sails, args]);
 
-  const schema = useMemo(() => getPayloadSchema(sails, args), [sails, args]);
+  const schema = useMemo(
+    () => z.object({ payload: getPayloadSchema(sails, args, sails.ctors[ctorName].encodePayload) }),
+    [sails, args, ctorName],
+  );
 
-  const form = useForm<Values, unknown, unknown[]>({
+  const form = useForm<Values, unknown, FormattedValues>({
     values: defaultValues,
     resolver: zodResolver(schema),
   });
 
   const onSuccess = () => {
-    form.reset(defaultValues);
+    const values = form.getValues();
+    const resetValue = { payload: getResetPayloadValue(values.payload) };
+
+    form.reset(resetValue);
     onInit();
   };
 
-  const handleSubmitForm = form.handleSubmit((formValues) => {
-    initProgram({ ctorName, args: formValues }, { onSuccess });
+  const handleSubmitForm = form.handleSubmit(({ payload }) => {
+    initProgram({ ctorName, payload }, { onSuccess });
   });
 
   return (
@@ -56,10 +63,7 @@ const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
               Initialize
             </Button>
           }>
-          {args.map((param) => (
-            // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields
-            <Input key={param.name} placeholder="0x" {...form.register(param.name)} />
-          ))}
+          <Fields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>
