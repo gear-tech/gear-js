@@ -13,6 +13,7 @@
     "@base-ui/react": "1.0.0",
     "@gear-js/api": "0.44.2",
     "@gear-js/react-hooks": "*",
+    "@gear-js/sails-payload-form": "*",
     "@gear-js/ui": "*",
     "@gear-js/wallet-connect": "*",
     "@hcaptcha/react-hcaptcha": "1.12.1",

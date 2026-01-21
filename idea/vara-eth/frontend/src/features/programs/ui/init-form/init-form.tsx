@@ -1,3 +1,10 @@
+import {
+  getDefaultPayloadValue,
+  getPayloadSchema,
+  getResetPayloadValue,
+  ISailsFuncArg,
+  PayloadValue,
+} from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@vara-eth/api';
 import { useMemo } from 'react';
@@ -7,8 +14,6 @@ import { z } from 'zod';
 
 import { Button, ExpandableItem } from '@/components';
 import { SailsPayloadFields } from '@/features/sails';
-import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
-import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
 
 import { useInitProgram } from '../../lib';
 

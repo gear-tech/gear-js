@@ -16051,6 +16051,7 @@ __metadata:
     "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/react-hooks": "npm:*"
+    "@gear-js/sails-payload-form": "npm:*"
     "@gear-js/ui": "npm:*"
     "@gear-js/wallet-connect": "npm:*"
     "@hcaptcha/react-hcaptcha": "npm:1.12.1"

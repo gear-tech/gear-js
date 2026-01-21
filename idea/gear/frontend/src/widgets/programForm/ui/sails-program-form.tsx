@@ -1,4 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
+import { PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Input as GearInput } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -8,7 +9,7 @@ import { Sails } from 'sails-js';
 import { z } from 'zod';
 
 import { GasField } from '@/features/gasField';
-import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
+import { PayloadForm, useConstructor } from '@/features/sails';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { GasMethod } from '@/shared/config';
