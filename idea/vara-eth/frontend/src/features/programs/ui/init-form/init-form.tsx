@@ -6,7 +6,7 @@ import { Sails } from 'sails-js';
 import { z } from 'zod';
 
 import { Button, ExpandableItem } from '@/components';
-import { Fields } from '@/features/sails';
+import { SailsPayloadFields } from '@/features/sails';
 import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
 import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
 
@@ -63,7 +63,7 @@ const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
               Initialize
             </Button>
           }>
-          <Fields sails={sails} args={args} />
+          <SailsPayloadFields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>

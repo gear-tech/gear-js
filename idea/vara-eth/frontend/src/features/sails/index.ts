@@ -1,1 +1,1 @@
-export { Fields, SailsServices } from './components';
+export { SailsPayloadFields } from './components';

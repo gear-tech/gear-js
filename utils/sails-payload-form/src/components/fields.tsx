@@ -1,8 +1,8 @@
 import { Sails } from 'sails-js';
 import { ISailsTypeDef } from 'sails-js-types';
 
-import { ISailsFuncArg } from '../../types';
-import { getNestedName } from '../../utils';
+import { FieldProps, ISailsFuncArg } from '../types';
+import { getNestedName } from '../utils';
 
 import { EnumField } from './enum-field';
 import { FixedSizeArrayField } from './fixed-size-array-field';
@@ -17,9 +17,10 @@ import { VecField } from './vec-field';
 type Props = {
   sails: Sails;
   args: ISailsFuncArg[];
+  render: FieldProps['render'];
 };
 
-function Fields({ sails, args }: Props) {
+function Fields({ sails, args, render }: Props) {
   const getFieldComponent = (def: ISailsTypeDef) => {
     if (def.isEnum) return EnumField;
     if (def.isStruct) return StructField;
@@ -35,18 +36,16 @@ function Fields({ sails, args }: Props) {
   };
 
   const renderField = (def: ISailsTypeDef, label: string = '', name: string = '') => {
-    if (!sails) throw new Error('Sails is not defined');
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 
     const Field = getFieldComponent(def);
 
-    return <Field key={name} def={def} sails={sails} name={name} label={label} renderField={renderField} />;
+    return (
+      <Field key={name} def={def} sails={sails} name={name} label={label} render={render} renderField={renderField} />
+    );
   };
 
-  const renderFields = () =>
-    args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
-
-  return renderFields();
+  return args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
 }
 
 export { Fields };
