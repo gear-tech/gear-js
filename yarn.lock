@@ -2361,6 +2361,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/sails-payload-form@npm:*, @gear-js/sails-payload-form@workspace:utils/sails-payload-form":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/sails-payload-form@workspace:utils/sails-payload-form"
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/txwrapper@workspace:tools/txwrapper":
   version: 0.0.0-use.local
   resolution: "@gear-js/txwrapper@workspace:tools/txwrapper"
@@ -10157,7 +10163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vara-eth/api@workspace:*, @vara-eth/api@workspace:apis/vara-eth":
+"@vara-eth/api@npm:*, @vara-eth/api@workspace:*, @vara-eth/api@workspace:apis/vara-eth":
   version: 0.0.0-use.local
   resolution: "@vara-eth/api@workspace:apis/vara-eth"
   dependencies:
@@ -25659,12 +25665,13 @@ __metadata:
   dependencies:
     "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
+    "@gear-js/sails-payload-form": "npm:*"
     "@hookform/resolvers": "npm:4.0.0"
     "@reown/appkit": "npm:1.8.14"
     "@reown/appkit-adapter-wagmi": "npm:1.8.14"
     "@tanstack/react-query": "npm:5.90.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
-    "@vara-eth/api": "workspace:*"
+    "@vara-eth/api": "npm:*"
     jotai: "npm:2.12.0"
     kzg-wasm: "npm:1.0.0"
     react: "npm:19.2.0"
