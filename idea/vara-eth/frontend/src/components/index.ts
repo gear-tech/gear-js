@@ -4,3 +4,4 @@ export { WalletButton } from './wallet';
 export { ErrorBoundary } from './error-boundary';
 export { HeaderBalance } from './header-balance';
 export * from './ui';
+export * from './form';

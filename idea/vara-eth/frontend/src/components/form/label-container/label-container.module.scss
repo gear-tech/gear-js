@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  gap: 16px;
+}
+
+.label {
+  line-height: 24px;
+}
+
+.content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  input,
+  textarea,
+  select {
+    padding: 4px 16px;
+
+    font: inherit;
+    color: #fff;
+
+    background-color: rgba(15, 15, 15, 1);
+    border: 1px solid rgba(41, 41, 41, 0.5);
+    border-radius: 4px;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(41, 41, 41, 1);
+      caret-color: rgba(168, 245, 147, 1);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: rgba(247, 58, 61, 0.16);
+      color: rgba(247, 58, 61, 1);
+    }
+  }
+}
+
+.error {
+  color: rgba(247, 58, 61, 0.75);
+}
