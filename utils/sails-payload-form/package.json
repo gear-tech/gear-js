@@ -2,6 +2,7 @@
   "name": "@gear-js/sails-payload-form",
   "version": "0.1.0",
   "type": "module",
+  "private": true,
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
@@ -12,5 +13,8 @@
   "devDependencies": {
     "@polkadot/types": "16.5.4",
     "sails-js-types": "0.5.1"
+  },
+  "exports": {
+    ".": "./src/index.ts"
   }
 }

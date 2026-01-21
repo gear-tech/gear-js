@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus gear-idea-frontend @gear-js/api gear-js-util gear-js
+RUN yarn workspaces focus gear-idea-frontend @gear-js/api @gear-js/react-hooks @gear-js/ui @gear-js/wallet-connect @gear-js/vara-ui @gear-js/sails-payload-form gear-js
 
 ARG VITE_NODE_ADDRESS \
     VITE_NODES_API_URL \
