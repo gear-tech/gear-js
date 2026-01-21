@@ -6,7 +6,6 @@ import { ISailsTypeDef } from 'sails-js-types';
 type FieldsetProps = PropsWithChildren & { legend: string };
 
 type SelectProps = Pick<SelectHTMLAttributes<HTMLSelectElement>, 'value' | 'onChange'> & {
-  label?: string;
   options: readonly OptionHTMLAttributes<HTMLOptionElement>[];
 };
 

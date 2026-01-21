@@ -1,3 +1,4 @@
+import { JSX, PropsWithChildren } from 'react';
 import { Sails } from 'sails-js';
 import { ISailsTypeDef } from 'sails-js-types';
 
@@ -18,9 +19,10 @@ type Props = {
   sails: Sails;
   args: ISailsFuncArg[];
   render: FieldProps['render'];
+  renderContainer?: (props: PropsWithChildren) => JSX.Element;
 };
 
-function Fields({ sails, args, render }: Props) {
+function Fields({ sails, args, render, renderContainer }: Props) {
   const getFieldComponent = (def: ISailsTypeDef) => {
     if (def.isEnum) return EnumField;
     if (def.isStruct) return StructField;
@@ -45,7 +47,10 @@ function Fields({ sails, args, render }: Props) {
     );
   };
 
-  return args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
+  const renderFields = () =>
+    args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
+
+  return args.length && renderContainer ? renderContainer({ children: renderFields() }) : renderFields();
 }
 
 export { Fields };
