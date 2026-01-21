@@ -1,4 +1,3 @@
-import { HexString } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { Sails } from 'sails-js';
 import { ISailsTypeDef } from 'sails-js-types';
@@ -23,7 +22,7 @@ const asTuple = <T extends z.ZodTypeAny>(schema: T[]) => z.tuple(schema as [T, .
 
 const isUnion = <T>(arr: T[]): arr is [T, T, ...T[]] => arr.length >= 2;
 
-const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
+const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => `0x${string}`) => {
   const getSchema = (def: ISailsTypeDef): z.ZodType<unknown> => {
     if (def.isPrimitive) return def.asPrimitive.isBool ? z.boolean() : z.string().trim();
 

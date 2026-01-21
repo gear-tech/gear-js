@@ -1,5 +1,16 @@
 {
   "name": "@gear-js/sails-payload-form",
   "version": "0.1.0",
-  "type": "module"
+  "type": "module",
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "react-hook-form": "7.54.2",
+    "sails-js": "^0.5",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@polkadot/types": "16.5.4",
+    "sails-js-types": "0.5.1"
+  }
 }

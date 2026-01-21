@@ -1,6 +1,5 @@
-import { Fields } from '@gear-js/sails-payload-form';
+import { Fields, ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { InputProps, InputWrapper, Select } from '@gear-js/ui';
-import { ComponentProps } from 'react';
 import { Sails } from 'sails-js';
 
 import { Checkbox, Fieldset, Input, Textarea } from '@/shared/ui';
@@ -11,7 +10,7 @@ import styles from './payload-form.module.scss';
 
 type BaseProps = Pick<InputProps, 'direction' | 'gap'> & {
   sails: Sails;
-  args: ComponentProps<typeof Fields>['args'];
+  args: ISailsFuncArg[];
 };
 
 type ConstructorProps = BaseProps & {

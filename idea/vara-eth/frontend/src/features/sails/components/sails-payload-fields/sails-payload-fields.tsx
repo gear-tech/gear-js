@@ -1,5 +1,4 @@
-import { Fields } from '@gear-js/sails-payload-form';
-import { ComponentProps } from 'react';
+import { Fields, ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { Sails } from 'sails-js';
 
 import { Checkbox, Input, Textarea } from '@/components';
@@ -9,7 +8,7 @@ import { Fieldset } from '../fieldset';
 
 type Props = {
   sails: Sails;
-  args: ComponentProps<typeof Fields>['args'];
+  args: ISailsFuncArg[];
 };
 
 function SailsPayloadFields({ sails, args }: Props) {
