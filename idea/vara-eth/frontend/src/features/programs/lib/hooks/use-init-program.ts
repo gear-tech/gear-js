@@ -38,12 +38,10 @@ const useInitProgram = (programId: HexString, idl: string) => {
     });
   };
 
-  const { mutate: initProgramMutation, isPending } = useMutation({
+  return useMutation({
     mutationKey: ['initProgram', programId],
     mutationFn: initProgram,
   });
-
-  return { initProgram: initProgramMutation, isPending };
 };
 
 export { useInitProgram };
