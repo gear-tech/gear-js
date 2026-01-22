@@ -1,0 +1,32 @@
+.container {
+  border: 1px solid rgba(41, 41, 41, 0.5);
+  border-radius: 4px;
+}
+
+.header {
+  width: 100%;
+  padding: 8px 16px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #0f0f0f;
+  border-bottom: 1px solid rgba(41, 41, 41, 0.5);
+
+  .arrow {
+    &.open {
+      transform: rotate(-90deg);
+    }
+  }
+
+  .title {
+    margin-left: 12px;
+    margin-right: auto;
+
+    color: #fff;
+  }
+}
+
+.body {
+  padding: 16px 12px;
+}
