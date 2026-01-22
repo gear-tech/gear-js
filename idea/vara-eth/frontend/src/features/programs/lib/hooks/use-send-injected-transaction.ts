@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
+import { Sails } from 'sails-js';
 
 import { useVaraEthApi } from '@/app/providers';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
-
-import { useSails } from './use-sails';
 
 type SendMessageParams = {
   serviceName: string;
@@ -13,8 +12,7 @@ type SendMessageParams = {
   payload: HexString;
 };
 
-const useSendInjectedTransaction = (programId: HexString, idl: string) => {
-  const { data: sails } = useSails(idl);
+const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefined) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 

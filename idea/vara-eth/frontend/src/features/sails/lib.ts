@@ -1,4 +1,6 @@
+import { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useQuery } from '@tanstack/react-query';
+import { HexString } from '@vara-eth/api';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
 
@@ -22,4 +24,14 @@ const useSails = (idl: string | null) => {
   });
 };
 
+type SailsAction = {
+  id: string;
+  name: string;
+  action: string;
+  args: ISailsFuncArg[];
+  encode: (...params: unknown[]) => HexString;
+  onSubmit: (payload: HexString) => Promise<unknown>;
+};
+
 export { useSails };
+export type { SailsAction };

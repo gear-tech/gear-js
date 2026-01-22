@@ -3,7 +3,6 @@ export {
   useCreateProgram,
   useInitProgram,
   useReadContractState,
-  useSails,
   useSendProgramMessage,
   useSendInjectedTransaction,
 } from './hooks';

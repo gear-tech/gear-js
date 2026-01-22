@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
+import { Sails } from 'sails-js';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
-
-import { useSails } from './use-sails';
 
 type SendMessageParams = {
   serviceName: string;
@@ -13,8 +12,7 @@ type SendMessageParams = {
   payload: HexString;
 };
 
-const useSendProgramMessage = (programId: HexString, idl: string) => {
-  const { data: sails } = useSails(idl);
+const useSendProgramMessage = (programId: HexString, sails: Sails | undefined) => {
   const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
