@@ -1,4 +1,5 @@
 import { ISailsFuncArg } from '@gear-js/sails-payload-form';
+import { HexString } from '@vara-eth/api';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
@@ -18,36 +19,39 @@ import styles from './sails-function.module.scss';
 
 type Props = {
   name: string;
-  type: 'function' | 'query';
+  action: string;
   sails: Sails;
   args: ISailsFuncArg[];
+  onSubmit: (payload: HexString) => Promise<unknown>;
 };
 
-const SailsFunction = ({ name, type, sails, args }: Props) => {
+const SailsFunction = ({ name, action, sails, args, onSubmit }: Props) => {
   const form = useForm();
+  const { formState } = form;
+  const { isSubmitting } = formState;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = form.handleSubmit(() => {
     console.log('submit');
+
+    onSubmit('0x00')
+      .then(() => form.reset())
+      .catch((error) => console.error(error));
   });
 
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit} className={styles.container}>
-        <button className={styles.header} onClick={() => setIsOpen((prevValue) => !prevValue)}>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+        <header className={styles.header} onClick={() => setIsOpen((prevValue) => !prevValue)}>
           <ArrowSVG className={cx(styles.arrow, isOpen && styles.open)} />
           <span className={styles.title}>{name}</span>
 
-          <Button
-            type="submit"
-            variant="default"
-            size="xs"
-            //   isLoading={isPendingInjectedTransaction || isPendingMessage}
-            className={styles.button}>
-            {type === 'function' ? 'Read' : 'Write'}
+          <Button type="submit" variant="default" size="xs" isLoading={isSubmitting} className={styles.button}>
+            {action}
           </Button>
-        </button>
+        </header>
 
         {isOpen && (
           <div className={styles.body}>

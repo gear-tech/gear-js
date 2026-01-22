@@ -30,7 +30,7 @@ type Values = { payload: PayloadValue };
 type FormattedValues = { payload: HexString };
 
 const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
-  const { initProgram, isPending: isInitPending } = useInitProgram(programId, idl);
+  const { mutate: initProgram, isPending: isInitPending } = useInitProgram(programId, idl);
 
   const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), [sails, args]);
 
