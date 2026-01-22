@@ -4,8 +4,9 @@ import { formatEther, formatUnits } from 'viem';
 
 import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import { Badge, Balance, Button, ChainEntity, HashLink, UploadIdlButton } from '@/components';
-import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
+import { useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
+import { SailsProgramActions } from '@/features/sails';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
 import { isUndefined } from '@/shared/utils';
@@ -97,7 +98,7 @@ const Program = () => {
 
       <div className={styles.card}>
         {idl ? (
-          <ServiceList programId={programId} idl={idl} />
+          <SailsProgramActions programId={programId} idl={idl} isInitialized={isInitialized} />
         ) : (
           <div className={styles.emptyState}>
             <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
