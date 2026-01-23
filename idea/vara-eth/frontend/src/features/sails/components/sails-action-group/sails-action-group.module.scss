@@ -11,8 +11,14 @@
   display: flex;
   align-items: center;
 
-  .arrow {
-    &.open {
+  &.empty {
+    .arrow {
+      visibility: hidden;
+    }
+  }
+
+  &.open {
+    .arrow {
       transform: rotate(-90deg);
     }
   }
