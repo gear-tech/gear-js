@@ -8,7 +8,7 @@ import {
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@vara-eth/api';
-import { useMemo } from 'react';
+import { ComponentProps, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
@@ -30,6 +30,18 @@ type Props = {
 
 type Values = { payload: PayloadValue };
 type FormattedValues = { payload: HexString };
+
+const GridInput = ({ ...props }: ComponentProps<typeof Input>) => <Input {...props} className={styles.input} />;
+
+const GridTextarea = ({ ...props }: ComponentProps<typeof Textarea>) => (
+  <Textarea {...props} className={styles.textarea} />
+);
+
+const GridSelect = ({ ...props }: ComponentProps<typeof Select>) => <Select {...props} className={styles.select} />;
+
+const GridCheckbox = ({ ...props }: ComponentProps<typeof Checkbox>) => (
+  <Checkbox {...props} className={styles.checkbox} />
+);
 
 const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,8 +74,8 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
           sails={sails}
           args={args}
           render={{
-            ui: { fieldset: Fieldset, select: Select },
-            rhf: { input: Input, textarea: Textarea, checkbox: Checkbox },
+            ui: { fieldset: Fieldset, select: GridSelect },
+            rhf: { input: GridInput, textarea: GridTextarea, checkbox: GridCheckbox },
           }}
         />
       </form>
