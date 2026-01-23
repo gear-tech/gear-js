@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
-import { useSails } from '@/features/programs/lib';
-import { SailsServices } from '@/features/sails';
+import { useSails, SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';

@@ -1,6 +1,7 @@
 .container {
   border: 1px solid rgba(41, 41, 41, 0.5);
   border-radius: 4px;
+  overflow: hidden; // header background color
 }
 
 .header {
@@ -11,7 +12,6 @@
   align-items: center;
 
   background-color: #0f0f0f;
-  border-bottom: 1px solid rgba(41, 41, 41, 0.5);
 
   &.empty {
     .arrow {
@@ -20,6 +20,8 @@
   }
 
   &.open {
+    border-bottom: 1px solid rgba(41, 41, 41, 0.5);
+
     .arrow {
       transform: rotate(-90deg);
     }

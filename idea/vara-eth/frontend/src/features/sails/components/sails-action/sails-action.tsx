@@ -54,7 +54,7 @@ const SailsAction = ({ id, name, action, sails, args, encode, onSubmit }: Props)
         <header className={cx(styles.header, styles.empty)}>
           <ArrowSVG className={styles.arrow} />
           <span className={styles.title}>{name}</span>
-          <Button {...buttonProps} onClick={(e) => e.stopPropagation()} />
+          <Button {...buttonProps} />
         </header>
 
         <SailsPayloadForm id={id} sails={sails} args={args} encode={encode} onSubmit={handleSubmit} />

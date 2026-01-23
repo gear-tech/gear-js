@@ -20,14 +20,19 @@ const SailsActionGroup = ({ name, sails, items }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const count = items.length;
+  const isEmpty = count === 0;
 
   const renderItems = () => items.map((item) => <SailsAction key={item.id} sails={sails} {...item} />);
 
   return (
     // TODO: ExpandableItem component? it's not flexible though
     <div className={styles.container}>
-      <button type="button" className={styles.header} onClick={() => setIsOpen((prevValue) => !prevValue)}>
-        <ArrowSVG className={cx(styles.arrow, isOpen && styles.open)} />
+      <button
+        type="button"
+        className={cx(styles.header, isOpen && styles.open, isEmpty && styles.empty)}
+        onClick={() => setIsOpen((prevValue) => !prevValue)}
+        disabled={isEmpty}>
+        <ArrowSVG className={styles.arrow} />
         <span className={styles.title}>{name}</span>
 
         <Badge color="secondary">
