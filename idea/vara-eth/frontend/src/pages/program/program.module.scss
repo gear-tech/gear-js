@@ -7,28 +7,6 @@
   border-radius: 0 0 4px 4px;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: space-between;
-
-  .leftSide {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-  }
-
-  .link {
-    display: flex;
-  }
-
-  .arrowLeft {
-    margin-right: 4px;
-  }
-}
-
 .card {
   padding: 24px;
 
@@ -37,28 +15,14 @@
   }
 }
 
-.name {
-  padding-left: 32px;
-  color: #fff;
+.status {
+  margin-left: auto;
 }
 
-.properties {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: 136px 1fr;
-  gap: 20px 24px;
-}
-
-.property {
+.executableBalance {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.blockHash {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .emptyState {
