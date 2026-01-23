@@ -13,12 +13,20 @@
   background-color: #0f0f0f;
   border-bottom: 1px solid rgba(41, 41, 41, 0.5);
 
-  cursor: pointer;
+  &.empty {
+    .arrow {
+      visibility: hidden;
+    }
+  }
 
-  .arrow {
-    &.open {
+  &.open {
+    .arrow {
       transform: rotate(-90deg);
     }
+  }
+
+  &:not(.empty) {
+    cursor: pointer;
   }
 
   .title {
