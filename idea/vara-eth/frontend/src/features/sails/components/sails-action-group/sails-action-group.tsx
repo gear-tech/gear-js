@@ -24,7 +24,7 @@ const SailsActionGroup = ({ name, sails, items }: Props) => {
   const renderItems = () => items.map((item) => <SailsAction key={item.id} sails={sails} {...item} />);
 
   return (
-    // TODO: ExpandableItem component? it's not truly flexible though
+    // TODO: ExpandableItem component? it's not flexible though
     <div className={styles.container}>
       <button type="button" className={styles.header} onClick={() => setIsOpen((prevValue) => !prevValue)}>
         <ArrowSVG className={cx(styles.arrow, isOpen && styles.open)} />
