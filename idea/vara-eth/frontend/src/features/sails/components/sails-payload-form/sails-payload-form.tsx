@@ -1,4 +1,5 @@
 import {
+  Fields,
   getDefaultPayloadValue,
   getPayloadSchema,
   getResetPayloadValue,
@@ -7,11 +8,17 @@ import {
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@vara-eth/api';
+import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
-import { SailsPayloadFields } from '../sails-payload-fields';
+import { Checkbox, Input, Textarea } from '@/components';
+import { Select } from '@/components/form/select';
+
+import { Fieldset } from '../fieldset';
+
+import styles from './sails-payload-form.module.scss';
 
 type Props = {
   id: string;
@@ -25,8 +32,10 @@ type Values = { payload: PayloadValue };
 type FormattedValues = { payload: HexString };
 
 const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
-  const defaultValues = { payload: getDefaultPayloadValue(sails, args) };
-  const schema = z.object({ payload: getPayloadSchema(sails, args, encode) });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const schema = useMemo(() => z.object({ payload: getPayloadSchema(sails, args, encode) }), []);
 
   const form = useForm<Values, unknown, FormattedValues>({
     values: defaultValues,
@@ -48,8 +57,15 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form id={id} onSubmit={handleSubmit}>
-        <SailsPayloadFields sails={sails} args={args} />
+      <form id={id} onSubmit={handleSubmit} className={styles.form}>
+        <Fields
+          sails={sails}
+          args={args}
+          render={{
+            ui: { fieldset: Fieldset, select: Select },
+            rhf: { input: Input, textarea: Textarea, checkbox: Checkbox },
+          }}
+        />
       </form>
     </FormProvider>
   );
