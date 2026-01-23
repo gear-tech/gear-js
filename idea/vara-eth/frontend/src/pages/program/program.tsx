@@ -5,7 +5,7 @@ import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Badge, Balance, Button, HashLink, UploadIdlButton, NotFound, Tooltip } from '@/components';
+import { Badge, Balance, Button, HashLink, NotFound, Tooltip, UploadIdlButton } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { routes } from '@/shared/config';

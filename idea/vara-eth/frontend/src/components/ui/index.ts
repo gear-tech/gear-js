@@ -14,3 +14,5 @@ export { Tabs } from './tabs';
 export { Tooltip } from './tooltip';
 export { Modal } from './modal';
 export { LinkButton } from './link-button';
+export { PageContainer } from './page-container';
+export { ChainEntity } from './chain-entity';

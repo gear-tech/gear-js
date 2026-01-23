@@ -1,0 +1,66 @@
+.header {
+  margin-bottom: 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  // TODO: remove after default heading capitalize is gone
+  text-transform: none;
+  font-size: 16px;
+}
+
+.data {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 24px;
+}
+
+.key {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #fff;
+  }
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  gap: 16px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    color: rgba(255, 255, 255, 1);
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
