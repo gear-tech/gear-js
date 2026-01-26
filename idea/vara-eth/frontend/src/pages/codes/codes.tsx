@@ -11,9 +11,6 @@ import styles from './codes.module.scss';
 type DataRow = {
   id: string;
   codeId: string;
-  status: string;
-  programsCount: string;
-  services: string;
   createdAt: string;
 };
 
@@ -33,9 +30,6 @@ const columns = [
       </div>
     ),
   },
-  { key: 'programsCount' as const, title: 'PROGRAMS', sortable: true },
-  // ! TODO: filtrable
-  { key: 'services' as const, title: 'SERVICES', sortable: true },
   { key: 'createdAt' as const, title: 'CREATED AT', sortable: true },
 ];
 
@@ -47,10 +41,6 @@ const Codes = () => {
     allCodes?.data.map((code) => ({
       id: code.id,
       codeId: code.id,
-      status: code.status,
-      // ! TODO: get programs count and services
-      programsCount: '1',
-      services: 'Service 1',
       createdAt: formatDate(code.createdAt),
     })) || [];
 
