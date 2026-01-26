@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import CodeSVG from '@/assets/icons/code.svg?react';
 import MessageSVG from '@/assets/icons/message.svg?react';
-import UserSVG from '@/assets/icons/user-square.svg?react';
+import { useGetAllCodesQuery } from '@/features/codes';
 import {
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
@@ -13,51 +13,40 @@ import {
 import { useGetAllProgramsQuery } from '@/features/programs';
 import { useGetAllTransactionsQuery } from '@/features/transactions';
 import { routes } from '@/shared/config';
+import { SVGComponent } from '@/shared/types';
 import { formatNumber, isUndefined } from '@/shared/utils';
 
 import styles from './home.module.scss';
 
-const PROGRAMS_LINK = { text: 'View All', to: routes.programs };
-
 type CardProps = {
   title: string;
-  icon: React.ReactNode;
+  SVG: SVGComponent;
   count: number | undefined;
-  increase: number;
-  link?: { text: string; to: string };
+  linkTo?: string;
 };
 
-const Card = ({ title, icon, link, count, increase }: CardProps) => {
+const Card = ({ title, SVG, linkTo, count }: CardProps) => {
+  const Container = linkTo ? Link : 'div';
+
   return (
-    <div className={styles.card}>
-      <div className={styles.row}>
+    <Container className={styles.card} to={linkTo!}>
+      <header className={styles.cardHeader}>
         <span className={styles.cardTitle}>
-          {icon}
+          <SVG />
           {title}
         </span>
 
-        {link && (
-          <Link className={styles.link} to={link.to}>
-            [{link.text}]
-          </Link>
-        )}
-      </div>
+        {linkTo && <span className={styles.link}>[View All]</span>}
+      </header>
 
-      <div className={styles.row}>
-        {!isUndefined(count) && <span className={styles.cardCount}>{formatNumber(count)}</span>}
-
-        {increase && (
-          <span>
-            <span className={styles.accent}>+ {formatNumber(increase)}</span> / last 24h
-          </span>
-        )}
-      </div>
-    </div>
+      {!isUndefined(count) && <span className={styles.cardCount}>{formatNumber(count)}</span>}
+    </Container>
   );
 };
 
 const Home = () => {
   const { data: programs } = useGetAllProgramsQuery(1, 1);
+  const { data: codes } = useGetAllCodesQuery(1, 1);
   const { data: messagesRequests } = useGetAllMessageRequestsQuery(1, 1);
   const { data: messagesSent } = useGetAllMessageSentsQuery(1, 1);
   const { data: replyRequests } = useGetAllReplyRequestsQuery(1, 1);
@@ -81,15 +70,15 @@ const Home = () => {
       </div>
 
       <div className={styles.titleContainer}>
-        <h2 className={styles.subtitle}>
+        <p className={styles.subtitle}>
           {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth'}
-        </h2>
+        </p>
       </div>
 
-      <Card title="Programs" icon={<CodeSVG />} link={PROGRAMS_LINK} count={programs?.total} increase={5000} />
-      <Card title="Messages" icon={<MessageSVG />} count={messagesCount} increase={5000} />
-      <Card title="Transactions" icon={<TransactionSVG />} count={transactions?.total} increase={5000} />
-      <Card title="Users" icon={<UserSVG />} count={100000} increase={5000} />
+      <Card title="Programs" SVG={CodeSVG} linkTo={routes.programs} count={programs?.total} />
+      <Card title="Codes" SVG={CodeSVG} linkTo={routes.codes} count={codes?.total} />
+      <Card title="Messages" SVG={MessageSVG} count={messagesCount} />
+      <Card title="Transactions" SVG={TransactionSVG} count={transactions?.total} />
     </div>
   );
 };

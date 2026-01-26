@@ -36,6 +36,12 @@
   &:nth-child(2n) {
     border-right: none;
   }
+
+  &:hover {
+    .link {
+      color: #fff;
+    }
+  }
 }
 
 .cardTitle {
@@ -46,24 +52,15 @@
   color: #fff;
 }
 
+.cardHeader,
 .cardCount {
-  color: #fff;
-  font-size: 24px;
-  line-height: 28.8px;
-}
-
-.row {
   display: flex;
   align-items: end;
   justify-content: space-between;
 }
 
-.link {
-  color: rgba(255, 255, 255, 0.75);
-  text-decoration-line: none;
-  text-transform: uppercase;
-
-  &:hover {
-    color: rgba(255, 255, 255, 1);
-  }
+.cardCount {
+  color: #fff;
+  font-size: 24px;
+  line-height: 28.8px;
 }
