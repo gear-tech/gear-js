@@ -2,7 +2,6 @@ import { HexString } from '@vara-eth/api';
 import { clsx } from 'clsx';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
-import { UploadCodeButton } from '@/features/codes';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
@@ -32,7 +31,6 @@ const Navigation = () => {
         <div className={styles.navigation}>{renderLinks()}</div>
 
         {codeId && <CreateProgramButton codeId={codeId} />}
-        {matchPath(routes.codes, pathname) && <UploadCodeButton />}
       </div>
 
       {/* key to reset search on route change */}
