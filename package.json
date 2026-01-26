@@ -96,7 +96,7 @@
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.10",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/react-transition-group": "4.4.12",
