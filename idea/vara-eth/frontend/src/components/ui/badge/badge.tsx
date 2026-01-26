@@ -10,9 +10,7 @@ type Props = PropsWithChildren & {
 };
 
 const Badge = ({ children, className, color = 'primary', size = 'default' }: Props) => {
-  const variant = typeof color === 'number' ? `color-${(color % 10) + 1}` : color;
-
-  return <div className={clsx(styles.container, styles[`size-${size}`], styles[variant], className)}>{children}</div>;
+  return <div className={clsx(styles.container, styles[size], styles[color], className)}>{children}</div>;
 };
 
 export { Badge };

@@ -1,2 +1,1 @@
-export { Fields } from './fields';
 export { ServiceBadges } from './service-badges';
