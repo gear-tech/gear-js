@@ -1,1 +1,1 @@
-export { Fields, ServiceBadges } from './components';
+export { Fields, SailsServices } from './components';

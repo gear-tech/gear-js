@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { useSails } from '@/features/programs/lib';
-import { ServiceBadges } from '@/features/sails';
+import { SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';
@@ -42,7 +42,7 @@ const Code = () => {
 
         <ChainEntity.Data>
           <ChainEntity.Key>Services</ChainEntity.Key>
-          {idl ? <ServiceBadges sails={sails.data} /> : <div>No IDL uploaded.</div>}
+          {idl ? <SailsServices value={sails.data?.services || {}} /> : <div>No IDL uploaded.</div>}
 
           <ChainEntity.Key>Created at</ChainEntity.Key>
           <ChainEntity.Date value={code.createdAt} />

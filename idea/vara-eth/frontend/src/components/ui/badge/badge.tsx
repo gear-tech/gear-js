@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react';
 import styles from './badge.module.scss';
 
 type Props = PropsWithChildren & {
-  color?: number | 'primary' | 'secondary' | 'danger';
+  color?: 'primary' | 'secondary' | 'danger';
   size?: 'default' | 'sm';
   className?: string;
 };
