@@ -18,7 +18,7 @@ export const useExecutableBalanceTopUp = (programId: HexString) => {
     await tx.send();
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.executableBalanceTopUp,
       value: String(value),
       programId,

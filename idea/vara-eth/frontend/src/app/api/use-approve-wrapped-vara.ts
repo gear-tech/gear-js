@@ -17,7 +17,7 @@ const useApproveWrappedVara = (address: HexString) => {
     const result = await tx.send();
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.approve,
       value: value.toString(),
       owner: receipt.from,

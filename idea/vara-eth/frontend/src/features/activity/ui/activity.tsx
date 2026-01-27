@@ -64,12 +64,11 @@ const Activity = () => {
         <div className={styles.content}>
           {myActivity.map((activity, index) => (
             <ExpandableItem
-              key={activity.hash || index}
+              key={'hash' in activity ? activity.hash : index}
               header={
                 <Block
-                  // ! TODO: remove empty string and 0
-                  blockHash={activity.blockHash || ''}
-                  blockNumber={Number(activity.blockNumber || 0)}
+                  blockHash={activity.blockHash}
+                  blockNumber={Number(activity.blockNumber)}
                   timestamp={activity.timestamp}
                 />
               }>

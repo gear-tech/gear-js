@@ -15,7 +15,6 @@ export const useCreateProgram = () => {
   const { data: ethereumClient } = useEthereumClient();
 
   const createProgram = async (codeId: HexString) => {
-    console.log('createProgram', codeId, api);
     if (!api || !ethereumClient) return;
 
     const tx = await ethereumClient.router.createProgram(codeId);
@@ -23,7 +22,7 @@ export const useCreateProgram = () => {
     const id = await tx.getProgramId();
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.createProgram,
       programId: id,
       ...unpackReceipt(receipt),

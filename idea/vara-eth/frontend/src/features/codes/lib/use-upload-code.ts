@@ -23,7 +23,7 @@ export const useUploadCode = () => {
     const codeId = tx.codeId;
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.codeValidation,
       codeId,
       resultStatus: isValidated ? 'success' : 'error',
@@ -34,18 +34,7 @@ export const useUploadCode = () => {
     void navigate(generatePath(routes.code, { codeId }));
   };
 
-  const onError = (error: Error) => {
-    console.error(error);
-    addMyActivity({
-      type: TransactionTypes.codeValidation,
-      error: error.name,
-      resultStatus: 'error',
-      codeId: '',
-      ...unpackReceipt(),
-    });
-  };
-
-  const mutation = useMutation({ mutationFn: uploadCode, onError });
+  const mutation = useMutation({ mutationFn: uploadCode });
 
   return mutation;
 };

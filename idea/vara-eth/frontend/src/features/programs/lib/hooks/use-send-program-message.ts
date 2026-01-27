@@ -37,7 +37,7 @@ const useSendProgramMessage = (programId: HexString, idl: string) => {
       return `${key}: ${String(_value)}`;
     });
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.programMessage,
       serviceName,
       messageName,
@@ -53,12 +53,11 @@ const useSendProgramMessage = (programId: HexString, idl: string) => {
 
     const result: Record<string, unknown> = sailsMessage.decodeResult(reply.payload);
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.programReply,
       serviceName,
       messageName,
       replyCode,
-      ...unpackReceipt(),
       blockNumber: BigInt(blockNumber),
       from: programId,
       hash: txHash,
