@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { Checkbox, Input, Textarea } from '@/components';
 import { Select } from '@/components/form/select';
 
+import { FormattedPayloadValue } from '../../lib';
 import { Fieldset } from '../fieldset';
 
 import styles from './sails-payload-form.module.scss';
@@ -25,11 +26,11 @@ type Props = {
   sails: Sails;
   args: ISailsFuncArg[];
   encode: (...params: unknown[]) => HexString;
-  onSubmit: (payload: HexString) => Promise<unknown>;
+  onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 
 type Values = { payload: PayloadValue };
-type FormattedValues = { payload: HexString };
+type FormattedValues = { payload: FormattedPayloadValue };
 
 const GridInput = ({ ...props }: ComponentProps<typeof Input>) => <Input {...props} className={styles.input} />;
 
@@ -46,8 +47,23 @@ const GridCheckbox = ({ ...props }: ComponentProps<typeof Checkbox>) => (
 const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const schema = useMemo(() => z.object({ payload: getPayloadSchema(sails, args, encode) }), []);
+
+  const getFormattedPayloadSchema = (payload: Record<string, unknown>) =>
+    Object.values(payload)
+      .map((value, index) => `${args[index].name}: ${String(value)}`)
+      .join(', ');
+
+  const schema = useMemo(
+    () =>
+      z.object({
+        payload: getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
+          encoded,
+          formatted: getFormattedPayloadSchema(decoded),
+        })),
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const form = useForm<Values, unknown, FormattedValues>({
     values: defaultValues,

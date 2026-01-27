@@ -1,5 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { getResetPayloadValue, PayloadValueSchema, PayloadValue } from '@gear-js/sails-payload-form';
+import { getResetPayloadValue, PayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -45,7 +45,7 @@ type Values = {
   payload: PayloadValue;
 };
 
-const useSchema = (payloadSchema: PayloadValueSchema) => {
+const useSchema = (payloadSchema: ReturnType<typeof useService>['schema']) => {
   const balanceSchema = useBalanceSchema();
   const gasLimitSchema = useGasLimitSchema();
 
