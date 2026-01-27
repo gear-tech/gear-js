@@ -44,26 +44,21 @@ const GridCheckbox = ({ ...props }: ComponentProps<typeof Checkbox>) => (
   <Checkbox {...props} className={styles.checkbox} />
 );
 
+const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unknown[]) => HexString) =>
+  getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
+    encoded,
+
+    formatted: Object.values(decoded)
+      .map((value, index) => `${args[index].name}: ${String(value)}`)
+      .join(', '),
+  }));
+
 const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), []);
 
-  const getFormattedPayloadSchema = (payload: Record<string, unknown>) =>
-    Object.values(payload)
-      .map((value, index) => `${args[index].name}: ${String(value)}`)
-      .join(', ');
-
-  const schema = useMemo(
-    () =>
-      z.object({
-        payload: getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
-          encoded,
-          formatted: getFormattedPayloadSchema(decoded),
-        })),
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const schema = useMemo(() => z.object({ payload: getSchema(sails, args, encode) }), []);
 
   const form = useForm<Values, unknown, FormattedValues>({
     values: defaultValues,
