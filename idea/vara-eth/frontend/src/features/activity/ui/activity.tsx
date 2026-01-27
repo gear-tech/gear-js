@@ -6,21 +6,21 @@ import { myActivityAtom } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, Tabs, ExpandableItem } from '@/components';
 
-import { useAllActivity } from '../lib';
+// import { useAllActivity } from '../lib';
 
-import { ActivityEvent } from './activity-event';
+// import { ActivityEvent } from './activity-event';
 import styles from './activity.module.scss';
 import { Block } from './block';
 import { Transaction } from './transaction';
 
-const tabs = ['Latest activity', 'My activity'];
+const tabs = ['My activity'];
 
 const Activity = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
 
   const myActivity = useAtomValue(myActivityAtom);
-  const allActivity = useAllActivity();
+  // const allActivity = useAllActivity();
 
   return (
     <div className={clsx(styles.wrapper, isOpen && styles.open)}>
@@ -40,7 +40,7 @@ const Activity = () => {
         </Button>
       </div>
 
-      {isOpen && tabIndex === 0 && (
+      {/* {isOpen && tabIndex === 0 && (
         <div className={styles.content}>
           {allActivity.map((activity) => (
             <ExpandableItem
@@ -58,9 +58,9 @@ const Activity = () => {
             </ExpandableItem>
           ))}
         </div>
-      )}
+      )} */}
 
-      {isOpen && tabIndex === 1 && (
+      {isOpen && tabIndex === 0 && (
         <div className={styles.content}>
           {myActivity.map((activity, index) => (
             <ExpandableItem
