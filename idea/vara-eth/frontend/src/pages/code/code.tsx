@@ -1,9 +1,8 @@
 import { HexString } from '@vara-eth/api';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import { Badge, UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
+import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
-import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';
@@ -39,24 +38,6 @@ const Code = () => {
         </ChainEntity.Header>
 
         <ChainEntity.Data>
-          <ChainEntity.Key>Services</ChainEntity.Key>
-
-          <div className={styles.services}>
-            <Badge color={1} size="sm">
-              SERVICE 1
-            </Badge>
-
-            <Badge color={2} size="sm">
-              SERVICE 2
-            </Badge>
-          </div>
-
-          <ChainEntity.Key>Programs</ChainEntity.Key>
-
-          <Link to={routes.programs} className={styles.programs}>
-            3 programs
-          </Link>
-
           <ChainEntity.Key>Created at</ChainEntity.Key>
           <ChainEntity.Date value={code.createdAt} />
         </ChainEntity.Data>
