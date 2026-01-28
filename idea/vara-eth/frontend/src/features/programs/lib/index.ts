@@ -1,5 +1,4 @@
 export {
-  useExecutableBalanceTopUp,
   useCreateProgram,
   useInitProgram,
   useReadContractState,

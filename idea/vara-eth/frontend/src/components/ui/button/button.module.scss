@@ -3,6 +3,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   border-radius: 12px;
   font-size: 12px;
   line-height: 1.5;
@@ -14,7 +15,9 @@
 
   &[data-focus-visible] {
     outline: none;
-    box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+    box-shadow:
+      0 0 0 2px var(--ring),
+      0 0 0 4px var(--background);
   }
 
   &.btn--variant-default {
