@@ -5,12 +5,9 @@ import { parseUnits } from 'viem';
 import { useEthereumClient, useMirrorContract } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
-import LoadingSVG from '@/assets/icons/loading.svg?react';
 import { Button } from '@/components';
 
 import { useWatchProgramStateChange } from '../../lib';
-
-import styles from './top-up-exec-balance.module.scss';
 
 type Props = {
   programId: HexString;
@@ -86,9 +83,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
   };
 
   return (
-    // TODO: spinner position prop? loadingText prop?
-    <Button size="xs" onClick={handleTopUpClick} disabled={isLoading} variant="secondary">
-      {isLoading && <LoadingSVG className={styles.spinner} />}
+    <Button size="xs" onClick={handleTopUpClick} loadingPosition="start" disabled={isLoading} variant="secondary">
       {getButtonText()}
     </Button>
   );
