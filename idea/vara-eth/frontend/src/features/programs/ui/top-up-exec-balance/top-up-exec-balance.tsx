@@ -29,9 +29,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
 
     const tx = await ethClient.wvara.approve(programId, value);
 
-    await tx.send();
-
-    return tx.getReceipt();
+    return tx.sendAndWaitForReceipt();
   };
 
   const topUpFn = async (value: bigint) => {
@@ -40,9 +38,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
 
     const tx = await mirrorContract.executableBalanceTopUp(value);
 
-    await tx.send();
-
-    return tx.getReceipt();
+    return tx.sendAndWaitForReceipt();
   };
 
   const approve = useMutation({ mutationFn: approveFn });
@@ -54,7 +50,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
 
     const approveReceipt = await approve.mutateAsync(value);
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.approve,
       value: value.toString(),
       owner: approveReceipt.from,
@@ -64,16 +60,17 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
 
     const topUpReceipt = await topUp.mutateAsync(value);
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.executableBalanceTopUp,
       value: String(value),
       programId,
       ...unpackReceipt(topUpReceipt),
     });
 
-    await watch.mutateAsync(
-      (state, incomingState) => BigInt(incomingState.executableBalance - state.executableBalance) === value,
-    );
+    await watch.mutateAsync({
+      name: 'executable program balance',
+      isChanged: (current, incoming) => BigInt(incoming.executableBalance - current.executableBalance) === value,
+    });
 
     onSuccess();
   };
