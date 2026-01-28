@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Sails } from 'sails-js';
 
 import { Badge } from '@/components';
@@ -10,41 +9,34 @@ type Props = {
   value: Sails['services'];
 };
 
-const createRandomColorIndexGenerator = (size = 10) => {
-  let pool: number[] = [];
+const getHash = (value: string) => {
+  let hash = 0;
 
-  const fisherYatesShuffle = () => {
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+  for (const char of value) {
+    hash = (hash << 5) - hash + char.charCodeAt(0);
+    hash |= 0;
+  }
 
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-  };
-
-  return () => {
-    if (!pool.length) {
-      pool = Array.from({ length: size }, (_, i) => i);
-
-      fisherYatesShuffle();
-    }
-
-    return pool.pop()!;
-  };
+  return hash >>> 0;
 };
 
+const COLOR_COUNT = 10;
+
 const SailsServices = ({ value }: Props) => {
-  const badges = useMemo(() => {
-    const getColorIndex = createRandomColorIndexGenerator();
-    const serviceNames = Object.keys(value);
+  const services = Object.keys(value);
 
-    return serviceNames.map((service) => (
-      <Badge key={service} className={cx(styles.badge, styles[`c${getColorIndex()}`])}>
-        {service}
-      </Badge>
-    ));
-  }, [value]);
+  const render = () =>
+    services.map((service) => {
+      const colorIndex = getHash(service) % COLOR_COUNT;
 
-  return badges.length ? <div className={styles.container}>{badges}</div> : <p>No services found.</p>;
+      return (
+        <Badge key={service} className={cx(styles.badge, styles[`c${colorIndex}`])}>
+          {service}
+        </Badge>
+      );
+    });
+
+  return services.length ? <div className={styles.container}>{render()}</div> : <p>No services found.</p>;
 };
 
 export { SailsServices };
