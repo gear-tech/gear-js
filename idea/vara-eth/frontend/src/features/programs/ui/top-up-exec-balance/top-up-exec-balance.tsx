@@ -8,6 +8,8 @@ import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
 import { Button } from '@/components';
 
+import { useWatchProgramStateChange } from '../../lib';
+
 import styles from './top-up-exec-balance.module.scss';
 
 type Props = {
@@ -43,34 +45,9 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
     return tx.getReceipt();
   };
 
-  const watchFn = async (value: bigint) => {
-    if (!api) throw new Error('API is not intialized');
-    if (!mirrorContract) throw new Error('Mirror contract is not found');
-
-    const currentStateHash = await mirrorContract.stateHash();
-    const currentState = await api.query.program.readState(currentStateHash);
-
-    return new Promise<void>((resolve, reject) => {
-      const unwatch = mirrorContract.watchStateChangedEvent((stateHash) => {
-        api.query.program
-          .readState(stateHash)
-          .then((state) => {
-            if (BigInt(state.executableBalance - currentState.executableBalance) === value) {
-              unwatch();
-              resolve();
-            }
-          })
-          .catch((error) => {
-            unwatch();
-            reject(error instanceof Error ? error : new Error(String(error)));
-          });
-      });
-    });
-  };
-
   const approve = useMutation({ mutationFn: approveFn });
   const topUp = useMutation({ mutationFn: topUpFn });
-  const watch = useMutation({ mutationFn: watchFn });
+  const watch = useWatchProgramStateChange(programId);
 
   const handleTopUpClick = async () => {
     const value = parseUnits('1', 12);
@@ -94,7 +71,9 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
       ...unpackReceipt(topUpReceipt),
     });
 
-    await watch.mutateAsync(value);
+    await watch.mutateAsync(
+      (state, incomingState) => BigInt(incomingState.executableBalance - state.executableBalance) === value,
+    );
 
     onSuccess();
   };
