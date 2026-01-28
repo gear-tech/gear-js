@@ -15,11 +15,11 @@ const Transaction = ({ item }: Props) => {
   const { decimals } = useWrappedVaraBalance();
 
   if (item.type === TransactionTypes.codeValidation) {
-    const isSucces = item.resultStatus === 'success';
+    const isSuccess = item.resultStatus === 'success';
 
     return (
       <div className={styles.row}>
-        {isSucces ? (
+        {isSuccess ? (
           <>
             <Badge>Code approved</Badge>
             <div className={styles.transaction}>
@@ -88,9 +88,7 @@ const Transaction = ({ item }: Props) => {
     );
   }
 
-  if (item.type === TransactionTypes.programMessage) {
-    const params = item.params || item.value ? { ...item.params, value: `${item.value} ${item.units || ''}` } : null;
-
+  if (item.type === TransactionTypes.programMessage || item.type === TransactionTypes.injectedTx) {
     return (
       <ExpandableItem
         header={
@@ -98,19 +96,19 @@ const Transaction = ({ item }: Props) => {
             Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
           </div>
         }>
-        <div className={styles.params}>{params && <Params params={params} />}</div>
+        <div className={styles.params}>{item.params && <Params params={item.params} />}</div>
       </ExpandableItem>
     );
   }
 
-  if (item.type === TransactionTypes.programReply) {
-    const params = item.params || item.value ? { ...item.params, value: `${item.value} ${item.units || ''}` } : null;
+  if (item.type === TransactionTypes.programReply || item.type === TransactionTypes.injectedTxResponse) {
+    const params = item.params || item.value ? { ...item.params, value: `${item.value}` } : null;
 
     return (
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Reply {item.hash && <HashLink hash={item.hash} />} from <HashLink hash={item.from || '-'} />
+            Reply {'hash' in item && <HashLink hash={item.hash} />} from <HashLink hash={item.from || '-'} />
           </div>
         }>
         <div className={styles.params}>{params && <Params params={params} />}</div>

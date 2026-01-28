@@ -11,7 +11,6 @@ import styles from './programs.module.scss';
 type DataRow = {
   id: string;
   programId: string;
-  messages: string;
   createdAt: string;
 };
 
@@ -24,7 +23,6 @@ const columns = [
     sortable: true,
     render: (programId: string) => <HashLink hash={programId} href={generatePath(routes.program, { programId })} />,
   },
-  { key: 'messages' as const, title: 'MESSAGES', sortable: true },
   { key: 'createdAt' as const, title: 'CREATED AT', sortable: true },
 ];
 
@@ -36,8 +34,6 @@ const Programs = () => {
     programsResponse?.data?.map((program) => ({
       id: program.id,
       programId: program.id,
-      // ! TODO: get messages count
-      messages: '0',
       createdAt: formatDate(program.createdAt),
     })) ?? [];
 

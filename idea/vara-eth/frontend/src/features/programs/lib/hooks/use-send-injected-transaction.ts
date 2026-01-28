@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 
 import { useVaraEthApi } from '@/app/providers';
-import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
+import { TransactionTypes, useAddMyActivity } from '@/app/store';
 
 import { useSails } from './use-sails';
 
@@ -41,11 +41,10 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
       return `${key}: ${String(_value)}`;
     });
 
-    addMyActivity({
-      type: TransactionTypes.programMessage,
+    await addMyActivity({
+      type: TransactionTypes.injectedTx,
       serviceName,
       messageName,
-      ...unpackReceipt(),
       hash: response.txHash,
       to: programId,
       params: { payload: `${messageName} (${params.join(', ')})` },
@@ -55,13 +54,12 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
 
     const result: Record<string, unknown> = sailsMessage.decodeResult(response.payload);
 
-    addMyActivity({
-      type: TransactionTypes.programReply,
+    await addMyActivity({
+      type: TransactionTypes.injectedTxResponse,
       serviceName,
       messageName,
       // TODO: fix this once code is of type ReplyCode
-      replyCode: code.startsWith('0x00') ? 'Success' : 'Error',
-      ...unpackReceipt(),
+      replyCode: code.startsWith('0x00') ? 'success' : 'error',
       from: programId,
       params: { payload: JSON.stringify(result) },
       value: String(value),

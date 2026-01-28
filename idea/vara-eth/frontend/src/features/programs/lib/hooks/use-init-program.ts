@@ -29,12 +29,12 @@ const useInitProgram = (programId: HexString, idl: string) => {
 
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    return addMyActivity({
       type: TransactionTypes.initProgram,
       programId,
       params: { ctorName, ...args },
-      to: programId,
       ...unpackReceipt(receipt),
+      to: programId,
     });
   };
 
