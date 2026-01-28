@@ -9,11 +9,10 @@ import styles from './expandable-item.module.scss';
 type Props = PropsWithChildren & {
   header: ReactNode;
   headerSlot?: ReactNode;
-  isNested?: boolean;
   isOpen?: boolean;
 };
 
-const ExpandableItem = ({ children, header, headerSlot, isNested, isOpen: isDefaultOpen = false }: Props) => {
+const ExpandableItem = ({ children, header, headerSlot, isOpen: isDefaultOpen = false }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(isDefaultOpen);
 
   const isEmptyChildren =
@@ -22,8 +21,8 @@ const ExpandableItem = ({ children, header, headerSlot, isNested, isOpen: isDefa
     (typeof children === 'object' && 'length' in children && children.length === 0);
 
   return (
-    <div className={clsx(styles.container, isNested && styles.nested)}>
-      <div className={clsx(styles.header, isNested && styles.nested)}>
+    <div>
+      <div className={styles.header}>
         <div className={styles.leftSide}>
           {isEmptyChildren ? (
             <div className={clsx(styles.empty, styles.icon)} />
@@ -36,7 +35,7 @@ const ExpandableItem = ({ children, header, headerSlot, isNested, isOpen: isDefa
         </div>
         {headerSlot}
       </div>
-      {isOpen && <div className={clsx(styles.content, isNested && styles.nested)}>{children}</div>}
+      {isOpen && <div className={styles.content}>{children}</div>}
     </div>
   );
 };
