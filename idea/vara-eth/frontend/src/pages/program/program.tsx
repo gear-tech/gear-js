@@ -2,9 +2,9 @@ import { HexString } from '@vara-eth/api';
 import { generatePath, useParams } from 'react-router-dom';
 import { formatEther, formatUnits } from 'viem';
 
-import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
-import { Badge, Balance, Button, ChainEntity, HashLink, UploadIdlButton } from '@/components';
-import { useExecutableBalanceTopUp } from '@/features/programs';
+import { useWrappedVaraBalance } from '@/app/api';
+import { Badge, Balance, ChainEntity, HashLink, UploadIdlButton } from '@/components';
+import { TopUpExecBalance } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { SailsProgramActions } from '@/features/sails';
 import { routes } from '@/shared/config';
@@ -20,9 +20,6 @@ type Params = {
 const Program = () => {
   const { programId } = useParams() as Params;
 
-  const approveWrappedVara = useApproveWrappedVara(programId);
-  const executableBalanceTopUp = useExecutableBalanceTopUp(programId);
-
   const { data: program, isLoading } = useGetProgramByIdQuery(programId);
   const codeId = program?.code?.id; // TODO: program.codeId property should be present?
 
@@ -32,14 +29,6 @@ const Program = () => {
 
   const { decimals, isPending: isDecimalsPending } = useWrappedVaraBalance(programId);
   const { idl, saveIdl } = useIdlStorage(codeId);
-
-  const onTopUp = async () => {
-    const topUpValue = BigInt(10 * 1e12);
-    await approveWrappedVara.mutateAsync(topUpValue);
-    await executableBalanceTopUp.mutateAsync(topUpValue);
-    // TODO: updated after couple of seconds after the transaction
-    await refetch();
-  };
 
   if (isLoading || isProgramStateLoading || isDecimalsPending) {
     return (
@@ -81,14 +70,7 @@ const Program = () => {
 
           <div className={styles.executableBalance}>
             <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
-
-            <Button
-              size="xs"
-              onClick={onTopUp}
-              isLoading={executableBalanceTopUp.isPending || approveWrappedVara.isPending}
-              variant="secondary">
-              Top up
-            </Button>
+            <TopUpExecBalance programId={programId} onSuccess={refetch} />
           </div>
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>
