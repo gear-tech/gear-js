@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
+import { useSails } from '@/features/programs/lib';
+import { SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';
@@ -16,8 +18,9 @@ const Code = () => {
 
   const { data: code, isLoading } = useGetCodeByIdQuery(codeId);
   const { idl, saveIdl } = useIdlStorage(codeId);
+  const sails = useSails(idl);
 
-  if (isLoading) {
+  if (isLoading || sails.isLoading) {
     return (
       <div className={styles.container}>
         <div className={styles.card}>Loading...</div>
@@ -38,6 +41,9 @@ const Code = () => {
         </ChainEntity.Header>
 
         <ChainEntity.Data>
+          <ChainEntity.Key>Services</ChainEntity.Key>
+          {idl ? <SailsServices value={sails.data?.services || {}} /> : <div>No IDL uploaded.</div>}
+
           <ChainEntity.Key>Created at</ChainEntity.Key>
           <ChainEntity.Date value={code.createdAt} />
         </ChainEntity.Data>

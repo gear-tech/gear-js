@@ -1,2 +1,1 @@
-export { Fields } from './fields';
 export { SailsServices } from './sails-services';

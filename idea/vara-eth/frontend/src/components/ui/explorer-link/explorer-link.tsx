@@ -11,7 +11,6 @@ type Props = PropsWithClassName & {
   id: string;
 };
 
-// TODO: support mainnet
 const ExplorerLink = ({ path, id, className }: Props) => {
   return (
     <Tooltip value="View on Etherscan">
