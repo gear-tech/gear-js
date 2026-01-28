@@ -21,7 +21,8 @@
     "utils/logger",
     "utils/util",
     "utils/vara-ui",
-    "utils/wallet-connect"
+    "utils/wallet-connect",
+    "utils/sails-payload-form"
   ],
   "npmClient": "yarn",
   "command": {

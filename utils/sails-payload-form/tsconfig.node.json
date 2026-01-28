@@ -1,0 +1,3 @@
+{
+  "extends": "@gear-js/frontend-configs/tsconfig.node.json"
+}

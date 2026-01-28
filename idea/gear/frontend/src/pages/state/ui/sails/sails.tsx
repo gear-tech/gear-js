@@ -1,5 +1,6 @@
 import { HexString } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import { PayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnyJson } from '@polkadot/types/types';
@@ -10,7 +11,7 @@ import { Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
 
 import { useProgram } from '@/features/program';
-import { useService, PayloadValue, useSails, PayloadForm } from '@/features/sails';
+import { useService, useSails, PayloadForm } from '@/features/sails';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { getPreformattedText, isUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
