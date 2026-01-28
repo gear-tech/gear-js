@@ -24,14 +24,19 @@ const useSails = (idl: string | null) => {
   });
 };
 
+type FormattedPayloadValue = {
+  encoded: HexString;
+  formatted: string;
+};
+
 type SailsAction = {
   id: string;
   name: string;
   action: string;
   args: ISailsFuncArg[];
   encode: (...params: unknown[]) => HexString;
-  onSubmit: (payload: HexString) => Promise<unknown>;
+  onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 
 export { useSails };
-export type { SailsAction };
+export type { SailsAction, FormattedPayloadValue };
