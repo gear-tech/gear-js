@@ -28,7 +28,6 @@ const useInitProgram = (programId: HexString, sails: Sails | undefined) => {
       type: TransactionTypes.initProgram,
       programId,
       params: { payload: `${ctorName} (${payload.formatted})` },
-      to: programId,
       ...unpackReceipt(receipt),
       to: programId,
     });

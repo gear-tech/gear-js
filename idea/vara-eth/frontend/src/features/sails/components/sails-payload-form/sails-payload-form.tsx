@@ -48,8 +48,9 @@ const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unkn
   getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
     encoded,
 
+    // TODO: maybe @gear-js/sails-js-payload should use arg names instead of indexes?
     formatted: Object.values(decoded)
-      .map((value, index) => `${args[index].name}: ${String(value)}`)
+      .map((value, index) => `${args[index].name}: ${JSON.stringify(value)}`)
       .join(', '),
   }));
 

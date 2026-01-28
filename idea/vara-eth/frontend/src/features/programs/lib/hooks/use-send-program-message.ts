@@ -27,7 +27,7 @@ const useSendProgramMessage = (programId: HexString, sails: Sails | undefined) =
     const response = await tx.send();
     const receipt = await tx.getReceipt();
 
-    addMyActivity({
+    await addMyActivity({
       type: TransactionTypes.programMessage,
       serviceName,
       messageName,

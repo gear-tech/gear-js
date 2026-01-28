@@ -22,7 +22,6 @@ const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefin
 
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
-    // const args = Object.values(payload.decoded);
 
     const params = payload.formatted;
 
@@ -34,8 +33,8 @@ const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefin
 
     const response = await tx.sendAndWaitForPromise();
 
-    addMyActivity({
-      type: TransactionTypes.programMessage,
+    await addMyActivity({
+      type: TransactionTypes.injectedTx,
       serviceName,
       messageName,
       hash: response.txHash,
