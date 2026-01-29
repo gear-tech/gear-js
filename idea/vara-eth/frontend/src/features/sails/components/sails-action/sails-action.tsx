@@ -14,7 +14,7 @@ type Props = SailsActionType & {
   sails: Sails;
 };
 
-const SailsAction = ({ id, name, action, sails, args, encode, onSubmit }: Props) => {
+const SailsAction = ({ id, name, action, sails, args, isEnabled = true, encode, onSubmit }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,6 +42,7 @@ const SailsAction = ({ id, name, action, sails, args, encode, onSubmit }: Props)
     variant: 'default' as const,
     size: 'xs' as const,
     isLoading: isSubmitting,
+    disabled: !isEnabled,
     form: id,
     children: action,
   };

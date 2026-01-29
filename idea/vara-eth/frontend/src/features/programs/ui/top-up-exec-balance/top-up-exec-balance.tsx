@@ -7,11 +7,9 @@ import { useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { Button } from '@/components';
 
-import { useWatchProgramStateChange } from '../../lib';
-
 type Props = {
   programId: HexString;
-  onSuccess: () => void;
+  onSuccess: (value: bigint) => void;
 };
 
 const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
@@ -40,7 +38,6 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
 
   const approve = useMutation({ mutationFn: approveFn });
   const topUp = useMutation({ mutationFn: topUpFn });
-  const watch = useWatchProgramStateChange(programId);
 
   const handleTopUpClick = async () => {
     const value = parseUnits('1', 12);
@@ -64,26 +61,20 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
       ...unpackReceipt(topUpReceipt),
     });
 
-    await watch.mutateAsync({
-      name: 'executable program balance',
-      isChanged: (current, incoming) => BigInt(incoming.executableBalance - current.executableBalance) === value,
-    });
-
-    onSuccess();
+    onSuccess(value);
   };
 
-  const isLoading = approve.isPending || topUp.isPending || watch.isPending;
+  const isLoading = !api || !ethClient || !mirrorContract || approve.isPending || topUp.isPending;
 
   const getButtonText = () => {
     if (approve.isPending) return 'Approving';
     if (topUp.isPending) return 'Topping Up';
-    if (watch.isPending) return 'Processing';
 
     return 'Top Up';
   };
 
   return (
-    <Button size="xs" onClick={handleTopUpClick} loadingPosition="start" disabled={isLoading} variant="secondary">
+    <Button size="xs" onClick={handleTopUpClick} loadingPosition="start" isLoading={isLoading} variant="secondary">
       {getButtonText()}
     </Button>
   );
