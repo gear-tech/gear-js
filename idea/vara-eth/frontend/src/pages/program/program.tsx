@@ -3,9 +3,14 @@ import { generatePath, useParams } from 'react-router-dom';
 import { formatEther, formatUnits } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
+import LoadingSVG from '@/assets/icons/loading.svg?react';
 import { Badge, Balance, ChainEntity, HashLink, UploadIdlButton } from '@/components';
-import { TopUpExecBalance } from '@/features/programs';
-import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
+import {
+  TopUpExecBalance,
+  useReadContractState,
+  useGetProgramByIdQuery,
+  useWatchProgramStateChange,
+} from '@/features/programs';
 import { SailsProgramActions } from '@/features/sails';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
@@ -30,6 +35,35 @@ const Program = () => {
   const { decimals, isPending: isDecimalsPending } = useWrappedVaraBalance(programId);
   const { idl, saveIdl } = useIdlStorage(codeId);
 
+  const watchInit = useWatchProgramStateChange(programId);
+  const watchBalance = useWatchProgramStateChange(programId);
+
+  const getStatusText = () => {
+    if (watchInit.isPending) return 'Initializing...';
+
+    return isInitialized ? 'Active' : 'Uninitialized';
+  };
+
+  const handleSuccessfulInit = () => {
+    watchInit
+      .mutateAsync({
+        name: 'program init',
+        isChanged: (_, incoming) => 'Active' in incoming.program && incoming.program.Active.initialized,
+      })
+      .then(() => refetch())
+      .catch((error) => console.error(error));
+  };
+
+  const handleSuccessfulTopUp = (value: bigint) => {
+    watchBalance
+      .mutateAsync({
+        name: 'executable program balance',
+        isChanged: (current, incoming) => BigInt(incoming.executableBalance - current.executableBalance) === value,
+      })
+      .then(() => refetch())
+      .catch((error) => console.error(error));
+  };
+
   if (isLoading || isProgramStateLoading || isDecimalsPending) {
     return (
       <div className={styles.container}>
@@ -51,7 +85,8 @@ const Program = () => {
 
           {isActive && (
             <Badge color={isInitialized ? 'primary' : 'secondary'} className={styles.status}>
-              {isInitialized ? 'Active' : 'Uninitialized'}
+              {watchInit.isPending && <LoadingSVG className={styles.statusSpinner} />}
+              {getStatusText()}
             </Badge>
           )}
         </ChainEntity.Header>
@@ -68,9 +103,12 @@ const Program = () => {
 
           <ChainEntity.Key>Executable Balance</ChainEntity.Key>
 
-          <div className={styles.executableBalance}>
+          <div className={styles.balance}>
+            {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
+
             <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
-            <TopUpExecBalance programId={programId} onSuccess={refetch} />
+
+            {!watchBalance.isPending && <TopUpExecBalance programId={programId} onSuccess={handleSuccessfulTopUp} />}
           </div>
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>
@@ -80,7 +118,11 @@ const Program = () => {
 
       <div className={styles.card}>
         {idl ? (
-          <SailsProgramActions programId={programId} idl={idl} isInitialized={isInitialized} />
+          <SailsProgramActions
+            programId={programId}
+            idl={idl}
+            init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
+          />
         ) : (
           <div className={styles.emptyState}>
             <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>

@@ -29,6 +29,7 @@ type SailsAction = {
   name: string;
   action: string;
   args: ISailsFuncArg[];
+  isEnabled?: boolean;
   encode: (...params: unknown[]) => HexString;
   onSubmit: (payload: HexString) => Promise<unknown>;
 };
