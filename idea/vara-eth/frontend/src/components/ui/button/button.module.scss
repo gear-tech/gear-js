@@ -1,8 +1,15 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   border-radius: 12px;
   font-size: 12px;
   line-height: 1.5;
@@ -14,7 +21,9 @@
 
   &[data-focus-visible] {
     outline: none;
-    box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+    box-shadow:
+      0 0 0 2px var(--ring),
+      0 0 0 4px var(--background);
   }
 
   &.btn--variant-default {
@@ -96,6 +105,28 @@
   }
 }
 
+.loadingPosition {
+  &center {
+    .content {
+      display: none;
+    }
+  }
+
+  &end {
+    .spinner {
+      order: 1;
+    }
+  }
+}
+
+.content {
+  display: contents;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
 .size-default {
   padding: 15px 25px;
 }
@@ -114,14 +145,4 @@
 
 .size-icon {
   padding: 15px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
 }

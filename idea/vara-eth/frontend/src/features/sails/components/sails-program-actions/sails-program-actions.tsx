@@ -14,10 +14,10 @@ const tabs = ['Call offchain', 'Call onchain'];
 type Props = {
   programId: HexString;
   idl: string;
-  isInitialized: boolean | undefined;
+  init: { isRequired: boolean; isEnabled: boolean; onSuccess: () => void };
 };
 
-const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
+const SailsProgramActions = ({ programId, idl, init }: Props) => {
   const { data: sails } = useSails(idl);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -57,9 +57,10 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
       id: `ctor:${ctorName}`,
       name: ctorName,
       action: 'Initialize',
+      isEnabled: init.isEnabled,
       args: meta.args,
       encode: meta.encodePayload,
-      onSubmit: (payload: HexString) => initProgram.mutateAsync({ ctorName, payload }),
+      onSubmit: (payload: HexString) => initProgram.mutateAsync({ ctorName, payload }).then(() => init.onSuccess()),
     }));
 
     return <SailsActionGroup name="Constructors" sails={sails} items={items} />;
@@ -67,7 +68,7 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
 
   return (
     <>
-      {isInitialized && (
+      {!init.isRequired && (
         <Tabs
           tabs={tabs}
           tabIndex={tabIndex}
@@ -76,7 +77,7 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
         />
       )}
 
-      <div className={styles.list}>{isInitialized ? renderMessages() : renderCtors()}</div>
+      <div className={styles.list}>{init.isRequired ? renderCtors() : renderMessages()}</div>
     </>
   );
 };

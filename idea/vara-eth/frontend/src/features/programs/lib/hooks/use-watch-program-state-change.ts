@@ -1,0 +1,72 @@
+import { useMutation } from '@tanstack/react-query';
+import { HexString, ProgramState } from '@vara-eth/api';
+import { useRef, useEffect } from 'react';
+
+import { useMirrorContract } from '@/app/api';
+import { useVaraEthApi } from '@/app/providers';
+
+const UNWATCH_TIMEOUT_MS = 180_000;
+
+type Params = {
+  name: string;
+  isChanged: (currentState: ProgramState, incomingState: ProgramState) => boolean;
+};
+
+const useWatchProgramStateChange = (programId: HexString) => {
+  const { api } = useVaraEthApi();
+  const { data: mirrorContract } = useMirrorContract(programId);
+
+  const cleanupRef = useRef(() => {});
+
+  const watch = async ({ name, isChanged }: Params) => {
+    if (!api) throw new Error('API is not initialized');
+    if (!mirrorContract) throw new Error('Mirror contract is not found');
+
+    // mutation not intended to be used simultaneously or by multiple watchers per one hook,
+    // clean up just in case
+    cleanupRef.current();
+
+    const currentStateHash = await mirrorContract.stateHash();
+    const currentState = await api.query.program.readState(currentStateHash);
+
+    return new Promise<void>((resolve, reject) => {
+      let unwatch = () => {};
+
+      const timeoutId = setTimeout(() => {
+        unwatch();
+        reject(new Error(`No ${name} changes detected`));
+      }, UNWATCH_TIMEOUT_MS);
+
+      const cleanup = () => {
+        clearTimeout(timeoutId);
+        unwatch();
+        cleanupRef.current = () => {};
+      };
+
+      cleanupRef.current = cleanup;
+
+      const handleChange = (stateHash: HexString) => {
+        api.query.program
+          .readState(stateHash)
+          .then((state) => {
+            if (isChanged(currentState, state)) {
+              cleanup();
+              resolve();
+            }
+          })
+          .catch((error) => {
+            cleanup();
+            reject(error instanceof Error ? error : new Error(String(error)));
+          });
+      };
+
+      unwatch = mirrorContract.watchStateChangedEvent((stateHash) => handleChange(stateHash));
+    });
+  };
+
+  useEffect(() => () => cleanupRef.current(), []);
+
+  return useMutation({ mutationFn: watch });
+};
+
+export { useWatchProgramStateChange };
