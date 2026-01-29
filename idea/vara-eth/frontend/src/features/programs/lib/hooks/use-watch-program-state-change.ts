@@ -5,6 +5,20 @@ import { useRef, useEffect } from 'react';
 import { useMirrorContract } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 
+class TimeoutError extends Error {
+  constructor(name: string) {
+    super(`Timed out ${name} changes detection`);
+    this.name = 'WatchProgramStateChangeTimeoutError';
+  }
+}
+
+class CancelError extends Error {
+  constructor(name: string) {
+    super(`Cancelled ${name} changes detection`);
+    this.name = 'WatchProgramStateChangeCancelError';
+  }
+}
+
 const UNWATCH_TIMEOUT_MS = 180_000;
 
 type Params = {
@@ -16,7 +30,7 @@ const useWatchProgramStateChange = (programId: HexString) => {
   const { api } = useVaraEthApi();
   const { data: mirrorContract } = useMirrorContract(programId);
 
-  const cleanupRef = useRef(() => {});
+  const cleanUpRef = useRef(() => {});
 
   const watch = async ({ name, isChanged }: Params) => {
     if (!api) throw new Error('API is not initialized');
@@ -24,47 +38,51 @@ const useWatchProgramStateChange = (programId: HexString) => {
 
     // mutation not intended to be used simultaneously or by multiple watchers per one hook,
     // clean up just in case
-    cleanupRef.current();
+    cleanUpRef.current();
 
     const currentStateHash = await mirrorContract.stateHash();
     const currentState = await api.query.program.readState(currentStateHash);
 
     return new Promise<void>((resolve, reject) => {
+      let isFinished = false;
       let unwatch = () => {};
 
-      const timeoutId = setTimeout(() => {
-        unwatch();
-        reject(new Error(`No ${name} changes detected`));
-      }, UNWATCH_TIMEOUT_MS);
+      const cleanUp = <T>(settle: (param?: T) => void, param?: T) => {
+        if (isFinished) return;
 
-      const cleanup = () => {
+        isFinished = true;
+        cleanUpRef.current = () => {};
+
         clearTimeout(timeoutId);
         unwatch();
-        cleanupRef.current = () => {};
+        settle(param);
       };
 
-      cleanupRef.current = cleanup;
+      const timeoutId = setTimeout(() => cleanUp(reject, new TimeoutError(name)), UNWATCH_TIMEOUT_MS);
+      cleanUpRef.current = () => cleanUp(reject, new CancelError(name));
 
       const handleChange = (stateHash: HexString) => {
+        if (isFinished) return;
+
         api.query.program
           .readState(stateHash)
           .then((state) => {
-            if (isChanged(currentState, state)) {
-              cleanup();
-              resolve();
-            }
+            if (isFinished || !isChanged(currentState, state)) return;
+
+            cleanUp(resolve);
           })
           .catch((error) => {
-            cleanup();
-            reject(error instanceof Error ? error : new Error(String(error)));
+            if (isFinished) return;
+
+            cleanUp(reject, error instanceof Error ? error : new Error(String(error)));
           });
       };
 
-      unwatch = mirrorContract.watchStateChangedEvent((stateHash) => handleChange(stateHash));
+      unwatch = mirrorContract.watchStateChangedEvent(handleChange);
     });
   };
 
-  useEffect(() => () => cleanupRef.current(), []);
+  useEffect(() => () => cleanUpRef.current(), []);
 
   return useMutation({ mutationFn: watch });
 };
