@@ -1,3 +1,10 @@
+import {
+  getDefaultPayloadValue,
+  getPayloadSchema,
+  getResetPayloadValue,
+  ISailsFuncArg,
+  PayloadValue,
+} from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@vara-eth/api';
 import { useMemo } from 'react';
@@ -6,9 +13,7 @@ import { Sails } from 'sails-js';
 import { z } from 'zod';
 
 import { Button, ExpandableItem } from '@/components';
-import { Fields } from '@/features/sails';
-import { ISailsFuncArg, PayloadValue } from '@/features/sails/types';
-import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from '@/features/sails/utils';
+import { SailsPayloadFields } from '@/features/sails';
 
 import { useInitProgram } from '../../lib';
 
@@ -63,7 +68,7 @@ const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
               Initialize
             </Button>
           }>
-          <Fields sails={sails} args={args} />
+          <SailsPayloadFields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>

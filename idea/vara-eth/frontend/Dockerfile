@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus varaeth-idea-frontend @vara-eth/api @gear-js/api gear-js-util gear-js
+RUN yarn workspaces focus varaeth-idea-frontend @vara-eth/api @gear-js/api @gear-js/sails-payload-form gear-js
 
 RUN yarn add -D storybook@8
 

@@ -44,13 +44,13 @@ export default [
   ...frontendEslintConfig({
     tsConfigs: [
       'idea/{gear,vara-eth}/frontend/tsconfig.json',
-      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/tsconfig.json',
+      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect,sails-payload-form}/tsconfig.json',
     ],
   }).map((conf) => ({
     ...conf,
     files: [
       'idea/{gear,vara-eth}/frontend/src/**/*.{ts,js,tsx,jsx}',
-      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}',
+      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect,sails-payload-form}/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
   ...storybook.configs['flat/recommended'].map((conf) => ({
