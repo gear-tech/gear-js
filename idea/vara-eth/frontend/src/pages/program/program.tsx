@@ -103,7 +103,11 @@ const Program = () => {
 
             <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
 
-            {!watchBalance.isPending && <TopUpExecBalance programId={programId} onSuccess={handleSuccessfulTopUp} />}
+            <TopUpExecBalance
+              programId={programId}
+              isEnabled={!watchBalance.isPending}
+              onSuccess={handleSuccessfulTopUp}
+            />
           </div>
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>

@@ -9,10 +9,11 @@ import { Button } from '@/components';
 
 type Props = {
   programId: HexString;
+  isEnabled: boolean;
   onSuccess: (value: bigint) => void;
 };
 
-const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
+const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
   const { data: ethClient } = useEthereumClient();
   const { api } = useVaraEthApi();
   const { data: mirrorContract } = useMirrorContract(programId);
@@ -76,7 +77,13 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
   };
 
   return (
-    <Button size="xs" onClick={handleClick} loadingPosition="start" isLoading={isLoading} variant="secondary">
+    <Button
+      size="xs"
+      onClick={handleClick}
+      loadingPosition="start"
+      isLoading={isLoading}
+      variant="secondary"
+      disabled={!isEnabled}>
       {getButtonText()}
     </Button>
   );
