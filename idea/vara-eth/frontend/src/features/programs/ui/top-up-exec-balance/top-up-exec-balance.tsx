@@ -28,7 +28,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
   };
 
   const topUpFn = async (value: bigint) => {
-    if (!api) throw new Error('API is not intialized');
+    if (!api) throw new Error('API is not initialized');
     if (!mirrorContract) throw new Error('Mirror contract is not found');
 
     const tx = await mirrorContract.executableBalanceTopUp(value);
@@ -39,29 +39,31 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
   const approve = useMutation({ mutationFn: approveFn });
   const topUp = useMutation({ mutationFn: topUpFn });
 
-  const handleTopUpClick = async () => {
-    const value = parseUnits('1', 12);
+  const handleClick = () => {
+    const value = parseUnits('10', 12);
 
-    const approveReceipt = await approve.mutateAsync(value);
-
-    await addMyActivity({
-      type: TransactionTypes.approve,
-      value: value.toString(),
-      owner: approveReceipt.from,
-      spender: programId,
-      ...unpackReceipt(approveReceipt),
-    });
-
-    const topUpReceipt = await topUp.mutateAsync(value);
-
-    await addMyActivity({
-      type: TransactionTypes.executableBalanceTopUp,
-      value: String(value),
-      programId,
-      ...unpackReceipt(topUpReceipt),
-    });
-
-    onSuccess(value);
+    approve
+      .mutateAsync(value)
+      .then((receipt) =>
+        addMyActivity({
+          type: TransactionTypes.approve,
+          value: value.toString(),
+          owner: receipt.from,
+          spender: programId,
+          ...unpackReceipt(receipt),
+        }),
+      )
+      .then(() => topUp.mutateAsync(value))
+      .then((receipt) =>
+        addMyActivity({
+          type: TransactionTypes.executableBalanceTopUp,
+          value: String(value),
+          programId,
+          ...unpackReceipt(receipt),
+        }),
+      )
+      .then(() => onSuccess(value))
+      .catch((error) => console.error(error));
   };
 
   const isLoading = !api || !ethClient || !mirrorContract || approve.isPending || topUp.isPending;
@@ -74,7 +76,7 @@ const TopUpExecBalance = ({ programId, onSuccess }: Props) => {
   };
 
   return (
-    <Button size="xs" onClick={handleTopUpClick} loadingPosition="start" isLoading={isLoading} variant="secondary">
+    <Button size="xs" onClick={handleClick} loadingPosition="start" isLoading={isLoading} variant="secondary">
       {getButtonText()}
     </Button>
   );

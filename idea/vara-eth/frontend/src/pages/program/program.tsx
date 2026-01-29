@@ -38,12 +38,6 @@ const Program = () => {
   const watchInit = useWatchProgramStateChange(programId);
   const watchBalance = useWatchProgramStateChange(programId);
 
-  const getStatusText = () => {
-    if (watchInit.isPending) return 'Initializing...';
-
-    return isInitialized ? 'Active' : 'Uninitialized';
-  };
-
   const handleSuccessfulInit = () => {
     watchInit
       .mutateAsync({
@@ -58,7 +52,8 @@ const Program = () => {
     watchBalance
       .mutateAsync({
         name: 'executable program balance',
-        isChanged: (current, incoming) => BigInt(incoming.executableBalance - current.executableBalance) === value,
+        isChanged: (current, incoming) =>
+          BigInt(incoming.executableBalance) - BigInt(current.executableBalance) === value,
       })
       .then(() => refetch())
       .catch((error) => console.error(error));
@@ -86,7 +81,7 @@ const Program = () => {
           {isActive && (
             <Badge color={isInitialized ? 'primary' : 'secondary'} className={styles.status}>
               {watchInit.isPending && <LoadingSVG className={styles.statusSpinner} />}
-              {getStatusText()}
+              {isInitialized ? 'Active' : 'Uninitialized'}
             </Badge>
           )}
         </ChainEntity.Header>

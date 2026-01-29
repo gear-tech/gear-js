@@ -19,8 +19,12 @@ const useWatchProgramStateChange = (programId: HexString) => {
   const cleanupRef = useRef(() => {});
 
   const watch = async ({ name, isChanged }: Params) => {
-    if (!api) throw new Error('API is not intialized');
+    if (!api) throw new Error('API is not initialized');
     if (!mirrorContract) throw new Error('Mirror contract is not found');
+
+    // mutation not intended to be used simultaneously or by multiple watchers per one hook,
+    // clean up just in case
+    cleanupRef.current();
 
     const currentStateHash = await mirrorContract.stateHash();
     const currentState = await api.query.program.readState(currentStateHash);
