@@ -2,10 +2,15 @@ import { HexString } from '@vara-eth/api';
 import { generatePath, useParams } from 'react-router-dom';
 import { formatEther, formatUnits } from 'viem';
 
-import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
-import { Badge, Balance, Button, ChainEntity, HashLink, UploadIdlButton } from '@/components';
-import { useExecutableBalanceTopUp } from '@/features/programs';
-import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
+import { useWrappedVaraBalance } from '@/app/api';
+import LoadingSVG from '@/assets/icons/loading.svg?react';
+import { Badge, Balance, ChainEntity, HashLink, UploadIdlButton } from '@/components';
+import {
+  TopUpExecBalance,
+  useReadContractState,
+  useGetProgramByIdQuery,
+  useWatchProgramStateChange,
+} from '@/features/programs';
 import { SailsProgramActions } from '@/features/sails';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
@@ -20,9 +25,6 @@ type Params = {
 const Program = () => {
   const { programId } = useParams() as Params;
 
-  const approveWrappedVara = useApproveWrappedVara(programId);
-  const executableBalanceTopUp = useExecutableBalanceTopUp(programId);
-
   const { data: program, isLoading } = useGetProgramByIdQuery(programId);
   const codeId = program?.code?.id; // TODO: program.codeId property should be present?
 
@@ -33,12 +35,28 @@ const Program = () => {
   const { decimals, isPending: isDecimalsPending } = useWrappedVaraBalance(programId);
   const { idl, saveIdl } = useIdlStorage(codeId);
 
-  const onTopUp = async () => {
-    const topUpValue = BigInt(10 * 1e12);
-    await approveWrappedVara.mutateAsync(topUpValue);
-    await executableBalanceTopUp.mutateAsync(topUpValue);
-    // TODO: updated after couple of seconds after the transaction
-    await refetch();
+  const watchInit = useWatchProgramStateChange(programId);
+  const watchBalance = useWatchProgramStateChange(programId);
+
+  const handleSuccessfulInit = () => {
+    watchInit
+      .mutateAsync({
+        name: 'program init',
+        isChanged: (_, incoming) => 'Active' in incoming.program && incoming.program.Active.initialized,
+      })
+      .then(() => refetch())
+      .catch((error) => console.error(error));
+  };
+
+  const handleSuccessfulTopUp = (value: bigint) => {
+    watchBalance
+      .mutateAsync({
+        name: 'executable program balance',
+        isChanged: (current, incoming) =>
+          BigInt(incoming.executableBalance) - BigInt(current.executableBalance) === value,
+      })
+      .then(() => refetch())
+      .catch((error) => console.error(error));
   };
 
   if (isLoading || isProgramStateLoading || isDecimalsPending) {
@@ -62,6 +80,7 @@ const Program = () => {
 
           {isActive && (
             <Badge color={isInitialized ? 'primary' : 'secondary'} className={styles.status}>
+              {watchInit.isPending && <LoadingSVG className={styles.statusSpinner} />}
               {isInitialized ? 'Active' : 'Uninitialized'}
             </Badge>
           )}
@@ -79,16 +98,16 @@ const Program = () => {
 
           <ChainEntity.Key>Executable Balance</ChainEntity.Key>
 
-          <div className={styles.executableBalance}>
+          <div className={styles.balance}>
+            {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
+
             <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
 
-            <Button
-              size="xs"
-              onClick={onTopUp}
-              isLoading={executableBalanceTopUp.isPending || approveWrappedVara.isPending}
-              variant="secondary">
-              Top up
-            </Button>
+            <TopUpExecBalance
+              programId={programId}
+              isEnabled={!watchBalance.isPending}
+              onSuccess={handleSuccessfulTopUp}
+            />
           </div>
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>
@@ -98,7 +117,11 @@ const Program = () => {
 
       <div className={styles.card}>
         {idl ? (
-          <SailsProgramActions programId={programId} idl={idl} isInitialized={isInitialized} />
+          <SailsProgramActions
+            programId={programId}
+            idl={idl}
+            init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
+          />
         ) : (
           <div className={styles.emptyState}>
             <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>

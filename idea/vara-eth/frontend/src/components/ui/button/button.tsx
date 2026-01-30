@@ -10,6 +10,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'outline' | 'link' | 'icon' | 'ghost' | 'secondary';
   size?: 'default' | 'sm' | 'xs' | 'icon';
   isLoading?: boolean;
+  loadingPosition?: 'start' | 'center' | 'end';
   className?: string;
 };
 
@@ -20,24 +21,25 @@ const Button = ({
   disabled,
   children,
   className,
+  loadingPosition = 'center',
   type = 'button',
   ...props
 }: ButtonProps) => {
   const isDisabled = disabled || isLoading;
+
   const buttonClass = clsx(
     styles.button,
     styles[`btn--variant-${variant}`],
     styles[`size-${size}`],
-    {
-      [styles[`state-disabled`]]: isDisabled,
-      [styles[`state-loading`]]: isLoading,
-    },
+    isLoading && styles.loading,
+    isLoading && styles[`loadingPosition${loadingPosition}`],
     className,
   );
 
   return (
     <button className={buttonClass} disabled={isDisabled} aria-disabled={isDisabled} type={type} {...props}>
-      {isLoading ? <LoadingIcon className={styles['animate-spin']} /> : children}
+      {isLoading && <LoadingIcon className={styles.spinner} />}
+      <span className={styles.content}>{children}</span>
     </button>
   );
 };
