@@ -1,11 +1,12 @@
+import { HexString } from '@gear-js/api';
+
 import { RESULT } from '../consts';
-import { getPayloadSchema } from '../utils';
 
 import { FieldProps } from './field-props';
 import { ISailsFuncArg } from './sails';
 
 type Result = (typeof RESULT)[keyof typeof RESULT];
 type PayloadValue = string | boolean | null | Array<PayloadValue> | { [key: string]: PayloadValue };
-type PayloadValueSchema = ReturnType<typeof getPayloadSchema>;
+type FormattedPayloadValue = { encoded: HexString; decoded: Record<string, unknown> };
 
-export type { FieldProps, ISailsFuncArg, Result, PayloadValue, PayloadValueSchema };
+export type { FieldProps, ISailsFuncArg, Result, PayloadValue, FormattedPayloadValue };

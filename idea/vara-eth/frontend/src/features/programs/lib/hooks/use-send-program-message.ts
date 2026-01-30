@@ -4,12 +4,13 @@ import { Sails } from 'sails-js';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
+import { FormattedPayloadValue } from '@/features/sails/lib';
 
 type SendMessageParams = {
   serviceName: string;
   messageName: string;
   isQuery: boolean;
-  payload: HexString;
+  payload: FormattedPayloadValue;
 };
 
 const useSendProgramMessage = (programId: HexString, sails: Sails | undefined) => {
@@ -22,18 +23,9 @@ const useSendProgramMessage = (programId: HexString, sails: Sails | undefined) =
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
 
-    // TODO: would be better to return non-encoded payload from schema,
-    // but for now to not change gear idea implementation we have to decode encoded value here
-    const args: unknown[] = sailsMessage.decodePayload(payload);
-
-    const tx = await mirrorContract.sendMessage(payload);
+    const tx = await mirrorContract.sendMessage(payload.encoded);
     const response = await tx.send();
     const receipt = await tx.getReceipt();
-
-    const params = args.map((_value, index) => {
-      const key = sailsMessage.args[index].name;
-      return `${key}: ${String(_value)}`;
-    });
 
     await addMyActivity({
       type: TransactionTypes.programMessage,
@@ -41,7 +33,7 @@ const useSendProgramMessage = (programId: HexString, sails: Sails | undefined) =
       messageName,
       ...unpackReceipt(receipt),
       to: programId,
-      params: { payload: `${messageName} (${params.join(', ')})` },
+      params: { payload: `${messageName} (${payload.formatted})` },
     });
 
     const { waitForReply } = await tx.setupReplyListener();

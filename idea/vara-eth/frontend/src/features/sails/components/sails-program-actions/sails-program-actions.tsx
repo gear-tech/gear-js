@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Tabs } from '@/components';
 import { useSendInjectedTransaction, useInitProgram, useSendProgramMessage } from '@/features/programs/lib';
 
-import { useSails } from '../../lib';
+import { FormattedPayloadValue, useSails } from '../../lib';
 import { SailsActionGroup } from '../sails-action-group';
 
 import styles from './sails-program-actions.module.scss';
@@ -37,7 +37,8 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
         action: 'Read',
         args: meta.args,
         encode: meta.encodePayload,
-        onSubmit: (payload: HexString) => send.mutateAsync({ serviceName, messageName, isQuery: true, payload }),
+        onSubmit: (payload: FormattedPayloadValue) =>
+          send.mutateAsync({ serviceName, messageName, isQuery: true, payload }),
       }));
 
       const functions = Object.entries(service.functions).map(([messageName, meta]) => ({
@@ -46,7 +47,8 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
         action: 'Write',
         args: meta.args,
         encode: meta.encodePayload,
-        onSubmit: (payload: HexString) => send.mutateAsync({ serviceName, messageName, isQuery: false, payload }),
+        onSubmit: (payload: FormattedPayloadValue) =>
+          send.mutateAsync({ serviceName, messageName, isQuery: false, payload }),
       }));
 
       return <SailsActionGroup key={serviceName} name={serviceName} sails={sails} items={[...queries, ...functions]} />;
@@ -59,7 +61,7 @@ const SailsProgramActions = ({ programId, idl, isInitialized }: Props) => {
       action: 'Initialize',
       args: meta.args,
       encode: meta.encodePayload,
-      onSubmit: (payload: HexString) => initProgram.mutateAsync({ ctorName, payload }),
+      onSubmit: (payload: FormattedPayloadValue) => initProgram.mutateAsync({ ctorName, payload }),
     }));
 
     return <SailsActionGroup name="Constructors" sails={sails} items={items} />;

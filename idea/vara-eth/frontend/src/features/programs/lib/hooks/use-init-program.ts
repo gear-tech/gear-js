@@ -4,10 +4,11 @@ import { Sails } from 'sails-js';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
+import { FormattedPayloadValue } from '@/features/sails/lib';
 
 type InitProgramParams = {
   ctorName: string;
-  payload: HexString;
+  payload: FormattedPayloadValue;
 };
 
 const useInitProgram = (programId: HexString, sails: Sails | undefined) => {
@@ -17,11 +18,7 @@ const useInitProgram = (programId: HexString, sails: Sails | undefined) => {
   const initProgram = async ({ ctorName, payload }: InitProgramParams) => {
     if (!mirrorContract || !sails) return;
 
-    // TODO: would be better to return non-encoded payload from schema,
-    // but for now to not change gear idea implementation we have to decode encoded value here
-    const args: unknown[] = sails.ctors[ctorName]?.decodePayload(payload);
-
-    const tx = await mirrorContract.sendMessage(payload);
+    const tx = await mirrorContract.sendMessage(payload.encoded);
 
     await tx.send();
 
@@ -30,7 +27,7 @@ const useInitProgram = (programId: HexString, sails: Sails | undefined) => {
     return addMyActivity({
       type: TransactionTypes.initProgram,
       programId,
-      params: { ctorName, ...args },
+      params: { payload: `${ctorName} (${payload.formatted})` },
       ...unpackReceipt(receipt),
       to: programId,
     });

@@ -1,4 +1,3 @@
-import { HexString } from '@vara-eth/api';
 import { MouseEvent, useState } from 'react';
 import { Sails } from 'sails-js';
 
@@ -6,7 +5,7 @@ import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button } from '@/components';
 import { cx } from '@/shared/utils';
 
-import { SailsAction as SailsActionType } from '../../lib';
+import { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
 import { SailsPayloadForm } from '../sails-payload-form';
 
 import styles from './sails-action.module.scss';
@@ -32,7 +31,7 @@ const SailsAction = ({ id, name, action, sails, args, encode, onSubmit }: Props)
     }
   };
 
-  const handleSubmit = async (payload: HexString) => {
+  const handleSubmit = async (payload: FormattedPayloadValue) => {
     setIsSubmitting(true);
 
     return onSubmit(payload).finally(() => setIsSubmitting(false));
