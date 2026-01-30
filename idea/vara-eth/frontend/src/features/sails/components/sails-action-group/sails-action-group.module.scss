@@ -1,0 +1,42 @@
+.container {
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(41, 41, 41, 0.5);
+  }
+}
+
+.header {
+  width: 100%;
+  padding: 12px 24px;
+
+  display: flex;
+  align-items: center;
+
+  &.empty {
+    .arrow {
+      visibility: hidden;
+    }
+  }
+
+  &.open {
+    .arrow {
+      transform: rotate(-90deg);
+    }
+  }
+
+  .title {
+    margin-left: 12px;
+    margin-right: auto;
+
+    color: #fff;
+  }
+}
+
+.body {
+  padding-left: 52px;
+  padding-right: 24px;
+  padding-bottom: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

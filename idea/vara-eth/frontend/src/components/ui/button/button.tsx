@@ -11,7 +11,6 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: 'default' | 'sm' | 'xs' | 'icon';
   isLoading?: boolean;
   className?: string;
-  onClick?: () => void;
 };
 
 const Button = ({
@@ -21,8 +20,8 @@ const Button = ({
   disabled,
   children,
   className,
-  onClick,
   type = 'button',
+  ...props
 }: ButtonProps) => {
   const isDisabled = disabled || isLoading;
   const buttonClass = clsx(
@@ -37,7 +36,7 @@ const Button = ({
   );
 
   return (
-    <button className={buttonClass} onClick={onClick} disabled={isDisabled} aria-disabled={isDisabled} type={type}>
+    <button className={buttonClass} disabled={isDisabled} aria-disabled={isDisabled} type={type} {...props}>
       {isLoading ? <LoadingIcon className={styles['animate-spin']} /> : children}
     </button>
   );

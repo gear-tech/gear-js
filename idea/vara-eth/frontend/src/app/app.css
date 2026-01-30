@@ -111,13 +111,22 @@ a {
   text-decoration: none;
 }
 
-button,
 input {
   font-family: 'Roboto Mono', monospace;
 }
 
 button {
+  padding: 0;
+
+  font: inherit;
+  color: inherit;
+
+  background-color: transparent;
   border: none;
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 p,
@@ -136,8 +145,9 @@ h3,
 h4,
 h5,
 h6 {
-  text-transform: uppercase;
   margin: 0;
+
+  font: inherit;
 }
 
 h1 {
