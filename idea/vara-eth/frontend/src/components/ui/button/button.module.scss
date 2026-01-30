@@ -17,7 +17,6 @@
   font-weight: bold;
   user-select: none;
   transition: all 0.2s;
-  cursor: pointer;
 
   &[data-focus-visible] {
     outline: none;
@@ -37,7 +36,6 @@
     &:disabled,
     &[aria-disabled='true'] {
       background-color: var(--foreground-50);
-      cursor: auto;
     }
   }
 
@@ -53,7 +51,6 @@
     &:disabled,
     &[aria-disabled='true'] {
       color: var(--foreground-30);
-      cursor: auto;
     }
   }
 
@@ -62,7 +59,6 @@
     border-radius: 0;
     padding: 0;
     justify-content: flex-start;
-    cursor: auto;
   }
 
   &.btn--variant-icon {
@@ -83,7 +79,6 @@
     &:disabled,
     &[aria-disabled='true'] {
       color: var(--foreground-30);
-      cursor: auto;
 
       path {
         stroke: var(--border);
@@ -102,6 +97,11 @@
     background-color: var(--secondary);
     color: var(--secondary-foreground);
     border: 1px solid var(--border);
+
+    // TODO: loading makes selector too complex, is there a way to simplify it to &:disabled?
+    &:not(.loading):disabled {
+      opacity: 0.5;
+    }
   }
 }
 

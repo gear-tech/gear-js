@@ -31,6 +31,7 @@ const Button = ({
     styles.button,
     styles[`btn--variant-${variant}`],
     styles[`size-${size}`],
+    isLoading && styles.loading,
     isLoading && styles[`loadingPosition${loadingPosition}`],
     className,
   );
