@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "2.40.0",
+    "viem": "2.45.1",
     "ws": "8.18.3"
   },
   "files": [
