@@ -1,54 +1,46 @@
 import { useWrappedVaraBalance } from '@/app/api';
-import { AllEvents, RouterEvents, WrappedVaraEvents } from '@/app/store';
 import { Badge, Balance, ExpandableItem, HashLink } from '@/components';
 import { formatBalance } from '@/shared/utils';
 
+import { Event, EVENT_NAME } from '../../lib/use-activity';
 import { Params } from '../params';
 
 import styles from './activity-event.module.scss';
 
-type Props = {
-  item: AllEvents;
-};
+type Props = Event;
 
-const ActivityEvent = ({ item }: Props) => {
+const ActivityEvent = ({ name, args }: Props) => {
   const { decimals } = useWrappedVaraBalance();
 
-  if (item.type === RouterEvents.blockCommitted) {
-    return null;
-  }
-
-  if (item.type === RouterEvents.codeValidationRequested) {
-    const { type: _type, ...params } = item;
+  if (name === EVENT_NAME.ROUTER.CODE_VALIDATION_REQUESTED) {
     return (
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Code <HashLink hash={item.codeId} /> validation requested.
+            Code <HashLink hash={args.codeId} /> validation requested.
           </div>
         }>
-        <Params params={params} />
+        <Params params={args} />
       </ExpandableItem>
     );
   }
 
-  // Clarify if the design of events and my transactions is the same
-  if (item.type === RouterEvents.codeGotValidated) {
-    const error = 'Code id can not be found';
+  // clarify whether it should look as my activity event
+  if (name === EVENT_NAME.ROUTER.CODE_GOT_VALIDATED) {
     return (
       <div className={styles.row}>
-        {item.valid ? (
+        {args.valid ? (
           <>
             <Badge>Code approved</Badge>
             <div className={styles.transaction}>
-              Code <HashLink hash={item.codeId} /> was approved.
+              Code <HashLink hash={args.codeId} /> was approved.
             </div>
           </>
         ) : (
           <>
             <Badge color="danger">Code rejected</Badge>
             <div className={styles.transaction}>
-              <span className={styles.error}>{error}</span> <HashLink hash={item.codeId} isDisabled />
+              <span className={styles.error}>Code id can not be found</span> <HashLink hash={args.codeId} isDisabled />
             </div>
           </>
         )}
@@ -56,43 +48,39 @@ const ActivityEvent = ({ item }: Props) => {
     );
   }
 
-  if (item.type === RouterEvents.programCreated) {
+  if (name === EVENT_NAME.ROUTER.PROGRAM_CREATED) {
     return (
       <div className={styles.transaction}>
-        Program <HashLink hash={item.actorId} /> was created.
+        Program <HashLink hash={args.actorId} /> was created.
       </div>
     );
   }
 
-  if (item.type === WrappedVaraEvents.approval) {
-    const value = decimals ? formatBalance(BigInt(item.value), decimals) : null;
+  if (name === EVENT_NAME.WVARA.APPROVAL) {
+    const value = decimals ? formatBalance(BigInt(args.value), decimals) : null;
 
     return (
       <div className={styles.transaction}>
-        Approve <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
-        <HashLink hash={item.spender} />
+        Approve <Balance value={value} units="WVARA" /> <HashLink hash={args.owner} /> to{' '}
+        <HashLink hash={args.spender} />
       </div>
     );
   }
 
-  if (item.type === WrappedVaraEvents.transfer) {
-    const value = decimals ? formatBalance(BigInt(item.value), decimals) : null;
-    const { type: _type, ...originalParams } = item;
-    const params = { ...originalParams, value: `${value} WVARA` };
+  if (name === EVENT_NAME.WVARA.TRANSFER) {
+    const value = decimals ? formatBalance(BigInt(args.value), decimals) : null;
 
     return (
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Balance transfer from <HashLink hash={item.from} /> to <HashLink hash={item.to} />
+            Balance transfer from <HashLink hash={args.from} /> to <HashLink hash={args.to} />
           </div>
         }>
-        <Params params={params} />
+        <Params params={{ ...args, value: `${value} WVARA` }} />
       </ExpandableItem>
     );
   }
-
-  return null;
 };
 
 export { ActivityEvent };

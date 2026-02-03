@@ -6,21 +6,21 @@ import { myActivityAtom } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, Tabs, ExpandableItem } from '@/components';
 
-// import { useAllActivity } from '../lib';
+import { useActivity } from '../lib';
 
-// import { ActivityEvent } from './activity-event';
+import { ActivityEvent } from './activity-event';
 import styles from './activity.module.scss';
 import { Block } from './block';
 import { Transaction } from './transaction';
 
-const tabs = ['My activity'];
+const tabs = ['All activity', 'My activity'];
 
 const Activity = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
 
+  const activity = useActivity();
   const myActivity = useAtomValue(myActivityAtom);
-  // const allActivity = useAllActivity();
 
   return (
     <div className={clsx(styles.wrapper, isOpen && styles.open)}>
@@ -40,39 +40,31 @@ const Activity = () => {
         </Button>
       </div>
 
-      {/* {isOpen && tabIndex === 0 && (
+      {isOpen && tabIndex === 0 && (
         <div className={styles.content}>
-          {allActivity.map((activity) => (
+          {activity.map((item) => (
             <ExpandableItem
-              key={activity.blockHash}
+              key={item.blockHash}
               header={
-                <Block
-                  blockHash={activity.blockHash}
-                  blockNumber={activity.blockNumber}
-                  timestamp={activity.timestamp}
-                />
+                <Block blockHash={item.blockHash} blockNumber={Number(item.blockNumber)} timestamp={item.timestamp} />
               }>
-              {activity.events.map((activityEvent, index) => (
-                <ActivityEvent key={index} item={activityEvent} />
+              {item.events.map((activityEvent, index) => (
+                <ActivityEvent key={index} {...activityEvent} />
               ))}
             </ExpandableItem>
           ))}
         </div>
-      )} */}
+      )}
 
-      {isOpen && tabIndex === 0 && (
+      {isOpen && tabIndex === 1 && (
         <div className={styles.content}>
-          {myActivity.map((activity, index) => (
+          {myActivity.map((item, index) => (
             <ExpandableItem
-              key={'hash' in activity ? activity.hash : index}
+              key={'hash' in item ? item.hash : index}
               header={
-                <Block
-                  blockHash={activity.blockHash}
-                  blockNumber={Number(activity.blockNumber)}
-                  timestamp={activity.timestamp}
-                />
+                <Block blockHash={item.blockHash} blockNumber={Number(item.blockNumber)} timestamp={item.timestamp} />
               }>
-              <Transaction item={activity} />
+              <Transaction item={item} />
             </ExpandableItem>
           ))}
         </div>
