@@ -1,85 +1,104 @@
 import { useWrappedVaraBalance } from '@/app/api';
-import { Badge, Balance, ExpandableItem, HashLink } from '@/components';
+import { Badge, Balance, HashLink } from '@/components';
 import { formatBalance } from '@/shared/utils';
 
-import { Event, EVENT_NAME } from '../../lib/use-activity';
+import {
+  CodeValidatedEvent as CodeValidatedEventType,
+  CodeValidationRequestedEvent as CodeValidationRequestedEventType,
+  Event,
+  EVENT_NAME,
+  ProgramCreatedEvent as ProgramCreatedEventType,
+  ApprovalEvent as ApprovalEventType,
+  TransferEvent as TransferEventType,
+} from '../../lib/use-activity';
 import { Params } from '../params';
 
 import styles from './activity-event.module.scss';
 
 type Props = Event;
 
-const ActivityEvent = ({ name, args }: Props) => {
-  const { decimals } = useWrappedVaraBalance();
+const CodeValidationRequestedEvent = ({ codeId }: CodeValidationRequestedEventType['args']) => {
+  return (
+    <div className={styles.transaction}>
+      Code <HashLink hash={codeId} /> validation requested.
+    </div>
+  );
+};
 
-  if (name === EVENT_NAME.ROUTER.CODE_VALIDATION_REQUESTED) {
-    return (
-      <ExpandableItem
-        header={
-          <div className={styles.transaction}>
-            Code <HashLink hash={args.codeId} /> validation requested.
-          </div>
-        }>
-        <Params params={args} />
-      </ExpandableItem>
-    );
-  }
+// should it look like my activity event?
+const CodeValidatedEvent = ({ valid, codeId }: CodeValidatedEventType['args']) => {
+  return (
+    <div className={styles.row}>
+      <Badge color={valid ? 'primary' : 'danger'}>Code {valid ? 'approved' : 'rejected'}</Badge>
 
-  // clarify whether it should look as my activity event
-  if (name === EVENT_NAME.ROUTER.CODE_GOT_VALIDATED) {
-    return (
-      <div className={styles.row}>
-        {args.valid ? (
+      <div className={styles.transaction}>
+        {valid ? (
           <>
-            <Badge>Code approved</Badge>
-            <div className={styles.transaction}>
-              Code <HashLink hash={args.codeId} /> was approved.
-            </div>
+            Code <HashLink hash={codeId} /> was approved.
           </>
         ) : (
           <>
-            <Badge color="danger">Code rejected</Badge>
-            <div className={styles.transaction}>
-              <span className={styles.error}>Code id can not be found</span> <HashLink hash={args.codeId} isDisabled />
-            </div>
+            <span className={styles.error}>Code validation rejected.</span> <HashLink hash={codeId} isDisabled />
           </>
         )}
       </div>
-    );
-  }
+    </div>
+  );
+};
 
-  if (name === EVENT_NAME.ROUTER.PROGRAM_CREATED) {
-    return (
-      <div className={styles.transaction}>
-        Program <HashLink hash={args.actorId} /> was created.
-      </div>
-    );
-  }
+const ProgramCreatedEvent = ({ actorId }: ProgramCreatedEventType['args']) => {
+  return (
+    <div className={styles.transaction}>
+      Program <HashLink hash={actorId} /> was created.
+    </div>
+  );
+};
 
-  if (name === EVENT_NAME.WVARA.APPROVAL) {
-    const value = decimals ? formatBalance(BigInt(args.value), decimals) : null;
+const ApprovalEvent = ({ owner, spender, ...props }: ApprovalEventType['args']) => {
+  const { decimals } = useWrappedVaraBalance();
+  const value = decimals ? formatBalance(BigInt(props.value), decimals) : null;
 
-    return (
-      <div className={styles.transaction}>
-        Approve <Balance value={value} units="WVARA" /> <HashLink hash={args.owner} /> to{' '}
-        <HashLink hash={args.spender} />
-      </div>
-    );
-  }
+  return (
+    <div className={styles.transaction}>
+      Approve <Balance value={value} units="WVARA" /> <HashLink hash={owner} /> to <HashLink hash={spender} />
+    </div>
+  );
+};
 
-  if (name === EVENT_NAME.WVARA.TRANSFER) {
-    const value = decimals ? formatBalance(BigInt(args.value), decimals) : null;
+const TransferEvent = ({ from, to, ...props }: TransferEventType['args']) => {
+  const { decimals } = useWrappedVaraBalance();
+  const value = decimals ? formatBalance(BigInt(props.value), decimals) : null;
 
-    return (
-      <ExpandableItem
-        header={
-          <div className={styles.transaction}>
-            Balance transfer from <HashLink hash={args.from} /> to <HashLink hash={args.to} />
-          </div>
-        }>
-        <Params params={{ ...args, value: `${value} WVARA` }} />
-      </ExpandableItem>
-    );
+  return (
+    <div className={styles.transaction}>
+      Balance transfer <Balance value={value} units="WVARA" /> from <HashLink hash={from} /> to <HashLink hash={to} />
+    </div>
+  );
+};
+
+const ActivityEvent = ({ name, args }: Props) => {
+  switch (name) {
+    case EVENT_NAME.ROUTER.CODE_VALIDATION_REQUESTED:
+      return <CodeValidationRequestedEvent {...args} />;
+
+    case EVENT_NAME.ROUTER.CODE_VALIDATED:
+      return <CodeValidatedEvent {...args} />;
+
+    case EVENT_NAME.ROUTER.PROGRAM_CREATED:
+      return <ProgramCreatedEvent {...args} />;
+
+    case EVENT_NAME.WVARA.APPROVAL:
+      return <ApprovalEvent {...args} />;
+
+    case EVENT_NAME.WVARA.TRANSFER:
+      return <TransferEvent {...args} />;
+
+    default:
+      return (
+        <div className={styles.transaction}>
+          {name} event. {args && <Params params={args} />}
+        </div>
+      );
   }
 };
 

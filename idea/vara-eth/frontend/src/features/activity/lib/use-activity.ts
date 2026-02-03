@@ -12,7 +12,7 @@ import { useEthereumClient } from '@/app/api';
 const EVENT_NAME = {
   ROUTER: {
     CODE_VALIDATION_REQUESTED: 'CodeValidationRequested',
-    CODE_GOT_VALIDATED: 'CodeGotValidated',
+    CODE_VALIDATED: 'CodeGotValidated',
     PROGRAM_CREATED: 'ProgramCreated',
     ANNOUNCES_COMMITTED: 'AnnouncesCommitted',
     BATCH_COMMITTED: 'BatchCommitted',
@@ -33,7 +33,7 @@ type CodeValidationRequestedEvent = {
 };
 
 type CodeValidatedEvent = {
-  name: typeof EVENT_NAME.ROUTER.CODE_GOT_VALIDATED;
+  name: typeof EVENT_NAME.ROUTER.CODE_VALIDATED;
   args: { codeId: HexString; valid: boolean };
 };
 
@@ -59,7 +59,7 @@ type ComputationSettingsChangedEvent = {
 
 type StorageSlotChangedEvent = {
   name: typeof EVENT_NAME.ROUTER.STORAGE_SLOT_CHANGED;
-  args: object;
+  args: undefined;
 };
 
 type ValidatorsCommittedForEraEvent = {
@@ -168,4 +168,17 @@ const useActivity = () => {
 };
 
 export { EVENT_NAME, useActivity };
-export type { Event };
+
+export type {
+  CodeValidationRequestedEvent,
+  CodeValidatedEvent,
+  ProgramCreatedEvent,
+  AnnouncesCommittedEvent,
+  BatchCommittedEvent,
+  ComputationSettingsChangedEvent,
+  StorageSlotChangedEvent,
+  ValidatorsCommittedForEraEvent,
+  ApprovalEvent,
+  TransferEvent,
+  Event,
+};
