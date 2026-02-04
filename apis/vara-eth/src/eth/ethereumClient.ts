@@ -55,6 +55,8 @@ export class EthereumClient {
 
   public setSigner(signer: ISigner) {
     this.signer = signer;
+    this._routerClient.setSigner(signer);
+    this._wvaraClient.setSigner(signer);
     return this;
   }
 
