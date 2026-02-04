@@ -4,13 +4,10 @@ import type {
   Hash,
   ContractEventName,
   DecodeEventLogReturnType,
-  Chain,
-  SendTransactionRequest,
   EstimateGasParameters,
   TransactionRequest,
   Log,
   Hex,
-  Transport,
   PublicClient,
 } from 'viem';
 import { decodeEventLog } from 'viem';
@@ -30,13 +27,6 @@ export class TxManager<
   T extends Record<string, any> = object,
   U extends Record<string, any> = object,
   const abi extends Abi = Abi,
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TRequest extends SendTransactionRequest<TChain, undefined, TChain> = SendTransactionRequest<
-    TChain,
-    undefined,
-    TChain
-  >,
 > implements ITxManager
 {
   private _receipt: TransactionReceipt | null = null;
@@ -52,12 +42,12 @@ export class TxManager<
    * @param txIndependentHelperFns - Helper functions that do not depend on the transaction
    */
   constructor(
-    private _pc: PublicClient<TTransport, TChain>,
+    private _pc: PublicClient,
     private _signer: ISigner,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {
-      [k in keyof T]: (manager: TxManager<T, U, abi, TTransport, TChain, TRequest>) => any;
+      [k in keyof T]: (manager: TxManager<T, U, abi>) => any;
     },
     txIndependentHelperFns?: Record<keyof U, any>,
   ) {
@@ -80,7 +70,7 @@ export class TxManager<
    */
   async estimateGas(): Promise<bigint> {
     try {
-      const gasParams: EstimateGasParameters<TChain> = this._tx as EstimateGasParameters<TChain>;
+      const gasParams: EstimateGasParameters = this._tx as EstimateGasParameters;
 
       this._tx.gas = await this._pc.estimateGas(gasParams);
 

@@ -1,4 +1,4 @@
-import type { Address, Chain, Hex, PublicClient, Transport } from 'viem';
+import type { Address, Hex, PublicClient } from 'viem';
 
 import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
 import { getRouterClient, type RouterClient } from './router.js';
@@ -10,20 +10,17 @@ const TARGET_BLOCK_TIMES: Record<number, number> = {
   31337: 1,
 };
 
-export class EthereumClient<TTransport extends Transport = Transport, TChain extends Chain = Chain> {
-  public readonly publicClient: PublicClient<TTransport, TChain>;
+export class EthereumClient {
   private _chainId: number;
-  private _routerClient: RouterClient<TTransport, TChain>;
-  private _wvaraClient: WrappedVaraClient<TTransport, TChain>;
+  private _routerClient: RouterClient;
+  private _wvaraClient: WrappedVaraClient;
   private _initPromise: Promise<boolean>;
 
   constructor(
-    publicClient: PublicClient,
+    public readonly publicClient: PublicClient,
     public signer: ISigner,
     routerAddress: Address,
   ) {
-    this.publicClient = publicClient as PublicClient<TTransport, TChain>;
-
     this._routerClient = getRouterClient(routerAddress, signer, this.publicClient);
 
     this._initPromise = this._init();

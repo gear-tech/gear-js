@@ -1,4 +1,4 @@
-import type { Address, Chain, Hex, PublicClient, Transport } from 'viem';
+import type { Address, Hex, PublicClient } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
@@ -7,27 +7,13 @@ import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
 import { convertEventParams } from '../util/index.js';
 import { TxManager } from './tx-manager.js';
 import { ISigner } from '../types/signer.js';
+import { BaseContractClient } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with the WrappedVara token.
  * Provides methods for approving token spending and other ERC20 operations.
  */
-export class WrappedVaraClient<TTransport extends Transport = Transport, TChain extends Chain = Chain>
-  implements IWrappedVaraContract
-{
-  /**
-   * Creates a new WrappedVaraClient instance.
-   *
-   * @param address - The address of the WrappedVara contract
-   * @param signer - The signer for sending transactions and signing messages
-   * @param publicClient - The public client for reading data from the blockchain
-   */
-  constructor(
-    public readonly address: Address,
-    private _signer: ISigner,
-    private _pc: PublicClient<TTransport, TChain>,
-  ) {}
-
+export class WrappedVaraClient extends BaseContractClient implements IWrappedVaraContract {
   allowance(owner: Hex, spender: Hex): Promise<bigint> {
     return this._pc.readContract({
       address: this.address,
@@ -86,6 +72,7 @@ export class WrappedVaraClient<TTransport extends Transport = Transport, TChain 
    * @returns A transaction manager with approval-specific helper functions
    */
   async approve(spender: Address, value: bigint): Promise<TxManagerWithHelpers<WrappedVaraTxHelpers>> {
+    const signer = this._ensureSigner();
     const tx = {
       to: this.address,
       data: encodeFunctionData({
@@ -95,7 +82,7 @@ export class WrappedVaraClient<TTransport extends Transport = Transport, TChain 
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._signer, tx, IWRAPPEDVARA_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IWRAPPEDVARA_ABI, {
       getApprovalLog: (manager) => async () => {
         const event = await manager.findEvent('Approval');
         return convertEventParams<ApprovalLog>(event);
@@ -106,6 +93,7 @@ export class WrappedVaraClient<TTransport extends Transport = Transport, TChain 
   }
 
   async transfer(to: Address, value: bigint): Promise<TxManagerWithHelpers<WVaraTransferHelpers>> {
+    const signer = this._ensureSigner();
     const tx = {
       to: this.address,
       data: encodeFunctionData({
@@ -115,7 +103,7 @@ export class WrappedVaraClient<TTransport extends Transport = Transport, TChain 
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._signer, tx, IWRAPPEDVARA_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IWRAPPEDVARA_ABI, {
       getTransferLog: (manager) => async () => {
         const event = await manager.findEvent('Transfer');
         return convertEventParams<TransferLog>(event);
@@ -130,13 +118,10 @@ export class WrappedVaraClient<TTransport extends Transport = Transport, TChain 
  * Creates a new WrappedVaraContract instance.
  *
  * @param address - The address of the WrappedVara contract
- * @param ethereumClient - The Ethereum client for interacting with the contract
+ * @param signer - The signer for sending transactions
+ * @param publicClient - The public client for interacting with the contract
  * @returns A new WrappedVaraContract instance that implements the IWrappedVaraContract interface
  */
-export function getWrappedVaraClient<TTransport extends Transport = Transport, TChain extends Chain = Chain>(
-  address: Address,
-  signer: ISigner,
-  publicClient: PublicClient<TTransport, TChain>,
-): WrappedVaraClient<TTransport, TChain> {
-  return new WrappedVaraClient(address, signer, publicClient);
+export function getWrappedVaraClient(address: Address, signer: ISigner, publicClient: PublicClient): WrappedVaraClient {
+  return new WrappedVaraClient({ address, signer, publicClient });
 }
