@@ -4,9 +4,7 @@ import type {
   Hash,
   ContractEventName,
   DecodeEventLogReturnType,
-  SendTransactionParameters,
   Chain,
-  Account,
   SendTransactionRequest,
   EstimateGasParameters,
   TransactionRequest,
@@ -14,11 +12,11 @@ import type {
   Hex,
   Transport,
   PublicClient,
-  WalletClient,
 } from 'viem';
 import { decodeEventLog } from 'viem';
 
 import { ITxManager } from './interfaces/tx-manager.js';
+import { ISigner } from '../types/signer.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -34,7 +32,6 @@ export class TxManager<
   const abi extends Abi = Abi,
   TTransport extends Transport = Transport,
   TChain extends Chain = Chain,
-  TAccount extends Account = Account,
   TRequest extends SendTransactionRequest<TChain, undefined, TChain> = SendTransactionRequest<
     TChain,
     undefined,
@@ -56,11 +53,11 @@ export class TxManager<
    */
   constructor(
     private _pc: PublicClient<TTransport, TChain>,
-    private _wc: WalletClient<TTransport, TChain, TAccount>,
+    private _signer: ISigner,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {
-      [k in keyof T]: (manager: TxManager<T, U, abi, TTransport, TChain, TAccount, TRequest>) => any;
+      [k in keyof T]: (manager: TxManager<T, U, abi, TTransport, TChain, TRequest>) => any;
     },
     txIndependentHelperFns?: Record<keyof U, any>,
   ) {
@@ -100,9 +97,7 @@ export class TxManager<
    * @returns The transaction hash
    */
   async send(): Promise<Hash> {
-    const hash = await this._wc.sendTransaction(
-      this._tx as SendTransactionParameters<TChain, TAccount, undefined, TRequest>,
-    );
+    const hash = await this._signer.sendTransaction(this._tx);
     this._hash = hash;
     return hash;
   }

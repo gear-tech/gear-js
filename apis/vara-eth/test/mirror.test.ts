@@ -4,15 +4,16 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { deployContract } from 'viem/actions';
 import fs from 'node:fs';
 
-import { EthereumClient, getMirrorClient, VaraEthApi, HttpVaraEthProvider } from '../src';
+import { EthereumClient, getMirrorClient, VaraEthApi, HttpVaraEthProvider, type ISigner } from '../src';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
+import { walletClientToSigner } from '../src/signer';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let ethereumClient: EthereumClient;
-
+let signer: ISigner;
 let mirror: ReturnType<typeof getMirrorClient>;
 
 let programId: `0x${string}`;
@@ -29,9 +30,9 @@ beforeAll(async () => {
     account,
     transport,
   });
-  ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
-
-  await ethereumClient.isInitialized;
+  signer = walletClientToSigner(walletClient);
+  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  await ethereumClient.waitForInitialization();
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
 });
@@ -52,7 +53,7 @@ describe('setup', () => {
 
     expect(programId).toBeDefined();
 
-    mirror = getMirrorClient(programId, walletClient, publicClient);
+    mirror = getMirrorClient(programId, signer, publicClient);
   });
 
   test(
@@ -89,7 +90,7 @@ describe('setup', () => {
 
     expect(approvalData.value).toEqual(BigInt(100 * 1e12));
 
-    const allowance = await ethereumClient.wvara.allowance(ethereumClient.accountAddress, programId);
+    const allowance = await ethereumClient.wvara.allowance(await signer.getAddress(), programId);
     expect(allowance).toEqual(BigInt(100 * 1e12));
   });
 
@@ -330,7 +331,7 @@ describe('program state', () => {
   test('should calculate reply for handle', async () => {
     const payload = '0x1c436f756e7465722047657456616c7565';
 
-    const reply = await api.call.program.calculateReplyForHandle(ethereumClient.accountAddress, programId, payload);
+    const reply = await api.call.program.calculateReplyForHandle(await signer.getAddress(), programId, payload);
 
     expect(reply.payload).toBe('0x1c436f756e7465722047657456616c756565000000');
   });
@@ -338,9 +339,8 @@ describe('program state', () => {
   test('should fail calculateReplyForHandle for incorrect program id', async () => {
     const payload = '0x00';
 
-    await expect(
-      api.call.program.calculateReplyForHandle(ethereumClient.accountAddress, ethereumClient.accountAddress, payload),
-    ).rejects.toThrow();
+    const addr = await signer.getAddress();
+    await expect(api.call.program.calculateReplyForHandle(addr, addr, payload)).rejects.toThrow();
   });
 
   test('should get code id of the created program', async () => {

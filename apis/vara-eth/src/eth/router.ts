@@ -1,4 +1,4 @@
-import type { Account, Address, Chain, Hex, PublicClient, TransactionRequest, Transport, WalletClient } from 'viem';
+import type { Address, Chain, Hex, PublicClient, TransactionRequest, Transport } from 'viem';
 import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
@@ -8,6 +8,7 @@ import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.j
 import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { generateCodeHash } from '../util/index.js';
 import { TxManager } from './tx-manager.js';
+import { ISigner } from '../types/signer.js';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -30,22 +31,19 @@ const getCodeState = (value: number): CodeState => {
  * A contract wrapper for interacting with a Router contract.
  * Provides methods for code validation, program creation, and other router-related operations.
  */
-export class RouterClient<
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
-> implements IRouterContract
+export class RouterClient<TTransport extends Transport = Transport, TChain extends Chain = Chain>
+  implements IRouterContract
 {
   /**
    * Creates a new RouterClient instance.
    *
    * @param address - The address of the Router contract
-   * @param walletClient - The wallet client for sending transactions and signing messages
+   * @param signer - The signer for sending transactions and signing messages
    * @param publicClient - The public client for reading data from the blockchain
    */
   constructor(
     public readonly address: Address,
-    private _wc: WalletClient<TTransport, TChain, TAccount>,
+    private _signer: ISigner,
     private _pc: PublicClient<TTransport, TChain>,
   ) {}
 
@@ -242,7 +240,7 @@ export class RouterClient<
    * @returns A transaction manager with validation-specific helper functions, including
    *          the code ID and a function to wait for the code to be validated
    */
-  async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
+  private async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     throw new Error('Not implemented');
     const codeId = generateCodeHash(code);
 
@@ -284,7 +282,7 @@ export class RouterClient<
 
     console.log(request);
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, undefined, {
+    const txManager: ITxManager = new TxManager(this._pc, this._signer, tx, IROUTER_ABI, undefined, {
       codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>
@@ -337,7 +335,7 @@ export class RouterClient<
       data: encodedData,
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._signer, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
         return event.args.actorId.toLowerCase();
@@ -375,7 +373,7 @@ export class RouterClient<
       data: encodedData,
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._signer, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
         return event.args.actorId.toLowerCase();
@@ -390,20 +388,16 @@ export class RouterClient<
  * Creates a new RouterContract instance.
  *
  * @param address - The address of the Router contract
- * @param walletClient - The wallet client for sending transactions
+ * @param signer - The signer for sending transactions
  * @param publicClient - The public client for reading data
  * @returns A new RouterContract instance that implements the IRouterContract interface
  */
-export function getRouterClient<
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
->(
+export function getRouterClient<TTransport extends Transport = Transport, TChain extends Chain = Chain>(
   address: Address,
-  walletClient: WalletClient<TTransport, TChain, TAccount>,
+  signer: ISigner,
   publicClient: PublicClient<TTransport, TChain>,
-): RouterClient<TTransport, TChain, TAccount> {
-  return new RouterClient(address, walletClient, publicClient);
+): RouterClient<TTransport, TChain> {
+  return new RouterClient(address, signer, publicClient);
 }
 
 function prepareBlob(data: Uint8Array) {

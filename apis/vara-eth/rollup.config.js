@@ -14,9 +14,11 @@ function cleanOldBuild() {
 
 const externalPackages = ['viem', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@noble/hashes'];
 
+const INPUT = ['src/index.ts', 'src/eth/abi/index.ts', 'src/signer/index.ts'];
+
 export default [
   {
-    input: ['src/index.ts', 'src/eth/abi/index.ts'],
+    input: INPUT,
     output: [
       {
         dir: 'lib',
@@ -41,7 +43,7 @@ export default [
     external: externalPackages,
   },
   {
-    input: ['src/index.ts', 'src/eth/abi/index.ts'],
+    input: INPUT,
     output: [
       {
         dir: 'lib/cjs',

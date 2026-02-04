@@ -11,7 +11,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "npx jest",
+    "test": "npx jest --runInBand",
     "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
     "test:no-setup": "npx jest",
     "build": "npx rollup -c",
@@ -30,6 +30,11 @@
       "import": "./lib/eth/abi/index.js",
       "require": "./lib/eth/abi/index.cjs",
       "types": "./lib/eth/abi/index.d.ts"
+    },
+    "./signer": {
+      "import": "./lib/signer/index.js",
+      "require": "./lib/signer/index.cjs",
+      "types": "./lib/signer/index.d.ts"
     }
   },
   "peerDependencies": {

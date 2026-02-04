@@ -12,6 +12,7 @@ import {
   InjectedTx,
   IInjectedTransaction,
 } from '../src';
+import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
@@ -19,6 +20,7 @@ import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise'
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
+let signer: ReturnType<typeof walletClientToSigner>;
 let ethereumClient: EthereumClient;
 
 let mirror: ReturnType<typeof getMirrorClient>;
@@ -36,8 +38,10 @@ beforeAll(async () => {
   walletClient = createWalletClient({
     account,
     transport,
-  });
-  ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
+  }) as WalletClient<WebSocketTransport, Chain, Account>;
+  signer = walletClientToSigner(walletClient);
+  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  await ethereumClient.waitForInitialization();
 
   api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient);
 });
@@ -167,7 +171,7 @@ describe('Injected Transactions', () => {
 
       expect(programId).toBeDefined();
 
-      mirror = getMirrorClient(programId, walletClient, publicClient);
+      mirror = getMirrorClient(programId, signer, publicClient);
     });
 
     test(
@@ -201,7 +205,7 @@ describe('Injected Transactions', () => {
 
       expect(approvalData.value).toEqual(BigInt(10 * 1e12));
 
-      const allowance = await ethereumClient.wvara.allowance(ethereumClient.accountAddress, programId);
+      const allowance = await ethereumClient.wvara.allowance(await ethereumClient.getAccountAddress(), programId);
       expect(allowance).toEqual(BigInt(10 * 1e12));
     });
 
@@ -348,13 +352,26 @@ describe('Injected Transactions', () => {
 
       const result = await tx.sendAndWaitForPromise();
 
-      expect(result).toHaveProperty('txHash');
-      expect(result).toHaveProperty('code', '0x00010000');
-      expect(result).toHaveProperty('payload', '0x1c436f756e74657224496e6372656d656e7402000000');
-      expect(result).toHaveProperty('value', 0n);
-      expect(result).toHaveProperty('signature');
+      expect(result.txHash).toBeDefined();
+      expect(result.code).toBe('0x00010000');
+      expect(result.payload).toBe('0x1c436f756e74657224496e6372656d656e7402000000');
+      expect(result.value).toBe(0n);
+      expect(result.signature).toBeDefined();
 
-      promise = result;
+      promise = new InjectedTxPromise(
+        {
+          data: {
+            txHash: result.txHash,
+            reply: {
+              payload: result.payload,
+              value: Number(result.value),
+              code: result.code,
+            },
+          },
+          signature: result.signature,
+        },
+        ethereumClient,
+      );
     });
 
     test('should validate promise signature', async () => {
