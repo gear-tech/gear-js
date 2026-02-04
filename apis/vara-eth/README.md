@@ -51,7 +51,8 @@ npm install viem@^2.39.0 kzg-wasm@1.0.0
 ## Quick Start
 
 ```typescript
-import { VaraEthApi, WsVaraEthProvider, EthereumClient, walletClientToSigner } from '@vara-eth/api';
+import { VaraEthApi, WsVaraEthProvider, EthereumClient } from '@vara-eth/api';
+import { walletClientToSigner } from '@vara-eth/api/signer';
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -99,7 +100,7 @@ interface ISigner {
 Convert viem's `WalletClient` to `ISigner`:
 
 ```typescript
-import { walletClientToSigner } from '@vara-eth/api';
+import { walletClientToSigner } from '@vara-eth/api/signer';
 
 const signer = walletClientToSigner(walletClient);
 ```

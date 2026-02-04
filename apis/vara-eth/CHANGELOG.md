@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **BREAKING**: `EthereumClient.walletClient` property replaced with `signer` property in https://github.com/gear-tech/gear-js/pull/2332
 - **BREAKING**: `getRouterClient()`, `getMirrorClient()`, and `getWrappedVaraClient()` factory functions now accept `ISigner` instead of `WalletClient` in https://github.com/gear-tech/gear-js/pull/2332
 - **BREAKING**: `RouterClient`, `MirrorClient`, `WrappedVaraClient`, and `TxManager` internal implementations refactored to use `ISigner` in https://github.com/gear-tech/gear-js/pull/2332
+- **BREAKING**: `RouterClient`, `MirrorClient` and `WrappedVaraClient` accepts a single param object instead of seperate arguments in https://github.com/gear-tech/gear-js/pull/2332
 - Renamed `Injected` class to `InjectedTx` (with backward-compatible alias) in https://github.com/gear-tech/gear-js/pull/2281
 - Refactored injected transaction code into separate modules (`tx.ts` and `promise.ts`) in https://github.com/gear-tech/gear-js/pull/2281
 - Updated `IInjectedTransactionPromise` interface: flattened reply structure, changed `value` from `number` to `bigint`, changed `code` to `Hex` in https://github.com/gear-tech/gear-js/pull/2281

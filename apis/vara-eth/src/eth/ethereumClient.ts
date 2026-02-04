@@ -15,12 +15,14 @@ export class EthereumClient {
   private _routerClient: RouterClient;
   private _wvaraClient: WrappedVaraClient;
   private _initPromise: Promise<boolean>;
+  private _isInitialized: boolean;
 
   constructor(
     public readonly publicClient: PublicClient,
     public signer: ISigner,
     routerAddress: Address,
   ) {
+    this._isInitialized = false;
     this._routerClient = getRouterClient(routerAddress, signer, this.publicClient);
 
     this._initPromise = this._init();
@@ -34,6 +36,7 @@ export class EthereumClient {
     this._chainId = chainId;
     this._wvaraClient = getWrappedVaraClient(wvaraAddress, this.signer, this.publicClient);
 
+    this._isInitialized = true;
     return true;
   }
 
@@ -54,6 +57,11 @@ export class EthereumClient {
   }
 
   public setSigner(signer: ISigner) {
+    if (!this._isInitialized) {
+      throw new Error(
+        'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before setting the signer.',
+      );
+    }
     this.signer = signer;
     this._routerClient.setSigner(signer);
     this._wvaraClient.setSigner(signer);
