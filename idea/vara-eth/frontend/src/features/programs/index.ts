@@ -1,2 +1,8 @@
-export { CreateProgramButton, ServiceList } from './ui';
-export { useExecutableBalanceTopUp, useSendProgramMessage, useGetAllProgramsQuery } from './lib';
+export { CreateProgramButton, TopUpExecBalance } from './ui';
+export {
+  useSendProgramMessage,
+  useGetProgramByIdQuery,
+  useGetAllProgramsQuery,
+  useReadContractState,
+  useWatchProgramStateChange,
+} from './lib';

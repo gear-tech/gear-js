@@ -1,21 +1,8 @@
-.container {
-  &.nested {
-    border: 1px solid rgba(41, 41, 41, 0.5);
-    border-radius: 4px;
-  }
-}
-
 .header {
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-
-  &.nested {
-    background: rgba(15, 15, 15, 1);
-    padding: 8px 16px;
-    height: 42px;
-  }
 }
 
 .icon {
@@ -41,15 +28,6 @@
   gap: 8px;
   display: flex;
   flex-direction: column;
-
-  &.nested {
-    padding: 12px 16px;
-    border-top: 1px solid rgba(41, 41, 41, 0.5);
-    border-radius: 4px;
-    gap: 8px;
-    margin-top: 0;
-    margin-left: 0;
-  }
 }
 
 .iconOpen {

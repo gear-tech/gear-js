@@ -1,0 +1,15 @@
+.form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+}
+
+.input,
+.textarea {
+  display: contents;
+}
+
+.select,
+.checkbox {
+  grid-column: 1 / -1;
+}

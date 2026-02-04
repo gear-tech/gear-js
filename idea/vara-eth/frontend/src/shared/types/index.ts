@@ -1,3 +1,5 @@
+import { FunctionComponent, SVGProps } from 'react';
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -8,3 +10,7 @@ export interface PaginatedResponse<T> {
 export type PropsWithClassName = {
   className?: string;
 };
+
+export type SVGComponent = FunctionComponent<
+  SVGProps<SVGSVGElement> & { title?: string; titleId?: string; desc?: string; descId?: string }
+>;

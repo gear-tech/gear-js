@@ -1,52 +1,42 @@
+import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
+import { formatEther, formatUnits, isAddress } from 'viem';
 import { useBalance } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
-import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Balance, HashLink, Tooltip } from '@/components';
-import { formatBalance } from '@/shared/utils';
+import { Balance, ChainEntity } from '@/components';
 
 import styles from './user.module.scss';
 
 type Params = {
-  userId: string;
+  userId: HexString;
 };
 
 export const User = () => {
   const { userId } = useParams() as Params;
-
-  const address = userId.startsWith('0x') ? (userId as `0x${string}`) : undefined;
+  const address = isAddress(userId) ? userId : undefined;
 
   const { data: ethBalance } = useBalance({ address });
   const { value, decimals } = useWrappedVaraBalance(address);
 
-  const wvara = value !== undefined && decimals ? formatBalance(value, decimals) : null;
-  const eth = ethBalance ? formatBalance(ethBalance.value, ethBalance.decimals) : null;
+  const wvara = value !== undefined && decimals ? formatUnits(value, decimals) : null;
+  const eth = ethBalance ? formatEther(ethBalance.value) : null;
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.header}>
-          <div className={styles.leftSide}>
-            <HashLink hash={userId} />
-            <Tooltip value="View on Etherscan">
-              {/* TODO: support mainnet */}
-              <a
-                href={`https://hoodi.etherscan.io/address/${userId}`}
-                target={'_blank'}
-                rel={'noreferrer'}
-                className={styles.link}>
-                <EtherscanSvg />
-              </a>
-            </Tooltip>
-          </div>
-        </div>
+        <ChainEntity.Header>
+          <h2 className={styles.title}>Address</h2>
+          <ChainEntity.Title id={userId} explorerLink />
+        </ChainEntity.Header>
 
-        <div className={styles.properties}>
-          <div>BALANCE</div>
-          {wvara && <Balance value={wvara} units="VWARA" />}
-          {eth && <Balance value={eth} units="ETH" />}
-        </div>
+        <ChainEntity.Data>
+          <ChainEntity.Key>Balance</ChainEntity.Key>
+
+          <div>
+            {wvara && <Balance value={wvara} units="WVARA" />} | {eth && <Balance value={eth} units="ETH" />}
+          </div>
+        </ChainEntity.Data>
       </div>
     </div>
   );

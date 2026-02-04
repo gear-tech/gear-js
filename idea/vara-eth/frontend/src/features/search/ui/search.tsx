@@ -70,6 +70,12 @@ const Search = () => {
       case INDEXER_ENTITY.CODE:
         return navigate(generatePath(routes.code, { codeId: value }));
 
+      case INDEXER_ENTITY.MESSAGE_REQUEST:
+      case INDEXER_ENTITY.MESSAGE_SENT:
+      case INDEXER_ENTITY.REPLY_REQUEST:
+      case INDEXER_ENTITY.REPLY_SENT:
+        return navigate(generatePath(routes.message, { messageId: value }));
+
       default:
         return navigate(generatePath(routes.notFound), { state: value });
     }

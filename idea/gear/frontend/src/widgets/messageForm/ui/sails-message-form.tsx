@@ -1,4 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
+import { getResetPayloadValue, PayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -8,7 +9,7 @@ import { Sails } from 'sails-js';
 import { z } from 'zod';
 
 import { GasField } from '@/features/gasField';
-import { PayloadForm, getResetPayloadValue, useService, PayloadValue, PayloadValueSchema } from '@/features/sails';
+import { PayloadForm, useService } from '@/features/sails';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
@@ -44,7 +45,7 @@ type Values = {
   payload: PayloadValue;
 };
 
-const useSchema = (payloadSchema: PayloadValueSchema) => {
+const useSchema = (payloadSchema: ReturnType<typeof useService>['schema']) => {
   const balanceSchema = useBalanceSchema();
   const gasLimitSchema = useGasLimitSchema();
 

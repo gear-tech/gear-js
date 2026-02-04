@@ -1,3 +1,4 @@
+import { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import cx from 'clsx';
 import { ReactNode, useState } from 'react';
 import { Sails } from 'sails-js';
@@ -6,13 +7,7 @@ import { getPreformattedText, isAnyKey } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
 import ArrowSVG from '../../assets/arrow.svg?react';
-import {
-  ISailsCtorFuncParams,
-  ISailsFuncArg,
-  SailsServiceEvent,
-  SailsServiceFunc,
-  SailsServiceQuery,
-} from '../../types';
+import { ISailsCtorFuncParams, SailsServiceEvent, SailsServiceFunc, SailsServiceQuery } from '../../types';
 
 import styles from './sails-preview.module.scss';
 

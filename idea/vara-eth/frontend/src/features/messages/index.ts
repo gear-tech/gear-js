@@ -1,3 +1,23 @@
-import { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery } from './lib';
+import { MessageData } from './components';
+import {
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
+} from './lib';
 
-export { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery };
+export {
+  MessageData,
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
+};

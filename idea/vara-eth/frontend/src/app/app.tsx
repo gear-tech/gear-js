@@ -13,7 +13,7 @@ function Component() {
 
       <div className="layout">
         <ErrorBoundary>
-          <div>
+          <div className="page">
             <Navigation />
             <Routing />
           </div>

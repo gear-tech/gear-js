@@ -1,10 +1,9 @@
 export {
-  useExecutableBalanceTopUp,
   useCreateProgram,
   useInitProgram,
   useReadContractState,
-  useSails,
   useSendProgramMessage,
   useSendInjectedTransaction,
+  useWatchProgramStateChange,
 } from './hooks';
 export { useGetAllProgramsQuery, useGetProgramByIdQuery } from './queries';

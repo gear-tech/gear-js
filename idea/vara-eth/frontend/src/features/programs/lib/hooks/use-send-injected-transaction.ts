@@ -1,20 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
+import { Sails } from 'sails-js';
 
 import { useVaraEthApi } from '@/app/providers';
-import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
-
-import { useSails } from './use-sails';
+import { TransactionTypes, useAddMyActivity } from '@/app/store';
+import { FormattedPayloadValue } from '@/features/sails/lib';
 
 type SendMessageParams = {
   serviceName: string;
   messageName: string;
   isQuery: boolean;
-  payload: HexString;
+  payload: FormattedPayloadValue;
 };
 
-const useSendInjectedTransaction = (programId: HexString, idl: string) => {
-  const { data: sails } = useSails(idl);
+const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefined) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
@@ -24,44 +23,35 @@ const useSendInjectedTransaction = (programId: HexString, idl: string) => {
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
 
-    // TODO: would be better to return non-encoded payload from schema,
-    // but for now to not change gear idea implementation we have to decode encoded value here
-    const args: unknown[] = sailsMessage.decodePayload(payload);
+    const params = payload.formatted;
 
     const tx = await api.createInjectedTransaction({
       destination: programId,
-      payload,
+      payload: payload.encoded,
       value: 0n,
     });
 
     const response = await tx.sendAndWaitForPromise();
 
-    const params = args.map((_value, index) => {
-      const key = sailsMessage.args[index].name;
-      return `${key}: ${String(_value)}`;
-    });
-
-    addMyActivity({
-      type: TransactionTypes.programMessage,
+    await addMyActivity({
+      type: TransactionTypes.injectedTx,
       serviceName,
       messageName,
-      ...unpackReceipt(),
       hash: response.txHash,
       to: programId,
-      params: { payload: `${messageName} (${params.join(', ')})` },
+      params: { payload: `${messageName} (${params})` },
     });
 
     const { value, code } = response;
 
     const result: Record<string, unknown> = sailsMessage.decodeResult(response.payload);
 
-    addMyActivity({
-      type: TransactionTypes.programReply,
+    await addMyActivity({
+      type: TransactionTypes.injectedTxResponse,
       serviceName,
       messageName,
       // TODO: fix this once code is of type ReplyCode
-      replyCode: code.startsWith('0x00') ? 'Success' : 'Error',
-      ...unpackReceipt(),
+      replyCode: code.startsWith('0x00') ? 'success' : 'error',
       from: programId,
       params: { payload: JSON.stringify(result) },
       value: String(value),

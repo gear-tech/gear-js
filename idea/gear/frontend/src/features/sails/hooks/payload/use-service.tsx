@@ -1,9 +1,8 @@
+import { getDefaultPayloadValue, getPayloadSchema } from '@gear-js/sails-payload-form';
 import { ChangeEvent, useMemo } from 'react';
 import { Sails } from 'sails-js';
 
 import { isAnyKey } from '@/shared/helpers';
-
-import { getDefaultPayloadValue, getPayloadSchema } from '../../utils';
 
 import { useSelect } from './use-select';
 
@@ -31,7 +30,7 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
   );
 
   const schema = useMemo(
-    () => getPayloadSchema(sails, args, encodePayload),
+    () => getPayloadSchema(sails, args, encodePayload).transform((value) => value.encoded),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value, functionSelect.value],
   );

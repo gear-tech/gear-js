@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 
 import logo from '@/assets/logo.svg';
 import { HeaderBalance } from '@/components';
+import { routes } from '@/shared/config';
 
 import { WalletButton } from '../wallet/wallet-button';
 
@@ -14,7 +16,10 @@ const Header = () => {
   return (
     <header className={styles.container}>
       <div className={styles.leftGroup}>
-        <img src={logo} alt="Gear logo" />
+        <Link to={routes.home} className={styles.logo}>
+          <img src={logo} alt="Gear logo" />
+        </Link>
+
         {/* <NodesSwitch /> */}
       </div>
 

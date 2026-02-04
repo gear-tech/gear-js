@@ -1,12 +1,10 @@
 import { HexString } from '@vara-eth/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import { Badge, Button, HashLink, UploadIdlButton, NotFound, SyntaxHighlighter } from '@/components';
+import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
-import { routes } from '@/shared/config';
+import { useSails, SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
-import { formatDate } from '@/shared/utils';
 
 import styles from './code.module.scss';
 
@@ -15,67 +13,39 @@ type Params = {
 };
 
 const Code = () => {
-  const navigate = useNavigate();
-  const params = useParams<Params>();
-  const codeId = params?.codeId;
+  const { codeId } = useParams() as Params;
 
-  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
+  const { data: code, isLoading } = useGetCodeByIdQuery(codeId);
   const { idl, saveIdl } = useIdlStorage(codeId);
+  const sails = useSails(idl);
 
-  if (isLoading) {
+  if (isLoading || sails.isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.card}>
-          <div>Loading...</div>
-        </div>
+        <div className={styles.card}>Loading...</div>
       </div>
     );
   }
 
-  if (error || !code || !codeId) {
-    return <NotFound entity="code" id={params?.codeId} />;
+  if (!code) {
+    return <ChainEntity.NotFound entity="code" id={codeId} />;
   }
-
-  const createdDateTime = formatDate(code.createdAt);
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.header}>
-          <div className={styles.leftSide}>
-            <Button variant="icon" onClick={() => navigate(routes.programs)}>
-              <ArrowLeftSVG className={styles.arrowLeft} />
-            </Button>
-            <HashLink hash={codeId} truncateSize="xxl" />
-          </div>
-          {/* TODO: add after code verifier is implemented */}
-          {/* {isVerify && (
-              <Tooltip value="Verified">
-                <VerifySvg />
-              </Tooltip>
-            )} */}
-        </div>
+        <ChainEntity.Header>
+          <ChainEntity.BackButton />
+          <ChainEntity.Title id={codeId} />
+        </ChainEntity.Header>
 
-        <div className={styles.properties}>
-          <div>SERVICES</div>
-          <div className={styles.services}>
-            <Badge color={1} size="sm">
-              SERVICE 1
-            </Badge>
-            <Badge color={2} size="sm">
-              SERVICE 2
-            </Badge>
-          </div>
+        <ChainEntity.Data>
+          <ChainEntity.Key>Services</ChainEntity.Key>
+          {idl ? <SailsServices value={sails.data?.services || {}} /> : <div>No IDL uploaded.</div>}
 
-          <div>PROGRAMS</div>
-          {/* TODO: add filtered programs page */}
-          <a className={styles.programs} href={routes.programs}>
-            3 programs
-          </a>
-
-          <div>CREATED AT</div>
-          <div>{createdDateTime}</div>
-        </div>
+          <ChainEntity.Key>Created at</ChainEntity.Key>
+          <ChainEntity.Date value={code.createdAt} />
+        </ChainEntity.Data>
       </div>
 
       <div className={styles.card}>

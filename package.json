@@ -37,7 +37,8 @@
     "utils/logger",
     "utils/util",
     "utils/vara-ui",
-    "utils/wallet-connect"
+    "utils/wallet-connect",
+    "utils/sails-payload-form"
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",

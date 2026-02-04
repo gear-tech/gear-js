@@ -52,13 +52,7 @@ const formatBalance = (value: bigint, decimals: number) => {
   return polkadotFormatBalance(value, { decimals, forceUnit: '-', withSi: false, withUnit: false });
 };
 
-const formatDate = (rawDate: string | number) => {
-  const date = new Date(rawDate);
-  const time = date.toLocaleTimeString('en-GB');
-  const formatedDate = date.toLocaleDateString('en-US').replace(/\//g, '-');
-
-  return `${formatedDate} ${time}`;
-};
+const formatDate = (value: string | number) => new Date(value).toLocaleString();
 
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
