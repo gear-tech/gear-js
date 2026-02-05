@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient, TransactionRequest } from 'viem';
+import type { Address, Hex, TransactionRequest } from 'viem';
 import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
@@ -8,8 +8,7 @@ import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.j
 import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { generateCodeHash } from '../util/index.js';
 import { TxManager } from './tx-manager.js';
-import { ISigner } from '../types/signer.js';
-import { BaseContractClient } from './base-contract.js';
+import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -375,13 +374,11 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 /**
  * Creates a new RouterContract instance.
  *
- * @param address - The address of the Router contract
- * @param signer - The signer for sending transactions
- * @param publicClient - The public client for reading data
- * @returns A new RouterContract instance that implements the IRouterContract interface
+ * @param params - {@link ContractClientParams} parameters for creating the Router contract client
+ * @returns A new {@link RouterClient} instance that implements the {@link IRouterContract} interface
  */
-export function getRouterClient(address: Address, signer: ISigner, publicClient: PublicClient): RouterClient {
-  return new RouterClient({ address, signer, publicClient });
+export function getRouterClient(params: ContractClientParams): RouterClient {
+  return new RouterClient(params);
 }
 
 function prepareBlob(data: Uint8Array) {

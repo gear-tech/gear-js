@@ -73,7 +73,7 @@ describe('router', () => {
 
       const id = await tx.getProgramId();
 
-      const mirror = getMirrorClient(id, signer, publicClient);
+      const mirror = getMirrorClient({ address: id, signer, publicClient });
 
       const mirrorRouter = (await mirror.router()).toLowerCase();
 

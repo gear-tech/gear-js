@@ -71,10 +71,7 @@ const ethereumClient = new EthereumClient(publicClient, signer, routerAddress);
 await ethereumClient.waitForInitialization();
 
 // Initialize Vara.Eth API (connects to Vara.Eth node)
-const api = new VaraEthApi(
-  new WsVaraEthProvider('ws://localhost:9944'),
-  ethereumClient
-);
+const api = new VaraEthApi(new WsVaraEthProvider('ws://localhost:9944'), ethereumClient);
 
 // Access Router and WVARA clients through EthereumClient
 const router = ethereumClient.router;
@@ -115,9 +112,9 @@ Main API class for interacting with the Vara.Eth network. Provides methods for q
 const api = new VaraEthApi(provider, ethereumClient);
 
 // Query methods
-await api.query.program.getIds();           // List all program IDs
-await api.query.program.readState(hash);    // Read program state
-await api.query.program.codeId(programId);  // Get program's code ID
+await api.query.program.getIds(); // List all program IDs
+await api.query.program.readState(hash); // Read program state
+await api.query.program.codeId(programId); // Get program's code ID
 
 // Call methods (read-only)
 await api.call.program.calculateReplyForHandle(source, programId, payload);
@@ -144,14 +141,14 @@ await ethereumClient.waitForInitialization();
 
 // Access underlying clients
 ethereumClient.publicClient;
-ethereumClient.signer;  // ISigner interface
+ethereumClient.signer; // ISigner interface
 
 // Get account address (async)
 const address = await ethereumClient.getAccountAddress();
 
 // Access contract clients
-ethereumClient.router;      // RouterClient instance
-ethereumClient.wvara;       // WrappedVaraClient instance
+ethereumClient.router; // RouterClient instance
+ethereumClient.wvara; // WrappedVaraClient instance
 
 // Update signer if needed
 ethereumClient.setSigner(newSigner);
@@ -164,11 +161,11 @@ Interface for interacting with the Router contract - the main entry point for co
 **Source:** [Router.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Router.sol)
 
 ```typescript
-const router = getRouterClient(routerAddress, signer, publicClient);
+const router = getRouterClient({ address: routerAddress, signer, publicClient });
 // Or access via EthereumClient
 const router = ethereumClient.router;
 
-await router.createProgram(codeId);                 // Create program from validated code
+await router.createProgram(codeId); // Create program from validated code
 await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
 ```
 
@@ -181,9 +178,9 @@ Interface for interacting with Mirror contracts - deployed programs on Ethereum.
 ```typescript
 const mirror = getMirrorClient(programId, signer, publicClient);
 
-await mirror.sendMessage(payload, value);          // Send message to program
-await mirror.executableBalanceTopUp(amount);       // Top up program's balance
-await mirror.stateHash();                          // Get current state hash
+await mirror.sendMessage(payload, value); // Send message to program
+await mirror.executableBalanceTopUp(amount); // Top up program's balance
+await mirror.stateHash(); // Get current state hash
 ```
 
 ### WrappedVaraClient
@@ -197,9 +194,9 @@ const wvara = getWrappedVaraClient(wvaraAddress, signer, publicClient);
 // Or access via EthereumClient
 const wvara = ethereumClient.wvara;
 
-await wvara.approve(spender, amount);              // Approve spending
-await wvara.balanceOf(address);                    // Check balance
-await wvara.allowance(owner, spender);             // Check allowance
+await wvara.approve(spender, amount); // Approve spending
+await wvara.balanceOf(address); // Check balance
+await wvara.allowance(owner, spender); // Check allowance
 ```
 
 ## Uploading Program Code
@@ -209,10 +206,12 @@ Before creating a program, you must upload and validate your WASM code using the
 ### Getting the CLI
 
 **Download from releases** (recommended):
+
 - Visit [Gear repository releases](https://github.com/gear-tech/gear/releases)
 - Download the `ethexe-cli` binary for your platform
 
 **Build from source**:
+
 ```bash
 cargo build -p ethexe-cli -r
 ```
@@ -220,11 +219,13 @@ cargo build -p ethexe-cli -r
 ### Uploading Your Program
 
 Insert your private key:
+
 ```bash
 ./target/release/ethexe key insert $SENDER_PRIVATE_KEY
 ```
 
 Upload your compiled WASM:
+
 ```bash
 ./target/release/ethexe --cfg none tx \
   --ethereum-rpc "$ETH_RPC" \           # Ethereum node RPC
@@ -407,18 +408,12 @@ Connect to Vara.Eth node using HTTP or WebSocket provider:
 // HTTP Provider (for queries and calls)
 import { VaraEthApi, HttpVaraEthProvider } from '@vara-eth/api';
 
-const api = new VaraEthApi(
-  new HttpVaraEthProvider('http://localhost:9944'),
-  ethereumClient
-);
+const api = new VaraEthApi(new HttpVaraEthProvider('http://localhost:9944'), ethereumClient);
 
 // WebSocket Provider (for subscriptions and real-time updates)
 import { WsVaraEthProvider } from '@vara-eth/api';
 
-const wsApi = new VaraEthApi(
-  new WsVaraEthProvider('ws://localhost:9944'),
-  ethereumClient
-);
+const wsApi = new VaraEthApi(new WsVaraEthProvider('ws://localhost:9944'), ethereumClient);
 
 // Don't forget to disconnect when done
 await api.provider.disconnect();
@@ -436,6 +431,7 @@ Injected transactions are Vara.Eth-native transactions sent directly to the netw
 **What are Injected Transactions?**
 
 Unlike regular messages sent through Mirror contracts on Ethereum, injected transactions are:
+
 - Sent directly to Vara.Eth validators
 - Signed with Ethereum private key but submitted off-chain
 - Cheaper and faster (no Ethereum gas costs)
@@ -446,9 +442,9 @@ Unlike regular messages sent through Mirror contracts on Ethereum, injected tran
 ```typescript
 // Create injected transaction using API
 const injected = await api.createInjectedTransaction({
-  destination: programId,              // Program to send message to
+  destination: programId, // Program to send message to
   payload: '0x1c436f756e74657224496e6372656d656e74', // Encoded message payload
-  value: 0n,                           // Optional value to send
+  value: 0n, // Optional value to send
   // These are auto-populated if not provided:
   // recipient: validator address (auto-selected)
   // referenceBlock: recent Ethereum block hash (auto-fetched)
@@ -475,22 +471,22 @@ const injected = await api.createInjectedTransaction({
   destination: programId,
   payload: encodedPayload,
   value: 1000n,
-  referenceBlock: blockHash,          // Specific Ethereum block
-  salt: '0x030405',                   // Custom salt
-  recipient: validatorAddress,        // Specific validator
+  referenceBlock: blockHash, // Specific Ethereum block
+  salt: '0x030405', // Custom salt
+  recipient: validatorAddress, // Specific validator
 });
 
 // Modify transaction using fluent API
 injected
-  .setValue(2000n)                    // Update value
-  .setSalt('0x060708');               // Update salt
+  .setValue(2000n) // Update value
+  .setSalt('0x060708'); // Update salt
 
 // Access transaction properties
 const messageId = injected.messageId; // Vara.Eth message ID
 
 // Update transaction fields
-await injected.setReferenceBlock();   // Fetch latest Ethereum block
-await injected.setRecipient();        // Auto-select next validator
+await injected.setReferenceBlock(); // Fetch latest Ethereum block
+await injected.setRecipient(); // Auto-select next validator
 // or specify a validator
 await injected.setRecipient(validatorAddress);
 
@@ -532,9 +528,9 @@ const queryPayload = sails.services.Counter.queries.GetValue.encodePayload();
 
 // Calculate what the program would reply (read-only)
 const reply = await api.call.program.calculateReplyForHandle(
-  await ethereumClient.getAccountAddress(),  // Source address
-  programId,                      // Program to query
-  queryPayload                    // Encoded query
+  await ethereumClient.getAccountAddress(), // Source address
+  programId, // Program to query
+  queryPayload, // Encoded query
 );
 
 // Decode result using sails-js
@@ -543,6 +539,7 @@ console.log('Current counter value:', value);
 ```
 
 This method is useful for:
+
 - Reading program state without modifying it
 - Testing message payloads before sending
 - Querying computed values from programs

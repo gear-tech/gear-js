@@ -19,11 +19,15 @@ export class EthereumClient {
 
   constructor(
     public readonly publicClient: PublicClient,
-    private _signer: ISigner,
     routerAddress: Address,
+    private _signer?: ISigner,
   ) {
     this._isInitialized = false;
-    this._routerClient = getRouterClient(routerAddress, _signer, this.publicClient);
+    this._routerClient = getRouterClient({
+      address: routerAddress,
+      signer: this._signer,
+      publicClient: this.publicClient,
+    });
 
     this._initPromise = this._init();
   }
@@ -34,7 +38,11 @@ export class EthereumClient {
       this._routerClient.wrappedVara(),
     ]);
     this._chainId = chainId;
-    this._wvaraClient = getWrappedVaraClient(wvaraAddress, this._signer, this.publicClient);
+    this._wvaraClient = getWrappedVaraClient({
+      address: wvaraAddress,
+      signer: this._signer,
+      publicClient: this.publicClient,
+    });
 
     this._isInitialized = true;
     return true;

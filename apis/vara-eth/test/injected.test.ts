@@ -171,7 +171,7 @@ describe('Injected Transactions', () => {
 
       expect(programId).toBeDefined();
 
-      mirror = getMirrorClient(programId, signer, publicClient);
+      mirror = getMirrorClient({ address: programId, signer, publicClient });
     });
 
     test(
