@@ -15,9 +15,14 @@ import { Transaction } from './transaction';
 
 const tabs = ['All activity', 'My activity'];
 
-const Activity = () => {
+type Props = {
+  isOpen: boolean;
+  onToggleClick: () => void;
+  onTabChange: () => void;
+};
+
+const Activity = ({ isOpen, onToggleClick, onTabChange }: Props) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [isOpen, setIsOpen] = useState(true);
 
   const activity = useActivity();
   const myActivity = useAtomValue(myActivityAtom);

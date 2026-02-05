@@ -1,7 +1,6 @@
 .container {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: 340px;
   border: 1px solid rgba(41, 41, 41, 1);
   border-top: none;
   border-radius: 0 0 4px 4px;
