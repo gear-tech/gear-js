@@ -1,12 +1,20 @@
 .container {
+  min-height: 0; // sails actions overflow
+
   display: grid;
   grid-template-columns: 1fr 1fr;
+
   border: 1px solid rgba(41, 41, 41, 1);
   border-top: none;
   border-radius: 0 0 4px 4px;
 }
 
 .card {
+  // sails actions overflow
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+
   padding: 24px;
 
   &:first-child {

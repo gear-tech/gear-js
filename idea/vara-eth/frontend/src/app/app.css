@@ -164,17 +164,15 @@ main {
   flex: 1;
 
   justify-content: space-between;
-
-  overflow: hidden;
 }
 
-.page {
-  flex: 1;
+main,
+.content {
+  /* control nested overflows */
+  min-height: 0;
+}
 
+.content {
   display: flex;
   flex-direction: column;
-
-  &.activity {
-    max-height: 75%;
-  }
 }

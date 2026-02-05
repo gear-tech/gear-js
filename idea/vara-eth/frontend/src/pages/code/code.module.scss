@@ -1,4 +1,6 @@
 .container {
+  min-height: 0; // syntax highlighter overflow
+
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   border: 1px solid rgba(41, 41, 41, 1);
@@ -7,7 +9,12 @@
 }
 
 .card {
-  padding: 24px 24px 12px 24px;
+  padding: 24px;
+
+  // syntax highlighter overflow
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 
   &:first-child {
     border-right: 1px solid rgba(41, 41, 41, 1);

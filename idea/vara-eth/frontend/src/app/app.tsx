@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { ErrorBoundary, Header, Navigation } from '@/components';
 import { Activity } from '@/features/activity';
 import { Routing } from '@/pages';
-import { cx } from '@/shared/utils';
 
 import { withProviders } from './providers';
 
@@ -18,7 +17,7 @@ function Component() {
 
       <main>
         <ErrorBoundary>
-          <div className={cx('page', isActivityOpen && 'activity')}>
+          <div className="content">
             <Navigation />
             <Routing />
           </div>
