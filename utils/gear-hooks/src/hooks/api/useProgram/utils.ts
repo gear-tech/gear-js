@@ -18,7 +18,6 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
         }
       }
     });
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1816): resolve eslint comments
   }).finally(unsubscribe);
 };
 

@@ -4,17 +4,18 @@ import { privateKeyToAccount } from 'viem/accounts';
 import * as fs from 'fs';
 import path from 'path';
 
-import { CodeState, EthereumClient, getMirrorClient } from '../src';
-import { waitNBlocks } from './common';
+import { CodeState, EthereumClient, getMirrorClient, ISigner } from '../src';
 import { config } from './config';
+import { walletClientToSigner } from '../src/signer';
 
-const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
+// const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: `0x${string}`;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
+let signer: ISigner;
 let ethereumClient: EthereumClient;
 
-let codeValidatedPromise: Promise<boolean>;
+// let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
@@ -28,7 +29,9 @@ beforeAll(async () => {
     account,
     transport,
   });
-  ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
+  signer = walletClientToSigner(walletClient);
+  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  await ethereumClient.waitForInitialization();
   codeId = config.codeId;
 });
 
@@ -38,24 +41,24 @@ afterAll(async () => {
 
 describe('router', () => {
   describe('upload code', () => {
-    test.skip('should request code validation', async () => {
-      const tx = await ethereumClient.router.requestCodeValidation(code);
-      codeId = tx.codeId;
-      const receipt = await tx.sendAndWaitForReceipt();
-      expect(receipt.blockHash).toBeDefined();
-      codeValidatedPromise = tx.waitForCodeGotValidated();
-    }, 60_000);
+    // test.skip('should request code validation', async () => {
+    //   const tx = await ethereumClient.router.requestCodeValidation(code);
+    //   codeId = tx.codeId;
+    //   const receipt = await tx.sendAndWaitForReceipt();
+    //   expect(receipt.blockHash).toBeDefined();
+    //   codeValidatedPromise = tx.waitForCodeGotValidated();
+    // }, 60_000);
 
-    test.skip(
-      'should wait when code got validated',
-      async () => {
-        expect(await codeValidatedPromise).toBeTruthy();
-        await waitNBlocks(5);
+    // test.skip(
+    //   'should wait when code got validated',
+    //   async () => {
+    //     expect(await codeValidatedPromise).toBeTruthy();
+    //     await waitNBlocks(5);
 
-        console.log(codeId);
-      },
-      config.longRunningTestTimeout,
-    );
+    //     console.log(codeId);
+    //   },
+    //   config.longRunningTestTimeout,
+    // );
 
     test('should check that code state is Validated', async () => {
       expect(await ethereumClient.router.codeState(codeId)).toBe(CodeState.Validated);
@@ -70,7 +73,7 @@ describe('router', () => {
 
       const id = await tx.getProgramId();
 
-      const mirror = getMirrorClient(id, walletClient, publicClient);
+      const mirror = getMirrorClient(id, signer, publicClient);
 
       const mirrorRouter = (await mirror.router()).toLowerCase();
 

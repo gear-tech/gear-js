@@ -1,7 +1,8 @@
-import type { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
+import type { Address, Hex, PublicClient } from 'viem';
 
-import { getRouterClient, type RouterClient } from './router';
-import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara';
+import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
+import { getRouterClient, type RouterClient } from './router.js';
+import { ISigner } from '../types/signer.js';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,
@@ -9,23 +10,20 @@ const TARGET_BLOCK_TIMES: Record<number, number> = {
   31337: 1,
 };
 
-export class EthereumClient<
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
-> {
-  public readonly publicClient: PublicClient<TTransport, TChain>;
-  private _walletClient: WalletClient<TTransport, TChain, TAccount>;
+export class EthereumClient {
   private _chainId: number;
-  private _routerClient: RouterClient<TTransport, TChain, TAccount>;
-  private _wvaraClient: WrappedVaraClient<TTransport, TChain, TAccount>;
+  private _routerClient: RouterClient;
+  private _wvaraClient: WrappedVaraClient;
   private _initPromise: Promise<boolean>;
+  private _isInitialized: boolean;
 
-  constructor(publicClient: PublicClient, walletClient: WalletClient, routerAddress: Address) {
-    this.publicClient = publicClient as PublicClient<TTransport, TChain>;
-    this._walletClient = walletClient as WalletClient<TTransport, TChain, TAccount>;
-
-    this._routerClient = getRouterClient(routerAddress, this._walletClient, this.publicClient);
+  constructor(
+    public readonly publicClient: PublicClient,
+    public signer: ISigner,
+    routerAddress: Address,
+  ) {
+    this._isInitialized = false;
+    this._routerClient = getRouterClient(routerAddress, signer, this.publicClient);
 
     this._initPromise = this._init();
   }
@@ -36,20 +34,14 @@ export class EthereumClient<
       this._routerClient.wrappedVara(),
     ]);
     this._chainId = chainId;
-    this._wvaraClient = getWrappedVaraClient(wvaraAddress, this.walletClient, this.publicClient);
+    this._wvaraClient = getWrappedVaraClient(wvaraAddress, this.signer, this.publicClient);
 
+    this._isInitialized = true;
     return true;
   }
 
-  public get isInitialized(): Promise<boolean> {
+  public waitForInitialization(): Promise<boolean> {
     return this._initPromise;
-  }
-
-  public get walletClient() {
-    if (!this._walletClient) {
-      throw new Error('Wallet client not connected');
-    }
-    return this._walletClient;
   }
 
   public get router() {
@@ -64,23 +56,23 @@ export class EthereumClient<
     return this._wvaraClient;
   }
 
-  public setWalletClient(client: WalletClient) {
-    this._walletClient = client as WalletClient<TTransport, TChain, TAccount>;
+  public setSigner(signer: ISigner) {
+    if (!this._isInitialized) {
+      throw new Error(
+        'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before setting the signer.',
+      );
+    }
+    this.signer = signer;
+    this._routerClient.setSigner(signer);
+    this._wvaraClient.setSigner(signer);
     return this;
   }
 
-  get accountAddress() {
-    if (!this.walletClient || !this.walletClient.account) {
-      throw new Error('Wallet client not connected');
+  public getAccountAddress(): Promise<Address> {
+    if (!this.signer) {
+      throw new Error('Signer is not provided.');
     }
-    return this.walletClient.account.address;
-  }
-
-  get account() {
-    if (!this.walletClient || !this.walletClient.account) {
-      throw new Error('Wallet client not connected');
-    }
-    return this.walletClient.account;
+    return this.signer.getAddress();
   }
 
   async getBlockNumber() {
@@ -99,7 +91,7 @@ export class EthereumClient<
   }
 
   async signMessage(data: Hex) {
-    return this.walletClient.signMessage({ message: { raw: data }, account: this.account });
+    return this.signer.signMessage(data);
   }
 
   get blockDuration(): number {

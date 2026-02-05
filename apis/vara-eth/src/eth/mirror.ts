@@ -1,4 +1,4 @@
-import type { Account, Address, Chain, Hex, PublicClient, TransactionRequest, Transport, WalletClient } from 'viem';
+import type { Address, Hex, PublicClient, TransactionRequest } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import {
@@ -13,30 +13,14 @@ import {
 import { convertEventParams } from '../util/index.js';
 import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
 import { TxManager } from './tx-manager.js';
+import { ISigner } from '../types/signer.js';
+import { BaseContractClient } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with a Mirror contract.
  * Provides methods for sending messages, replies, claiming values, and managing balance.
  */
-export class MirrorClient<
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
-> implements IMirrorContract
-{
-  /**
-   * Creates a new MirrorClient instance.
-   *
-   * @param address - The address of the Mirror contract
-   * @param walletClient - The wallet client for sending transactions and signing messages
-   * @param publicClient - The public client for reading contract data
-   */
-  constructor(
-    public readonly address: Address,
-    private _wc: WalletClient<TTransport, TChain, TAccount>,
-    private _pc: PublicClient<TTransport, TChain>,
-  ) {}
-
+export class MirrorClient extends BaseContractClient implements IMirrorContract {
   router(): Promise<Address> {
     return this._pc.readContract({
       address: this.address,
@@ -85,13 +69,14 @@ export class MirrorClient<
    * @returns A transaction manager with message-specific helper functions
    */
   async sendMessage(payload: string, value?: bigint): Promise<TxManagerWithHelpers<MessageHelpers>> {
+    const signer = this._ensureSigner();
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
     await this._pc.simulateContract({
       address: this.address,
       abi: IMIRROR_ABI,
       functionName: 'sendMessage',
       args: [payload as Hex, false],
-      account: this._wc.account,
+      account: await signer.getAddress(),
     });
 
     const tx: TransactionRequest = {
@@ -104,7 +89,7 @@ export class MirrorClient<
       value,
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IMIRROR_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IMIRROR_ABI, {
       getMessage: (manager) => async () => {
         const event = await manager.findEvent('MessageQueueingRequested');
         return convertEventParams<MessageQueuingRequestedLog>(event);
@@ -138,12 +123,13 @@ export class MirrorClient<
    * @returns A transaction manager with reply-specific helper functions
    */
   async sendReply(repliedTo: string, payload: string, value?: bigint): Promise<TxManagerWithHelpers<ReplyHelpers>> {
+    const signer = this._ensureSigner();
     await this._pc.simulateContract({
       address: this.address,
       abi: IMIRROR_ABI,
       functionName: 'sendReply',
       args: [repliedTo as Hex, payload as Hex],
-      account: this._wc.account,
+      account: await signer.getAddress(),
       value,
     });
 
@@ -157,7 +143,7 @@ export class MirrorClient<
       value,
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IMIRROR_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IMIRROR_ABI, {
       getEvent: (manager) => async () => {
         return manager.findEvent('ReplyQueueingRequested');
       },
@@ -177,12 +163,13 @@ export class MirrorClient<
       getValueClaimingRequestedEvent: () => Promise<ValueClaimingRequestedLog>;
     }>
   > {
+    const signer = this._ensureSigner();
     await this._pc.simulateContract({
       address: this.address,
       abi: IMIRROR_ABI,
       functionName: 'claimValue',
       args: [claimedId as Hex],
-      account: this._wc.account,
+      account: await signer.getAddress(),
     });
 
     const tx = {
@@ -194,7 +181,7 @@ export class MirrorClient<
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IMIRROR_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IMIRROR_ABI, {
       getValueClaimingRequestedEvent: (manager) => async () => {
         const event = await manager.findEvent('ValueClaimingRequested');
         return convertEventParams<ValueClaimingRequestedLog>(event);
@@ -212,12 +199,13 @@ export class MirrorClient<
    * @param value - The amount to top up
    */
   async executableBalanceTopUp(value: bigint): Promise<ITxManager> {
+    const signer = this._ensureSigner();
     await this._pc.simulateContract({
       address: this.address,
       abi: IMIRROR_ABI,
       functionName: 'executableBalanceTopUp',
       args: [value],
-      account: this._wc.account,
+      account: await signer.getAddress(),
     });
 
     const tx = {
@@ -229,7 +217,7 @@ export class MirrorClient<
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IMIRROR_ABI);
+    const txManager: ITxManager = new TxManager(this._pc, signer, tx, IMIRROR_ABI);
 
     return txManager;
   }
@@ -304,18 +292,10 @@ export class MirrorClient<
  * Creates a new MirrorContract instance.
  *
  * @param address - The address of the Mirror contract
- * @param walletClient - The wallet client for sending transactions
+ * @param signer - The signer for sending transactions
  * @param publicClient - The public client for reading data
  * @returns A new MirrorContract instance that implements the IMirrorContract interface
  */
-export function getMirrorClient<
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
->(
-  address: Address,
-  walletClient: WalletClient<TTransport, TChain, TAccount>,
-  publicClient: PublicClient<TTransport, TChain>,
-): MirrorClient<TTransport, TChain, TAccount> {
-  return new MirrorClient(address, walletClient, publicClient);
+export function getMirrorClient(address: Address, signer: ISigner, publicClient: PublicClient): MirrorClient {
+  return new MirrorClient({ address, publicClient, signer });
 }

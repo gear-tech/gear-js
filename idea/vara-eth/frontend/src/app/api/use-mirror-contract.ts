@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMirrorClient } from '@vara-eth/api';
+import { walletClientToSigner } from '@vara-eth/api/signer';
 import type { Address } from 'viem';
 import { usePublicClient, useWalletClient } from 'wagmi';
 
@@ -9,7 +10,7 @@ const useMirrorContract = (mirrorAddress: Address) => {
 
   return useQuery({
     queryKey: ['mirrorContract', mirrorAddress, walletClient, publicClient],
-    queryFn: () => getMirrorClient(mirrorAddress, walletClient!, publicClient!),
+    queryFn: () => getMirrorClient(mirrorAddress, walletClientToSigner(walletClient!), publicClient!),
     enabled: Boolean(mirrorAddress && walletClient && publicClient),
   });
 };

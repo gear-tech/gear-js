@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { EthereumClient } from '@vara-eth/api';
-import { type WebSocketTransport } from 'viem';
+import { walletClientToSigner } from '@vara-eth/api/signer';
 import { usePublicClient, useWalletClient } from 'wagmi';
 
 import { ROUTER_CONTRACT_ADDRESS } from '@/shared/config';
@@ -12,8 +12,8 @@ export function useEthereumClient() {
   return useQuery({
     queryKey: ['ethereumClient', walletClient, publicClient],
     queryFn: async () => {
-      const instance = new EthereumClient<WebSocketTransport>(publicClient!, walletClient!, ROUTER_CONTRACT_ADDRESS);
-      const isInitialized = await instance.isInitialized;
+      const instance = new EthereumClient(publicClient!, walletClientToSigner(walletClient!), ROUTER_CONTRACT_ADDRESS);
+      const isInitialized = await instance.waitForInitialization();
 
       if (!isInitialized) throw new Error('EthereumClient initialization failed');
 

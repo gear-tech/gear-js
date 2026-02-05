@@ -9,6 +9,7 @@ import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
 import type { EthereumClient } from '../../eth/index.js';
 import { isPoolProvider } from '../../provider/util.js';
 import { bigint128ToBytes } from '../../util/index.js';
+import { VARA_ETH_RPC_METHODS } from '../rpc.js';
 
 export class InjectedTx {
   private _destination: Address;
@@ -18,6 +19,7 @@ export class InjectedTx {
   private _salt: Hex;
   private _recipient?: Address;
   private _signature: Hex;
+  private _account: Address;
 
   constructor(
     private _varaethProvider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
@@ -182,37 +184,50 @@ export class InjectedTx {
     return this._recipient;
   }
 
-  public get _rpcData() {
+  private get _rpcData() {
     return [
       {
         recipient: this._recipient,
         tx: {
           data: this._data,
           signature: this._signature,
-          address: this._ethClient.accountAddress,
+          address: this._account,
         },
       },
     ];
   }
 
+  /**
+   * ## Sign the injected transaction
+   * @returns The signature of the transaction
+   */
   public async sign() {
+    this._account = await this._ethClient.getAccountAddress();
     this._signature = await this._ethClient.signMessage(this.hash);
 
     return this._signature;
   }
 
+  /**
+   * ## Send the injected transaction
+   */
   public async send(): Promise<string> {
     if (!this._referenceBlock) {
       await this.setReferenceBlock();
     }
 
-    await this.sign();
+    if (!this._signature) {
+      await this.sign();
+    }
 
     if (!this._recipient) {
       await this.setRecipient();
     }
 
-    const result = await this._varaethProvider.send<string>('injected_sendTransaction', this._rpcData);
+    const result = await this._varaethProvider.send<string>(
+      VARA_ETH_RPC_METHODS.injected.sendTransaction,
+      this._rpcData,
+    );
 
     return result;
   }
@@ -222,7 +237,9 @@ export class InjectedTx {
       await this.setReferenceBlock();
     }
 
-    await this.sign();
+    if (!this._signature) {
+      await this.sign();
+    }
 
     if (!this._recipient) {
       await this.setRecipient();
@@ -233,8 +250,8 @@ export class InjectedTx {
     const promise = new Promise<InjectedTxPromise>((resolve, reject) => {
       this._varaethProvider
         .subscribe<unknown, InjectedTransactionPromiseRaw>(
-          'injected_sendTransactionAndWatch',
-          'injected_sendTransactionAndWatchUnsubscribe',
+          VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.subscribe,
+          VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.unsubscribe,
           this._rpcData,
           (error, result) => {
             if (error) {

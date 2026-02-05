@@ -4,21 +4,16 @@ import type {
   Hash,
   ContractEventName,
   DecodeEventLogReturnType,
-  SendTransactionParameters,
-  Chain,
-  Account,
-  SendTransactionRequest,
   EstimateGasParameters,
   TransactionRequest,
   Log,
   Hex,
-  Transport,
   PublicClient,
-  WalletClient,
 } from 'viem';
 import { decodeEventLog } from 'viem';
 
 import { ITxManager } from './interfaces/tx-manager.js';
+import { ISigner } from '../types/signer.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -32,14 +27,6 @@ export class TxManager<
   T extends Record<string, any> = object,
   U extends Record<string, any> = object,
   const abi extends Abi = Abi,
-  TTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TAccount extends Account = Account,
-  TRequest extends SendTransactionRequest<TChain, undefined, TChain> = SendTransactionRequest<
-    TChain,
-    undefined,
-    TChain
-  >,
 > implements ITxManager
 {
   private _receipt: TransactionReceipt | null = null;
@@ -55,12 +42,12 @@ export class TxManager<
    * @param txIndependentHelperFns - Helper functions that do not depend on the transaction
    */
   constructor(
-    private _pc: PublicClient<TTransport, TChain>,
-    private _wc: WalletClient<TTransport, TChain, TAccount>,
+    private _pc: PublicClient,
+    private _signer: ISigner,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {
-      [k in keyof T]: (manager: TxManager<T, U, abi, TTransport, TChain, TAccount, TRequest>) => any;
+      [k in keyof T]: (manager: TxManager<T, U, abi>) => any;
     },
     txIndependentHelperFns?: Record<keyof U, any>,
   ) {
@@ -83,7 +70,7 @@ export class TxManager<
    */
   async estimateGas(): Promise<bigint> {
     try {
-      const gasParams: EstimateGasParameters<TChain> = this._tx as EstimateGasParameters<TChain>;
+      const gasParams: EstimateGasParameters = this._tx as EstimateGasParameters;
 
       this._tx.gas = await this._pc.estimateGas(gasParams);
 
@@ -100,9 +87,7 @@ export class TxManager<
    * @returns The transaction hash
    */
   async send(): Promise<Hash> {
-    const hash = await this._wc.sendTransaction(
-      this._tx as SendTransactionParameters<TChain, TAccount, undefined, TRequest>,
-    );
+    const hash = await this._signer.sendTransaction(this._tx);
     this._hash = hash;
     return hash;
   }
