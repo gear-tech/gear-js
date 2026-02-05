@@ -15,13 +15,8 @@ import { Transaction } from './transaction';
 
 const tabs = ['All activity', 'My activity'];
 
-type Props = {
-  isOpen: boolean;
-  onToggleClick: () => void;
-  onTabChange: () => void;
-};
-
-const Activity = ({ isOpen, onToggleClick, onTabChange }: Props) => {
+const Activity = () => {
+  const [isOpen, setIsOpen] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
 
   const activity = useActivity();
@@ -57,7 +52,7 @@ const Activity = ({ isOpen, onToggleClick, onTabChange }: Props) => {
       <header className={styles.header}>
         <Tabs tabs={tabs} tabIndex={tabIndex} onTabIndexChange={handleTabChange} className={styles.tabs} />
 
-        <Button variant="icon" onClick={() => setIsOpen((value) => !value)}>
+        <Button variant="icon" onClick={() => setIsOpen((prevValue) => !prevValue)}>
           <DoubleDownSVG className={clsx(!isOpen && styles.iconClosed)} />
         </Button>
       </header>
