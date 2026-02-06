@@ -7,16 +7,21 @@ import { VARA_ETH_NODE_ADDRESS } from '@/shared/config';
 import { ApiContext } from './context';
 
 const VaraEthApiProvider = ({ children }: PropsWithChildren) => {
-  const [api, setApi] = useState<VaraEthApi>();
   const { data: ethereumClient } = useEthereumClient();
 
+  const [api, setApi] = useState<VaraEthApi>();
+
   useEffect(() => {
+    setApi(undefined);
+
     if (!ethereumClient) return;
+
     const instance = new VaraEthApi(new WsVaraEthProvider(VARA_ETH_NODE_ADDRESS), ethereumClient);
+
     setApi(instance);
 
     return () => {
-      void instance.provider.disconnect();
+      instance.provider.disconnect().catch((error) => console.error(error));
     };
   }, [ethereumClient]);
 

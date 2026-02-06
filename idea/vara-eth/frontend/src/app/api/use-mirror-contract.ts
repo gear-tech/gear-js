@@ -4,21 +4,21 @@ import { walletClientToSigner } from '@vara-eth/api/signer';
 import type { Address } from 'viem';
 import { usePublicClient, useWalletClient } from 'wagmi';
 
-const useMirrorContract = (mirrorAddress: Address) => {
-  const { data: walletClient } = useWalletClient();
+const useMirrorContract = (address: Address) => {
   const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
 
   return useQuery({
-    queryKey: ['mirrorContract', mirrorAddress, walletClient, publicClient],
+    queryKey: ['mirrorContract', address, publicClient?.uid, walletClient?.uid],
 
     queryFn: () =>
       getMirrorClient({
-        address: mirrorAddress,
-        signer: walletClientToSigner(walletClient!),
+        address,
+        signer: walletClient ? walletClientToSigner(walletClient) : undefined,
         publicClient: publicClient!,
       }),
 
-    enabled: Boolean(mirrorAddress && walletClient && publicClient),
+    enabled: Boolean(publicClient),
   });
 };
 
