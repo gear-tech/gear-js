@@ -7,6 +7,10 @@ import type { ISigner } from '../../types/signer.js';
 export class WalletClientAdapter implements ISigner {
   constructor(private _wc: WalletClient) {}
 
+  getId(): string {
+    return this._wc.uid;
+  }
+
   async signMessage(data: Uint8Array | Hash): Promise<Hash> {
     if (!this._wc.account) {
       throw new SigningError('Wallet client has no account');
