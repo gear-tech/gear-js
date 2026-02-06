@@ -5,10 +5,6 @@ import type { Address, Hash, TransactionRequest } from 'viem';
  * This is the core interface used throughout the library.
  */
 export interface ISigner {
-  /**  * Get a unique identifier for the signer
-   * @returns Signer ID as a string
-   */
-  getId(): string;
   /**
    * Sign a message using ECDSA
    * @param message - Message to sign (as Uint8Array or hex string)
