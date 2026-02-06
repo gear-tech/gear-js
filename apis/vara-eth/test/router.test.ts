@@ -30,7 +30,7 @@ beforeAll(async () => {
     transport,
   });
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
   await ethereumClient.waitForInitialization();
   codeId = config.codeId;
 });
@@ -73,7 +73,7 @@ describe('router', () => {
 
       const id = await tx.getProgramId();
 
-      const mirror = getMirrorClient(id, signer, publicClient);
+      const mirror = getMirrorClient({ address: id, signer, publicClient });
 
       const mirrorRouter = (await mirror.router()).toLowerCase();
 

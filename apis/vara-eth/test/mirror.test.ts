@@ -31,7 +31,7 @@ beforeAll(async () => {
     transport,
   });
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
   await ethereumClient.waitForInitialization();
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
@@ -53,7 +53,7 @@ describe('setup', () => {
 
     expect(programId).toBeDefined();
 
-    mirror = getMirrorClient(programId, signer, publicClient);
+    mirror = getMirrorClient({ address: programId, signer, publicClient });
   });
 
   test(

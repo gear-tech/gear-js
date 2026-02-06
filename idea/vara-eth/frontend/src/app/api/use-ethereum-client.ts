@@ -11,14 +11,16 @@ export function useEthereumClient() {
 
   return useQuery({
     queryKey: ['ethereumClient', walletClient, publicClient],
+
     queryFn: async () => {
-      const instance = new EthereumClient(publicClient!, walletClientToSigner(walletClient!), ROUTER_CONTRACT_ADDRESS);
+      const instance = new EthereumClient(publicClient!, ROUTER_CONTRACT_ADDRESS, walletClientToSigner(walletClient!));
       const isInitialized = await instance.waitForInitialization();
 
       if (!isInitialized) throw new Error('EthereumClient initialization failed');
 
       return instance;
     },
+
     enabled: Boolean(walletClient && publicClient),
   });
 }

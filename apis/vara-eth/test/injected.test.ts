@@ -40,7 +40,7 @@ beforeAll(async () => {
     transport,
   }) as WalletClient<WebSocketTransport, Chain, Account>;
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
   await ethereumClient.waitForInitialization();
 
   api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient);
@@ -171,7 +171,7 @@ describe('Injected Transactions', () => {
 
       expect(programId).toBeDefined();
 
-      mirror = getMirrorClient(programId, signer, publicClient);
+      mirror = getMirrorClient({ address: programId, signer, publicClient });
     });
 
     test(
