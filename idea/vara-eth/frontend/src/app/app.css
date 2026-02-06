@@ -1,17 +1,4 @@
 :root {
-  font-family: 'Roboto Mono', monospace;
-  line-height: 1.5;
-  font-weight: 400;
-  font-size: 12px;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scrollbar-width: thin;
-  scrollbar-color: #ffffff80 transparent;
-  scroll-snap-type: proximity;
-
   --background: rgb(255, 255, 255);
   --foreground: rgb(57, 36, 20);
   --foreground-80: rgba(57, 36, 20, 0.8);
@@ -85,25 +72,27 @@
   --radius: 0.5rem;
 }
 
-* {
-  border-color: var(--border);
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
-body {
-  background-color: var(--background);
+html {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
   color: var(--foreground-75);
-  --container-padding: 1.5rem;
-  font-optical-sizing: auto;
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
-@media (min-width: 768px) {
-  body {
-    --container-padding: 3rem;
-  }
+body {
+  margin: 0;
+
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff80 transparent;
+
+  background-color: var(--background);
 }
 
 a {
@@ -112,7 +101,7 @@ a {
 }
 
 input {
-  font-family: 'Roboto Mono', monospace;
+  font: inherit;
 }
 
 button {
@@ -129,10 +118,12 @@ button {
   }
 }
 
-p,
 ul,
 ol {
-  text-transform: none;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
 }
 
 p {
@@ -150,57 +141,38 @@ h6 {
   font: inherit;
 }
 
-h1 {
-  font-size: 24px;
-  line-height: 28.8px;
-  font-weight: 400;
-  color: #fff;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: block;
-}
-
-.scrollbar {
-  -ms-overflow-style: auto;
-  scrollbar-width: thin;
-}
-
 w3m-modal {
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
 }
 
-main {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+#root {
+  max-width: 1376px;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
-.layout {
-  max-width: 1440px;
-  min-width: 940px;
-  width: 100%;
-  flex: 1;
-  margin: 0 auto;
-  padding: 8px 48px 0px 48px;
+#root,
+main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 8px;
 }
 
-.page {
+main {
   flex: 1;
+
+  justify-content: space-between;
+}
+
+main,
+.content {
+  /* control nested overflows */
+  min-height: 0;
+}
+
+.content {
   display: flex;
   flex-direction: column;
 }

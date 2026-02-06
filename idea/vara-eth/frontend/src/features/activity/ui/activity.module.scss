@@ -1,10 +1,11 @@
 .wrapper {
-  max-height: calc(50vh);
   display: flex;
   flex-direction: column;
 
   &.open {
-    flex-grow: 1;
+    flex: 1;
+
+    min-height: 256px;
   }
 }
 

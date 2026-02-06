@@ -1,13 +1,9 @@
 .container {
-  position: relative;
-  width: 100%;
-  max-width: 1440px;
-  min-width: 940px;
-  margin: 0 auto;
+  padding: 16px 0;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 48px;
 }
 
 .logo {

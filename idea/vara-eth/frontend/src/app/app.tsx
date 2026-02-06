@@ -8,20 +8,20 @@ import { withProviders } from './providers';
 
 function Component() {
   return (
-    <main>
+    <>
       <Header />
 
-      <div className="layout">
+      <main>
         <ErrorBoundary>
-          <div className="page">
+          <div className="content">
             <Navigation />
             <Routing />
           </div>
 
           <Activity />
         </ErrorBoundary>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

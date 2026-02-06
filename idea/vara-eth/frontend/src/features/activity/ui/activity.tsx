@@ -16,8 +16,8 @@ import { Transaction } from './transaction';
 const tabs = ['All activity', 'My activity'];
 
 const Activity = () => {
-  const [tabIndex, setTabIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const activity = useActivity();
   const myActivity = useAtomValue(myActivityAtom);
@@ -52,7 +52,7 @@ const Activity = () => {
       <header className={styles.header}>
         <Tabs tabs={tabs} tabIndex={tabIndex} onTabIndexChange={handleTabChange} className={styles.tabs} />
 
-        <Button variant="icon" onClick={() => setIsOpen((value) => !value)}>
+        <Button variant="icon" onClick={() => setIsOpen((prevValue) => !prevValue)}>
           <DoubleDownSVG className={clsx(!isOpen && styles.iconClosed)} />
         </Button>
       </header>
