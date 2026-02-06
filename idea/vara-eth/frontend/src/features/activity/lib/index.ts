@@ -1,1 +1,1 @@
-export { useAllActivity } from './use-all-activity';
+export { useActivity } from './use-activity';

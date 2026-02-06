@@ -24,11 +24,6 @@
   transform: rotate(180deg);
 }
 
-.tabs {
-  display: flex;
-  gap: 8px;
-}
-
 .content {
   flex-grow: 1;
   display: flex;
@@ -40,7 +35,7 @@
   border: 1px solid rgba(41, 41, 41, 1);
   min-height: 60px;
 
-  & > div:last  -child {
+  & > div:last-child {
     margin-bottom: 12px;
   }
 }
