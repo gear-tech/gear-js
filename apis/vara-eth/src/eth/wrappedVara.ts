@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient } from 'viem';
+import type { Address, Hex } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
@@ -6,8 +6,7 @@ import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.j
 import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
 import { convertEventParams } from '../util/index.js';
 import { TxManager } from './tx-manager.js';
-import { ISigner } from '../types/signer.js';
-import { BaseContractClient } from './base-contract.js';
+import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with the WrappedVara token.
@@ -117,11 +116,9 @@ export class WrappedVaraClient extends BaseContractClient implements IWrappedVar
 /**
  * Creates a new WrappedVaraContract instance.
  *
- * @param address - The address of the WrappedVara contract
- * @param signer - The signer for sending transactions
- * @param publicClient - The public client for interacting with the contract
- * @returns A new WrappedVaraContract instance that implements the IWrappedVaraContract interface
+ * @param params - {@link ContractClientParams} parameters for creating the WrappedVara contract client
+ * @returns A new {@link WrappedVaraClient} instance that implements the {@link IWrappedVaraContract} interface
  */
-export function getWrappedVaraClient(address: Address, signer: ISigner, publicClient: PublicClient): WrappedVaraClient {
-  return new WrappedVaraClient({ address, signer, publicClient });
+export function getWrappedVaraClient(params: ContractClientParams): WrappedVaraClient {
+  return new WrappedVaraClient(params);
 }

@@ -1,10 +1,15 @@
 import { bytesToHex, concatBytes, hexToBytes, randomBytes } from '@ethereumjs/util';
 import { blake2b } from '@noble/hashes/blake2';
 import { keccak_256 } from '@noble/hashes/sha3.js';
-import type { Address, Hex } from 'viem';
+import type { Address, Hash, Hex } from 'viem';
 import { zeroAddress } from 'viem';
 
-import type { IInjectedTransaction, IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../../types/index.js';
+import type {
+  IInjectedTransaction,
+  ISigner,
+  IVaraEthProvider,
+  IVaraEthValidatorPoolProvider,
+} from '../../types/index.js';
 import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
 import type { EthereumClient } from '../../eth/index.js';
 import { isPoolProvider } from '../../provider/util.js';
@@ -130,7 +135,12 @@ export class InjectedTx {
     return this;
   }
 
-  public async setReferenceBlock() {
+  public async setReferenceBlock(blockHash?: Hash) {
+    if (blockHash) {
+      this._referenceBlock = blockHash;
+      return;
+    }
+
     const latestBlockNumber = await this._ethClient.getBlockNumber();
     const blockNumber = latestBlockNumber - 3; // TODO: move to consts, explain why such value
 
@@ -201,9 +211,10 @@ export class InjectedTx {
    * ## Sign the injected transaction
    * @returns The signature of the transaction
    */
-  public async sign() {
-    this._account = await this._ethClient.getAccountAddress();
-    this._signature = await this._ethClient.signMessage(this.hash);
+  public async sign(signer?: ISigner) {
+    const _signer = signer ?? this._ethClient.signer;
+    this._account = await _signer.getAddress();
+    this._signature = await _signer.signMessage(this.hash);
 
     return this._signature;
   }

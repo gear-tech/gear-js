@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient } from 'viem';
+import type { Address, PublicClient } from 'viem';
 
 import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
 import { getRouterClient, type RouterClient } from './router.js';
@@ -19,11 +19,15 @@ export class EthereumClient {
 
   constructor(
     public readonly publicClient: PublicClient,
-    public signer: ISigner,
     routerAddress: Address,
+    private _signer?: ISigner,
   ) {
     this._isInitialized = false;
-    this._routerClient = getRouterClient(routerAddress, signer, this.publicClient);
+    this._routerClient = getRouterClient({
+      address: routerAddress,
+      signer: this._signer,
+      publicClient: this.publicClient,
+    });
 
     this._initPromise = this._init();
   }
@@ -34,7 +38,11 @@ export class EthereumClient {
       this._routerClient.wrappedVara(),
     ]);
     this._chainId = chainId;
-    this._wvaraClient = getWrappedVaraClient(wvaraAddress, this.signer, this.publicClient);
+    this._wvaraClient = getWrappedVaraClient({
+      address: wvaraAddress,
+      signer: this._signer,
+      publicClient: this.publicClient,
+    });
 
     this._isInitialized = true;
     return true;
@@ -62,17 +70,22 @@ export class EthereumClient {
         'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before setting the signer.',
       );
     }
-    this.signer = signer;
+    this._signer = signer;
     this._routerClient.setSigner(signer);
     this._wvaraClient.setSigner(signer);
     return this;
   }
 
-  public getAccountAddress(): Promise<Address> {
-    if (!this.signer) {
-      throw new Error('Signer is not provided.');
+  public resetSigner() {
+    if (!this._isInitialized) {
+      throw new Error(
+        'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before resetting the signer.',
+      );
     }
-    return this.signer.getAddress();
+    this._signer = undefined;
+    this._routerClient.resetSigner();
+    this._wvaraClient.resetSigner();
+    return this;
   }
 
   async getBlockNumber() {
@@ -90,14 +103,17 @@ export class EthereumClient {
     return Number(block.timestamp);
   }
 
-  async signMessage(data: Hex) {
-    return this.signer.signMessage(data);
-  }
-
   get blockDuration(): number {
     if (this._chainId in TARGET_BLOCK_TIMES) {
       return TARGET_BLOCK_TIMES[this._chainId];
     }
     throw new Error(`Unsupported chain ID: ${this._chainId}`);
+  }
+
+  get signer() {
+    if (!this._signer) {
+      throw new Error('Signer not set');
+    }
+    return this._signer;
   }
 }

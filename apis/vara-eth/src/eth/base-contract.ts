@@ -35,6 +35,11 @@ export abstract class BaseContractClient {
     return this;
   }
 
+  public resetSigner() {
+    this._signer = undefined;
+    return this;
+  }
+
   protected _ensureSigner(): ISigner {
     if (!this._signer) {
       throw new Error('Signer is not provided');

@@ -10,7 +10,14 @@ const useMirrorContract = (mirrorAddress: Address) => {
 
   return useQuery({
     queryKey: ['mirrorContract', mirrorAddress, walletClient, publicClient],
-    queryFn: () => getMirrorClient(mirrorAddress, walletClientToSigner(walletClient!), publicClient!),
+
+    queryFn: () =>
+      getMirrorClient({
+        address: mirrorAddress,
+        signer: walletClientToSigner(walletClient!),
+        publicClient: publicClient!,
+      }),
+
     enabled: Boolean(mirrorAddress && walletClient && publicClient),
   });
 };

@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient, TransactionRequest } from 'viem';
+import type { Address, Hex, TransactionRequest } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import {
@@ -13,8 +13,7 @@ import {
 import { convertEventParams } from '../util/index.js';
 import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
 import { TxManager } from './tx-manager.js';
-import { ISigner } from '../types/signer.js';
-import { BaseContractClient } from './base-contract.js';
+import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with a Mirror contract.
@@ -291,11 +290,9 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
 /**
  * Creates a new MirrorContract instance.
  *
- * @param address - The address of the Mirror contract
- * @param signer - The signer for sending transactions
- * @param publicClient - The public client for reading data
- * @returns A new MirrorContract instance that implements the IMirrorContract interface
+ * @param params - {@link ContractClientParams} parameters for creating the Mirror contract client
+ * @returns A new {@link MirrorClient} instance that implements the {@link IMirrorContract} interface
  */
-export function getMirrorClient(address: Address, signer: ISigner, publicClient: PublicClient): MirrorClient {
-  return new MirrorClient({ address, publicClient, signer });
+export function getMirrorClient(params: ContractClientParams): MirrorClient {
+  return new MirrorClient(params);
 }

@@ -40,7 +40,7 @@ beforeAll(async () => {
     transport,
   }) as WalletClient<WebSocketTransport, Chain, Account>;
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
   await ethereumClient.waitForInitialization();
 
   api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient);
@@ -171,7 +171,7 @@ describe('Injected Transactions', () => {
 
       expect(programId).toBeDefined();
 
-      mirror = getMirrorClient(programId, signer, publicClient);
+      mirror = getMirrorClient({ address: programId, signer, publicClient });
     });
 
     test(
@@ -205,7 +205,7 @@ describe('Injected Transactions', () => {
 
       expect(approvalData.value).toEqual(BigInt(10 * 1e12));
 
-      const allowance = await ethereumClient.wvara.allowance(await ethereumClient.getAccountAddress(), programId);
+      const allowance = await ethereumClient.wvara.allowance(await ethereumClient.signer.getAddress(), programId);
       expect(allowance).toEqual(BigInt(10 * 1e12));
     });
 
@@ -378,6 +378,41 @@ describe('Injected Transactions', () => {
       expect(promise).toBeDefined();
 
       await expect(promise.validateSignature()).resolves.not.toThrow();
+    });
+
+    test('should send tx with invalid signature', async () => {
+      const payload = '0x';
+      const injected: IInjectedTransaction = {
+        destination: zeroAddress,
+        payload,
+      };
+
+      const tx = await api.createInjectedTransaction(injected);
+
+      await tx.sign();
+
+      tx.setSalt('0x00');
+
+      await expect(tx.sendAndWaitForPromise()).rejects.toThrow(
+        'RpcError(-32602): Invalid params :: Address mismatch at line 1 column 461',
+      );
+    });
+
+    test.skip('should send transaction with non-zero value and reject', async () => {
+      const payload = '0x';
+      const injected: IInjectedTransaction = {
+        destination: programId,
+        payload,
+        value: 10n,
+      };
+
+      const tx = await api.createInjectedTransaction(injected);
+
+      await tx.sign();
+
+      await expect(tx.sendAndWaitForPromise()).rejects.toThrow(
+        'RpcError(-32602): Invalid params :: Injected transactions with non-zero value are not supported',
+      );
     });
   });
 });
