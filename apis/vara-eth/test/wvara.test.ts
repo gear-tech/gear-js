@@ -65,7 +65,7 @@ describe('view functions', () => {
   });
 
   test('should get account balance', async () => {
-    const balance = await ethereumClient.wvara.balanceOf(await ethereumClient.getAccountAddress());
+    const balance = await ethereumClient.wvara.balanceOf(await ethereumClient.signer.getAddress());
     expect(balance).toBeDefined();
     expect(typeof balance).toBe('bigint');
     expect(balance).toBeGreaterThan(0n);
@@ -73,8 +73,8 @@ describe('view functions', () => {
 
   test('should get allowance', async () => {
     const allowance = await ethereumClient.wvara.allowance(
-      await ethereumClient.getAccountAddress(),
-      await ethereumClient.getAccountAddress(),
+      await ethereumClient.signer.getAddress(),
+      await ethereumClient.signer.getAddress(),
     );
     expect(allowance).toBeDefined();
     expect(typeof allowance).toBe('bigint');
@@ -84,7 +84,7 @@ describe('view functions', () => {
 
 describe('transactions', () => {
   test('should approve token spending', async () => {
-    const tx = await ethereumClient.wvara.approve(await ethereumClient.getAccountAddress(), BigInt(1000));
+    const tx = await ethereumClient.wvara.approve(await ethereumClient.signer.getAddress(), BigInt(1000));
 
     await tx.send();
 
@@ -98,8 +98,8 @@ describe('transactions', () => {
 
   test('should verify allowance after approval', async () => {
     const allowance = await ethereumClient.wvara.allowance(
-      await ethereumClient.getAccountAddress(),
-      await ethereumClient.getAccountAddress(),
+      await ethereumClient.signer.getAddress(),
+      await ethereumClient.signer.getAddress(),
     );
     expect(allowance).toBeGreaterThanOrEqual(BigInt(1000));
   });
