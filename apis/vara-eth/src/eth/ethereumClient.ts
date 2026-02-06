@@ -76,6 +76,18 @@ export class EthereumClient {
     return this;
   }
 
+  public resetSigner() {
+    if (!this._isInitialized) {
+      throw new Error(
+        'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before resetting the signer.',
+      );
+    }
+    this._signer = undefined;
+    this._routerClient.resetSigner();
+    this._wvaraClient.resetSigner();
+    return this;
+  }
+
   async getBlockNumber() {
     const bn = await this.publicClient.getBlockNumber();
 
