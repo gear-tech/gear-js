@@ -24,7 +24,7 @@ beforeAll(async () => {
     transport,
   }) as WalletClient<WebSocketTransport>;
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, signer, config.routerId);
+  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
   await ethereumClient.waitForInitialization();
 });
 

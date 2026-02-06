@@ -65,7 +65,7 @@ const walletClient = createWalletClient({ account, transport: http('https://eth-
 const signer = walletClientToSigner(walletClient);
 
 // Create EthereumClient with signer and router address
-const ethereumClient = new EthereumClient(publicClient, signer, routerAddress);
+const ethereumClient = new EthereumClient(publicClient, routerAddress, signer);
 
 // Wait for initialization to complete
 await ethereumClient.waitForInitialization();
@@ -134,7 +134,7 @@ Wrapper around viem's `PublicClient` and a signer that provides unified interfac
 
 ```typescript
 const signer = walletClientToSigner(walletClient);
-const ethereumClient = new EthereumClient(publicClient, signer, routerAddress);
+const ethereumClient = new EthereumClient(publicClient, routerAddress, signer);
 
 // Wait for initialization to complete
 await ethereumClient.waitForInitialization();
