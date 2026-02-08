@@ -4,8 +4,9 @@ import type { Address, Hash, Hex } from 'viem';
 import { recoverMessageAddress } from 'viem';
 
 import type { IInjectedTransactionPromise } from '../../types/index.js';
-import { bigint128ToBytes } from '../../util/index.js';
 import type { EthereumClient } from '../../eth/index.js';
+import { bigint128ToBytes } from '../../util/index.js';
+import { ReplyCode } from '../../errors/index.js';
 
 export type InjectedTransactionPromiseRaw = {
   data: {
@@ -35,7 +36,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
   /**
    * The reply code indicating the result status
    */
-  public readonly code: Hex;
+  public readonly code: ReplyCode;
   /**
    * The validator's signature for this promise
    */
@@ -50,7 +51,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
     this.txHash = promise.data.txHash;
     this.payload = promise.data.reply.payload;
     this.value = BigInt(promise.data.reply.value);
-    this.code = promise.data.reply.code;
+    this.code = ReplyCode.fromBytes(promise.data.reply.code);
     this.signature = promise.signature;
   }
 
@@ -110,7 +111,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
   }
 
   private get _codeU8a(): Uint8Array {
-    return hexToBytes(this.code);
+    return this.code.toBytes();
   }
 
   private get _valueU8a(): Uint8Array {

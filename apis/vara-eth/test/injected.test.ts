@@ -353,25 +353,13 @@ describe('Injected Transactions', () => {
       const result = await tx.sendAndWaitForPromise();
 
       expect(result.txHash).toBeDefined();
-      expect(result.code).toBe('0x00010000');
+      expect(result.code.isSuccess).toBeTruthy();
+      expect(Array.from(result.code.toBytes())).toEqual([0, 1, 0, 0]);
       expect(result.payload).toBe('0x1c436f756e74657224496e6372656d656e7402000000');
       expect(result.value).toBe(0n);
       expect(result.signature).toBeDefined();
 
-      promise = new InjectedTxPromise(
-        {
-          data: {
-            txHash: result.txHash,
-            reply: {
-              payload: result.payload,
-              value: Number(result.value),
-              code: result.code,
-            },
-          },
-          signature: result.signature,
-        },
-        ethereumClient,
-      );
+      promise = result;
     });
 
     test('should validate promise signature', async () => {
