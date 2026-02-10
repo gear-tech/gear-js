@@ -6,6 +6,8 @@ import { VARA_ETH_NODE_ADDRESS } from '@/shared/config';
 
 import { ApiContext } from './context';
 
+const provider = new WsVaraEthProvider(VARA_ETH_NODE_ADDRESS);
+
 const VaraEthApiProvider = ({ children }: PropsWithChildren) => {
   const { data: ethereumClient } = useEthereumClient();
 
@@ -16,13 +18,9 @@ const VaraEthApiProvider = ({ children }: PropsWithChildren) => {
 
     if (!ethereumClient) return;
 
-    const instance = new VaraEthApi(new WsVaraEthProvider(VARA_ETH_NODE_ADDRESS), ethereumClient);
+    const instance = new VaraEthApi(provider, ethereumClient);
 
     setApi(instance);
-
-    return () => {
-      instance.provider.disconnect().catch((error) => console.error(error));
-    };
   }, [ethereumClient]);
 
   const value = useMemo(() => (api ? { api, isApiReady: true as const } : { api, isApiReady: false as const }), [api]);
