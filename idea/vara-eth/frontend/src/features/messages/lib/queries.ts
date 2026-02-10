@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 import {
   getMessageRequest,
@@ -12,28 +12,28 @@ import {
   getReplySents,
 } from './requests';
 
-export const useGetMessageRequestByIdQuery = (id: HexString) => {
+export const useGetMessageRequestByIdQuery = (id: Hex) => {
   return useQuery({
     queryKey: ['messageRequest', id],
     queryFn: () => getMessageRequest(id),
   });
 };
 
-export const useGetMessageSentByIdQuery = (id: HexString) => {
+export const useGetMessageSentByIdQuery = (id: Hex) => {
   return useQuery({
     queryKey: ['messageSent', id],
     queryFn: () => getMessageSent(id),
   });
 };
 
-export const useGetReplyRequestByIdQuery = (id: HexString) => {
+export const useGetReplyRequestByIdQuery = (id: Hex) => {
   return useQuery({
     queryKey: ['replyRequest', id],
     queryFn: () => getReplyRequest(id),
   });
 };
 
-export const useGetReplySentByIdQuery = (id: HexString) => {
+export const useGetReplySentByIdQuery = (id: Hex) => {
   return useQuery({
     queryKey: ['replySent', id],
     queryFn: () => getReplySent(id),

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useEthereumClient } from './use-ethereum-client';
@@ -16,7 +16,7 @@ type WrappedVaraBalance =
       isPending: false;
     };
 
-const useWrappedVaraBalance = (address?: HexString) => {
+const useWrappedVaraBalance = (address?: Hex) => {
   const ethAccount = useAccount();
   const { data: ethereumClient } = useEthereumClient();
 
@@ -24,7 +24,10 @@ const useWrappedVaraBalance = (address?: HexString) => {
 
   const value = useQuery({
     queryKey: ['wrappedVaraBalance', targetAddress],
-    queryFn: () => ethereumClient?.wvara.balanceOf(targetAddress!),
+    queryFn: () => {
+      if (!targetAddress) throw new Error('Address is required');
+      return ethereumClient?.wvara.balanceOf(targetAddress);
+    },
     select: (response) => (response !== undefined ? BigInt(response) : undefined),
     enabled: Boolean(ethereumClient && targetAddress),
   });

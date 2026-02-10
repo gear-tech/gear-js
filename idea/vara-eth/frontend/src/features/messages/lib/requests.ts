@@ -1,4 +1,4 @@
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 import { Program } from '@/features/programs/lib/queries';
 import { EXPLORER_URL } from '@/shared/config';
@@ -6,64 +6,64 @@ import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard, isUndefined } from '@/shared/utils';
 
 export type MessageRequest = {
-  id: HexString;
-  sourceAddress: HexString;
-  programId: HexString;
-  payload: HexString;
+  id: Hex;
+  sourceAddress: Hex;
+  programId: Hex;
+  payload: Hex;
   value: string;
   callReply: boolean;
-  txHash: HexString;
+  txHash: Hex;
   blockNumber: string;
   createdAt: string;
   program?: Program;
 };
 
 type StateTransition = {
-  id: HexString;
-  hash: HexString;
+  id: Hex;
+  hash: Hex;
   timestamp: string;
-  programId: HexString;
+  programId: Hex;
   exited: boolean;
   valueToReceive: string | null;
-  inheritor?: HexString | null;
+  inheritor?: Hex | null;
   program?: Program;
 };
 
 export type MessageSent = {
-  id: HexString;
-  sourceProgramId: HexString;
-  destination: HexString;
-  payload: HexString;
+  id: Hex;
+  sourceProgramId: Hex;
+  destination: Hex;
+  payload: Hex;
   value: string;
   isCall: boolean;
-  stateTransitionId: HexString;
+  stateTransitionId: Hex;
   createdAt: string;
   sourceProgram?: Program;
   stateTransition?: StateTransition;
 };
 
 export type ReplyRequest = {
-  id: HexString;
-  sourceAddress: HexString;
-  programId: HexString;
-  payload: HexString;
+  id: Hex;
+  sourceAddress: Hex;
+  programId: Hex;
+  payload: Hex;
   value: string;
-  txHash: HexString;
+  txHash: Hex;
   blockNumber: string;
   createdAt: string;
   program?: Program;
 };
 
 export type ReplySent = {
-  id: HexString;
-  repliedToId: HexString;
-  replyCode: HexString;
-  sourceProgramId: HexString;
-  destination: HexString;
-  payload: HexString;
+  id: Hex;
+  repliedToId: Hex;
+  replyCode: Hex;
+  sourceProgramId: Hex;
+  destination: Hex;
+  payload: Hex;
   value: string;
   isCall: boolean;
-  stateTransitionId: HexString;
+  stateTransitionId: Hex;
   createdAt: string;
   sourceProgram?: Program;
   stateTransition?: StateTransition;
@@ -84,16 +84,15 @@ const getIndexerUrl = (url: string, page?: number, pageSize?: number) => {
   return indexerUrl;
 };
 
-export const getMessageRequest = (id: HexString) =>
+export const getMessageRequest = (id: Hex) =>
   fetchWithGuard<MessageRequest>({ url: getIndexerUrl(`messages/requests/${id}`) });
 
-export const getMessageSent = (id: HexString) =>
-  fetchWithGuard<MessageSent>({ url: getIndexerUrl(`messages/sent/${id}`) });
+export const getMessageSent = (id: Hex) => fetchWithGuard<MessageSent>({ url: getIndexerUrl(`messages/sent/${id}`) });
 
-export const getReplyRequest = (id: HexString) =>
+export const getReplyRequest = (id: Hex) =>
   fetchWithGuard<ReplyRequest>({ url: getIndexerUrl(`replies/requests/${id}`) });
 
-export const getReplySent = (id: HexString) => fetchWithGuard<ReplySent>({ url: getIndexerUrl(`replies/sent/${id}`) });
+export const getReplySent = (id: Hex) => fetchWithGuard<ReplySent>({ url: getIndexerUrl(`replies/sent/${id}`) });
 
 export const getMessageRequests = (page: number, pageSize: number) =>
   fetchWithGuard<PaginatedResponse<MessageRequest>>({

@@ -1,11 +1,11 @@
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 import { Button } from '@/components';
 
 import { useCreateProgram } from '../../lib';
 
 type Props = {
-  codeId: HexString;
+  codeId: Hex;
 };
 
 const CreateProgramButton = ({ codeId }: Props) => {

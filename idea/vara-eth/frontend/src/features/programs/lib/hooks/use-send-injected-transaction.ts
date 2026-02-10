@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
 import { Sails } from 'sails-js';
+import { Hex } from 'viem';
 
 import { useVaraEthApi } from '@/app/providers';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
@@ -13,7 +13,7 @@ type SendMessageParams = {
   payload: FormattedPayloadValue;
 };
 
-const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefined) => {
+const useSendInjectedTransaction = (programId: Hex, sails: Sails | undefined) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
@@ -50,8 +50,7 @@ const useSendInjectedTransaction = (programId: HexString, sails: Sails | undefin
       type: TransactionTypes.injectedTxResponse,
       serviceName,
       messageName,
-      // TODO: fix this once code is of type ReplyCode
-      replyCode: code.startsWith('0x00') ? 'success' : 'error',
+      replyCode: code.isSuccess ? 'success' : 'error',
       from: programId,
       params: { payload: JSON.stringify(result) },
       value: String(value),

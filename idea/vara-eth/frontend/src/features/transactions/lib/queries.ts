@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
 type Transaction = {
-  id: HexString;
-  contractAddress: HexString;
+  id: Hex;
+  contractAddress: Hex;
   selector: string;
-  data: HexString;
-  sender: HexString;
+  data: Hex;
+  sender: Hex;
   blockNumber: string;
   createdAt: string;
 };

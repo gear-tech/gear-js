@@ -7,10 +7,10 @@ import {
   PayloadValue,
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@vara-eth/api';
 import { ComponentProps, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
+import { Hex } from 'viem';
 import { z } from 'zod';
 
 import { Checkbox, Input, Textarea } from '@/components';
@@ -25,7 +25,7 @@ type Props = {
   id: string;
   sails: Sails;
   args: ISailsFuncArg[];
-  encode: (...params: unknown[]) => HexString;
+  encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 
@@ -44,7 +44,7 @@ const GridCheckbox = ({ ...props }: ComponentProps<typeof Checkbox>) => (
   <Checkbox {...props} className={styles.checkbox} />
 );
 
-const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unknown[]) => HexString) =>
+const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unknown[]) => Hex) =>
   getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
     encoded,
 

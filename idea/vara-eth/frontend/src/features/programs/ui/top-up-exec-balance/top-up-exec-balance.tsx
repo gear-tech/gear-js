@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
-import { parseUnits } from 'viem';
+import { parseUnits, Hex } from 'viem';
 
 import { useEthereumClient, useMirrorContract } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
@@ -8,7 +7,7 @@ import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { Button } from '@/components';
 
 type Props = {
-  programId: HexString;
+  programId: Hex;
   isEnabled: boolean;
   onSuccess: (value: bigint) => void;
 };

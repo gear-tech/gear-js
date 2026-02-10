@@ -1,5 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { useState } from 'react';
+import { Hex } from 'viem';
 
 import { Tabs } from '@/components';
 import { useSendInjectedTransaction, useInitProgram, useSendProgramMessage } from '@/features/programs/lib';
@@ -12,7 +12,7 @@ import styles from './sails-program-actions.module.scss';
 const tabs = ['Call offchain', 'Call onchain'];
 
 type Props = {
-  programId: HexString;
+  programId: Hex;
   idl: string;
   init: { isRequired: boolean; isEnabled: boolean; onSuccess: () => void };
 };

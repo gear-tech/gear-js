@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
 import { generatePath, useNavigate } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import { useEthereumClient } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
@@ -14,7 +14,7 @@ export const useCreateProgram = () => {
 
   const { data: ethereumClient } = useEthereumClient();
 
-  const createProgram = async (codeId: HexString) => {
+  const createProgram = async (codeId: Hex) => {
     if (!api || !ethereumClient) return;
 
     const tx = await ethereumClient.router.createProgram(codeId);

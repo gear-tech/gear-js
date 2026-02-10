@@ -1,6 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
-import { formatEther, formatUnits, isAddress } from 'viem';
+import { formatEther, formatUnits, isAddress, Hex } from 'viem';
 import { useBalance } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
@@ -9,7 +8,7 @@ import { Balance, ChainEntity } from '@/components';
 import styles from './user.module.scss';
 
 type Params = {
-  userId: HexString;
+  userId: Hex;
 };
 
 export const User = () => {

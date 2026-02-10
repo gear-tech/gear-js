@@ -1,16 +1,16 @@
-import { HexString } from '@vara-eth/api';
 import { useState, useEffect } from 'react';
+import { Hex } from 'viem';
 
 const IDL_STORAGE_PREFIX = 'vara-eth-idl';
 
-const getIdlStorageKey = (codeId: HexString) => `${IDL_STORAGE_PREFIX}-${codeId}`;
+const getIdlStorageKey = (codeId: Hex) => `${IDL_STORAGE_PREFIX}-${codeId}`;
 
 type UseIdlStorageReturn = {
   idl: string | null;
   saveIdl: (idlContent: string) => void;
 };
 
-export const useIdlStorage = (codeId?: HexString): UseIdlStorageReturn => {
+export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
   const [idl, setIdl] = useState<string | null>(codeId ? localStorage.getItem(getIdlStorageKey(codeId)) : null);
 
   useEffect(() => {

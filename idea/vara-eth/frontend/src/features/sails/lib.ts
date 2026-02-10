@@ -1,8 +1,8 @@
 import { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
+import { Hex } from 'viem';
 
 const useSails = (idl: string | null) => {
   const initSails = async () => {
@@ -25,7 +25,7 @@ const useSails = (idl: string | null) => {
 };
 
 type FormattedPayloadValue = {
-  encoded: HexString;
+  encoded: Hex;
   formatted: string;
 };
 
@@ -35,7 +35,7 @@ type SailsAction = {
   action: string;
   args: ISailsFuncArg[];
   isEnabled?: boolean;
-  encode: (...params: unknown[]) => HexString;
+  encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 

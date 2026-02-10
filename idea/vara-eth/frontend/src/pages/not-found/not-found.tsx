@@ -1,5 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import { Button, LinkButton } from '@/components';
 import { routes } from '@/shared/config';
@@ -10,7 +10,7 @@ export const NotFound = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const searchQuery = location.state as HexString | null;
+  const searchQuery = location.state as Hex | null;
 
   return (
     <div className={styles.container}>
