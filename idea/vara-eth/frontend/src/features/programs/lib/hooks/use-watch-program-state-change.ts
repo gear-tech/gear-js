@@ -2,8 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString, ProgramState } from '@vara-eth/api';
 import { useRef, useEffect } from 'react';
 
-import { useMirrorContract } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useMirrorClient, useVaraEthApi } from '@/app/providers';
 
 class TimeoutError extends Error {
   constructor(name: string) {
@@ -28,7 +27,7 @@ type Params = {
 
 const useWatchProgramStateChange = (programId: HexString) => {
   const { api } = useVaraEthApi();
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const mirrorContract = useMirrorClient(programId);
 
   const cleanUpRef = useRef(() => {});
 

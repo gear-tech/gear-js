@@ -1,18 +1,17 @@
-import { HexString } from '@gear-js/api';
-import { EthereumClient } from '@vara-eth/api';
+import { HexString, MirrorClient } from '@vara-eth/api';
 import { walletClientToSigner } from '@vara-eth/api/signer';
-import { getWalletClient, Config, getPublicClient, watchConnection } from '@wagmi/core';
-import { Address } from 'viem';
+import { getPublicClient, getWalletClient, watchConnection } from '@wagmi/core';
+import { Config } from 'wagmi';
 
-class EthereumClientStore {
-  private client: EthereumClient | undefined;
+class MirrorClientStore {
+  private client: MirrorClient | undefined;
   private accountAddress: HexString | undefined;
   private listeners = new Set<() => void>();
   private unwatchConnection: (() => void) | undefined;
 
   constructor(
     private config: Config,
-    private routerAddress: Address,
+    private address: HexString,
   ) {}
 
   getSnapshot = () => this.client;
@@ -36,7 +35,7 @@ class EthereumClientStore {
         if (!this.client) throw new Error('EthereumClient not initialized');
         if (walletClient.account.address === this.accountAddress) return;
 
-        console.log('set ethereum client signer');
+        console.log('set mirror client signer');
 
         this.client.setSigner(walletClientToSigner(walletClient));
         this.accountAddress = walletClient.account.address;
@@ -46,7 +45,7 @@ class EthereumClientStore {
         if (!this.client) throw new Error('EthereumClient not initialized');
         if (!this.accountAddress) return;
 
-        console.log('reset ethereum client signer');
+        console.log('reset mirror client signer');
 
         this.client.resetSigner();
         this.accountAddress = undefined;
@@ -54,17 +53,12 @@ class EthereumClientStore {
       });
   }
 
-  async start() {
+  start() {
     const publicClient = getPublicClient(this.config);
 
     if (!publicClient) throw new Error('No public client available');
 
-    const client = new EthereumClient(publicClient, this.routerAddress);
-    const isInitialized = await client.waitForInitialization();
-
-    if (!isInitialized) throw new Error('Failed to initialize EthereumClient');
-
-    this.client = client;
+    this.client = new MirrorClient({ publicClient, address: this.address });
     this.emit();
 
     this.unwatchConnection = watchConnection(this.config, { onChange: () => this.setSigner() });
@@ -77,4 +71,4 @@ class EthereumClientStore {
   }
 }
 
-export { EthereumClientStore };
+export { MirrorClientStore };

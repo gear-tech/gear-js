@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 import { Sails } from 'sails-js';
 
-import { useMirrorContract } from '@/app/api';
+import { useMirrorClient } from '@/app/providers';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 import { FormattedPayloadValue } from '@/features/sails/lib';
 
@@ -12,7 +12,7 @@ type InitProgramParams = {
 };
 
 const useInitProgram = (programId: HexString, sails: Sails | undefined) => {
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const mirrorContract = useMirrorClient(programId);
   const addMyActivity = useAddMyActivity();
 
   const initProgram = async ({ ctorName, payload }: InitProgramParams) => {

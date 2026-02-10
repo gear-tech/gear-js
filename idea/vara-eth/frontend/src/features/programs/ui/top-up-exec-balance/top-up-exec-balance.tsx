@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 import { parseUnits } from 'viem';
 
-import { useEthereumClient, useMirrorContract } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useEthereumClient } from '@/app/api';
+import { useMirrorClient, useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { Button } from '@/components';
 
@@ -16,7 +16,7 @@ type Props = {
 const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
   const { data: ethClient } = useEthereumClient();
   const { api } = useVaraEthApi();
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const mirrorContract = useMirrorClient(programId);
 
   const addMyActivity = useAddMyActivity();
 
