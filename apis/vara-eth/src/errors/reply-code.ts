@@ -35,12 +35,18 @@ export const enum ESimpleUnavailableActorError {
 
 abstract class ReplyCodeDetails {
   constructor(protected _bytes: Uint8Array) {
-    if (this._bytes.length != 4) {
+    if (this._bytes.length !== 4) {
       throw new Error(`Invalid reply code length. Expected 4 bytes received ${this._bytes.length}`);
     }
   }
 
   abstract get reason(): string;
+
+  protected validateDetailsAccess(expectedReason: number, actualReason: number, reasonTypeName: string): void {
+    if (actualReason !== expectedReason) {
+      throw new Error(`Cannot access ${reasonTypeName} details. Actual reason does not match.`);
+    }
+  }
 }
 
 export class ReplyCode extends ReplyCodeDetails {
@@ -58,7 +64,7 @@ export class ReplyCode extends ReplyCodeDetails {
   }
 
   toBytes() {
-    return this._bytes;
+    return Uint8Array.from(this._bytes);
   }
 
   get isSuccess(): boolean {
@@ -70,10 +76,12 @@ export class ReplyCode extends ReplyCodeDetails {
   }
 
   get asSuccess(): SuccessReply {
+    this.validateDetailsAccess(EReplyCode.Success, this._bytes[0], 'Success');
     return new SuccessReply(this._bytes);
   }
 
   get asError(): ErrorReply {
+    this.validateDetailsAccess(EReplyCode.Error, this._bytes[0], 'Error');
     return new ErrorReply(this._bytes);
   }
 
@@ -129,6 +137,7 @@ class ErrorReply extends ReplyCodeDetails {
   }
 
   get asExecution(): ExecutionError {
+    this.validateDetailsAccess(EErrorReplyReason.Execution, this._bytes[1], 'Execution');
     return new ExecutionError(this._bytes);
   }
 
@@ -137,6 +146,7 @@ class ErrorReply extends ReplyCodeDetails {
   }
 
   get asUnavailableActor(): UnavailableActorError {
+    this.validateDetailsAccess(EErrorReplyReason.UnavailableActor, this._bytes[1], 'UnavailableActor');
     return new UnavailableActorError(this._bytes);
   }
 
@@ -145,7 +155,7 @@ class ErrorReply extends ReplyCodeDetails {
   }
 }
 
-export class ExecutionError extends ReplyCodeDetails {
+class ExecutionError extends ReplyCodeDetails {
   get reason(): string {
     switch (this._bytes[2]) {
       case ESimpleExecutionError.RanOutOfGas: {
@@ -155,7 +165,7 @@ export class ExecutionError extends ReplyCodeDetails {
         return 'Program has reached memory limit while executing.';
       }
       case ESimpleExecutionError.BackendError: {
-        return "Execution failed with backend error that couldn't been caught.";
+        return "Execution failed with backend error that couldn't be caught.";
       }
       case ESimpleExecutionError.UserspacePanic: {
         return 'Execution failed with userspace panic.';
@@ -173,31 +183,31 @@ export class ExecutionError extends ReplyCodeDetails {
   }
 
   get isRanOutOfGas(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.RanOutOfGas;
+    return this._bytes[2] === ESimpleExecutionError.RanOutOfGas;
   }
 
   get isMemoryOverflow(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.MemoryOverflow;
+    return this._bytes[2] === ESimpleExecutionError.MemoryOverflow;
   }
 
   get isBackendError(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.BackendError;
+    return this._bytes[2] === ESimpleExecutionError.BackendError;
   }
 
   get isUserspacePanic(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.UserspacePanic;
+    return this._bytes[2] === ESimpleExecutionError.UserspacePanic;
   }
 
   get isUnreachableInstruction(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.UnreachableInstruction;
+    return this._bytes[2] === ESimpleExecutionError.UnreachableInstruction;
   }
 
   get isStackLimitExceeded(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.StackLimitExceeded;
+    return this._bytes[2] === ESimpleExecutionError.StackLimitExceeded;
   }
 }
 
-export class UnavailableActorError extends ReplyCodeDetails {
+class UnavailableActorError extends ReplyCodeDetails {
   get reason(): string {
     switch (this._bytes[2]) {
       case ESimpleUnavailableActorError.ProgramExited: {
@@ -222,22 +232,24 @@ export class UnavailableActorError extends ReplyCodeDetails {
   }
 
   get isProgramExited(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ProgramExited;
+    return this._bytes[2] === ESimpleUnavailableActorError.ProgramExited;
   }
 
   get isInitializationFailure(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.InitializationFailure;
+    return this._bytes[2] === ESimpleUnavailableActorError.InitializationFailure;
   }
 
   get isUninitialized(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.Uninitialized;
+    return this._bytes[2] === ESimpleUnavailableActorError.Uninitialized;
   }
 
   get isProgramNotCreated(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ProgramNotCreated;
+    return this._bytes[2] === ESimpleUnavailableActorError.ProgramNotCreated;
   }
 
   get isReinstrumentationFailure(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ReinstrumentationFailure;
+    return this._bytes[2] === ESimpleUnavailableActorError.ReinstrumentationFailure;
   }
 }
+
+export type { SuccessReply, ErrorReply, ExecutionError, UnavailableActorError };

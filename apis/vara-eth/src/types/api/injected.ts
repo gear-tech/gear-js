@@ -1,6 +1,6 @@
-import { Address, Hex } from 'viem';
+import type { Address, Hex } from 'viem';
 
-import { ReplyCode } from '../../errors/index.js';
+import type { ReplyCode } from '../../errors/index.js';
 
 export interface IInjectedTransaction {
   /**

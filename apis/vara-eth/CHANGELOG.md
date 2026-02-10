@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - `ReplyCode` class for parsing and inspecting reply codes from program messages in https://github.com/gear-tech/gear-js/pull/2338
-- `SuccessReply`, `ErrorReply`, `ExecutionError`, `UnavailableActorError` detail classes for structured reply code introspection in https://github.com/gear-tech/gear-js/pull/2338
+- Internal `SuccessReply`, `ErrorReply`, `ExecutionError`, `UnavailableActorError` detail classes used by `ReplyCode` for structured reply code introspection in https://github.com/gear-tech/gear-js/pull/2338
 
 ### Changed
 

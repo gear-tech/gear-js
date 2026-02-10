@@ -1,29 +1,31 @@
-import { HexString, IVaraEthProvider, ReplyInfo } from '../../types/index.js';
+import { Hex } from 'viem';
+
+import { ReplyCode } from '../../errors/index.js';
+import { IVaraEthProvider, ReplyInfo } from '../../types/index.js';
+
+interface IReplyInfoRpc extends Omit<ReplyInfo, 'code'> {
+  code: Hex;
+}
 
 export class ProgramCalls {
   constructor(private _provider: IVaraEthProvider) {}
 
+  async calculateReplyForHandle(source: string, programId: string, payload: Hex, value?: bigint): Promise<ReplyInfo>;
   async calculateReplyForHandle(
     source: string,
     programId: string,
-    payload: HexString,
-    value?: bigint,
-  ): Promise<ReplyInfo>;
-  async calculateReplyForHandle(
-    source: string,
-    programId: string,
-    payload: HexString,
+    payload: Hex,
     value: bigint,
-    atBlock?: HexString,
+    atBlock?: Hex,
   ): Promise<ReplyInfo>;
   async calculateReplyForHandle(
     source: string,
     programId: string,
-    payload: HexString,
+    payload: Hex,
     value = 0n,
-    atBlock?: HexString,
+    atBlock?: Hex,
   ): Promise<ReplyInfo> {
-    const response = await this._provider.send<ReplyInfo>('program_calculateReplyForHandle', [
+    const { code, ...info } = await this._provider.send<IReplyInfoRpc>('program_calculateReplyForHandle', [
       atBlock || null,
       source,
       programId,
@@ -31,6 +33,9 @@ export class ProgramCalls {
       value,
     ]);
 
-    return response;
+    return {
+      ...info,
+      code: ReplyCode.fromBytes(code),
+    };
   }
 }

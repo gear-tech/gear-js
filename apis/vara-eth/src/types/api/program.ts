@@ -1,8 +1,9 @@
-import { ReplyCode } from '../../errors/index.js';
-import { HexString } from '../../types/index.js';
+import type { Hex } from 'viem';
+
+import type { ReplyCode } from '../../errors/index.js';
 
 export interface ReplyInfo {
-  readonly payload: HexString;
+  readonly payload: Hex;
   readonly value: number;
   readonly code: ReplyCode;
 }
