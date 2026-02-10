@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 // import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useEthereumClient } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useEthereumClient, useVaraEthApi } from '@/app/providers';
 // import { useAddMyActivity } from '@/app/store';
 // import { TransactionTypes, unpackReceipt } from '@/app/store/my-activity';
 // import { routes } from '@/shared/config';
@@ -12,7 +11,7 @@ export const useUploadCode = () => {
   // const navigate = useNavigate();
   // const addMyActivity = useAddMyActivity();
 
-  const { data: ethereumClient } = useEthereumClient();
+  const ethereumClient = useEthereumClient();
 
   const uploadCode = async (_code: Uint8Array) => {
     if (!api || !ethereumClient) return;

@@ -2,8 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useEthereumClient } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useEthereumClient, useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { routes } from '@/shared/config';
 
@@ -12,7 +11,7 @@ export const useCreateProgram = () => {
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 
-  const { data: ethereumClient } = useEthereumClient();
+  const ethereumClient = useEthereumClient();
 
   const createProgram = async (codeId: HexString) => {
     if (!api || !ethereumClient) return;

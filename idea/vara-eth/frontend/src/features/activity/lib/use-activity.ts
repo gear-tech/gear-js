@@ -5,7 +5,7 @@ import { ContractEventName, WatchContractEventOnLogsParameter, AbiEventParameter
 import { useConfig } from 'wagmi';
 import { watchContractEvent } from 'wagmi/actions';
 
-import { useEthereumClient } from '@/app/api';
+import { useEthereumClient } from '@/app/providers';
 
 type RouterAbi = typeof IROUTER_ABI;
 type WVaraAbi = typeof IWRAPPEDVARA_ABI;
@@ -39,7 +39,7 @@ const ROUTER_EVENTS = IROUTER_ABI.filter((item) => item.type === 'event').map((e
 const WVARA_EVENTS = IWRAPPEDVARA_ABI.filter((item) => item.type === 'event').map((event) => event.name);
 
 const useActivity = () => {
-  const { data: ethereumClient } = useEthereumClient();
+  const ethereumClient = useEthereumClient();
   const config = useConfig();
 
   const [state, setState] = useState<Activity[]>([]);
