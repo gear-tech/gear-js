@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- `ReplyCode` class for parsing and inspecting reply codes from program messages in https://github.com/gear-tech/gear-js/pull/2338
+- Internal `SuccessReply`, `ErrorReply`, `ExecutionError`, `UnavailableActorError` detail classes used by `ReplyCode` for structured reply code introspection in https://github.com/gear-tech/gear-js/pull/2338
+
+### Changed
+
+- `IInjectedTransactionPromise.code` changed from `Hex` to `ReplyCode` in https://github.com/gear-tech/gear-js/pull/2338
+- `InjectedTxPromise.code` now returns a `ReplyCode` instance instead of raw `Hex` value in https://github.com/gear-tech/gear-js/pull/2338
+
+
 ## [0.2.0]
 
 ### Added

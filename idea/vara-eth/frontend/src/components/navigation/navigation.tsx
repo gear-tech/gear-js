@@ -1,6 +1,6 @@
-import { HexString } from '@vara-eth/api';
 import { clsx } from 'clsx';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
@@ -16,7 +16,7 @@ const LINKS = [
 
 const Navigation = () => {
   const { pathname } = useLocation();
-  const codeId = matchPath(routes.code, pathname)?.params.codeId as HexString | undefined;
+  const codeId = matchPath(routes.code, pathname)?.params.codeId as Hex | undefined;
 
   const renderLinks = () =>
     LINKS.map(({ to, title }) => (

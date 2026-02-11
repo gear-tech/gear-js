@@ -1,6 +1,6 @@
-import { HexString } from '@vara-eth/api';
 import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import { formatDate } from '@/shared/utils';
@@ -26,7 +26,7 @@ const BackButton = () => {
 };
 
 type TitleProps = {
-  id: HexString;
+  id: Hex;
   explorerLink?: boolean;
 };
 
@@ -74,7 +74,7 @@ const BlockNumber = ({ value, date }: BlockProps) => {
 
 type NotFoundProps = {
   entity: string;
-  id: HexString;
+  id: Hex;
 };
 
 const NotFound = ({ entity, id }: NotFoundProps) => {

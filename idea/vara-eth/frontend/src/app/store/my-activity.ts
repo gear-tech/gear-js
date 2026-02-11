@@ -1,6 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { atom, useSetAtom } from 'jotai';
-import { TransactionReceipt } from 'viem';
+import { Hex, TransactionReceipt } from 'viem';
 import { useConfig } from 'wagmi';
 import { getBlockNumber, getBlock } from 'wagmi/actions';
 
@@ -19,7 +18,7 @@ const TransactionTypes = {
 type ResultStatus = 'success' | 'error';
 
 type ReceiptActivity = {
-  blockHash: HexString;
+  blockHash: Hex;
   blockNumber: bigint;
   from: string;
   to: string | null;
@@ -39,8 +38,8 @@ type ReplyActivity = {
   messageName: string;
   replyCode: string;
   blockNumber: bigint;
-  hash: HexString;
-  from: HexString;
+  hash: Hex;
+  from: Hex;
   value: string;
   params?: Record<string, unknown>;
 };
@@ -49,8 +48,8 @@ type InjectedTxActivity = {
   type: typeof TransactionTypes.injectedTx;
   serviceName: string;
   messageName: string;
-  hash: HexString;
-  to: HexString;
+  hash: Hex;
+  to: Hex;
   params?: Record<string, unknown>;
 };
 
@@ -59,7 +58,7 @@ type InjectedTxResponseActivity = {
   serviceName: string;
   messageName: string;
   replyCode: ResultStatus;
-  from: HexString;
+  from: Hex;
   value: string;
   params?: Record<string, unknown>;
 };
@@ -108,7 +107,7 @@ type MyActivity =
 
 type StoredMyActivity = MyActivity & {
   blockNumber: bigint;
-  blockHash: HexString;
+  blockHash: Hex;
   timestamp: number;
 };
 

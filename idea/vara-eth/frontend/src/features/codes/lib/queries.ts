@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
@@ -32,7 +32,7 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   });
 };
 
-export const useGetCodeByIdQuery = (id: HexString | undefined) => {
+export const useGetCodeByIdQuery = (id: Hex | undefined) => {
   return useQuery({
     queryKey: ['codeById', id],
     queryFn: () => getCode(id!),

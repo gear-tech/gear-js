@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString, ProgramState } from '@vara-eth/api';
+import { ProgramState } from '@vara-eth/api';
 import { useRef, useEffect } from 'react';
+import { Hex } from 'viem';
 
 import { useMirrorContract } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
@@ -26,7 +27,7 @@ type Params = {
   isChanged: (currentState: ProgramState, incomingState: ProgramState) => boolean;
 };
 
-const useWatchProgramStateChange = (programId: HexString) => {
+const useWatchProgramStateChange = (programId: Hex) => {
   const { api } = useVaraEthApi();
   const { data: mirrorContract } = useMirrorContract(programId);
 
@@ -61,7 +62,7 @@ const useWatchProgramStateChange = (programId: HexString) => {
       const timeoutId = setTimeout(() => cleanUp(reject, new TimeoutError(name)), UNWATCH_TIMEOUT_MS);
       cleanUpRef.current = () => cleanUp(reject, new CancelError(name));
 
-      const handleChange = (stateHash: HexString) => {
+      const handleChange = (stateHash: Hex) => {
         if (isFinished) return;
 
         api.query.program

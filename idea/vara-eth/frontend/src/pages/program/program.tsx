@@ -1,6 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { generatePath, useParams } from 'react-router-dom';
-import { formatEther, formatUnits } from 'viem';
+import { formatEther, formatUnits, Hex } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
@@ -19,7 +18,7 @@ import { isUndefined } from '@/shared/utils';
 import styles from './program.module.scss';
 
 type Params = {
-  programId: HexString;
+  programId: Hex;
 };
 
 const Program = () => {

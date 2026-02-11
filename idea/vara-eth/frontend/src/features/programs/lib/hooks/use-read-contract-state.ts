@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
-import { isAddress } from 'viem';
+import { Hex, isAddress } from 'viem';
 
 import { useMirrorContract } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 
-const useReadContractState = (programId: HexString) => {
+const useReadContractState = (programId: Hex) => {
   const { api } = useVaraEthApi();
 
   const { data: mirrorContract } = useMirrorContract(programId);

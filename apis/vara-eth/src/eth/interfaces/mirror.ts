@@ -1,5 +1,4 @@
 import { Address, Hex } from 'viem';
-import { HexString } from '../../types/index.js';
 
 /**
  * Helper functions for messages sent via the Mirror contract.
@@ -41,12 +40,12 @@ export interface MessageQueuingRequestedLog {
   /**
    * The ID of the message.
    */
-  id: HexString;
+  id: Hex;
 
   /**
    * The source address of the message.
    */
-  source: HexString;
+  source: Hex;
 
   /**
    * The payload of the message.
@@ -72,12 +71,12 @@ export interface ReplyQueueingRequestedLog {
   /**
    * The ID of the message being replied to.
    */
-  repliedTo: HexString;
+  repliedTo: Hex;
 
   /**
    * The source address of the reply.
    */
-  source: HexString;
+  source: Hex;
 
   /**
    * The payload of the reply.
@@ -97,7 +96,7 @@ export interface Reply {
   /**
    * The payload of the reply.
    */
-  payload: HexString;
+  payload: Hex;
 
   /**
    * The value transferred with the reply.
@@ -117,7 +116,7 @@ export interface Reply {
   /**
    * The transaction hash of the reply.
    */
-  txHash: HexString;
+  txHash: Hex;
 }
 
 export interface ValueClaimingRequestedLog {

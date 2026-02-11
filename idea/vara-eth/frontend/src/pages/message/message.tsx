@@ -1,5 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import { ChainEntity, PageContainer } from '@/components';
 import {
@@ -15,7 +15,7 @@ import ArrowSVG from './arrow.svg?react';
 import styles from './message.module.scss';
 
 type Params = {
-  messageId: HexString;
+  messageId: Hex;
 };
 
 const Message = () => {

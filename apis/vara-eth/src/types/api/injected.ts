@@ -1,4 +1,6 @@
-import { Address, Hex } from 'viem';
+import type { Address, Hex } from 'viem';
+
+import type { ReplyCode } from '../../errors/index.js';
 
 export interface IInjectedTransaction {
   /**
@@ -34,8 +36,7 @@ export interface IInjectedTransactionPromise {
   readonly txHash: Hex;
   readonly payload: Hex;
   readonly value: bigint;
-  // TODO: define an interface for this field
   // TODO: consider moving it to a `common` package to reuse in both @gear-js/api and @vara-eth/api
-  readonly code: Hex;
+  readonly code: ReplyCode;
   readonly signature: Hex;
 }

@@ -1,5 +1,5 @@
-import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
+import { Hex } from 'viem';
 
 import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
@@ -9,7 +9,7 @@ import { useIdlStorage } from '@/shared/hooks';
 import styles from './code.module.scss';
 
 type Params = {
-  codeId: HexString;
+  codeId: Hex;
 };
 
 const Code = () => {

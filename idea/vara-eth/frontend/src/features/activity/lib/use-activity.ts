@@ -1,7 +1,12 @@
-import { HexString } from '@vara-eth/api';
 import { IROUTER_ABI, IWRAPPEDVARA_ABI } from '@vara-eth/api/abi';
 import { useEffect, useState } from 'react';
-import { ContractEventName, WatchContractEventOnLogsParameter, AbiEventParametersToPrimitiveTypes, Abi } from 'viem';
+import {
+  ContractEventName,
+  WatchContractEventOnLogsParameter,
+  AbiEventParametersToPrimitiveTypes,
+  Abi,
+  Hex,
+} from 'viem';
 import { useConfig } from 'wagmi';
 import { watchContractEvent } from 'wagmi/actions';
 
@@ -29,7 +34,7 @@ type Event = GetEvent<RouterAbi> | GetEvent<WVaraAbi>;
 type EventArgs<T extends Event['name']> = Extract<Event, { name: T }>['args'];
 
 type Activity = {
-  blockHash: HexString;
+  blockHash: Hex;
   blockNumber: bigint;
   timestamp: number;
   events: Event[];
@@ -47,7 +52,7 @@ const useActivity = () => {
   useEffect(() => {
     if (!ethereumClient) return;
 
-    const blockHashToEvents: Record<HexString, Activity> = {};
+    const blockHashToEvents: Record<Hex, Activity> = {};
 
     const processLogs = (
       expectedEventName: ContractEventName<RouterAbi | WVaraAbi>,

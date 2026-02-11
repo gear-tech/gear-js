@@ -1,5 +1,4 @@
 import { Hex } from 'viem';
-import { HexString } from '../../types/index.js';
 
 /**
  * Helper functions for code validation.
@@ -25,7 +24,7 @@ export interface CreateProgramHelpers {
    * Gets the ID of the created program.
    * @returns Promise resolving to the program ID
    */
-  getProgramId: () => Promise<HexString>;
+  getProgramId: () => Promise<Hex>;
 }
 
 /**

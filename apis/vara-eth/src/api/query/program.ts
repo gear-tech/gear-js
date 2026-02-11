@@ -1,17 +1,18 @@
-import { HexString, IVaraEthProvider, ProgramState } from '../../types/index.js';
+import { Hex } from 'viem';
+import { IVaraEthProvider, ProgramState } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
 
 export class ProgramQueries {
   constructor(private _provider: IVaraEthProvider) {}
 
-  async getIds(): Promise<HexString[]> {
-    const ids = await this._provider.send<HexString[]>('program_ids', []);
+  async getIds(): Promise<Hex[]> {
+    const ids = await this._provider.send<Hex[]>('program_ids', []);
 
-    return ids.map((id) => id.toLowerCase() as HexString);
+    return ids.map((id) => id.toLowerCase() as Hex);
   }
 
-  async codeId(programId: string): Promise<HexString> {
-    return this._provider.send<HexString>('program_codeId', [programId]);
+  async codeId(programId: string): Promise<Hex> {
+    return this._provider.send<Hex>('program_codeId', [programId]);
   }
 
   async readState(hash: string): Promise<ProgramState> {

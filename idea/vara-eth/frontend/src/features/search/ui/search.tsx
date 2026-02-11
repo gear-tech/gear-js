@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@vara-eth/api';
 import { getBytecode } from '@wagmi/core';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { isAddress, isHash } from 'viem';
+import { isAddress, isHash, Hex } from 'viem';
 import { useConfig } from 'wagmi';
 import { z } from 'zod';
 
@@ -42,7 +41,7 @@ const Search = () => {
   const { errors, isSubmitting } = formState;
   const error = errors[FIELD_NAME]?.message;
 
-  const isWalletAddress = async (value: HexString) => {
+  const isWalletAddress = async (value: Hex) => {
     if (!isAddress(value)) return false;
 
     return getBytecode(config, { address: value })
