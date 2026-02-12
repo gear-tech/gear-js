@@ -5,10 +5,6 @@
   border-radius: 4px;
   transition: opacity 0.2s ease-in-out;
 
-  &.fetching {
-    opacity: 0.7;
-  }
-
   &.lineHeight-md {
     td {
       padding: 6.5px 24px;

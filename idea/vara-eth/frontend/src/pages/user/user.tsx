@@ -50,7 +50,7 @@ export const User = () => {
         <ChainEntity.Data>
           <ChainEntity.Key>Balance</ChainEntity.Key>
 
-          <div className={styles.balances}>
+          <div>
             <Balance value={formatUnits(value, decimals)} units="WVARA" /> |{' '}
             <Balance value={formatEther(ethBalance.value)} units="ETH" />
           </div>
