@@ -66,7 +66,7 @@ const Program = () => {
             <ChainEntity.BackButton />
             <ChainEntity.Title id={programId} explorerLink />
 
-            <Skeleton width="8rem" className={styles.status} />
+            <Skeleton width="4rem" className={styles.status} />
           </ChainEntity.Header>
 
           <ChainEntity.Data>
@@ -74,29 +74,24 @@ const Program = () => {
             <Skeleton width="16rem" />
 
             <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
-            <Skeleton width="16rem" />
+            <Skeleton width="18rem" />
 
             <ChainEntity.Key>Program Balance</ChainEntity.Key>
-            <Skeleton width="16rem" />
+            <Skeleton width="4rem" />
 
             <ChainEntity.Key>Executable Balance</ChainEntity.Key>
-            <Skeleton width="16rem" />
+            <Skeleton width="17rem" />
 
             <ChainEntity.Key>Block Number</ChainEntity.Key>
-            <Skeleton width="16rem" />
+            <Skeleton width="8rem" />
           </ChainEntity.Data>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.emptyState} />
         </div>
       </div>
     );
   }
 
-  if (!program || !programState || !codeId || isUndefined(decimals)) {
+  if (!program || !programState || !codeId || isUndefined(decimals))
     return <ChainEntity.NotFound entity="program" id={programId} />;
-  }
 
   return (
     <div className={styles.container}>

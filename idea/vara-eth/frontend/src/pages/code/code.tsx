@@ -30,15 +30,11 @@ const Code = () => {
 
           <ChainEntity.Data>
             <ChainEntity.Key>Services</ChainEntity.Key>
-            <Skeleton width="8rem" />
+            <Skeleton width="4rem" />
 
             <ChainEntity.Key>Created at</ChainEntity.Key>
-            <Skeleton width="8rem" />
+            <Skeleton width="16rem" />
           </ChainEntity.Data>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.emptyState} />
         </div>
       </div>
     );
