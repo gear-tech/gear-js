@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import CodeSVG from '@/assets/icons/code.svg?react';
 import MessageSVG from '@/assets/icons/message.svg?react';
+import { Skeleton } from '@/components';
 import { useGetAllCodesQuery } from '@/features/codes';
 import {
   useGetAllMessageRequestsQuery,
@@ -39,7 +40,11 @@ const Card = ({ title, SVG, linkTo, count }: CardProps) => {
         {linkTo && <span className={styles.link}>[View All]</span>}
       </header>
 
-      {!isUndefined(count) && <span className={styles.cardCount}>{formatNumber(count)}</span>}
+      {isUndefined(count) ? (
+        <Skeleton width="7rem" className={styles.cardCount} />
+      ) : (
+        <span className={styles.cardCount}>{formatNumber(count)}</span>
+      )}
     </Container>
   );
 };
