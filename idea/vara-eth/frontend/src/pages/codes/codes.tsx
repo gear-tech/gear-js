@@ -8,12 +8,6 @@ import { formatDate } from '@/shared/utils';
 
 import styles from './codes.module.scss';
 
-type DataRow = {
-  id: string;
-  codeId: string;
-  createdAt: string;
-};
-
 const PAGE_SIZE = 10;
 
 const columns = [
@@ -35,14 +29,13 @@ const columns = [
 
 const Codes = () => {
   const [page, setPage] = useState(1);
-  const { data: allCodes, isFetching } = useGetAllCodesQuery(page, PAGE_SIZE);
+  const { data: allCodes } = useGetAllCodesQuery(page, PAGE_SIZE);
 
-  const data: DataRow[] =
-    allCodes?.data.map((code) => ({
-      id: code.id,
-      codeId: code.id,
-      createdAt: formatDate(code.createdAt),
-    })) || [];
+  const data = allCodes?.data.map((code) => ({
+    id: code.id,
+    codeId: code.id,
+    createdAt: formatDate(code.createdAt),
+  }));
 
   const totalItems = allCodes?.total ?? 0;
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
@@ -52,7 +45,7 @@ const Codes = () => {
       <Table
         columns={columns}
         data={data}
-        isFetching={isFetching}
+        pageSize={PAGE_SIZE}
         headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
       />
     </div>

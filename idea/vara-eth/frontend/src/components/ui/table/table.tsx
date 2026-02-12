@@ -1,7 +1,9 @@
 import { clsx } from 'clsx';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import SortSVG from '@/assets/icons/sort.svg?react';
+
+import { Skeleton } from '../skeleton';
 
 import styles from './table.module.scss';
 
@@ -14,18 +16,18 @@ type TableColumn<T> = {
 
 type TableProps<T> = {
   columns: TableColumn<T>[];
-  data: T[];
+  data: T[] | undefined;
+  pageSize?: number;
   lineHeight?: 'md' | 'lg';
   headerRight?: React.ReactNode;
-  isFetching?: boolean;
 };
 
 const Table = <T extends { id: string | number }>({
   columns,
   data,
+  pageSize = 5,
   lineHeight = 'md',
   headerRight,
-  isFetching = false,
 }: TableProps<T>) => {
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -39,21 +41,39 @@ const Table = <T extends { id: string | number }>({
     }
   };
 
-  const sortedData = React.useMemo(() => {
+  const sortedData = useMemo(() => {
+    if (!data) return;
     if (!sortKey) return data;
+
     return [...data].sort((a, b) => {
       const aValue = a[sortKey];
       const bValue = b[sortKey];
+
       if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+
       return 0;
     });
   }, [data, sortKey, sortOrder]);
 
   const hasExtraColumn = Boolean(headerRight);
 
+  const render = () => {
+    return (sortedData || Array.from({ length: pageSize })).map((row: T | undefined, index) => (
+      <tr key={row ? row.id : `skeleton-${index}`}>
+        {columns.map((column) => (
+          <td key={column.key as string}>
+            {row ? column.render?.(row[column.key], row) || String(row[column.key]) : <Skeleton width="16rem" />}
+          </td>
+        ))}
+
+        {hasExtraColumn && <td />}
+      </tr>
+    ));
+  };
+
   return (
-    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], isFetching && styles.fetching)}>
+    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`])}>
       <thead>
         <tr>
           {columns.map((column: TableColumn<T>) => (
@@ -64,6 +84,7 @@ const Table = <T extends { id: string | number }>({
               {column.title} <SortSVG />
             </th>
           ))}
+
           {hasExtraColumn && (
             <th className={styles.headerRightCell}>
               <div className={styles.headerRight}>{headerRight}</div>
@@ -71,18 +92,8 @@ const Table = <T extends { id: string | number }>({
           )}
         </tr>
       </thead>
-      <tbody>
-        {sortedData.map((row) => (
-          <tr key={row.id}>
-            {columns.map((column) => (
-              <td key={column.key as string}>
-                {column.render ? column.render(row[column.key], row) : String(row[column.key])}
-              </td>
-            ))}
-            {hasExtraColumn && <td />}
-          </tr>
-        ))}
-      </tbody>
+
+      <tbody>{render()}</tbody>
     </table>
   );
 };
