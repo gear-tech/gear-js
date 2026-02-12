@@ -1,7 +1,8 @@
+import { Fragment } from 'react/jsx-runtime';
 import { generatePath } from 'react-router-dom';
 import { formatEther } from 'viem';
 
-import { Balance, ChainEntity, HashLink } from '@/components';
+import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
 import { MessageRequest, MessageSent, ReplyRequest, ReplySent } from '../../lib';
@@ -132,11 +133,27 @@ const ReplySentData = (props: ReplySent) => {
   );
 };
 
+const SkeletonData = () => {
+  const render = () =>
+    Array.from({ length: 6 }, (_, index) => (
+      <Fragment key={index}>
+        <ChainEntity.Key>
+          <Skeleton width="8rem" />
+        </ChainEntity.Key>
+
+        <Skeleton width="16rem" />
+      </Fragment>
+    ));
+
+  return <ChainEntity.Data>{render()}</ChainEntity.Data>;
+};
+
 const MessageData = {
   Request: MessageRequestData,
   Sent: MessageSentData,
   ReplyRequest: ReplyRequestData,
   ReplySent: ReplySentData,
+  Skeleton: SkeletonData,
 };
 
 export { MessageData };
