@@ -3,7 +3,7 @@ import { formatEther, formatUnits, Hex } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
-import { Badge, Balance, ChainEntity, HashLink, UploadIdlButton } from '@/components';
+import { Badge, Balance, ChainEntity, HashLink, Skeleton, UploadIdlButton } from '@/components';
 import {
   TopUpExecBalance,
   useReadContractState,
@@ -61,7 +61,35 @@ const Program = () => {
   if (isLoading || isProgramStateLoading || isDecimalsPending) {
     return (
       <div className={styles.container}>
-        <div className={styles.card}>Loading...</div>
+        <div className={styles.card}>
+          <ChainEntity.Header>
+            <ChainEntity.BackButton />
+            <ChainEntity.Title id={programId} explorerLink />
+
+            <Skeleton width="8rem" className={styles.status} />
+          </ChainEntity.Header>
+
+          <ChainEntity.Data>
+            <ChainEntity.Key>Code ID</ChainEntity.Key>
+            <Skeleton width="16rem" />
+
+            <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
+            <Skeleton width="16rem" />
+
+            <ChainEntity.Key>Program Balance</ChainEntity.Key>
+            <Skeleton width="16rem" />
+
+            <ChainEntity.Key>Executable Balance</ChainEntity.Key>
+            <Skeleton width="16rem" />
+
+            <ChainEntity.Key>Block Number</ChainEntity.Key>
+            <Skeleton width="16rem" />
+          </ChainEntity.Data>
+        </div>
+
+        <div className={styles.card}>
+          <div className={styles.emptyState} />
+        </div>
       </div>
     );
   }
