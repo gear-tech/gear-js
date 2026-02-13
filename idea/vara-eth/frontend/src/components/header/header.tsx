@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 
-import logo from '@/assets/logo.svg';
+import LogoSVG from '@/assets/logo.svg?react';
 import { HeaderBalance } from '@/components';
 import { routes } from '@/shared/config';
 
@@ -11,13 +11,13 @@ import styles from './header.module.scss';
 
 const Header = () => {
   const ethAccount = useAccount();
-  const isConnected = Boolean(ethAccount.chainId);
+  const isConnected = Boolean(ethAccount.address);
 
   return (
     <header className={styles.container}>
       <div className={styles.leftGroup}>
         <Link to={routes.home} className={styles.logo}>
-          <img src={logo} alt="Gear logo" />
+          <LogoSVG />
         </Link>
 
         {/* <NodesSwitch /> */}

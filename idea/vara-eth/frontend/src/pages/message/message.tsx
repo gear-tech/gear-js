@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Hex } from 'viem';
 
-import { ChainEntity, PageContainer } from '@/components';
+import { ChainEntity, PageContainer, Skeleton } from '@/components';
 import {
   MessageData,
   useGetMessageRequestByIdQuery,
@@ -29,7 +29,23 @@ const Message = () => {
   if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading) {
     return (
       <PageContainer className={styles.container}>
-        <div className={styles.column}>Loading...</div>
+        <div className={styles.column}>
+          <ChainEntity.Header>
+            <ChainEntity.BackButton />
+
+            <div className={styles.title}>
+              <Skeleton width="16px" />
+              <ChainEntity.Title id={messageId} />
+            </div>
+          </ChainEntity.Header>
+
+          <MessageData.Skeleton />
+        </div>
+
+        <div className={styles.column}>
+          <h2 className={styles.payloadTitle}>Payload</h2>
+          <Skeleton height="4rem" />
+        </div>
       </PageContainer>
     );
   }

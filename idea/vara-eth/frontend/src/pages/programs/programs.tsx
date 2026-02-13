@@ -8,12 +8,6 @@ import { formatDate } from '@/shared/utils';
 
 import styles from './programs.module.scss';
 
-type DataRow = {
-  id: string;
-  programId: string;
-  createdAt: string;
-};
-
 const PAGE_SIZE = 7;
 
 const columns = [
@@ -28,14 +22,13 @@ const columns = [
 
 const Programs = () => {
   const [page, setPage] = useState(1);
-  const { data: programsResponse, isFetching } = useGetAllProgramsQuery(page, PAGE_SIZE);
+  const { data: programsResponse } = useGetAllProgramsQuery(page, PAGE_SIZE);
 
-  const data: DataRow[] =
-    programsResponse?.data?.map((program) => ({
-      id: program.id,
-      programId: program.id,
-      createdAt: formatDate(program.createdAt),
-    })) ?? [];
+  const data = programsResponse?.data?.map((program) => ({
+    id: program.id,
+    programId: program.id,
+    createdAt: formatDate(program.createdAt),
+  }));
 
   const totalItems = programsResponse?.total ?? 0;
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
@@ -45,8 +38,8 @@ const Programs = () => {
       <Table
         columns={columns}
         data={data}
-        isFetching={isFetching}
         lineHeight="lg"
+        pageSize={PAGE_SIZE}
         headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
       />
     </div>

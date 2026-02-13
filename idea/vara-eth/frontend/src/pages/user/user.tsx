@@ -3,7 +3,8 @@ import { formatEther, formatUnits, isAddress, Hex } from 'viem';
 import { useBalance } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
-import { Balance, ChainEntity } from '@/components';
+import { Balance, ChainEntity, Skeleton } from '@/components';
+import { isUndefined } from '@/shared/utils';
 
 import styles from './user.module.scss';
 
@@ -15,11 +16,28 @@ export const User = () => {
   const { userId } = useParams() as Params;
   const address = isAddress(userId) ? userId : undefined;
 
-  const { data: ethBalance } = useBalance({ address });
-  const { value, decimals } = useWrappedVaraBalance(address);
+  const { data: ethBalance, isPending: isEthPending } = useBalance({ address });
+  const { value, decimals, isPending: isWvaraPending } = useWrappedVaraBalance(address);
 
-  const wvara = value !== undefined && decimals ? formatUnits(value, decimals) : null;
-  const eth = ethBalance ? formatEther(ethBalance.value) : null;
+  if (isEthPending || isWvaraPending)
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <ChainEntity.Header>
+            <h2 className={styles.title}>Address</h2>
+            <ChainEntity.Title id={userId} explorerLink />
+          </ChainEntity.Header>
+
+          <ChainEntity.Data>
+            <ChainEntity.Key>Balance</ChainEntity.Key>
+            <Skeleton width="16rem" />
+          </ChainEntity.Data>
+        </div>
+      </div>
+    );
+
+  if (isUndefined(value) || isUndefined(decimals) || !ethBalance)
+    return <ChainEntity.NotFound entity="user" id={userId} />;
 
   return (
     <div className={styles.container}>
@@ -33,7 +51,8 @@ export const User = () => {
           <ChainEntity.Key>Balance</ChainEntity.Key>
 
           <div>
-            {wvara && <Balance value={wvara} units="WVARA" />} | {eth && <Balance value={eth} units="ETH" />}
+            <Balance value={formatUnits(value, decimals)} units="WVARA" /> |{' '}
+            <Balance value={formatEther(ethBalance.value)} units="ETH" />
           </div>
         </ChainEntity.Data>
       </div>

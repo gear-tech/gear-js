@@ -1,0 +1,35 @@
+@keyframes loading {
+  from {
+    background-position: -200px 0;
+  }
+
+  to {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  display: block;
+
+  background-color: rgba(#fff, 0.03);
+  border-radius: 4px;
+
+  &.loading {
+    background: linear-gradient(90deg, rgba(#fff, 0.01) 25%, rgba(#fff, 0.1) 50%, rgba(#fff, 0.01) 75%);
+    background-size: 200px 100%;
+    animation: loading 1.5s ease-in-out infinite;
+  }
+
+  &:empty {
+    &::before {
+      // to inherit line height
+      content: '\00a0';
+    }
+  }
+
+  &:not(:empty) {
+    > *:not(.skeleton) {
+      visibility: hidden;
+    }
+  }
+}

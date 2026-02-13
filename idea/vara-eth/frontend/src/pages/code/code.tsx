@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Hex } from 'viem';
 
-import { UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
+import { UploadIdlButton, SyntaxHighlighter, ChainEntity, Skeleton } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { useSails, SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
@@ -22,14 +22,25 @@ const Code = () => {
   if (isLoading || sails.isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.card}>Loading...</div>
+        <div className={styles.card}>
+          <ChainEntity.Header>
+            <ChainEntity.BackButton />
+            <ChainEntity.Title id={codeId} />
+          </ChainEntity.Header>
+
+          <ChainEntity.Data>
+            <ChainEntity.Key>Services</ChainEntity.Key>
+            <Skeleton width="4rem" />
+
+            <ChainEntity.Key>Created at</ChainEntity.Key>
+            <Skeleton width="16rem" />
+          </ChainEntity.Data>
+        </div>
       </div>
     );
   }
 
-  if (!code) {
-    return <ChainEntity.NotFound entity="code" id={codeId} />;
-  }
+  if (!code) return <ChainEntity.NotFound entity="code" id={codeId} />;
 
   return (
     <div className={styles.container}>
