@@ -4,7 +4,7 @@ import { ISailsTypeDef } from 'sails-js-types';
 import { z } from 'zod';
 
 import { RESULT } from '../../consts';
-import { ISailsFuncArg } from '../../types';
+import { HexString, ISailsFuncArg } from '../../types';
 
 const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   schema.transform((value, ctx) => {
@@ -22,7 +22,7 @@ const asTuple = <T extends z.ZodTypeAny>(schema: T[]) => z.tuple(schema as [T, .
 
 const isUnion = <T>(arr: T[]): arr is [T, T, ...T[]] => arr.length >= 2;
 
-const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => `0x${string}`) => {
+const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
   const getSchema = (def: ISailsTypeDef): z.ZodType<unknown> => {
     if (def.isPrimitive) return def.asPrimitive.isBool ? z.boolean() : z.string().trim();
 
