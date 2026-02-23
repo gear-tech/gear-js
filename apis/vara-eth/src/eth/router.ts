@@ -1,6 +1,6 @@
 import type { Address, Hex, TransactionRequest } from 'viem';
 import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
-import { randomBytes } from '@noble/hashes/utils';
+import { randomBytes } from '@noble/hashes/utils.js';
 import { loadKZG } from 'kzg-wasm';
 
 import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';

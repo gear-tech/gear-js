@@ -28,6 +28,7 @@ const config: Config.InitialOptions = {
   testSequencer: './test/testSequencer.js',
   forceExit: true,
   testTimeout: 15_000,
+  transformIgnorePatterns: ['node_modules/(?!(@noble|@ethereumjs)/)'],
 };
 
 export default config;

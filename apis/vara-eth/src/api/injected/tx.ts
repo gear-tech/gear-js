@@ -1,5 +1,5 @@
 import { bytesToHex, concatBytes, hexToBytes, randomBytes } from '@ethereumjs/util';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hash, Hex } from 'viem';
 import { zeroAddress } from 'viem';
