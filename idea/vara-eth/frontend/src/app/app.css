@@ -6,7 +6,7 @@
 }
 
 @font-face {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Roboto Mono';
   src: url('../assets/fonts/roboto-mono-italic-variable.woff2') format('woff2-variations');
   font-weight: 100 700;
   font-style: italic;
@@ -30,7 +30,7 @@
   --input: rgb(235, 240, 245);
 
   --card: rgb(255, 255, 255);
-  --card-foreground: rgb(147, 110, 83);
+  --card-foreground: rgb(57, 36, 20);
 
   --primary: rgba(168, 245, 147, 1);
   --primary-foreground: rgb(240, 245, 255);
@@ -48,7 +48,7 @@
 
   --radius: 0.5rem;
 
-  /* reown appkit overides */
+  /* reown appkit overrides */
 
   /* modal background, cuz there's no such setting */
   --apkt-tokens-theme-backgroundPrimary-base: rgb(0, 0, 0) !important;
