@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../assets/fonts/roboto-mono-variable.woff2') format('woff2-variations');
+  font-weight: 100 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Mono', monospace;
+  src: url('../assets/fonts/roboto-mono-italic-variable.woff2') format('woff2-variations');
+  font-weight: 100 700;
+  font-style: italic;
+}
+
 :root {
   --background: rgb(255, 255, 255);
   --foreground: rgb(57, 36, 20);
@@ -16,7 +30,7 @@
   --input: rgb(235, 240, 245);
 
   --card: rgb(255, 255, 255);
-  --card-foreground: rgb(57, 36, 20);
+  --card-foreground: rgb(147, 110, 83);
 
   --primary: rgba(168, 245, 147, 1);
   --primary-foreground: rgb(240, 245, 255);
