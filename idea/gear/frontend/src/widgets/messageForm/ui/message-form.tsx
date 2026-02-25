@@ -50,7 +50,7 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
   const schema = useValidationSchema();
 
@@ -90,13 +90,13 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
-    const { voucherId, keepAlive } = values;
+    const { gasLimit, value, voucherId, keepAlive } = values;
 
     const baseValues = {
-      value: getChainBalanceValue(values.value).toFixed(),
+      value,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
-      gasLimit: getChainGasValue(values.gasLimit).toFixed(),
+      gasLimit,
       keepAlive,
     };
 
@@ -118,7 +118,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const preparedValues = {
       ...values,
-      value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };

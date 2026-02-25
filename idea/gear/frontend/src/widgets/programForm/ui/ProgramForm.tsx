@@ -45,7 +45,7 @@ type Props = {
 };
 
 const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
-  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
   const schema = useValidationSchema();
 
@@ -73,7 +73,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
     const preparedValues = {
       ...values,
-      value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };
@@ -95,8 +94,8 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data = {
-      value: getChainBalanceValue(value).toFixed(),
-      gasLimit: getChainGasValue(gasLimit).toFixed(),
+      value,
+      gasLimit,
       payloadType: metadata ? undefined : payloadType,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,
