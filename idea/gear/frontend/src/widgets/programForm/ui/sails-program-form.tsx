@@ -20,14 +20,6 @@ import { SubmitHelpers } from '../model';
 
 import styles from './ProgramForm.module.scss';
 
-type Values = {
-  value: string;
-  gasLimit: string;
-  programName: string;
-  keepAlive: boolean;
-  payload: PayloadValue;
-};
-
 const useSchema = (payloadSchema: ReturnType<typeof useConstructor>['schema']) => {
   const balanceSchema = useBalanceSchema();
   const gasLimitSchema = useGasLimitSchema();
@@ -65,7 +57,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
   const constructor = useConstructor(sails);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
   const schema = useSchema(constructor.schema);
-  const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
+  const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isGasDisabled, setIsGasDisabled] = useState(false);
@@ -74,7 +66,12 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
 
   const resetForm = () => {
     const values = form.getValues();
-    const resetValues = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
+
+    const resetValues = {
+      ...DEFAULT_VALUES,
+      payload: getResetPayloadValue(values.payload as PayloadValue) as Record<string, unknown>,
+      programName: values.programName,
+    };
 
     form.reset(resetValues);
     setGasinfo(undefined);

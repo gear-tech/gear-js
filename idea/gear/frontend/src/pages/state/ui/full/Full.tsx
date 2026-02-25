@@ -24,7 +24,7 @@ const Full = () => {
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 
-  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
+  const methods = useForm({ defaultValues: INITIAL_VALUES });
   const { control } = methods;
   const payloadValue = useWatch({ control, name: 'payload' });
 

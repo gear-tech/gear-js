@@ -1,6 +1,4 @@
-import { FormValues } from './types';
-
-const INITIAL_VALUES: FormValues = {
+const INITIAL_VALUES = {
   value: '0',
   payload: '0x',
   gasLimit: '0',

@@ -1,11 +1,13 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
@@ -32,9 +34,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
   const schema = useValidationSchema();
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
-  // TODOFORM:
-  // @ts-expect-error - TODO(#1738): explain why it should be ignored
-  const methods = useForm<FormValues>({ defaultValues, resolver: yupResolver(schema) });
+  const methods = useForm({ defaultValues, resolver: zodResolver(schema) });
   const { getValues, setValue, reset } = methods;
 
   const [gasInfo, setGasinfo] = useState<Result>();
@@ -44,7 +44,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
   const resetForm = () => {
     const values = getValues();
-    const payload = getResetPayloadValue(values.payload);
+    const payload = getResetPayloadValue(values.payload as PayloadValue);
 
     reset({ ...defaultValues, payload });
     setGasinfo(undefined);
@@ -59,7 +59,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       ...values,
       value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: getSubmitPayload(values.payload),
+      payload: getSubmitPayload(values.payload as PayloadValue),
     };
 
     try {
@@ -75,7 +75,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     }
   };
 
-  const handleSubmitForm = (values: FormValues) => {
+  const handleSubmitForm = (values: z.infer<typeof schema>) => {
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data = {
@@ -83,9 +83,9 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: metadata ? getSubmitPayload(payload) : payload,
-      programName,
-      keepAlive,
+      payload: metadata ? getSubmitPayload(payload as PayloadValue) : payload,
+      programName: programName as string,
+      keepAlive: keepAlive as boolean,
     };
 
     onSubmit(data, { resetForm });

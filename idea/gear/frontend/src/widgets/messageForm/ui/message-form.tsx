@@ -1,11 +1,13 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { ProgramVoucherSelect } from '@/features/voucher';
@@ -19,7 +21,7 @@ import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
 import { ValueField } from '@/shared/ui/form';
 
-import { FormValues, INITIAL_VALUES } from '../model';
+import { INITIAL_VALUES } from '../model';
 
 import styles from './message-form.module.scss';
 
@@ -36,9 +38,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const alert = useAlert();
   const schema = useValidationSchema();
 
-  // TODOFORM:
-  // @ts-expect-error - TODO(#1738): explain why it should be ignored
-  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES, resolver: yupResolver(schema) });
+  const methods = useForm({ defaultValues: INITIAL_VALUES, resolver: zodResolver(schema) });
   const { getValues, reset, setValue, register, getFieldState, formState } = methods;
   const { error: payloadTypeError } = getFieldState('payloadType', formState);
 
@@ -63,14 +63,14 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
   const resetForm = () => {
     const values = getValues();
-    const payload = getResetPayloadValue(values.payload);
+    const payload = getResetPayloadValue(values.payload as PayloadValue);
 
     reset({ ...INITIAL_VALUES, payload });
     enableSubmitButton();
     setGasInfo(undefined);
   };
 
-  const handleSubmitForm = (values: FormValues) => {
+  const handleSubmitForm = (values: z.infer<typeof schema>) => {
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
@@ -79,19 +79,33 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: getSubmitPayload(values.payload),
+      payload: getSubmitPayload(values.payload as PayloadValue),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
-      keepAlive,
+      keepAlive: keepAlive as boolean,
     };
 
     if (isReply) {
       const reply = { ...baseValues, replyToId: id };
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
-      replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
+
+      void replyMessage({
+        reply,
+        metadata,
+        payloadType,
+        voucherId: voucherId as HexString,
+        reject: enableSubmitButton,
+        resolve: resetForm,
+      });
     } else {
       const message = { ...baseValues, destination: id };
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
-      sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
+
+      void sendMessage({
+        message,
+        metadata,
+        payloadType,
+        voucherId: voucherId as HexString,
+        reject: enableSubmitButton,
+        resolve: resetForm,
+      });
     }
   };
 
@@ -104,7 +118,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       ...values,
       value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: getSubmitPayload(values.payload),
+      payload: getSubmitPayload(values.payload as PayloadValue),
     };
 
     calculateGas(method, preparedValues, null, metadata, id)
