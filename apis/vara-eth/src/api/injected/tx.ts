@@ -6,7 +6,7 @@ import { zeroAddress } from 'viem';
 
 import type {
   IInjectedTransaction,
-  ISigner,
+  IMessageSigner,
   IVaraEthProvider,
   IVaraEthValidatorPoolProvider,
 } from '../../types/index.js';
@@ -211,7 +211,7 @@ export class InjectedTx {
    * ## Sign the injected transaction
    * @returns The signature of the transaction
    */
-  public async sign(signer?: ISigner) {
+  public async sign(signer?: IMessageSigner) {
     const _signer = signer ?? this._ethClient.signer;
     this._account = await _signer.getAddress();
     this._signature = await _signer.signMessage(this.hash);

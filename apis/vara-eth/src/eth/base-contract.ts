@@ -1,5 +1,5 @@
 import { Address, PublicClient } from 'viem';
-import { ISigner } from '../types/signer.js';
+import { ITransactionSigner } from '../types/signer.js';
 
 export interface ContractClientParams {
   /**
@@ -13,7 +13,7 @@ export interface ContractClientParams {
   /**
    * (optional) Signer for signing and sending transactions
    */
-  signer?: ISigner;
+  signer?: ITransactionSigner;
 }
 
 export abstract class BaseContractClient {
@@ -22,7 +22,7 @@ export abstract class BaseContractClient {
    */
   public readonly address: Address;
   protected _pc: PublicClient;
-  protected _signer?: ISigner;
+  protected _signer?: ITransactionSigner;
 
   constructor(params: ContractClientParams) {
     this.address = params.address;
@@ -30,7 +30,7 @@ export abstract class BaseContractClient {
     this._signer = params.signer;
   }
 
-  public setSigner(signer: ISigner) {
+  public setSigner(signer: ITransactionSigner) {
     this._signer = signer;
     return this;
   }
@@ -40,7 +40,7 @@ export abstract class BaseContractClient {
     return this;
   }
 
-  protected _ensureSigner(): ISigner {
+  protected _ensureSigner(): ITransactionSigner {
     if (!this._signer) {
       throw new Error('Signer is not provided');
     }

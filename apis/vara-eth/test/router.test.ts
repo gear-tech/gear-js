@@ -4,7 +4,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import * as fs from 'fs';
 import path from 'path';
 
-import { CodeState, EthereumClient, getMirrorClient, ISigner } from '../src';
+import { CodeState, getMirrorClient, getRouterClient, RouterClient, type ITransactionSigner } from '../src';
 import { config } from './config';
 import { walletClientToSigner } from '../src/signer';
 
@@ -12,8 +12,8 @@ import { walletClientToSigner } from '../src/signer';
 let codeId: `0x${string}`;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
-let signer: ISigner;
-let ethereumClient: EthereumClient;
+let signer: ITransactionSigner;
+let router: RouterClient;
 
 // let codeValidatedPromise: Promise<boolean>;
 
@@ -30,8 +30,8 @@ beforeAll(async () => {
     transport,
   });
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
-  await ethereumClient.waitForInitialization();
+  router = getRouterClient({ publicClient, signer, address: config.routerId });
+
   codeId = config.codeId;
 });
 
@@ -61,13 +61,13 @@ describe('router', () => {
     // );
 
     test('should check that code state is Validated', async () => {
-      expect(await ethereumClient.router.codeState(codeId)).toBe(CodeState.Validated);
+      expect(await router.codeState(codeId)).toBe(CodeState.Validated);
     });
   });
 
   describe('create program', () => {
     test('should create program', async () => {
-      const tx = await ethereumClient.router.createProgram(codeId);
+      const tx = await router.createProgram(codeId);
 
       await tx.send();
 
@@ -94,7 +94,7 @@ describe('router', () => {
         bytecode,
       });
 
-      const receipt = await ethereumClient.publicClient.waitForTransactionReceipt({ hash: deployHash });
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
 
       const contractAddr = receipt.contractAddress?.toLowerCase() as `0x${string}` | undefined;
 
@@ -104,7 +104,7 @@ describe('router', () => {
 
       expect(contractAddr).toBeDefined();
 
-      const tx = await ethereumClient.router.createProgramWithAbiInterface(codeId, contractAddr);
+      const tx = await router.createProgramWithAbiInterface(codeId, contractAddr);
 
       const createProgramReceipt = await tx.sendAndWaitForReceipt();
 
@@ -114,21 +114,21 @@ describe('router', () => {
 
   describe('view functions', () => {
     test('should get genesisBlockHash', async () => {
-      const blockhash = await ethereumClient.router.genesisBlockHash();
+      const blockhash = await router.genesisBlockHash();
       expect(blockhash).toBeDefined();
       expect(typeof blockhash).toBe('string');
       expect(blockhash.startsWith('0x')).toBe(true);
     });
 
     test('should get genesisTimestamp', async () => {
-      const timestamp = await ethereumClient.router.genesisTimestamp();
+      const timestamp = await router.genesisTimestamp();
       expect(timestamp).toBeDefined();
       expect(typeof timestamp).toBe('number');
       expect(timestamp).toBeGreaterThan(0);
     });
 
     test('should get computeSettings', async () => {
-      const settings = await ethereumClient.router.computeSettings();
+      const settings = await router.computeSettings();
       expect(settings).toBeDefined();
       expect(settings.threshold).toBeDefined();
       expect(settings.wvaraPerSecond).toBeDefined();
@@ -137,28 +137,28 @@ describe('router', () => {
     });
 
     test('should get mirrorImpl address', async () => {
-      const implAddr = await ethereumClient.router.mirrorImpl();
+      const implAddr = await router.mirrorImpl();
       expect(implAddr).toBeDefined();
       expect(typeof implAddr).toBe('string');
       expect(implAddr.startsWith('0x')).toBe(true);
     });
 
     test('should get programsCount', async () => {
-      const count = await ethereumClient.router.programsCount();
+      const count = await router.programsCount();
       expect(count).toBeDefined();
       expect(typeof count).toBe('bigint');
       expect(count).toBeGreaterThanOrEqual(0n);
     });
 
     test('should get validatedCodesCount', async () => {
-      const count = await ethereumClient.router.validatedCodesCount();
+      const count = await router.validatedCodesCount();
       expect(count).toBeDefined();
       expect(typeof count).toBe('bigint');
       expect(count).toBeGreaterThanOrEqual(0n);
     });
 
     test('should get validators list', async () => {
-      const validators = await ethereumClient.router.validators();
+      const validators = await router.validators();
       expect(validators).toBeDefined();
       expect(Array.isArray(validators)).toBe(true);
       expect(validators.length).toBeGreaterThan(0);
@@ -169,21 +169,21 @@ describe('router', () => {
     });
 
     test('should get validatorsCount', async () => {
-      const count = await ethereumClient.router.validatorsCount();
+      const count = await router.validatorsCount();
       expect(count).toBeDefined();
       expect(typeof count).toBe('bigint');
       expect(count).toBeGreaterThan(0n);
     });
 
     test('should get validatorsThreshold', async () => {
-      const threshold = await ethereumClient.router.validatorsThreshold();
+      const threshold = await router.validatorsThreshold();
       expect(threshold).toBeDefined();
       expect(typeof threshold).toBe('bigint');
       expect(threshold).toBeGreaterThan(0n);
     });
 
     test('should get signingThresholdPercentage', async () => {
-      const fraction = await ethereumClient.router.signingThresholdFraction();
+      const fraction = await router.signingThresholdFraction();
       expect(fraction).toBeDefined();
       expect(Array.isArray(fraction)).toBeTruthy();
       expect(fraction.length).toBe(2);
@@ -192,37 +192,37 @@ describe('router', () => {
     });
 
     test('should get validatorsAggregatedPublicKey', async () => {
-      const publicKey = await ethereumClient.router.validatorsAggregatedPublicKey();
+      const publicKey = await router.validatorsAggregatedPublicKey();
       expect(publicKey).toBeDefined();
     });
 
     test('should get validatorsVerifiableSecretSharingCommitment', async () => {
-      const commitment = await ethereumClient.router.validatorsVerifiableSecretSharingCommitment();
+      const commitment = await router.validatorsVerifiableSecretSharingCommitment();
       expect(commitment).toBeDefined();
       expect(typeof commitment).toBe('string');
     });
 
     test('should get wrappedVara address', async () => {
-      const varaAddr = await ethereumClient.router.wrappedVara();
+      const varaAddr = await router.wrappedVara();
       expect(varaAddr).toBeDefined();
       expect(typeof varaAddr).toBe('string');
       expect(varaAddr.startsWith('0x')).toBe(true);
     });
 
     test('should get latestCommittedBlockHash', async () => {
-      const blockhash = await ethereumClient.router.latestCommittedBlockHash();
+      const blockhash = await router.latestCommittedBlockHash();
       expect(blockhash).toBeDefined();
       expect(typeof blockhash).toBe('string');
     });
 
     test('should get code state for validated code', async () => {
-      const state = await ethereumClient.router.codeState(codeId);
+      const state = await router.codeState(codeId);
       expect(state).toBeDefined();
       expect(state).toBe(CodeState.Validated);
     });
 
     test('should get states for multiple codes', async () => {
-      const states = await ethereumClient.router.codesStates([codeId]);
+      const states = await router.codesStates([codeId]);
       expect(states).toBeDefined();
       expect(Array.isArray(states)).toBe(true);
       expect(states.length).toBe(1);
@@ -230,47 +230,47 @@ describe('router', () => {
     });
 
     test('should check if addresses are validators', async () => {
-      const validators = await ethereumClient.router.validators();
-      const isValid = await ethereumClient.router.areValidators(validators as `0x${string}`[]);
+      const validators = await router.validators();
+      const isValid = await router.areValidators(validators as `0x${string}`[]);
       expect(isValid).toBeDefined();
       expect(typeof isValid).toBe('boolean');
     });
 
     test('should return false for non-validator addresses', async () => {
       const notValidator = '0x0000000000000000000000000000000000000001';
-      const isValid = await ethereumClient.router.areValidators([notValidator as `0x${string}`]);
+      const isValid = await router.areValidators([notValidator as `0x${string}`]);
       expect(isValid).toBe(false);
     });
 
     test('should check if single address is validator', async () => {
-      const validators = await ethereumClient.router.validators();
+      const validators = await router.validators();
       const firstValidator = validators[0];
-      const isValid = await ethereumClient.router.isValidator(firstValidator);
+      const isValid = await router.isValidator(firstValidator);
       expect(isValid).toBe(true);
     });
 
     test('should return false for non-validator address', async () => {
       const notValidator = '0x0000000000000000000000000000000000000001';
-      const isValid = await ethereumClient.router.isValidator(notValidator);
+      const isValid = await router.isValidator(notValidator);
       expect(isValid).toBe(false);
     });
 
     test('should get code id for created program', async () => {
-      const tx = await ethereumClient.router.createProgram(codeId);
+      const tx = await router.createProgram(codeId);
       await tx.send();
       const programId = await tx.getProgramId();
 
-      const retrievedCodeId = await ethereumClient.router.programCodeId(programId);
+      const retrievedCodeId = await router.programCodeId(programId);
       expect(retrievedCodeId).toBeDefined();
       expect(retrievedCodeId.toLowerCase()).toBe(codeId.toLowerCase());
     });
 
     test('should get code ids for multiple programs', async () => {
-      const tx = await ethereumClient.router.createProgram(codeId);
+      const tx = await router.createProgram(codeId);
       await tx.send();
       const programId = await tx.getProgramId();
 
-      const codeIds = await ethereumClient.router.programsCodeIds([programId]);
+      const codeIds = await router.programsCodeIds([programId]);
       expect(codeIds).toBeDefined();
       expect(Array.isArray(codeIds)).toBe(true);
       expect(codeIds.length).toBe(1);

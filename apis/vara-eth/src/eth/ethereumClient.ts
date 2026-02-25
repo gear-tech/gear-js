@@ -2,7 +2,7 @@ import type { Address, PublicClient } from 'viem';
 
 import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
 import { getRouterClient, type RouterClient } from './router.js';
-import { ISigner } from '../types/signer.js';
+import { ITransactionSigner } from '../types/signer.js';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,
@@ -20,7 +20,7 @@ export class EthereumClient {
   constructor(
     public readonly publicClient: PublicClient,
     routerAddress: Address,
-    private _signer?: ISigner,
+    private _signer?: ITransactionSigner,
   ) {
     this._isInitialized = false;
     this._routerClient = getRouterClient({
@@ -64,7 +64,7 @@ export class EthereumClient {
     return this._wvaraClient;
   }
 
-  public setSigner(signer: ISigner) {
+  public setSigner(signer: ITransactionSigner) {
     if (!this._isInitialized) {
       throw new Error(
         'EthereumClient not yet initialized. Await ethereumClient.waitForInitialization() before setting the signer.',

@@ -1,11 +1,17 @@
-import { VaraEthApi, WsVaraEthProvider } from '../src';
+import { createPublicClient, webSocket } from 'viem';
+
+import { createVaraEthApi, VaraEthApi, WsVaraEthProvider } from '../src';
+import { config } from './config';
 
 let provider: WsVaraEthProvider;
 let api: VaraEthApi;
 
-beforeAll(() => {
+beforeAll(async () => {
   provider = new WsVaraEthProvider();
-  api = new VaraEthApi(provider);
+  const pc = createPublicClient({
+    transport: webSocket(config.wsRpc),
+  });
+  api = await createVaraEthApi(provider, pc, config.routerId);
 });
 
 afterAll(async () => {

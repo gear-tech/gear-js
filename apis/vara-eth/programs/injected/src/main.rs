@@ -1,8 +1,8 @@
 use ethexe_common::{
-    ToDigest,
     ecdsa::{PrivateKey, Signature, SignedMessage},
     gprimitives::{ActorId, H256},
     injected::{InjectedTransaction, Promise},
+    ToDigest,
 };
 use gear_core::rpc::ReplyInfo;
 use gear_core_errors::{ReplyCode, SuccessReplyReason};
@@ -23,9 +23,9 @@ pub fn main() {
 
     println!("hash: <{:?}>", tx.to_digest());
 
-    let sig = Signature::create(private_key, tx.clone());
+    let sig = Signature::create(&private_key, tx.clone());
 
-    println!("signature: <{:?}>", sig.unwrap());
+    println!("signature: <{}>", sig.unwrap());
 
     let msg_id = tx.to_message_id();
 
@@ -46,5 +46,5 @@ pub fn main() {
         "promise_hash: <0x{}>",
         hex::encode(msg.data().to_digest().0)
     );
-    println!("promise_signature: <{:?}>", msg.signature());
+    println!("promise_signature: <{}>", msg.signature());
 }
