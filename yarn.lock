@@ -2370,9 +2370,9 @@ __metadata:
   peerDependencies:
     react: ^19
     react-dom: ^19
-    react-hook-form: 7.54.2
+    react-hook-form: ^7.71.2
     sails-js: ^0.5
-    zod: 3.25.76
+    zod: ^4.3.6
   languageName: unknown
   linkType: soft
 
@@ -2606,12 +2606,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hookform/resolvers@npm:4.0.0":
-  version: 4.0.0
-  resolution: "@hookform/resolvers@npm:4.0.0"
+"@hookform/resolvers@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@hookform/resolvers@npm:5.2.2"
+  dependencies:
+    "@standard-schema/utils": "npm:^0.3.0"
   peerDependencies:
-    react-hook-form: ^7.0.0
-  checksum: 10c0/4839b4cf869e5fe5e271a8d827e3c5ce803a956675f8d66b010f6784caffa2d507ffd4c2065e209470735ebd6fa3d942d74bce1b6223761d48a94b6fd7216e33
+    react-hook-form: ^7.55.0
+  checksum: 10c0/0692cd61dcc2a70cbb27b88a37f733c39e97f555c036ba04a81bd42b0467461cfb6bafacb46c16f173672f9c8a216bd7928a2330d4e49c700d130622bf1defaf
   languageName: node
   linkType: hard
 
@@ -7806,6 +7808,13 @@ __metadata:
   version: 1.1.0
   resolution: "@standard-schema/spec@npm:1.1.0"
   checksum: 10c0/d90f55acde4b2deb983529c87e8025fa693de1a5e8b49ecc6eb84d1fd96328add0e03d7d551442156c7432fd78165b2c26ff561b970a9a881f046abb78d6a526
+  languageName: node
+  linkType: hard
+
+"@standard-schema/utils@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@standard-schema/utils@npm:0.3.0"
+  checksum: 10c0/6eb74cd13e52d5fc74054df51e37d947ef53f3ab9e02c085665dcca3c38c60ece8d735cebbdf18fbb13c775fbcb9becb3f53109b0e092a63f0f7389ce0993fd0
   languageName: node
   linkType: hard
 
@@ -16064,7 +16073,7 @@ __metadata:
     "@gear-js/ui": "npm:*"
     "@gear-js/wallet-connect": "npm:*"
     "@hcaptcha/react-hcaptcha": "npm:1.12.1"
-    "@hookform/resolvers": "npm:4.0.0"
+    "@hookform/resolvers": "npm:5.2.2"
     "@polkadot/api": "npm:16.5.4"
     "@polkadot/api-augment": "npm:16.5.4"
     "@polkadot/react-identicon": "npm:3.16.4"
@@ -16086,13 +16095,13 @@ __metadata:
     lodash.isstring: "npm:4.0.1"
     nuqs: "npm:2.8.2"
     react: "npm:19.2.0"
-    react-day-picker: "npm:^9.13.0"
+    react-day-picker: "npm:9.13.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
     react-dom: "npm:19.2.0"
     react-error-boundary: "npm:6.0.0"
     react-gtm-module: "npm:2.0.11"
-    react-hook-form: "npm:7.54.2"
+    react-hook-form: "npm:7.71.2"
     react-number-format: "npm:5.4.4"
     react-router-dom: "npm:7.9.3"
     react-transition-group: "npm:4.4.5"
@@ -16101,7 +16110,7 @@ __metadata:
     sails-js-types: "npm:0.5.1"
     simplebar-react: "npm:3.3.2"
     yup: "npm:1.7.1"
-    zod: "npm:3.25.76"
+    zod: "npm:4.3.6"
   languageName: unknown
   linkType: soft
 
@@ -22130,7 +22139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-day-picker@npm:^9.13.0":
+"react-day-picker@npm:9.13.0":
   version: 9.13.0
   resolution: "react-day-picker@npm:9.13.0"
   dependencies:
@@ -22233,12 +22242,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:7.54.2":
-  version: 7.54.2
-  resolution: "react-hook-form@npm:7.54.2"
+"react-hook-form@npm:7.71.2":
+  version: 7.71.2
+  resolution: "react-hook-form@npm:7.71.2"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/6eebead2900e3d369a989e7a20429f390dc75b3897142aa3107f1f6dabb9ae64fed201ea98cdcd8676e40466c97748aeb0c0d83264f5bd3a84dbc0b8e4863415
+  checksum: 10c0/bff61c229f5f2516e650325e0c450146cb8a08dc323e5e9aa0753eb937be0b66fe17f40a7b4be9aabc2b5cb770d03de07db7f4912c6c9452a86924072cc1cb46
   languageName: node
   linkType: hard
 
@@ -25675,7 +25684,7 @@ __metadata:
   dependencies:
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/sails-payload-form": "workspace:*"
-    "@hookform/resolvers": "npm:4.0.0"
+    "@hookform/resolvers": "npm:5.2.2"
     "@reown/appkit": "npm:1.8.14"
     "@reown/appkit-adapter-wagmi": "npm:1.8.14"
     "@tanstack/react-query": "npm:5.90.2"
@@ -25685,14 +25694,14 @@ __metadata:
     kzg-wasm: "npm:1.0.0"
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
-    react-hook-form: "npm:7.54.2"
+    react-hook-form: "npm:7.71.2"
     react-router-dom: "npm:7.9.3"
     react-syntax-highlighter: "npm:15.6.6"
     sails-js: "npm:0.5.1"
     sails-js-parser: "npm:0.5.1"
     viem: "npm:2.40.0"
     wagmi: "npm:2.19.4"
-    zod: "npm:3.25.76"
+    zod: "npm:4.3.6"
   languageName: unknown
   linkType: soft
 
@@ -26723,7 +26732,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.25.76, zod@npm:^3.24.4":
+"zod@npm:4.3.6":
+  version: 4.3.6
+  resolution: "zod@npm:4.3.6"
+  checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.24.4":
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
