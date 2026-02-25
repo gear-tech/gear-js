@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
-import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
+import { useGasCalculate, useChangeEffect, useBalanceSchema, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { GasMethod } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
@@ -19,6 +19,22 @@ import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 
 import styles from './ProgramForm.module.scss';
+
+function useValidationSchema() {
+  const balanceSchema = useBalanceSchema();
+  const gasLimitSchema = useGasLimitSchema();
+
+  return z.object({
+    value: balanceSchema,
+    gasLimit: gasLimitSchema,
+
+    // passthrough properties to mimic legacy yup logic
+    payloadType: z.string().trim().min(1, 'This field is required'),
+    payload: z.unknown().transform((value) => value as PayloadValue),
+    keepAlive: z.boolean(),
+    programName: z.string().trim(),
+  });
+}
 
 type Props = {
   source: Buffer | HexString;
@@ -31,6 +47,7 @@ type Props = {
 const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const alert = useAlert();
+
   const schema = useValidationSchema();
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
@@ -83,9 +100,9 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: metadata ? getSubmitPayload(payload as PayloadValue) : payload,
-      programName: programName as string,
-      keepAlive: keepAlive as boolean,
+      payload: metadata ? getSubmitPayload(payload) : payload,
+      programName,
+      keepAlive,
     };
 
     onSubmit(data, { resetForm });

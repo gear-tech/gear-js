@@ -1,9 +1,7 @@
 import { useApi } from '@gear-js/react-hooks';
 import { z } from 'zod';
 
-type DurationSchema = ReturnType<typeof z.coerce.number<string>>;
-
-function useDurationSchema(): DurationSchema {
+function useDurationSchema() {
   const { api } = useApi();
 
   const getDurationSchema = () => {

@@ -1,7 +1,7 @@
 import { useQueryState as useSearchParamsState, useQueryStates as useSearchParamsStates } from 'nuqs';
 
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
-import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
+import { useBalanceSchema, useGasLimitSchema } from './schemas';
 import { useAddCodeName } from './use-add-code-name';
 import { useAddMetadata } from './use-add-metadata';
 import { useAddProgramName } from './use-add-program-name';
@@ -49,7 +49,6 @@ export {
   useNodeVersion,
   useMobileDisclaimer,
   useNetworkIcon,
-  useValidationSchema,
   useSignAndSend,
   useContractApiWithFile,
   useBalanceSchema,

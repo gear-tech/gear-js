@@ -11,7 +11,7 @@ import { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { ProgramVoucherSelect } from '@/features/voucher';
-import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
+import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { GasMethod } from '@/shared/config';
@@ -24,6 +24,22 @@ import { ValueField } from '@/shared/ui/form';
 import { INITIAL_VALUES } from '../model';
 
 import styles from './message-form.module.scss';
+
+function useValidationSchema() {
+  const balanceSchema = useBalanceSchema();
+  const gasLimitSchema = useGasLimitSchema();
+
+  return z.object({
+    value: balanceSchema,
+    gasLimit: gasLimitSchema,
+
+    // passthrough properties to mimic legacy yup logic
+    payloadType: z.string().trim().min(1, 'This field is required'),
+    payload: z.unknown().transform((value) => value as PayloadValue),
+    keepAlive: z.boolean(),
+    voucherId: z.string(),
+  });
+}
 
 type Props = {
   id: HexString;
@@ -81,7 +97,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
-      keepAlive: keepAlive as boolean,
+      keepAlive: keepAlive,
     };
 
     if (isReply) {

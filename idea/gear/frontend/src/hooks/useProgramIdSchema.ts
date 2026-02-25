@@ -17,8 +17,7 @@ function useProgramIdSchema(list: HexString[]) {
     .refine((value) => isHex(value), 'Value should be hex')
     .refine((value) => value.length === 66, 'Invalid program ID')
     .refine((value) => !list.includes(value), 'Program ID already exists')
-    .refine((value) => isProgramExists(value), 'Program not found in the storage')
-    .transform((value) => value);
+    .refine((value) => isProgramExists(value), 'Program not found in the storage');
 }
 
 export { useProgramIdSchema };
