@@ -212,7 +212,7 @@ Interface for interacting with Mirror contracts - deployed programs on Ethereum.
 **Source:** [Mirror.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Mirror.sol)
 
 ```typescript
-const mirror = getMirrorClient(programId, signer, publicClient);
+const mirror = getMirrorClient({ address: programId, signer, publicClient });
 
 await mirror.sendMessage(payload, value); // Send message to program
 await mirror.executableBalanceTopUp(amount); // Top up program's balance
@@ -273,7 +273,7 @@ The CLI will submit code via EIP-4844 blob transactions, request validation, and
 
 ```typescript
 const codeId = '0x...'; // From CLI output
-const tx = await router.createProgram(codeId);
+const tx = await api.eth.router.createProgram(codeId);
 ```
 
 ## Ethereum Side Operations
@@ -296,7 +296,7 @@ const programId = await tx.getProgramId();
 console.log('Program created:', programId);
 
 // Get Mirror contract for program interaction
-const mirror = getMirrorClient(programId, signer, publicClient);
+const mirror = getMirrorClient({ address: programId, signer, publicClient });
 ```
 
 #### Creating Program with Solidity ABI Interface
@@ -314,7 +314,7 @@ const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash 
 const abiAddress = receipt.contractAddress;
 
 // Create program with ABI interface
-const tx = await router.createProgramWithAbiInterface(codeId, abiAddress);
+const tx = await api.eth.router.createProgramWithAbiInterface(codeId, abiAddress);
 await tx.sendAndWaitForReceipt();
 ```
 
@@ -356,7 +356,7 @@ const balance = await api.eth.wvara.balanceOf(await api.eth.getAccountAddress())
 console.log('WVARA balance:', balance);
 
 // Approve program to spend wVARA
-const approveTx = await wvara.approve(programId, BigInt(10 * 1e12));
+const approveTx = await api.eth.wvara.approve(programId, BigInt(10 * 1e12));
 await approveTx.sendAndWaitForReceipt();
 
 const approvalData = await approveTx.getApprovalLog();
