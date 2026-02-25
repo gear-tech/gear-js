@@ -26,14 +26,11 @@ const SCHEMA = z.object({
     .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
 });
 
-type Values = typeof DEFAULT_VALUES;
-type FormattedValues = z.infer<typeof SCHEMA>;
-
 const Search = () => {
   const navigate = useNavigate();
   const config = useConfig();
 
-  const { formState, register, ...form } = useForm<Values, unknown, FormattedValues>({
+  const { formState, register, ...form } = useForm({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(SCHEMA),
   });
@@ -56,7 +53,7 @@ const Search = () => {
       });
   };
 
-  const handleSubmit = async ({ value }: FormattedValues) => {
+  const handleSubmit = async ({ value }: z.infer<typeof SCHEMA>) => {
     if (await isWalletAddress(value)) return navigate(generatePath(routes.user, { userId: value }));
 
     // TODO: implement indexer error type and noop only 404 to handle other errors

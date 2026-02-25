@@ -29,9 +29,6 @@ type Props = {
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 
-type Values = { payload: PayloadValue };
-type FormattedValues = { payload: FormattedPayloadValue };
-
 const GridInput = ({ ...props }: ComponentProps<typeof Input>) => <Input {...props} className={styles.input} />;
 
 const GridTextarea = ({ ...props }: ComponentProps<typeof Textarea>) => (
@@ -61,14 +58,14 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const schema = useMemo(() => z.object({ payload: getSchema(sails, args, encode) }), []);
 
-  const form = useForm<Values, unknown, FormattedValues>({
+  const form = useForm({
     values: defaultValues,
     resolver: zodResolver(schema),
   });
 
   const reset = () => {
     const values = form.getValues();
-    const resetValues = { payload: getResetPayloadValue(values.payload) };
+    const resetValues = { payload: getResetPayloadValue(values.payload as PayloadValue) as Record<string, unknown> };
 
     form.reset(resetValues);
   };
