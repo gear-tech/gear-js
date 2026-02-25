@@ -40,7 +40,7 @@ const ProgramsForm = ({ value, voucherValue = [], onChange }: Props) => {
     [FIELD_NAME.PROGRAM_ID]: programIdSchema,
   });
 
-  const form = useForm<Values, unknown, FormattedValues>({
+  const form = useForm({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });

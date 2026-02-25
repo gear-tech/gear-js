@@ -1,7 +1,9 @@
 import { useApi } from '@gear-js/react-hooks';
 import { z } from 'zod';
 
-function useDurationSchema() {
+type DurationSchema = ReturnType<typeof z.coerce.number<string>>;
+
+function useDurationSchema(): DurationSchema {
   const { api } = useApi();
 
   const getDurationSchema = () => {
@@ -9,7 +11,7 @@ function useDurationSchema() {
 
     const { minDuration, maxDuration } = api.voucher;
 
-    return z.coerce.number().min(minDuration).max(maxDuration).int();
+    return z.coerce.number<string>().min(minDuration).max(maxDuration).int();
   };
 
   return getDurationSchema();
