@@ -95,33 +95,19 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: getSubmitPayload(values.payload as PayloadValue),
+      payload: getSubmitPayload(values.payload),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
-      keepAlive: keepAlive,
+      keepAlive,
     };
 
     if (isReply) {
       const reply = { ...baseValues, replyToId: id };
 
-      void replyMessage({
-        reply,
-        metadata,
-        payloadType,
-        voucherId: voucherId as HexString,
-        reject: enableSubmitButton,
-        resolve: resetForm,
-      });
+      void replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     } else {
       const message = { ...baseValues, destination: id };
 
-      void sendMessage({
-        message,
-        metadata,
-        payloadType,
-        voucherId: voucherId as HexString,
-        reject: enableSubmitButton,
-        resolve: resetForm,
-      });
+      void sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     }
   };
 

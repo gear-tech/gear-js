@@ -47,7 +47,6 @@ type Props = {
 const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const alert = useAlert();
-
   const schema = useValidationSchema();
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };

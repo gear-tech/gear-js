@@ -4,7 +4,6 @@ import {
   getPayloadSchema,
   getResetPayloadValue,
   ISailsFuncArg,
-  PayloadValue,
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ComponentProps, useMemo } from 'react';
@@ -65,7 +64,7 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
 
   const reset = () => {
     const values = form.getValues();
-    const resetValues = { payload: getResetPayloadValue(values.payload as PayloadValue) as Record<string, unknown> };
+    const resetValues = { payload: getResetPayloadValue(values.payload) };
 
     form.reset(resetValues);
   };

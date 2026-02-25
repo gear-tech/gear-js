@@ -1,5 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { getResetPayloadValue, PayloadValue } from '@gear-js/sails-payload-form';
+import { getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -73,11 +73,7 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
   const resetForm = () => {
     const values = form.getValues();
-
-    const resetValue = {
-      ...DEFAULT_VALUES,
-      payload: getResetPayloadValue(values.payload as PayloadValue) as Record<string, unknown>,
-    };
+    const resetValue = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
 
     form.reset(resetValue);
     enableSubmitButton();

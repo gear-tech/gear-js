@@ -1,5 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { PayloadValue, getResetPayloadValue } from '@gear-js/sails-payload-form';
+import { getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Input as GearInput } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -66,12 +66,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
 
   const resetForm = () => {
     const values = form.getValues();
-
-    const resetValues = {
-      ...DEFAULT_VALUES,
-      payload: getResetPayloadValue(values.payload as PayloadValue) as Record<string, unknown>,
-      programName: values.programName,
-    };
+    const resetValues = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
 
     form.reset(resetValues);
     setGasinfo(undefined);
