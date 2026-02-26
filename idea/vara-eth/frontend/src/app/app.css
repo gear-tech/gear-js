@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../assets/fonts/roboto-mono-variable.woff2') format('woff2-variations');
+  font-weight: 100 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../assets/fonts/roboto-mono-italic-variable.woff2') format('woff2-variations');
+  font-weight: 100 700;
+  font-style: italic;
+}
+
 :root {
   --background: rgb(255, 255, 255);
   --foreground: rgb(57, 36, 20);
@@ -33,6 +47,14 @@
   --ring: rgb(150, 150, 150);
 
   --radius: 0.5rem;
+
+  /* reown appkit overrides */
+
+  /* modal background, cuz there's no such setting */
+  --apkt-tokens-theme-backgroundPrimary-base: rgb(0, 0, 0) !important;
+
+  /* secondary font, cuz font-family setting has no effect on it */
+  --apkt-fontFamily-mono: 'Roboto Mono', monospace !important;
 }
 
 .dark {
@@ -142,8 +164,8 @@ h6 {
 }
 
 w3m-modal {
-  background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
 }
 
 #root {

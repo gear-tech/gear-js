@@ -29,7 +29,7 @@ const columns = [
 
 const Codes = () => {
   const [page, setPage] = useState(1);
-  const { data: allCodes } = useGetAllCodesQuery(page, PAGE_SIZE);
+  const { data: allCodes, isFetching } = useGetAllCodesQuery(page, PAGE_SIZE);
 
   const data = allCodes?.data.map((code) => ({
     id: code.id,
@@ -45,6 +45,7 @@ const Codes = () => {
       <Table
         columns={columns}
         data={data}
+        isLoading={isFetching}
         pageSize={PAGE_SIZE}
         headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
       />

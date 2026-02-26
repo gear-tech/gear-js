@@ -11,4 +11,5 @@
 .chain {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.5);
+  text-transform: none; // override button's uppercase
 }

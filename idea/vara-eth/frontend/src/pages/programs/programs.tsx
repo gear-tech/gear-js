@@ -22,7 +22,7 @@ const columns = [
 
 const Programs = () => {
   const [page, setPage] = useState(1);
-  const { data: programsResponse } = useGetAllProgramsQuery(page, PAGE_SIZE);
+  const { data: programsResponse, isFetching } = useGetAllProgramsQuery(page, PAGE_SIZE);
 
   const data = programsResponse?.data?.map((program) => ({
     id: program.id,
@@ -38,6 +38,7 @@ const Programs = () => {
       <Table
         columns={columns}
         data={data}
+        isLoading={isFetching}
         lineHeight="lg"
         pageSize={PAGE_SIZE}
         headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
