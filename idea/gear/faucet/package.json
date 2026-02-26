@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/express": "5.0.5",
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "^7.2.0",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/xxhashjs": "^0.2.4",
     "@types/yamljs": "^0.2.34",
