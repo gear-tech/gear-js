@@ -12,7 +12,7 @@ type InitProgramParams = {
 };
 
 const useInitProgram = (programId: Hex, sails: Sails | undefined) => {
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const mirrorContract = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
   const initProgram = async ({ ctorName, payload }: InitProgramParams) => {
