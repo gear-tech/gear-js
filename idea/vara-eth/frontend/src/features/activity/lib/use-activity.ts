@@ -10,7 +10,7 @@ import {
 import { useConfig } from 'wagmi';
 import { watchContractEvent } from 'wagmi/actions';
 
-import { useVaraEthApi } from '@/app/providers';
+import { useEthereumClient } from '@/app/api';
 
 type RouterAbi = typeof IROUTER_ABI;
 type WVaraAbi = typeof IWRAPPEDVARA_ABI;
@@ -44,13 +44,13 @@ const ROUTER_EVENTS = IROUTER_ABI.filter((item) => item.type === 'event').map((e
 const WVARA_EVENTS = IWRAPPEDVARA_ABI.filter((item) => item.type === 'event').map((event) => event.name);
 
 const useActivity = () => {
-  const { api } = useVaraEthApi();
+  const { data: ethereumClient } = useEthereumClient();
   const config = useConfig();
 
   const [state, setState] = useState<Activity[]>([]);
 
   useEffect(() => {
-    if (!api) return;
+    if (!ethereumClient) return;
 
     const blockHashToEvents: Record<Hex, Activity> = {};
 
@@ -75,7 +75,7 @@ const useActivity = () => {
 
     ROUTER_EVENTS.forEach((eventName) => {
       const unwatch = watchContractEvent(config, {
-        address: api.eth.router.address,
+        address: ethereumClient.router.address,
         abi: IROUTER_ABI,
         eventName,
         strict: true,
@@ -87,7 +87,7 @@ const useActivity = () => {
 
     WVARA_EVENTS.forEach((eventName) => {
       const unwatch = watchContractEvent(config, {
-        address: api.eth.wvara.address,
+        address: ethereumClient.wvara.address,
         abi: IWRAPPEDVARA_ABI,
         eventName,
         strict: true,
@@ -100,7 +100,7 @@ const useActivity = () => {
     return () => {
       unwatchFunctions.forEach((unwatch) => unwatch());
     };
-  }, [api, config]);
+  }, [ethereumClient, config]);
 
   return state;
 };
