@@ -17,6 +17,7 @@ type TableColumn<T> = {
 type TableProps<T> = {
   columns: TableColumn<T>[];
   data: T[] | undefined;
+  isLoading: boolean;
   pageSize?: number;
   lineHeight?: 'md' | 'lg';
   headerRight?: React.ReactNode;
@@ -25,6 +26,7 @@ type TableProps<T> = {
 const Table = <T extends { id: string | number }>({
   columns,
   data,
+  isLoading,
   pageSize = 5,
   lineHeight = 'md',
   headerRight,
@@ -59,7 +61,10 @@ const Table = <T extends { id: string | number }>({
   const hasExtraColumn = Boolean(headerRight);
 
   const render = () => {
-    return (sortedData || Array.from({ length: pageSize })).map((row: T | undefined, index) => (
+    const placeholderData = Array.from<undefined>({ length: pageSize });
+    const list = isLoading ? placeholderData : sortedData || placeholderData;
+
+    return list.map((row, index) => (
       <tr key={row ? row.id : `skeleton-${index}`}>
         {columns.map((column) => (
           <td key={column.key as string}>
