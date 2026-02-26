@@ -16,7 +16,6 @@ import { Input, ValueField } from '@/shared/ui';
 import { Voucher } from '../../api';
 import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
 import { useDurationSchema } from '../../hooks';
-import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
 
@@ -43,9 +42,7 @@ const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
     [FIELD_NAME.DURATION]: asOptionalField(durationSchema),
   });
 
-  type Schema = z.infer<typeof schema>;
-
-  const form = useForm<Values, unknown, Schema>({
+  const form = useForm({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });
@@ -57,7 +54,7 @@ const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
   const duration = form.watch(FIELD_NAME.DURATION);
   const setDuration = (value: string) => form.setValue(FIELD_NAME.DURATION, value, { shouldValidate: true });
 
-  const handleSubmit = ({ address, value }: Schema) => {
+  const handleSubmit = ({ address, value }: z.infer<typeof schema>) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
     enableLoading();

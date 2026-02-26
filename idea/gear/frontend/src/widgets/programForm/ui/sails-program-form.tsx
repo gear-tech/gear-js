@@ -1,5 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { PayloadValue, getResetPayloadValue } from '@gear-js/sails-payload-form';
+import { getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Input as GearInput } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -19,14 +19,6 @@ import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { SubmitHelpers } from '../model';
 
 import styles from './ProgramForm.module.scss';
-
-type Values = {
-  value: string;
-  gasLimit: string;
-  programName: string;
-  keepAlive: boolean;
-  payload: PayloadValue;
-};
 
 const useSchema = (payloadSchema: ReturnType<typeof useConstructor>['schema']) => {
   const balanceSchema = useBalanceSchema();
@@ -65,7 +57,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
   const constructor = useConstructor(sails);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
   const schema = useSchema(constructor.schema);
-  const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
+  const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isGasDisabled, setIsGasDisabled] = useState(false);

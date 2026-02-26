@@ -4,7 +4,6 @@ import {
   getPayloadSchema,
   getResetPayloadValue,
   ISailsFuncArg,
-  PayloadValue,
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ComponentProps, useMemo } from 'react';
@@ -28,9 +27,6 @@ type Props = {
   encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
-
-type Values = { payload: PayloadValue };
-type FormattedValues = { payload: FormattedPayloadValue };
 
 const GridInput = ({ ...props }: ComponentProps<typeof Input>) => <Input {...props} className={styles.input} />;
 
@@ -61,7 +57,7 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const schema = useMemo(() => z.object({ payload: getSchema(sails, args, encode) }), []);
 
-  const form = useForm<Values, unknown, FormattedValues>({
+  const form = useForm({
     values: defaultValues,
     resolver: zodResolver(schema),
   });

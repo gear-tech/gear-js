@@ -1,14 +1,16 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
-import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
+import { useGasCalculate, useChangeEffect, useBalanceSchema, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { GasMethod } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
@@ -17,6 +19,22 @@ import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 
 import styles from './ProgramForm.module.scss';
+
+function useValidationSchema() {
+  const balanceSchema = useBalanceSchema();
+  const gasLimitSchema = useGasLimitSchema();
+
+  return z.object({
+    value: balanceSchema,
+    gasLimit: gasLimitSchema,
+
+    // passthrough properties to mimic legacy yup logic
+    payloadType: z.string().trim().min(1, 'This field is required'),
+    payload: z.unknown().transform((value) => value as PayloadValue),
+    keepAlive: z.boolean(),
+    programName: z.string().trim(),
+  });
+}
 
 type Props = {
   source: Buffer | HexString;
@@ -27,14 +45,12 @@ type Props = {
 };
 
 const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
-  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
   const schema = useValidationSchema();
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
-  // TODOFORM:
-  // @ts-expect-error - TODO(#1738): explain why it should be ignored
-  const methods = useForm<FormValues>({ defaultValues, resolver: yupResolver(schema) });
+  const methods = useForm({ defaultValues, resolver: zodResolver(schema) });
   const { getValues, setValue, reset } = methods;
 
   const [gasInfo, setGasinfo] = useState<Result>();
@@ -44,7 +60,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
   const resetForm = () => {
     const values = getValues();
-    const payload = getResetPayloadValue(values.payload);
+    const payload = getResetPayloadValue(values.payload as PayloadValue);
 
     reset({ ...defaultValues, payload });
     setGasinfo(undefined);
@@ -57,9 +73,8 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
     const preparedValues = {
       ...values,
-      value: getChainBalanceValue(values.value).toFixed(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-      payload: getSubmitPayload(values.payload),
+      payload: getSubmitPayload(values.payload as PayloadValue),
     };
 
     try {
@@ -75,12 +90,12 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     }
   };
 
-  const handleSubmitForm = (values: FormValues) => {
+  const handleSubmitForm = (values: z.infer<typeof schema>) => {
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data = {
-      value: getChainBalanceValue(value).toFixed(),
-      gasLimit: getChainGasValue(gasLimit).toFixed(),
+      value,
+      gasLimit,
       payloadType: metadata ? undefined : payloadType,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,

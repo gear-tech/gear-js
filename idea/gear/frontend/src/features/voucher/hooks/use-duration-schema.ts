@@ -9,7 +9,7 @@ function useDurationSchema() {
 
     const { minDuration, maxDuration } = api.voucher;
 
-    return z.coerce.number().min(minDuration).max(maxDuration).int();
+    return z.coerce.number<string>().min(minDuration).max(maxDuration).int();
   };
 
   return getDurationSchema();

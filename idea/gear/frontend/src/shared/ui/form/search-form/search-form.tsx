@@ -6,13 +6,13 @@ import { asOptionalField } from '@/shared/helpers';
 
 import { Input } from '../input';
 
-type Props<T extends z.ZodTypeAny> = {
+type Props = {
   onSubmit: (query: string) => void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   defaultValue?: string;
-  getSchema?: (defaultSchema: z.ZodString) => T;
+  getSchema?: (defaultSchema: z.ZodString) => z.ZodType<string, string>;
 };
 
 const FIELD_NAME = {
@@ -21,14 +21,7 @@ const FIELD_NAME = {
 
 const QUERY_SCHEMA = z.string().trim();
 
-const SearchForm = <T extends z.ZodTypeAny>({
-  placeholder,
-  className,
-  disabled,
-  defaultValue = '',
-  onSubmit,
-  getSchema,
-}: Props<T>) => {
+const SearchForm = ({ placeholder, className, disabled, defaultValue = '', onSubmit, getSchema }: Props) => {
   const schema = z.object({
     [FIELD_NAME.QUERY]: asOptionalField(getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA),
   });

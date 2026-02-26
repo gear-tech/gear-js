@@ -33,7 +33,7 @@ function AddAdminModal({ name, admins, onSuccess, close }: Pick<ModalProps, 'clo
     [FIELD_NAME.ADDRESS]: ACCOUNT_ADDRESS_SCHEMA.refine((value) => !admins.includes(value), 'Admin already exists'),
   });
 
-  const form = useForm<typeof DEFAULT_VALUES, unknown, z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });

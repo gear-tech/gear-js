@@ -16,7 +16,7 @@ type Props<T> = {
 };
 
 const Filters = <T extends FieldValues>({ initialValues, values, children, onSubmit, title = 'Filters' }: Props<T>) => {
-  const methods = useForm<T>({ defaultValues: initialValues, values, resetOptions: { keepDefaultValues: true } });
+  const methods = useForm({ defaultValues: initialValues, values, resetOptions: { keepDefaultValues: true } });
   const { handleSubmit, reset, formState } = methods;
   const { isDirty } = formState;
 

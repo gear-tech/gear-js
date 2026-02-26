@@ -17,7 +17,6 @@ import { useDefaultCodeId } from '../../hooks';
 import { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS } from './consts';
 import styles from './verify-form.module.scss';
 
-type Values = typeof DEFAULT_VALUES;
 type FormattedValues = z.infer<typeof SCHEMA>;
 
 const INPUT_GAP = '1.5/8.5';
@@ -38,7 +37,7 @@ function VerifyForm() {
   const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
   const defaultNetwork = genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
 
-  const form = useForm<Values, unknown, FormattedValues>({
+  const form = useForm({
     values: {
       ...DEFAULT_VALUES,
       [FIELD_NAME.DOCKER_IMAGE_VERSION]: dockerImageVersions?.[0] || '',

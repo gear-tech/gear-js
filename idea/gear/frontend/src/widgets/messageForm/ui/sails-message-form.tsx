@@ -1,5 +1,5 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { getResetPayloadValue, PayloadValue } from '@gear-js/sails-payload-form';
+import { getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
@@ -37,14 +37,6 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
-type Values = {
-  value: string;
-  gasLimit: string;
-  voucherId: string;
-  keepAlive: boolean;
-  payload: PayloadValue;
-};
-
 const useSchema = (payloadSchema: ReturnType<typeof useService>['schema']) => {
   const balanceSchema = useBalanceSchema();
   const gasLimitSchema = useGasLimitSchema();
@@ -58,8 +50,6 @@ const useSchema = (payloadSchema: ReturnType<typeof useService>['schema']) => {
   });
 };
 
-type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
-
 const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
@@ -67,7 +57,7 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
   const schema = useSchema(service.schema);
-  const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
+  const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();

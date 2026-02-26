@@ -2,7 +2,6 @@ import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { clsx } from 'clsx';
 import { FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
@@ -26,9 +25,9 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
   const isEditMode = Boolean(initialValues);
   const dnsSchema = useDnsSchema(isEditMode);
 
-  const form = useForm<Values, unknown, z.infer<typeof dnsSchema>>({
+  const form = useForm({
     defaultValues: initialValues || DEFAULT_VALUES,
-    resolver: zodResolver(dnsSchema, { async: true }),
+    resolver: zodResolver(dnsSchema),
   });
 
   const addProgram = useSendDnsTransaction(FUNCTION_NAME.ADD_PROGRAM);
