@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+import type { ISubscriptionCallback } from '../../src/types/provider.js';
 import {
   mockWebSocket,
   createJsonRpcResponse,
@@ -262,7 +264,7 @@ describe('WsVaraEthProvider - Connection Management', () => {
       await connectPromise;
       await delay(10);
 
-      const callback = jest.fn();
+      const callback = jest.fn() as unknown as ISubscriptionCallback;
       await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
       await provider.disconnect();
@@ -532,7 +534,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('should create and handle subscription when connected', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
     const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', ['param'], callback);
 
     // First message initializes subscription (returns subscription ID)
@@ -556,7 +558,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
 
     const connectPromise = provider.connect();
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
     const subscribePromise = provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     const ws = mock.getLastInstance()!;
@@ -592,7 +594,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
       await expect(connectPromise).rejects.toThrow();
     }
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
     await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow(
       expectedError,
     );
@@ -601,7 +603,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('should invoke callback with camelCase data and handle errors', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
     await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     ws.simulateMessage(createJsonRpcResponse(1, 103));
@@ -624,7 +626,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
     ws.simulateMessage(createJsonRpcError(103, -32000, 'Subscription error'));
 
     expect(callback).toHaveBeenCalledWith(expect.any(Error), null);
-    expect(callback.mock.calls[1][0].message).toBe('RpcError(-32000): Subscription error');
+    expect((callback as ReturnType<typeof jest.fn>).mock.calls[1][0] as Error).toMatchObject({ message: 'RpcError(-32000): Subscription error' });
 
     await provider.disconnect();
   });
@@ -632,8 +634,8 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('unsubscribe function should stop receiving updates', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback1 = jest.fn();
-    const callback2 = jest.fn();
+    const callback1 = jest.fn() as unknown as ISubscriptionCallback;
+    const callback2 = jest.fn() as unknown as ISubscriptionCallback;
 
     const unsubscribe1 = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback1);
     await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback2);
@@ -881,7 +883,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
   test('should gracefully handle JSON parse errors', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     // Simulate invalid JSON message
     const event = new MessageEvent('message', { data: 'invalid json' });
@@ -897,7 +899,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
   test('should handle errors in event listeners and subscription callbacks', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let badCallbackCallCount = 0;
     const badCallback = jest.fn((_error) => {
@@ -987,8 +989,8 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should clean up all resources on disconnect', async () => {
     const { provider } = await createConnectedProvider(mock);
 
-    const callback1 = jest.fn();
-    const callback2 = jest.fn();
+    const callback1 = jest.fn() as unknown as ISubscriptionCallback;
+    const callback2 = jest.fn() as unknown as ISubscriptionCallback;
 
     await provider.subscribe('sub1', 'unsub1', [], callback1);
     await provider.subscribe('sub2', 'unsub2', [], callback2);
@@ -1061,7 +1063,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
 
     ws.shouldThrowOnSend = true;
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
 
     await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow();
 
@@ -1242,7 +1244,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should handle unsubscribe of non-existent subscription', async () => {
     const { provider } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = jest.fn() as unknown as ISubscriptionCallback;
     const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     // Unsubscribe twice

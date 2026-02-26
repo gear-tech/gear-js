@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "clsx": "2.1.1",
-    "non.geist": "1.0.4"
+    "non.geist": "2.0.1"
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",

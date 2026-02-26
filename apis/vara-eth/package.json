@@ -11,9 +11,9 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "npx jest --runInBand",
-    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
-    "test:no-setup": "npx jest",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest --runInBand",
+    "test:only": "NODE_OPTIONS='--experimental-vm-modules' npx jest --runInBand",
+    "test:no-setup": "NODE_OPTIONS='--experimental-vm-modules' npx jest",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
@@ -52,6 +52,6 @@
   ],
   "dependencies": {
     "@ethereumjs/util": "^10.1.0",
-    "@noble/hashes": "1.8.0"
+    "@noble/hashes": "2.0.1"
   }
 }
