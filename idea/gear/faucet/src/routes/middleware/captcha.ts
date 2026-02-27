@@ -1,10 +1,10 @@
 import { Response, Request, NextFunction } from 'express';
-import { verify } from 'hcaptcha';
-
-import config from '../../config';
 import { logger } from 'gear-idea-common';
 
-const SECRET = config.server.captchaSecret;
+import config from '../../config';
+
+const SECRET_KEY = config.server.captchaSecret;
+const VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
 async function verifyCaptcha(token: string): Promise<boolean> {
   if (!token) {
@@ -15,10 +15,24 @@ async function verifyCaptcha(token: string): Promise<boolean> {
     return true;
   }
 
-  const verifResponse = await verify(SECRET, token);
-  logger.debug('verify captcha', { verifResponse });
+  try {
+    const response = await fetch(VERIFY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: SECRET_KEY,
+        response: token,
+      }),
+    });
 
-  return verifResponse.success;
+    const result = await response.json();
+    return result.success;
+  } catch (error) {
+    console.error('Turnstile validation error:', error);
+    return false;
+  }
 }
 
 export function captchaMiddleware({ body: { token } }: Request, res: Response, next: NextFunction) {
