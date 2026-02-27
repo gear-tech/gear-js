@@ -50,7 +50,7 @@ impl<'a> Counter<'a> {
         state.value
     }
 
-    #[export]
+    #[export(payable)]
     pub fn increment_with_value(&mut self) -> u32 {
         let value = Syscall::message_value();
 

@@ -13,7 +13,7 @@ import type {
 import { decodeEventLog } from 'viem';
 
 import { ITxManager } from './interfaces/tx-manager.js';
-import { ISigner } from '../types/signer.js';
+import { ITransactionSigner } from '../types/signer.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -43,7 +43,7 @@ export class TxManager<
    */
   constructor(
     private _pc: PublicClient,
-    private _signer: ISigner,
+    private _signer: ITransactionSigner,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {

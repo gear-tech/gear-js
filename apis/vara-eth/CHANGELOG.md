@@ -10,11 +10,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `ReplyCode` class for parsing and inspecting reply codes from program messages in https://github.com/gear-tech/gear-js/pull/2338
 - Internal `SuccessReply`, `ErrorReply`, `ExecutionError`, `UnavailableActorError` detail classes used by `ReplyCode` for structured reply code introspection in https://github.com/gear-tech/gear-js/pull/2338
+- `IMessageSigner` interface for message-only signing (used by injected transactions and Metamask Snap adapters) in https://github.com/gear-tech/gear-js/pull/2352
+- `ITransactionSigner` interface extending `IMessageSigner` with `sendTransaction` for on-chain contract operations in https://github.com/gear-tech/gear-js/pull/2352
+- `DynamicSigner` adapter class that resolves the active signer lazily at call time via a getter function — useful in reactive environments (e.g. React) where the wallet can change without recreating the API instance in https://github.com/gear-tech/gear-js/pull/2352
+- `createVaraEthApi()` factory function that constructs and initializes `EthereumClient` internally, returning a ready-to-use `VaraEthApi` instance in https://github.com/gear-tech/gear-js/pull/2352
+- `VaraEthApi.eth` getter that exposes the underlying `EthereumClient` for direct contract access in https://github.com/gear-tech/gear-js/pull/2352
 
 ### Changed
 
 - `IInjectedTransactionPromise.code` changed from `Hex` to `ReplyCode` in https://github.com/gear-tech/gear-js/pull/2338
 - `InjectedTxPromise.code` now returns a `ReplyCode` instance instead of raw `Hex` value in https://github.com/gear-tech/gear-js/pull/2338
+- `InjectedTx.sign()` now accepts `IMessageSigner` instead of `ISigner` — Snap adapters only need to implement `signMessage` and `getAddress` in https://github.com/gear-tech/gear-js/pull/2352
+- `EthereumClient`, `TxManager`, and base contract clients now require `ITransactionSigner` instead of `ISigner` in https://github.com/gear-tech/gear-js/pull/2352
+
+### Deprecated
+
+- `ISigner` — use `ITransactionSigner` (for contract operations) or `IMessageSigner` (for injected transactions / Snap) instead; `ISigner` remains as a type alias for `ITransactionSigner` in https://github.com/gear-tech/gear-js/pull/2352
 
 
 ## [0.2.0]

@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 import { Hex } from 'viem';
 
-import { useVaraEthApi } from '@/app/providers';
+import { useApi } from '@/app/api';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
 import { FormattedPayloadValue } from '@/features/sails/lib';
 
@@ -14,7 +14,7 @@ type SendMessageParams = {
 };
 
 const useSendInjectedTransaction = (programId: Hex, sails: Sails | undefined) => {
-  const { api } = useVaraEthApi();
+  const { data: api } = useApi();
   const addMyActivity = useAddMyActivity();
 
   const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {

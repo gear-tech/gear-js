@@ -2,9 +2,9 @@ import type { Hash, TransactionRequest, WalletClient, Hex, Address } from 'viem'
 import { isHex } from 'viem';
 
 import { SigningError, AddressError } from '../errors.js';
-import type { ISigner } from '../../types/signer.js';
+import type { ITransactionSigner } from '../../types/signer.js';
 
-export class WalletClientAdapter implements ISigner {
+export class WalletClientAdapter implements ITransactionSigner {
   constructor(private _wc: WalletClient) {}
 
   async signMessage(data: Uint8Array | Hash): Promise<Hash> {

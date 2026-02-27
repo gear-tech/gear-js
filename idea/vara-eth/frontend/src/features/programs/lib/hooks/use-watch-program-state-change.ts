@@ -3,8 +3,7 @@ import { ProgramState } from '@vara-eth/api';
 import { useRef, useEffect } from 'react';
 import { Hex } from 'viem';
 
-import { useMirrorContract } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useMirrorContract, useApi } from '@/app/api';
 
 class TimeoutError extends Error {
   constructor(name: string) {
@@ -28,8 +27,8 @@ type Params = {
 };
 
 const useWatchProgramStateChange = (programId: Hex) => {
-  const { api } = useVaraEthApi();
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const { data: api } = useApi();
+  const mirrorContract = useMirrorContract(programId);
 
   const cleanUpRef = useRef(() => {});
 

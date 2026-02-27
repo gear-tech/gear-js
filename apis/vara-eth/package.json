@@ -51,7 +51,6 @@
     "lib"
   ],
   "dependencies": {
-    "@ethereumjs/util": "^10.1.0",
     "@noble/hashes": "1.8.0"
   }
 }

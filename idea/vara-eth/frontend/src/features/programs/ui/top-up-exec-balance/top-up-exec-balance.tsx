@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { parseUnits, Hex } from 'viem';
 
-import { useEthereumClient, useMirrorContract } from '@/app/api';
-import { useVaraEthApi } from '@/app/providers';
+import { useMirrorContract, useApi } from '@/app/api';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { Button } from '@/components';
 
@@ -13,16 +12,15 @@ type Props = {
 };
 
 const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
-  const { data: ethClient } = useEthereumClient();
-  const { api } = useVaraEthApi();
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const { data: api } = useApi();
+  const mirrorContract = useMirrorContract(programId);
 
   const addMyActivity = useAddMyActivity();
 
   const approveFn = async (value: bigint) => {
-    if (!ethClient) throw new Error('Ethereum client is not found');
+    if (!api) throw new Error('API is not initialized');
 
-    const tx = await ethClient.wvara.approve(programId, value);
+    const tx = await api.eth.wvara.approve(programId, value);
 
     return tx.sendAndWaitForReceipt();
   };
@@ -66,7 +64,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
       .catch((error) => console.error(error));
   };
 
-  const isLoading = !api || !ethClient || !mirrorContract || approve.isPending || topUp.isPending;
+  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
 
   const getButtonText = () => {
     if (approve.isPending) return 'Approving';

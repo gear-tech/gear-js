@@ -5,12 +5,12 @@ import { execSync } from 'node:child_process';
 
 import {
   InjectedTxPromise,
-  EthereumClient,
   VaraEthApi,
   getMirrorClient,
   WsVaraEthProvider,
   InjectedTx,
   IInjectedTransaction,
+  createVaraEthApi,
 } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
@@ -21,7 +21,6 @@ let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ReturnType<typeof walletClientToSigner>;
-let ethereumClient: EthereumClient;
 
 let mirror: ReturnType<typeof getMirrorClient>;
 
@@ -40,10 +39,8 @@ beforeAll(async () => {
     transport,
   }) as WalletClient<WebSocketTransport, Chain, Account>;
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
-  await ethereumClient.waitForInitialization();
 
-  api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient);
+  api = await createVaraEthApi(new WsVaraEthProvider(), publicClient, config.routerId, signer);
 });
 
 afterAll(async () => {
@@ -116,19 +113,19 @@ describe('Injected Transactions', () => {
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
-      const injected = new InjectedTx(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, api.eth, TX);
       expect(injected.hash).toBe(injectedTxHash);
     });
 
     test('should create a correct message id', () => {
-      const injected = new InjectedTx(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, api.eth, TX);
       expect(injected.messageId).toBe(injectedMessageId);
     });
 
     test('should create a correct signature', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY);
 
-      const injected = new InjectedTx(api.provider, ethereumClient, TX);
+      const injected = new InjectedTx(api.provider, api.eth, TX);
 
       const signature = await account.sign({ hash: injected.hash });
 
@@ -136,13 +133,13 @@ describe('Injected Transactions', () => {
     });
 
     test('should create a correct promise hash', () => {
-      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+      const promise = new InjectedTxPromise(PROMISE, api.eth);
 
       expect(promise.hash).toBe(injectedPromiseHash);
     });
 
     test('should create correct promise signature', async () => {
-      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+      const promise = new InjectedTxPromise(PROMISE, api.eth);
 
       const account = privateKeyToAccount(PRIVATE_KEY);
 
@@ -152,7 +149,7 @@ describe('Injected Transactions', () => {
     });
 
     test('should correctly recover account from signature', async () => {
-      const promise = new InjectedTxPromise(PROMISE, ethereumClient);
+      const promise = new InjectedTxPromise(PROMISE, api.eth);
       const account = privateKeyToAccount(PRIVATE_KEY);
 
       const address = await recoverMessageAddress({ message: { raw: promise.hash }, signature: PROMISE.signature });
@@ -163,7 +160,7 @@ describe('Injected Transactions', () => {
 
   describe('setup', () => {
     test('should create program', async () => {
-      const tx = await ethereumClient.router.createProgram(config.codeId);
+      const tx = await api.eth.router.createProgram(config.codeId);
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();
@@ -195,7 +192,7 @@ describe('Injected Transactions', () => {
     );
 
     test('should approve wvara', async () => {
-      const tx = await ethereumClient.wvara.approve(programId, BigInt(10 * 1e12));
+      const tx = await api.eth.wvara.approve(programId, BigInt(10 * 1e12));
 
       await tx.send();
 
@@ -205,7 +202,7 @@ describe('Injected Transactions', () => {
 
       expect(approvalData.value).toEqual(BigInt(10 * 1e12));
 
-      const allowance = await ethereumClient.wvara.allowance(await ethereumClient.signer.getAddress(), programId);
+      const allowance = await api.eth.wvara.allowance(await api.eth.signer.getAddress(), programId);
       expect(allowance).toEqual(BigInt(10 * 1e12));
     });
 

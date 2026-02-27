@@ -4,7 +4,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { deployContract } from 'viem/actions';
 import fs from 'node:fs';
 
-import { EthereumClient, getMirrorClient, VaraEthApi, HttpVaraEthProvider, type ISigner } from '../src';
+import { getMirrorClient, VaraEthApi, HttpVaraEthProvider, createVaraEthApi, type ITransactionSigner } from '../src';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 import { walletClientToSigner } from '../src/signer';
@@ -12,8 +12,7 @@ import { walletClientToSigner } from '../src/signer';
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
-let ethereumClient: EthereumClient;
-let signer: ISigner;
+let signer: ITransactionSigner;
 let mirror: ReturnType<typeof getMirrorClient>;
 
 let programId: `0x${string}`;
@@ -31,10 +30,8 @@ beforeAll(async () => {
     transport,
   });
   signer = walletClientToSigner(walletClient);
-  ethereumClient = new EthereumClient(publicClient, config.routerId, signer);
-  await ethereumClient.waitForInitialization();
 
-  api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
+  api = await createVaraEthApi(new HttpVaraEthProvider(), publicClient, config.routerId, signer);
 });
 
 afterAll(async () => {
@@ -46,7 +43,7 @@ describe('setup', () => {
   let programWithAbiInterfaceId: Hex;
 
   test('should create program', async () => {
-    const tx = await ethereumClient.router.createProgram(config.codeId);
+    const tx = await api.eth.router.createProgram(config.codeId);
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
@@ -80,7 +77,7 @@ describe('setup', () => {
   );
 
   test('should approve wvara', async () => {
-    const tx = await ethereumClient.wvara.approve(programId, BigInt(100 * 1e12));
+    const tx = await api.eth.wvara.approve(programId, BigInt(100 * 1e12));
 
     await tx.send();
 
@@ -90,7 +87,7 @@ describe('setup', () => {
 
     expect(approvalData.value).toEqual(BigInt(100 * 1e12));
 
-    const allowance = await ethereumClient.wvara.allowance(await signer.getAddress(), programId);
+    const allowance = await api.eth.wvara.allowance(await signer.getAddress(), programId);
     expect(allowance).toEqual(BigInt(100 * 1e12));
   });
 
@@ -120,7 +117,7 @@ describe('setup', () => {
   });
 
   test('should create program with abi interface', async () => {
-    const tx = await ethereumClient.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
+    const tx = await api.eth.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
 
     const receipt = await tx.sendAndWaitForReceipt();
 
@@ -309,8 +306,8 @@ describe('messages', () => {
 
       const { payload, replyCode, value } = await waitForReply();
 
-      expect(payload).toEqual('0x1c436f756e74657248496e6372656d656e745769746856616c756565000000');
       expect(replyCode).toBe('0x00010000');
+      expect(payload).toEqual('0x1c436f756e74657248496e6372656d656e745769746856616c756565000000');
       expect(value).toBe(0n);
 
       await waitNBlocks(1);

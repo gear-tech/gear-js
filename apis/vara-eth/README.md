@@ -14,7 +14,8 @@ TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepape
   - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [High-Level API](#high-level-api)
-  - [ISigner Interface](#isigner-interface)
+  - [Signer Interfaces](#signer-interfaces)
+  - [createVaraEthApi](#createvaraethapi)
   - [VaraEthApi](#varaethapi)
   - [EthereumClient](#ethereumclient)
   - [RouterClient](#routerclient)
@@ -51,7 +52,7 @@ npm install viem@^2.39.0 kzg-wasm@1.0.0
 ## Quick Start
 
 ```typescript
-import { VaraEthApi, WsVaraEthProvider, EthereumClient } from '@vara-eth/api';
+import { createVaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
 import { walletClientToSigner } from '@vara-eth/api/signer';
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -61,40 +62,44 @@ const publicClient = createPublicClient({ transport: http('https://eth-rpc-url')
 const account = privateKeyToAccount('0x...');
 const walletClient = createWalletClient({ account, transport: http('https://eth-rpc-url') });
 
-// Convert WalletClient to ISigner
+// Convert WalletClient to ITransactionSigner
 const signer = walletClientToSigner(walletClient);
 
-// Create EthereumClient with signer and router address
-const ethereumClient = new EthereumClient(publicClient, routerAddress, signer);
+// Create fully initialized VaraEthApi in one call
+const api = await createVaraEthApi(
+  new WsVaraEthProvider('ws://localhost:9944'),
+  publicClient,
+  routerAddress,
+  signer,
+);
 
-// Wait for initialization to complete
-await ethereumClient.waitForInitialization();
-
-// Initialize Vara.Eth API (connects to Vara.Eth node)
-const api = new VaraEthApi(new WsVaraEthProvider('ws://localhost:9944'), ethereumClient);
-
-// Access Router and WVARA clients through EthereumClient
-const router = ethereumClient.router;
-const wvara = ethereumClient.wvara;
+// Access Router and WVARA clients via api.eth
+const router = api.eth.router;
+const wvara = api.eth.wvara;
 ```
 
 ## High-Level API
 
-### ISigner Interface
+### Signer Interfaces
 
-The library uses a unified `ISigner` interface to abstract transaction signing, making it compatible with different wallet implementations. The signer must implement:
+The library uses two signer interfaces to express the exact capabilities required at each use site:
 
 ```typescript
-interface ISigner {
+// For message signing only (injected transactions, Metamask Snap adapters)
+interface IMessageSigner {
   signMessage(message: Uint8Array | string): Promise<Hash>;
   getAddress(): Promise<Address>;
+}
+
+// For on-chain contract operations (extends IMessageSigner)
+interface ITransactionSigner extends IMessageSigner {
   sendTransaction(tx: TransactionRequest): Promise<Hash>;
 }
 ```
 
 **Viem WalletClient Adapter:**
 
-Convert viem's `WalletClient` to `ISigner`:
+Convert viem's `WalletClient` to `ITransactionSigner`:
 
 ```typescript
 import { walletClientToSigner } from '@vara-eth/api/signer';
@@ -102,15 +107,41 @@ import { walletClientToSigner } from '@vara-eth/api/signer';
 const signer = walletClientToSigner(walletClient);
 ```
 
-This adapter enables the library to work with any viem-compatible wallet while maintaining a clean abstraction layer for future wallet integrations.
+**DynamicSigner — for reactive environments (e.g. React):**
+
+`DynamicSigner` resolves the active signer lazily at call time. This lets you swap wallets without recreating the `VaraEthApi` instance:
+
+```typescript
+import { DynamicSigner } from '@vara-eth/api/signer';
+
+const signer = new DynamicSigner(() => getCurrentSigner()); // getter called on every operation
+const api = await createVaraEthApi(provider, publicClient, routerAddress, signer);
+```
+
+### createVaraEthApi
+
+Factory function that constructs `EthereumClient` internally, waits for initialization, and returns a ready-to-use `VaraEthApi`. Use this instead of constructing `EthereumClient` and `VaraEthApi` separately.
+
+```typescript
+import { createVaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
+
+const api = await createVaraEthApi(
+  new WsVaraEthProvider('ws://localhost:9944'), // or HttpVaraEthProvider
+  publicClient,
+  routerAddress,
+  signer, // optional ITransactionSigner
+);
+
+// EthereumClient is accessible via api.eth
+const router = api.eth.router;
+const wvara = api.eth.wvara;
+```
 
 ### VaraEthApi
 
-Main API class for interacting with the Vara.Eth network. Provides methods for querying program state and performing read-only operations.
+Main API class for interacting with the Vara.Eth network. Provides methods for querying program state and performing read-only operations. Use `createVaraEthApi()` to instantiate it.
 
 ```typescript
-const api = new VaraEthApi(provider, ethereumClient);
-
 // Query methods
 await api.query.program.getIds(); // List all program IDs
 await api.query.program.readState(hash); // Read program state
@@ -126,11 +157,17 @@ const injected = await api.createInjectedTransaction({
   value: 0n,
 });
 await injected.send();
+
+// Access EthereumClient for contract operations
+api.eth.router;
+api.eth.wvara;
 ```
 
 ### EthereumClient
 
-Wrapper around viem's `PublicClient` and a signer that provides unified interface for contract interactions. Automatically initializes Router and WrappedVara contract clients.
+Wrapper around viem's `PublicClient` and a signer that provides a unified interface for contract interactions. Automatically initializes Router and WrappedVara contract clients.
+
+> **Note**: Most users should use `createVaraEthApi()` instead of constructing `EthereumClient` directly. Access it via `api.eth` when needed.
 
 ```typescript
 const signer = walletClientToSigner(walletClient);
@@ -141,7 +178,7 @@ await ethereumClient.waitForInitialization();
 
 // Access underlying clients
 ethereumClient.publicClient;
-ethereumClient.signer; // ISigner interface
+ethereumClient.signer; // ITransactionSigner interface
 
 // Get account address (async)
 const address = await ethereumClient.getAccountAddress();
@@ -161,9 +198,8 @@ Interface for interacting with the Router contract - the main entry point for co
 **Source:** [Router.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Router.sol)
 
 ```typescript
-const router = getRouterClient({ address: routerAddress, signer, publicClient });
-// Or access via EthereumClient
-const router = ethereumClient.router;
+// Access via api.eth (recommended)
+const router = api.eth.router;
 
 await router.createProgram(codeId); // Create program from validated code
 await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
@@ -176,7 +212,7 @@ Interface for interacting with Mirror contracts - deployed programs on Ethereum.
 **Source:** [Mirror.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Mirror.sol)
 
 ```typescript
-const mirror = getMirrorClient(programId, signer, publicClient);
+const mirror = getMirrorClient({ address: programId, signer, publicClient });
 
 await mirror.sendMessage(payload, value); // Send message to program
 await mirror.executableBalanceTopUp(amount); // Top up program's balance
@@ -190,9 +226,8 @@ Interface for managing WVARA tokens (ERC20 wrapper for VARA) used for gas paymen
 **Source:** [WrappedVara.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/WrappedVara.sol)
 
 ```typescript
-const wvara = getWrappedVaraClient(wvaraAddress, signer, publicClient);
-// Or access via EthereumClient
-const wvara = ethereumClient.wvara;
+// Access via api.eth (recommended)
+const wvara = api.eth.wvara;
 
 await wvara.approve(spender, amount); // Approve spending
 await wvara.balanceOf(address); // Check balance
@@ -238,7 +273,7 @@ The CLI will submit code via EIP-4844 blob transactions, request validation, and
 
 ```typescript
 const codeId = '0x...'; // From CLI output
-const tx = await router.createProgram(codeId);
+const tx = await api.eth.router.createProgram(codeId);
 ```
 
 ## Ethereum Side Operations
@@ -253,7 +288,7 @@ Create programs from validated code:
 // Create program from validated code
 const codeId = '0x...'; // Code ID from vara-eth CLI
 
-const tx = await router.createProgram(codeId);
+const tx = await api.eth.router.createProgram(codeId);
 await tx.sendAndWaitForReceipt();
 
 // Get the program ID
@@ -261,7 +296,7 @@ const programId = await tx.getProgramId();
 console.log('Program created:', programId);
 
 // Get Mirror contract for program interaction
-const mirror = getMirrorClient(programId, ethereumClient);
+const mirror = getMirrorClient({ address: programId, signer, publicClient });
 ```
 
 #### Creating Program with Solidity ABI Interface
@@ -279,7 +314,7 @@ const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash 
 const abiAddress = receipt.contractAddress;
 
 // Create program with ABI interface
-const tx = await router.createProgramWithAbiInterface(codeId, abiAddress);
+const tx = await api.eth.router.createProgramWithAbiInterface(codeId, abiAddress);
 await tx.sendAndWaitForReceipt();
 ```
 
@@ -317,11 +352,11 @@ Programs require wVARA balance to execute. Top up using wVARA tokens:
 
 ```typescript
 // Check WVARA balance
-const balance = await wvara.balanceOf(ethereumClient.accountAddress);
+const balance = await api.eth.wvara.balanceOf(await api.eth.getAccountAddress());
 console.log('WVARA balance:', balance);
 
 // Approve program to spend wVARA
-const approveTx = await wvara.approve(programId, BigInt(10 * 1e12));
+const approveTx = await api.eth.wvara.approve(programId, BigInt(10 * 1e12));
 await approveTx.sendAndWaitForReceipt();
 
 const approvalData = await approveTx.getApprovalLog();
@@ -339,11 +374,11 @@ Query program information from Router and Mirror contracts:
 
 ```typescript
 // Check code validation status
-const codeState = await router.codeState(codeId);
+const codeState = await api.eth.router.codeState(codeId);
 console.log('Code state:', codeState); // 'Validated' | 'Rejected' | 'Unknown'
 
 // Get program's code ID
-const programCodeId = await router.programCodeId(programId);
+const programCodeId = await api.eth.router.programCodeId(programId);
 
 // Get program's state hash
 const stateHash = await mirror.stateHash();
@@ -361,7 +396,7 @@ const nonce = await mirror.nonce();
 Contract write methods return a `TxManager` instance that handles transaction lifecycle:
 
 ```typescript
-const tx = await router.createProgram(codeId);
+const tx = await api.eth.router.createProgram(codeId);
 
 // Send transaction and get response
 const response = await tx.send();
@@ -402,18 +437,16 @@ Each transaction type can have specific helper methods:
 
 ### 1. Instantiating VaraEthApi
 
-Connect to Vara.Eth node using HTTP or WebSocket provider:
+Use `createVaraEthApi()` with an HTTP or WebSocket provider:
 
 ```typescript
-// HTTP Provider (for queries and calls)
-import { VaraEthApi, HttpVaraEthProvider } from '@vara-eth/api';
+import { createVaraEthApi, HttpVaraEthProvider, WsVaraEthProvider } from '@vara-eth/api';
 
-const api = new VaraEthApi(new HttpVaraEthProvider('http://localhost:9944'), ethereumClient);
+// HTTP Provider (for queries and calls)
+const api = await createVaraEthApi(new HttpVaraEthProvider('http://localhost:9944'), publicClient, routerAddress, signer);
 
 // WebSocket Provider (for subscriptions and real-time updates)
-import { WsVaraEthProvider } from '@vara-eth/api';
-
-const wsApi = new VaraEthApi(new WsVaraEthProvider('ws://localhost:9944'), ethereumClient);
+const api = await createVaraEthApi(new WsVaraEthProvider('ws://localhost:9944'), publicClient, routerAddress, signer);
 
 // Don't forget to disconnect when done
 await api.provider.disconnect();
@@ -528,7 +561,7 @@ const queryPayload = sails.services.Counter.queries.GetValue.encodePayload();
 
 // Calculate what the program would reply (read-only)
 const reply = await api.call.program.calculateReplyForHandle(
-  await ethereumClient.getAccountAddress(), // Source address
+  await api.eth.getAccountAddress(), // Source address
   programId, // Program to query
   queryPayload, // Encoded query
 );

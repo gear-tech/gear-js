@@ -35,6 +35,13 @@ export class VaraEthApi {
     return this._provider;
   }
 
+  get eth(): EthereumClient {
+    if (!this._ethClient) {
+      throw new Error('EthereumClient is not set');
+    }
+    return this._ethClient;
+  }
+
   async createInjectedTransaction(tx: IInjectedTransaction): Promise<InjectedTx> {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');

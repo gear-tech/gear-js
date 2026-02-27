@@ -1,7 +1,6 @@
-import { bytesToHex, concatBytes, hexToBytes } from '@ethereumjs/util';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hash, Hex } from 'viem';
-import { recoverMessageAddress } from 'viem';
+import { bytesToHex, concatBytes, hexToBytes, recoverMessageAddress } from 'viem';
 
 import type { IInjectedTransactionPromise } from '../../types/index.js';
 import type { EthereumClient } from '../../eth/index.js';
@@ -91,7 +90,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
   }
 
   private get _dataU8a(): Uint8Array {
-    return concatBytes(this._txHashU8a, this._payloadU8a, this._codeU8a, this._valueU8a);
+    return concatBytes([this._txHashU8a, this._payloadU8a, this._codeU8a, this._valueU8a]);
   }
 
   /**
