@@ -1,0 +1,27 @@
+.button {
+  --font-size: 14px;
+  --padding: 4px 8px;
+  --spinner-size: 14px;
+}
+
+.overlay {
+  display: none;
+
+  width: 100%;
+  height: 100%;
+  padding: 0 32px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  background-color: #0003;
+  backdrop-filter: blur(20px);
+
+  &.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

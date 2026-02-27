@@ -1,14 +1,17 @@
 import { GearKeyring } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { useRef } from 'react';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
+import { useRef, useState } from 'react';
 
-import { useChain, useSignAndSend } from '@/hooks';
-import { GEAR_BALANCE_TRANSFER_VALUE, HCAPTCHA_SITE_KEY } from '@/shared/config';
+import { useChain, useModalState, useSignAndSend } from '@/hooks';
+import { GEAR_BALANCE_TRANSFER_VALUE, TURNSTILE_SITEKEY } from '@/shared/config';
+import { cx } from '@/shared/helpers';
 
 import { getTestBalance } from '../../api';
 import GiftSVG from '../../assets/gift.svg?react';
+
+import styles from './get-test-balance.module.scss';
 
 function GetTestBalance() {
   const { api, isApiReady } = useApi();
@@ -17,14 +20,10 @@ function GetTestBalance() {
   const alert = useAlert();
   const signAndSend = useSignAndSend();
 
-  const captchaRef = useRef<HCaptcha>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
-  const getBalance = (token: string) => {
-    if (!account) throw new Error('Account is not found');
-    const { address } = account;
-
-    getTestBalance({ address, token }).catch(({ message }: Error) => alert.error(message));
-  };
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isVerificationVisible, openVerification, closeVerification] = useModalState();
 
   const getBalanceFromAlice = async () => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -36,14 +35,61 @@ function GetTestBalance() {
     signAndSend(extrinsic, 'Transfer', { addressOrPair });
   };
 
-  const handleClick = () => (isDevChain ? getBalanceFromAlice() : captchaRef.current?.execute());
+  const settleVerification = () => {
+    closeVerification();
+    setIsVerifying(false);
+  };
+
+  const handleVerificationSuccess = (token: string) => {
+    if (!account) throw new Error('Account is not found');
+
+    settleVerification();
+
+    const { address } = account;
+
+    getTestBalance({ address, token })
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => turnstileRef.current?.reset());
+  };
+
+  const handleVerificationError = (code: string) => {
+    settleVerification();
+
+    alert.error(`Error verifying that you are a human, code: ${code}. Please try again.`);
+  };
+
+  const handleClick = () => {
+    if (isDevChain) return getBalanceFromAlice();
+
+    setIsVerifying(true);
+    turnstileRef.current?.execute();
+  };
 
   if (!isTestBalanceAvailable) return null;
 
   return (
     <>
-      <Button icon={GiftSVG} text="Get Test Balance" color="secondary" size="small" noWrap onClick={handleClick} />
-      <HCaptcha ref={captchaRef} size="invisible" theme="dark" sitekey={HCAPTCHA_SITE_KEY} onVerify={getBalance} />
+      <Button
+        icon={GiftSVG}
+        text="Get Test Balance"
+        color="secondary"
+        size="small"
+        onClick={handleClick}
+        disabled={isVerifying}
+        noWrap
+      />
+
+      <div className={cx(styles.overlay, isVerificationVisible && styles.active)}>
+        <Turnstile
+          options={{ execution: 'execute', appearance: 'interaction-only' }}
+          siteKey={TURNSTILE_SITEKEY}
+          ref={turnstileRef}
+          onBeforeInteractive={openVerification}
+          onAfterInteractive={settleVerification}
+          onError={handleVerificationError}
+          onSuccess={handleVerificationSuccess}
+        />
+      </div>
     </>
   );
 }
