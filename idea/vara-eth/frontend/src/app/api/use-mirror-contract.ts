@@ -1,25 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
 import { getMirrorClient } from '@vara-eth/api';
-import { walletClientToSigner } from '@vara-eth/api/signer';
+import { useMemo } from 'react';
 import type { Address } from 'viem';
-import { usePublicClient, useWalletClient } from 'wagmi';
+import { usePublicClient } from 'wagmi';
+
+import { useSigner } from './use-signer';
 
 const useMirrorContract = (address: Address) => {
   const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
+  const signer = useSigner();
 
-  return useQuery({
-    queryKey: ['mirrorContract', address, publicClient?.uid, walletClient?.uid],
+  return useMemo(() => {
+    if (!publicClient) return;
 
-    queryFn: () =>
-      getMirrorClient({
-        address,
-        signer: walletClient ? walletClientToSigner(walletClient) : undefined,
-        publicClient: publicClient!,
-      }),
-
-    enabled: Boolean(publicClient),
-  });
+    return getMirrorClient({ address, signer, publicClient });
+  }, [address, publicClient, signer]);
 };
 
 export { useMirrorContract };
