@@ -1,5 +1,5 @@
-import { bytesToHex, hexToBytes } from '@ethereumjs/util';
 import { blake2b } from '@noble/hashes/blake2.js';
+import { bytesToHex, hexToBytes } from 'viem';
 
 const CODE_HASH_LEN = 32;
 

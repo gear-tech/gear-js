@@ -1,20 +1,20 @@
-import { bytesToHex, concatBytes, hexToBytes, randomBytes } from '@ethereumjs/util';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
+import { randomBytes } from '@noble/hashes/utils.js';
 import type { Address, Hash, Hex } from 'viem';
-import { zeroAddress } from 'viem';
+import { bytesToHex, concatBytes, hexToBytes, zeroAddress } from 'viem';
 
+import type { EthereumClient } from '../../eth/index.js';
+import { isPoolProvider } from '../../provider/util.js';
 import type {
   IInjectedTransaction,
   IMessageSigner,
   IVaraEthProvider,
   IVaraEthValidatorPoolProvider,
 } from '../../types/index.js';
-import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
-import type { EthereumClient } from '../../eth/index.js';
-import { isPoolProvider } from '../../provider/util.js';
 import { bigint128ToBytes } from '../../util/index.js';
 import { VARA_ETH_RPC_METHODS } from '../rpc.js';
+import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
 
 export class InjectedTx {
   private _destination: Address;
@@ -96,7 +96,13 @@ export class InjectedTx {
   }
 
   private get _bytes() {
-    return concatBytes(this._destinationU8a, this._payloadU8a, this._valueU8a, this._referenceBlockU8a, this._saltU8a);
+    return concatBytes([
+      this._destinationU8a,
+      this._payloadU8a,
+      this._valueU8a,
+      this._referenceBlockU8a,
+      this._saltU8a,
+    ]);
   }
 
   public get hash(): Hex {
