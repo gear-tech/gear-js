@@ -1,5 +1,5 @@
 import { Hex } from 'viem';
-import { IVaraEthProvider, ProgramState } from '../../types/index.js';
+import { FullProgramState, IVaraEthProvider, ProgramState } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
 
 export class ProgramQueries {
@@ -23,6 +23,12 @@ export class ProgramQueries {
     if ('Active' in state.program) {
       transformMaybeHashes(state.program.Active, ['allocationsHash', 'pagesHash']);
     }
+
+    return state;
+  }
+
+  async readFullState(hash: string): Promise<FullProgramState> {
+    const state = await this._provider.send<FullProgramState>('program_readFullState', [hash]);
 
     return state;
   }

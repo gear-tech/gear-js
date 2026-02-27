@@ -1,4 +1,4 @@
-import type { Address, Hex, TransactionRequest } from 'viem';
+import type { Address, Hex, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import {
@@ -67,7 +67,11 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
    * @param value - The value to send with the message (in wei)
    * @returns A transaction manager with message-specific helper functions
    */
-  async sendMessage(payload: string, value?: bigint): Promise<TxManagerWithHelpers<MessageHelpers>> {
+  async sendMessage(
+    payload: string,
+    value?: bigint,
+    options?: Omit<TransactionRequestBase, 'to' | 'data' | 'value' | 'from' | 'type'>,
+  ): Promise<TxManagerWithHelpers<MessageHelpers>> {
     const signer = this._ensureSigner();
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
     await this._pc.simulateContract({
@@ -79,6 +83,7 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
     });
 
     const tx: TransactionRequest = {
+      ...options,
       to: this.address,
       data: encodeFunctionData({
         abi: IMIRROR_ABI,

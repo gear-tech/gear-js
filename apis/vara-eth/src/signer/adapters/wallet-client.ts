@@ -32,7 +32,7 @@ export class WalletClientAdapter implements ITransactionSigner {
     return this._wc.sendTransaction({
       ...tx,
       account: this._wc.account,
-      chain: this._wc.chain ?? null,
+      chain: this._wc.chain,
     });
   }
 }
