@@ -7,7 +7,7 @@ const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const METADATA_STORAGE_API_URL = import.meta.env.VITE_METADATA_STORAGE_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
-const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
+const TURNSTILE_SITEKEY = import.meta.env.VITE_TURNSTILE_SITEKEY as string;
 const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
 
 const GENESIS = {
@@ -100,7 +100,7 @@ export {
   NODES_API_URL,
   METADATA_STORAGE_API_URL,
   NODE_ADDRESS,
-  HCAPTCHA_SITE_KEY,
+  TURNSTILE_SITEKEY,
   GTM_ID,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
