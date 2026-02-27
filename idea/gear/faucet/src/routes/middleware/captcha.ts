@@ -30,7 +30,7 @@ async function verifyCaptcha(token: string): Promise<boolean> {
     const result = await response.json();
     return result.success;
   } catch (error) {
-    console.error('Turnstile validation error:', error);
+    logger.error('Turnstile validation error:', error);
     return false;
   }
 }
