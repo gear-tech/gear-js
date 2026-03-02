@@ -1,4 +1,4 @@
-export { CreateProgramButton, TopUpExecBalance } from './ui';
+export { CreateProgramButton, Programs, TopUpExecBalance } from './ui';
 export {
   useSendProgramMessage,
   useGetProgramByIdQuery,

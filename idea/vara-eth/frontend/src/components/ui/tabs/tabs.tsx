@@ -5,7 +5,7 @@ import { Button } from '../button/button';
 import styles from './tabs.module.scss';
 
 type Props = {
-  tabs: string[];
+  tabs: readonly string[];
   tabIndex: number;
   onTabIndexChange: (tabIndex: number) => void;
   className?: string;

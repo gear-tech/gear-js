@@ -15,7 +15,7 @@ type TableColumn<T> = {
 };
 
 type TableProps<T> = {
-  columns: TableColumn<T>[];
+  columns: readonly TableColumn<T>[];
   data: T[] | undefined;
   isLoading: boolean;
   pageSize?: number;
