@@ -24,9 +24,10 @@ const COLUMNS = [
 type Props = {
   pageSize?: number;
   codeId?: Hex;
+  positionedAt?: 'top' | 'bottom';
 };
 
-const ProgramsTable = ({ pageSize = 7, codeId }: Props) => {
+const ProgramsTable = ({ pageSize = 7, positionedAt = 'top', codeId }: Props) => {
   const [page, setPage] = useState(1);
   const { data: programsResponse, isFetching } = useGetAllProgramsQuery(page, pageSize, codeId);
 
@@ -47,6 +48,7 @@ const ProgramsTable = ({ pageSize = 7, codeId }: Props) => {
       lineHeight="lg"
       pageSize={pageSize}
       headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+      positionedAt={positionedAt}
     />
   );
 };

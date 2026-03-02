@@ -4,9 +4,16 @@
   background-color: #000;
   transition: opacity 0.2s ease-in-out;
 
-  border: 1px solid rgba(41, 41, 41, 1);
-  border-top: none;
-  border-radius: 0 0 4px 4px;
+  border-style: solid;
+  border-color: rgba(41, 41, 41, 1);
+
+  &.top {
+    border-width: 0 1px 1px 1px;
+  }
+
+  &.bottom {
+    border-width: 1px 0 0 0;
+  }
 
   &.lineHeight-md {
     td {
@@ -32,6 +39,9 @@
     cursor: pointer;
     user-select: none;
     position: relative;
+
+    border-bottom: 1px solid rgba(41, 41, 41, 1);
+
     svg {
       vertical-align: top;
     }
@@ -43,10 +53,6 @@
       box-shadow:
         -1px -1px inset rgba(168, 245, 147, 0.25),
         1px 1px inset rgba(168, 245, 147, 0.25);
-    }
-
-    &:first-child {
-      border-bottom: 1px solid rgba(41, 41, 41, 1);
     }
 
     &:not(:last-child) {

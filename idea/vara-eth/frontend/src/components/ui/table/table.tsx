@@ -20,6 +20,7 @@ type TableProps<T> = {
   isLoading: boolean;
   pageSize?: number;
   lineHeight?: 'md' | 'lg';
+  positionedAt?: 'top' | 'bottom';
   headerRight?: React.ReactNode;
 };
 
@@ -29,6 +30,7 @@ const Table = <T extends { id: string | number }>({
   isLoading,
   pageSize = 5,
   lineHeight = 'md',
+  positionedAt = 'top',
   headerRight,
 }: TableProps<T>) => {
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
@@ -78,7 +80,7 @@ const Table = <T extends { id: string | number }>({
   };
 
   return (
-    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`])}>
+    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], styles[positionedAt])}>
       <thead>
         <tr>
           {columns.map((column: TableColumn<T>) => (
