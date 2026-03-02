@@ -61,6 +61,7 @@ const Table = <T extends { id: string | number }>({
   }, [data, sortKey, sortOrder]);
 
   const hasExtraColumn = Boolean(headerRight);
+  const isEmpty = !isLoading && !data?.length;
 
   const render = () => {
     const placeholderData = Array.from<undefined>({ length: pageSize });
@@ -100,7 +101,23 @@ const Table = <T extends { id: string | number }>({
         </tr>
       </thead>
 
-      <tbody>{render()}</tbody>
+      <tbody>
+        {isEmpty ? (
+          <tr className={styles.emptyRow}>
+            <td colSpan={columns.length + Number(hasExtraColumn)}>
+              <div className={styles.emptyContainer}>
+                <span className={styles.title}>
+                  <span className={styles.comment}>{'//_'}</span>No Items Yet
+                </span>
+
+                <p className={styles.text}>Items will appear in this table as soon as they are available.</p>
+              </div>
+            </td>
+          </tr>
+        ) : (
+          render()
+        )}
+      </tbody>
     </table>
   );
 };
