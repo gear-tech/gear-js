@@ -41,15 +41,13 @@ const Codes = () => {
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (
-    <div className={styles.container}>
-      <Table
-        columns={columns}
-        data={data}
-        isLoading={isFetching}
-        pageSize={PAGE_SIZE}
-        headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
-      />
-    </div>
+    <Table
+      columns={columns}
+      data={data}
+      isLoading={isFetching}
+      pageSize={PAGE_SIZE}
+      headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+    />
   );
 };
 

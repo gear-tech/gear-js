@@ -17,16 +17,18 @@ export type Program = {
 
 export type ProgramsResponse = PaginatedResponse<Program>;
 
-export const useGetAllProgramsQuery = (page: number, pageSize: number) => {
+export const useGetAllProgramsQuery = (page: number, pageSize: number, codeId?: Hex) => {
   const limit = pageSize;
   const offset = (page - 1) * pageSize;
 
   return useQuery({
-    queryKey: ['allPrograms', limit, offset],
+    queryKey: ['allPrograms', limit, offset, codeId],
     queryFn: async () => {
       const url = new URL(`${EXPLORER_URL}/programs`);
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));
+
+      if (codeId) url.searchParams.set('codeId', codeId);
 
       return fetchWithGuard<ProgramsResponse>({ url });
     },
