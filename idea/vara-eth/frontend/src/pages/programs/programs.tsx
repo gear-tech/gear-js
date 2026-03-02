@@ -1,4 +1,4 @@
-import { Programs as ProgramsTable } from '@/features/programs';
+import { ProgramsTable } from '@/features/programs';
 
 const Programs = () => {
   return <ProgramsTable />;

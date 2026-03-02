@@ -4,7 +4,7 @@ import { Hex } from 'viem';
 
 import { UploadIdlButton, SyntaxHighlighter, ChainEntity, Skeleton, Tabs } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
-import { Programs } from '@/features/programs';
+import { ProgramsTable } from '@/features/programs';
 import { useSails, SailsServices } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
@@ -49,7 +49,7 @@ const Code = () => {
       <div className={styles.extraData}>
         <Tabs tabs={TABS} tabIndex={tabIndex} onTabIndexChange={setTabIndex} className={styles.tabs} />
 
-        {tabIndex === 0 && <Programs codeId={codeId} pageSize={5} />}
+        {tabIndex === 0 && <ProgramsTable codeId={codeId} pageSize={5} />}
 
         {tabIndex === 1 && !sails.isLoading && (
           <div className={styles.idlContainer}>
