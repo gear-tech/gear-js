@@ -28,7 +28,7 @@ const Code = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
+      <div className={styles.data}>
         <ChainEntity.Header>
           <ChainEntity.BackButton />
           <ChainEntity.Title id={codeId} />
@@ -46,21 +46,23 @@ const Code = () => {
         </ChainEntity.Data>
       </div>
 
-      <div className={styles.card}>
+      <div className={styles.extraData}>
         <Tabs tabs={TABS} tabIndex={tabIndex} onTabIndexChange={setTabIndex} className={styles.tabs} />
 
         {tabIndex === 0 && <Programs codeId={codeId} pageSize={5} />}
 
-        {tabIndex === 1 &&
-          !sails.isLoading &&
-          (idl ? (
-            <SyntaxHighlighter language="rust" code={idl} />
-          ) : (
-            <div className={styles.emptyState}>
-              <p>No IDL uploaded. Please upload an IDL file to view it here.</p>
-              <UploadIdlButton onSaveIdl={saveIdl} />
-            </div>
-          ))}
+        {tabIndex === 1 && !sails.isLoading && (
+          <div className={styles.idlContainer}>
+            {idl ? (
+              <SyntaxHighlighter language="rust" code={idl} />
+            ) : (
+              <div className={styles.emptyState}>
+                <p>No IDL uploaded. Please upload an IDL file to view it here.</p>
+                <UploadIdlButton onSaveIdl={saveIdl} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

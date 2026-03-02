@@ -8,32 +8,41 @@
   border-radius: 0 0 4px 4px;
 }
 
-.card {
+.data {
   padding: 24px;
 
+  border-right: 1px solid rgba(41, 41, 41, 1);
+}
+
+.extraData {
   // syntax highlighter overflow
   min-height: 0;
   display: flex;
   flex-direction: column;
 
-  &:first-child {
-    border-right: 1px solid rgba(41, 41, 41, 1);
+  .tabs {
+    padding: 24px 24px 12px;
   }
-}
 
-.tabs {
-  margin-bottom: 12px;
-}
+  .idlContainer {
+    padding: 0 24px 24px;
 
-.emptyState {
-  margin: auto 0;
+    // syntax highlighter overflow
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+  .emptyState {
+    margin: auto 0;
 
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+  }
 }
