@@ -15366,14 +15366,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:8.0.1":
-  version: 8.0.1
-  resolution: "express-rate-limit@npm:8.0.1"
+"express-rate-limit@npm:8.0.2":
+  version: 8.0.2
+  resolution: "express-rate-limit@npm:8.0.2"
   dependencies:
-    ip-address: "npm:10.0.1"
+    ip-address: "npm:10.1.0"
   peerDependencies:
     express: ">= 4.11"
-  checksum: 10c0/c3cca4a87c6839e3ed94617405091e80ecbcc7200e34495aeedc48c819ce1ca7073d522706e46369cc252b8df0364ae5ff181f4ae75e75cbbe9adf3f19ec6666
+  checksum: 10c0/f95bcd0c9903695fa8c50a381e6adb9743b37331ef08d491ceb532ee64a2b714914a3238a0f876f864984135fa836c905b5feaaecea9e6e8fd83f9dd53f6cc5a
   languageName: node
   linkType: hard
 
@@ -16122,7 +16122,7 @@ __metadata:
     cron: "npm:4.3.4"
     dotenv: "npm:17.2.3"
     express: "npm:5.2.0"
-    express-rate-limit: "npm:8.0.1"
+    express-rate-limit: "npm:8.0.2"
     gear-idea-common: "npm:1.3.25"
     pg: "npm:8.16.3"
     reflect-metadata: "npm:0.2.2"
@@ -17210,14 +17210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:10.0.1":
-  version: 10.0.1
-  resolution: "ip-address@npm:10.0.1"
-  checksum: 10c0/1634d79dae18394004775cb6d699dc46b7c23df6d2083164025a2b15240c1164fccde53d0e08bd5ee4fc53913d033ab6b5e395a809ad4b956a940c446e948843
-  languageName: node
-  linkType: hard
-
-"ip-address@npm:^10.0.1":
+"ip-address@npm:10.1.0, ip-address@npm:^10.0.1":
   version: 10.1.0
   resolution: "ip-address@npm:10.1.0"
   checksum: 10c0/0103516cfa93f6433b3bd7333fa876eb21263912329bfa47010af5e16934eeeff86f3d2ae700a3744a137839ddfad62b900c7a445607884a49b5d1e32a3d7566
