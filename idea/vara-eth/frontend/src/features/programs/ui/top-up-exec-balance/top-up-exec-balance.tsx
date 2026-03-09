@@ -3,7 +3,7 @@ import { parseUnits, Hex } from 'viem';
 
 import { useMirrorContract, useApi } from '@/app/api';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
-import { Button } from '@/components';
+import { ActionButton } from '@/components';
 
 type Props = {
   programId: Hex;
@@ -11,13 +11,10 @@ type Props = {
   onSuccess: (value: bigint) => void;
 };
 
-const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
+function useApprove(programId: Hex) {
   const { data: api } = useApi();
-  const mirrorContract = useMirrorContract(programId);
 
-  const addMyActivity = useAddMyActivity();
-
-  const approveFn = async (value: bigint) => {
+  const approve = async (value: bigint) => {
     if (!api) throw new Error('API is not initialized');
 
     const tx = await api.eth.wvara.approve(programId, value);
@@ -25,7 +22,14 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return tx.sendAndWaitForReceipt();
   };
 
-  const topUpFn = async (value: bigint) => {
+  return useMutation({ mutationFn: approve });
+}
+
+function useTopUp(programId: Hex) {
+  const { data: api } = useApi();
+  const mirrorContract = useMirrorContract(programId);
+
+  const topUp = async (value: bigint) => {
     if (!api) throw new Error('API is not initialized');
     if (!mirrorContract) throw new Error('Mirror contract is not found');
 
@@ -34,8 +38,17 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return tx.sendAndWaitForReceipt();
   };
 
-  const approve = useMutation({ mutationFn: approveFn });
-  const topUp = useMutation({ mutationFn: topUpFn });
+  return useMutation({ mutationFn: topUp });
+}
+
+const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
+  const { data: api } = useApi();
+  const mirrorContract = useMirrorContract(programId);
+  const approve = useApprove(programId);
+  const topUp = useTopUp(programId);
+  const addMyActivity = useAddMyActivity();
+
+  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
 
   const handleClick = () => {
     const value = parseUnits('10', 12);
@@ -64,8 +77,6 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
       .catch((error) => console.error(error));
   };
 
-  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
-
   const getButtonText = () => {
     if (approve.isPending) return 'Approving';
     if (topUp.isPending) return 'Topping Up';
@@ -74,7 +85,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
   };
 
   return (
-    <Button
+    <ActionButton
       size="xs"
       onClick={handleClick}
       loadingPosition="start"
@@ -82,7 +93,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
       variant="secondary"
       disabled={!isEnabled}>
       {getButtonText()}
-    </Button>
+    </ActionButton>
   );
 };
 
