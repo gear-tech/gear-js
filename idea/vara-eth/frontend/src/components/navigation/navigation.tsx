@@ -6,6 +6,8 @@ import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
+import { LinkButton } from '../ui';
+
 import styles from './navigation.module.scss';
 
 const LINKS = [
@@ -29,6 +31,12 @@ const Navigation = () => {
     <div className={styles.wrapper}>
       <div className={styles.leftSide}>
         <div className={styles.navigation}>{renderLinks()}</div>
+
+        {matchPath(routes.codes, pathname) && (
+          <LinkButton href="https://wiki.vara.network/docs/vara-eth/deploy/upload-validation" size="xs">
+            Upload Code
+          </LinkButton>
+        )}
 
         {codeId && <CreateProgramButton codeId={codeId} />}
       </div>
