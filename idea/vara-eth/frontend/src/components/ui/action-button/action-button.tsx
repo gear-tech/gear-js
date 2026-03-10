@@ -4,7 +4,8 @@ import { useAccount } from 'wagmi';
 
 import { Button } from '../button';
 
-function ActionButton({ onClick, ...props }: ComponentProps<typeof Button>) {
+// omit type because there's no way to capture submit
+function ActionButton({ onClick, ...props }: Omit<ComponentProps<typeof Button>, 'type'>) {
   const account = useAccount();
   const { open } = useAppKit();
 

@@ -1,5 +1,7 @@
+import { useAppKit } from '@reown/appkit/react';
 import { MouseEvent, useState } from 'react';
 import { Sails } from 'sails-js';
+import { useAccount } from 'wagmi';
 
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button, Tooltip } from '@/components';
@@ -15,6 +17,9 @@ type Props = SailsActionType & {
 };
 
 const SailsAction = ({ id, name, action, sails, args, isEnabled = true, tooltip, encode, onSubmit }: Props) => {
+  const account = useAccount();
+  const { open } = useAppKit();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,6 +37,8 @@ const SailsAction = ({ id, name, action, sails, args, isEnabled = true, tooltip,
   };
 
   const handleSubmit = async (payload: FormattedPayloadValue) => {
+    if (!account.address) return open();
+
     setIsSubmitting(true);
 
     return onSubmit(payload).finally(() => setIsSubmitting(false));
