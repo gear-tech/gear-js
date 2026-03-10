@@ -22,15 +22,13 @@ function useApprove(programId: Hex) {
     return tx.sendAndWaitForReceipt();
   };
 
-  return useMutation({ mutationFn: approve });
+  return { ...useMutation({ mutationFn: approve }), isLoading: !api };
 }
 
 function useTopUp(programId: Hex) {
-  const { data: api } = useApi();
   const mirrorContract = useMirrorContract(programId);
 
   const topUp = async (value: bigint) => {
-    if (!api) throw new Error('API is not initialized');
     if (!mirrorContract) throw new Error('Mirror contract is not found');
 
     const tx = await mirrorContract.executableBalanceTopUp(value);
@@ -38,17 +36,15 @@ function useTopUp(programId: Hex) {
     return tx.sendAndWaitForReceipt();
   };
 
-  return useMutation({ mutationFn: topUp });
+  return { ...useMutation({ mutationFn: topUp }), isLoading: !mirrorContract };
 }
 
 const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
-  const { data: api } = useApi();
-  const mirrorContract = useMirrorContract(programId);
   const approve = useApprove(programId);
   const topUp = useTopUp(programId);
   const addMyActivity = useAddMyActivity();
 
-  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
+  const isLoading = approve.isLoading || topUp.isLoading || approve.isPending || topUp.isPending;
 
   const handleClick = () => {
     const value = parseUnits('10', 12);
