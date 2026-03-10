@@ -2,7 +2,7 @@ import { MouseEvent, useState } from 'react';
 import { Sails } from 'sails-js';
 
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
-import { Button } from '@/components';
+import { Button, Tooltip } from '@/components';
 import { cx } from '@/shared/utils';
 
 import { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
@@ -14,7 +14,7 @@ type Props = SailsActionType & {
   sails: Sails;
 };
 
-const SailsAction = ({ id, name, action, sails, args, isEnabled = true, encode, onSubmit }: Props) => {
+const SailsAction = ({ id, name, action, sails, args, isEnabled = true, tooltip, encode, onSubmit }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -54,7 +54,10 @@ const SailsAction = ({ id, name, action, sails, args, isEnabled = true, encode, 
         <header className={cx(styles.header, styles.empty)}>
           <ArrowSVG className={styles.arrow} />
           <span className={styles.title}>{name}</span>
-          <Button {...buttonProps} />
+
+          <Tooltip value={tooltip} showOnDisabledTrigger>
+            <Button {...buttonProps} />
+          </Tooltip>
         </header>
 
         <SailsPayloadForm id={id} sails={sails} args={args} encode={encode} onSubmit={handleSubmit} />
@@ -67,7 +70,10 @@ const SailsAction = ({ id, name, action, sails, args, isEnabled = true, encode, 
       <header className={cx(styles.header, isOpen && styles.open)} onClick={() => setIsOpen((prevValue) => !prevValue)}>
         <ArrowSVG className={styles.arrow} />
         <span className={styles.title}>{name}</span>
-        <Button {...buttonProps} onClick={handleClick} />
+
+        <Tooltip value={tooltip} showOnDisabledTrigger>
+          <Button {...buttonProps} onClick={handleClick} />
+        </Tooltip>
       </header>
 
       {isOpen && (

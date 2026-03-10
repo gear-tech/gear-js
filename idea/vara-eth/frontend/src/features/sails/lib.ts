@@ -35,6 +35,7 @@ type SailsAction = {
   action: string;
   args: ISailsFuncArg[];
   isEnabled?: boolean;
+  tooltip?: string;
   encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };

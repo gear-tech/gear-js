@@ -14,7 +14,7 @@ const tabs = ['Call offchain', 'Call onchain'];
 type Props = {
   programId: Hex;
   idl: string;
-  init: { isRequired: boolean; isEnabled: boolean; onSuccess: () => void };
+  init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
 };
 
 const SailsProgramActions = ({ programId, idl, init }: Props) => {
@@ -60,6 +60,7 @@ const SailsProgramActions = ({ programId, idl, init }: Props) => {
       name: ctorName,
       action: 'Initialize',
       isEnabled: init.isEnabled,
+      tooltip: init.tooltip,
       args: meta.args,
       encode: meta.encodePayload,
       onSubmit: (payload: FormattedPayloadValue) =>
