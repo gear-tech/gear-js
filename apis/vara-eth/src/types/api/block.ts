@@ -1,4 +1,4 @@
-import type { MessageDetails, ReplyDetails } from './message.js';
+import type { ReplyDetails } from './message.js';
 
 export interface BlockHeader {
   readonly hash: string;
