@@ -14,7 +14,7 @@ type Props = {
   action?: ReactNode;
   children?: ReactNode;
   className?: string;
-  size?: 'normal' | 'large';
+  size?: 'small' | 'normal' | 'large';
 };
 
 const Modal = ({ heading, close, children, className, size = 'normal', action }: Props): ReactPortal | null => {
@@ -42,15 +42,16 @@ const Modal = ({ heading, close, children, className, size = 'normal', action }:
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={modalClassName}>
-        <Button variant="icon" className={styles.closeButton} onClick={close}>
-          <CrossIcon />
-        </Button>
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
-          {action}
+          <Button variant="icon" className={styles.closeButton} onClick={close}>
+            <CrossIcon />
+          </Button>
         </header>
 
         {children && <div className={bodyClassName}>{children}</div>}
+
+        {action && <footer className={styles.footer}>{action}</footer>}
       </div>
     </div>
   );
