@@ -57,7 +57,7 @@ jobs:
 
       - name: Check frontend changes
         id: frontend
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             changed:
@@ -65,7 +65,7 @@ jobs:
 
       - name: Check indexer changes
         id: indexer
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             changed:
