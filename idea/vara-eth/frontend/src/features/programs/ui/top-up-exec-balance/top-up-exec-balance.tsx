@@ -1,9 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { parseUnits, Hex } from 'viem';
 
-import { useMirrorContract, useApi } from '@/app/api';
+import { useMirrorContract, useApi, useWrappedVaraBalance } from '@/app/api';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { Button } from '@/components';
+import { Input } from '@/components/form/input';
+import { Modal } from '@/components/ui/modal';
+
+import styles from './top-up-exec-balance.module.scss';
 
 type Props = {
   programId: Hex;
@@ -14,8 +19,12 @@ type Props = {
 const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
   const { data: api } = useApi();
   const mirrorContract = useMirrorContract(programId);
+  const { decimals } = useWrappedVaraBalance();
 
   const addMyActivity = useAddMyActivity();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [amount, setAmount] = useState('10');
 
   const approveFn = async (value: bigint) => {
     if (!api) throw new Error('API is not initialized');
@@ -37,8 +46,24 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
   const approve = useMutation({ mutationFn: approveFn });
   const topUp = useMutation({ mutationFn: topUpFn });
 
-  const handleClick = () => {
-    const value = parseUnits('10', 12);
+  const handleOpenModal = () => {
+    if (!isEnabled) return;
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    if (approve.isPending || topUp.isPending) return;
+    setIsModalOpen(false);
+  };
+
+  const handleConfirm = () => {
+    const trimmed = amount.trim();
+    if (!trimmed || !decimals) return;
+
+    const value = parseUnits(trimmed, decimals);
+    if (value <= 0n) return;
+
+    setIsModalOpen(false);
 
     approve
       .mutateAsync(value)
@@ -73,16 +98,43 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return 'Top Up';
   };
 
+  const isConfirmDisabled = isLoading || !amount.trim() || isNaN(Number(amount)) || Number(amount) <= 0;
+
   return (
-    <Button
-      size="xs"
-      onClick={handleClick}
-      loadingPosition="start"
-      isLoading={isLoading}
-      variant="secondary"
-      disabled={!isEnabled}>
-      {getButtonText()}
-    </Button>
+    <>
+      <Button
+        size="xs"
+        onClick={handleOpenModal}
+        loadingPosition="start"
+        isLoading={isLoading}
+        variant="secondary"
+        disabled={!isEnabled}>
+        {getButtonText()}
+      </Button>
+
+      {isModalOpen && (
+        <Modal
+          heading="Top Up Executable Balance"
+          close={handleCloseModal}
+          size="small"
+          action={
+            <Button
+              size="xs"
+              variant="default"
+              onClick={handleConfirm}
+              disabled={isConfirmDisabled}
+              isLoading={isLoading}>
+              Confirm
+            </Button>
+          }>
+          <div className={styles.amountRow}>
+            <span>Amount:</span>
+            <Input type="number" min={0} step="1" value={amount} onChange={(event) => setAmount(event.target.value)} />
+            <span>VARA</span>
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
 
