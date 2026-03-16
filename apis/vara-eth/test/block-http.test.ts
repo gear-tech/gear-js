@@ -1,6 +1,11 @@
 import { createPublicClient, webSocket } from 'viem';
 
 import { createVaraEthApi, VaraEthApi, HttpVaraEthProvider } from '../src';
+import {
+  expectBlockRequestEvent,
+  expectHex,
+  expectStateTransition,
+} from './common';
 import { config } from './config';
 
 let provider: HttpVaraEthProvider;
@@ -19,12 +24,32 @@ afterAll(async () => {
 });
 
 describe('Block methods', () => {
-  test('get header', async () => {
+  test('should return block header with correct field types', async () => {
     const header = await api.query.block.header();
 
-    expect(header).toHaveProperty(['hash']);
-    expect(header).toHaveProperty(['height']);
-    expect(header).toHaveProperty(['timestamp']);
-    expect(header).toHaveProperty(['parentHash']);
+    expectHex(header.hash);
+    expect(typeof header.height).toBe('number');
+    expect(typeof header.timestamp).toBe('number');
+    expectHex(header.parentHash);
+  });
+
+  test('should return block events array with correct shapes', async () => {
+    const events = await api.query.block.events();
+
+    expect(Array.isArray(events)).toBe(true);
+
+    for (const event of events) {
+      expectBlockRequestEvent(event);
+    }
+  });
+
+  test('should return state transitions array with correct field types', async () => {
+    const outcome = await api.query.block.outcome();
+
+    expect(Array.isArray(outcome)).toBe(true);
+
+    for (const transition of outcome) {
+      expectStateTransition(transition);
+    }
   });
 });

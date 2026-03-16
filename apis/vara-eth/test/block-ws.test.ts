@@ -1,6 +1,7 @@
 import { createPublicClient, webSocket } from 'viem';
 
 import { createVaraEthApi, VaraEthApi, WsVaraEthProvider } from '../src';
+import { expectHex } from './common';
 import { config } from './config';
 
 let provider: WsVaraEthProvider;
@@ -19,12 +20,12 @@ afterAll(async () => {
 });
 
 describe('Block methods', () => {
-  test('get header', async () => {
+  test('should return block header with correct field types', async () => {
     const header = await api.query.block.header();
 
-    expect(header).toHaveProperty(['hash']);
-    expect(header).toHaveProperty(['height']);
-    expect(header).toHaveProperty(['timestamp']);
-    expect(header).toHaveProperty(['parentHash']);
+    expectHex(header.hash);
+    expect(typeof header.height).toBe('number');
+    expect(typeof header.timestamp).toBe('number');
+    expectHex(header.parentHash);
   });
 });

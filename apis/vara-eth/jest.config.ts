@@ -25,7 +25,7 @@ const config: Config.InitialOptions = {
       },
     ],
   },
-  testSequencer: './test/testSequencer.js',
+  testSequencer: './test/setup/testSequencer.js',
   forceExit: true,
   testTimeout: 15_000,
 };

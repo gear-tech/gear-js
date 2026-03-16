@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.3.0]
 
 ### Added
 
@@ -15,6 +15,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `DynamicSigner` adapter class that resolves the active signer lazily at call time via a getter function — useful in reactive environments (e.g. React) where the wallet can change without recreating the API instance in https://github.com/gear-tech/gear-js/pull/2352
 - `createVaraEthApi()` factory function that constructs and initializes `EthereumClient` internally, returning a ready-to-use `VaraEthApi` instance in https://github.com/gear-tech/gear-js/pull/2352
 - `VaraEthApi.eth` getter that exposes the underlying `EthereumClient` for direct contract access in https://github.com/gear-tech/gear-js/pull/2352
+- `api.query.block.events()` method to fetch block request events (optionally by block hash) in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.block.outcome()` method to fetch state transitions produced by a block (optionally by block hash) in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.code.getOriginal()` method to fetch original Wasm bytecode by code ID in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readQueue()` method to fetch the message queue for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readWaitlist()` method to fetch the waitlist for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readStash()` method to fetch the dispatch stash for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readMailbox()` method to fetch the mailbox for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readFullState()` method to fetch the complete program state including all queues in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readPages()` method to fetch memory page hashes for a program in https://github.com/gear-tech/gear-js/pull/2385
+- `api.query.program.readPageData()` method to fetch raw memory page data by page hash in https://github.com/gear-tech/gear-js/pull/2385
+- `BlockRequestEvent`, `StateTransition`, `ValueClaim`, `OutgoingMessage` types for block query results in https://github.com/gear-tech/gear-js/pull/2385
+- `FullProgramState`, `MessageQueue`, `Waitlist`, `DispatchStash`, `Mailbox`, `MemoryPages` types for program query results in https://github.com/gear-tech/gear-js/pull/2385
+- `Dispatch`, `DispatchKind`, `PayloadLookup`, `MessageDetails`, `ReplyDetails`, `SignalDetails`, `ContextStore`, `Expiring` types for message and dispatch structures in https://github.com/gear-tech/gear-js/pull/2385
 
 ### Changed
 
@@ -22,6 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `InjectedTxPromise.code` now returns a `ReplyCode` instance instead of raw `Hex` value in https://github.com/gear-tech/gear-js/pull/2338
 - `InjectedTx.sign()` now accepts `IMessageSigner` instead of `ISigner` — Snap adapters only need to implement `signMessage` and `getAddress` in https://github.com/gear-tech/gear-js/pull/2352
 - `EthereumClient`, `TxManager`, and base contract clients now require `ITransactionSigner` instead of `ISigner` in https://github.com/gear-tech/gear-js/pull/2352
+- `ProgramState` extended with `stashHash`, `balance` (`bigint`), and `executableBalance` (`bigint`) fields in https://github.com/gear-tech/gear-js/pull/2385
+- `Dispatch.messageType` renamed from `message_type` to camelCase `messageType` to match HTTP provider's automatic key transformation in https://github.com/gear-tech/gear-js/pull/2385
 
 ### Deprecated
 
