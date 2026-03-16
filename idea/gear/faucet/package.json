@@ -23,7 +23,6 @@
     "express": "5.2.0",
     "express-rate-limit": "8.0.1",
     "gear-idea-common": "1.3.25",
-    "hcaptcha": "0.1.1",
     "pg": "8.16.3",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",
