@@ -6,11 +6,11 @@ export function transformMaybeHash(value: any): MaybeHash {
   if (value == undefined) {
     return null;
   }
+  if (value === 'Empty') {
+    return null;
+  }
   if (typeof value === 'string') {
     return value as Hash;
-  }
-  if (value == 'Empty') {
-    return null;
   }
   if (typeof value !== 'object') {
     return value;

@@ -10,6 +10,12 @@ import {
   Waitlist,
 } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
+import { normalizeDispatch } from '../../util/normalize.js';
+
+function normalizeProgramBalances(state: any): void {
+  state.balance = BigInt(state.balance);
+  state.executableBalance = BigInt(state.executableBalance);
+}
 
 export class ProgramQueries {
   constructor(private _provider: IVaraEthProvider) {}
@@ -33,19 +39,27 @@ export class ProgramQueries {
       transformMaybeHashes(state.program.Active, ['allocationsHash', 'pagesHash']);
     }
 
+    normalizeProgramBalances(state);
+
     return state;
   }
 
   async readQueue(hash: string): Promise<MessageQueue> {
-    return this._provider.send<MessageQueue>('program_readQueue', [hash]);
+    const queue = await this._provider.send<any[]>('program_readQueue', [hash]);
+    queue.forEach(normalizeDispatch);
+    return queue;
   }
 
   async readWaitlist(hash: string): Promise<Waitlist> {
-    return this._provider.send<Waitlist>('program_readWaitlist', [hash]);
+    const waitlist = await this._provider.send<any>('program_readWaitlist', [hash]);
+    for (const entry of Object.values(waitlist.inner) as any[]) normalizeDispatch(entry.value);
+    return waitlist;
   }
 
   async readStash(hash: string): Promise<DispatchStash> {
-    return this._provider.send<DispatchStash>('program_readStash', [hash]);
+    const stash = await this._provider.send<any>('program_readStash', [hash]);
+    for (const entry of Object.values(stash) as any[]) normalizeDispatch(entry.value[0]);
+    return stash;
   }
 
   async readMailbox(hash: string): Promise<Mailbox> {
@@ -53,10 +67,22 @@ export class ProgramQueries {
   }
 
   async readFullState(hash: string): Promise<FullProgramState> {
-    const state = await this._provider.send<FullProgramState>('program_readFullState', [hash]);
+    const state = await this._provider.send<any>('program_readFullState', [hash]);
 
     if ('Active' in state.program) {
       transformMaybeHashes(state.program.Active, ['allocationsHash', 'pagesHash']);
+    }
+
+    normalizeProgramBalances(state);
+
+    state.canonicalQueue?.forEach(normalizeDispatch);
+    state.injectedQueue?.forEach(normalizeDispatch);
+
+    if (state.waitlist) {
+      for (const entry of Object.values(state.waitlist.inner) as any[]) normalizeDispatch(entry.value);
+    }
+    if (state.stash) {
+      for (const entry of Object.values(state.stash) as any[]) normalizeDispatch(entry.value[0]);
     }
 
     return state;

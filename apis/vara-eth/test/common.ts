@@ -14,7 +14,7 @@ export const waitNBlocks = async (count: number) =>
 /** Asserts value is a `0x`-prefixed hex string. */
 export const expectHex = (value: unknown) => {
   expect(typeof value).toBe('string');
-  expect(value as string).toMatch(/^0x[0-9a-f]*/i);
+  expect(value as string).toMatch(/^0x[0-9a-f]+$/i);
 };
 
 /**
@@ -25,7 +25,7 @@ export const expectNumeric = (value: unknown) => {
   expect(['number', 'bigint']).toContain(typeof value);
 };
 
-/** Asserts value is null or a `{ hash: string; len: number }` MaybeHash. */
+/** Asserts value is null or a hash. */
 export const expectMaybeHash = (value: unknown) => {
   if (value === null) return;
   expect(typeof value).toBe('string');

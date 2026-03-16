@@ -226,7 +226,7 @@ describe('balance', () => {
 
     const state = await api.query.program.readState(hash);
 
-    expect(state).toHaveProperty(['executableBalance'], 10 * 1e12);
+    expect(state).toHaveProperty(['executableBalance'], BigInt(10 * 1e12));
   });
 });
 
