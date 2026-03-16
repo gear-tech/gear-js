@@ -8,6 +8,8 @@ import { Button } from '@/components';
 import { Input } from '@/components/form/input';
 import { Modal } from '@/components/ui/modal';
 
+import styles from './top-up-exec-balance.module.scss';
+
 type Props = {
   programId: Hex;
   isEnabled: boolean;
@@ -96,7 +98,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return 'Top Up';
   };
 
-  const isConfirmDisabled = isLoading || !amount.trim() || Number(amount) <= 0;
+  const isConfirmDisabled = isLoading || !amount.trim() || isNaN(Number(amount)) || Number(amount) <= 0;
 
   return (
     <>
@@ -125,7 +127,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
               Confirm
             </Button>
           }>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className={styles.amountRow}>
             <span>Amount:</span>
             <Input type="number" min={0} step="1" value={amount} onChange={(event) => setAmount(event.target.value)} />
             <span>VARA</span>
