@@ -152,7 +152,7 @@ describe('Program Queries', () => {
         const [injected1, injected2, injected3] = await Promise.all(
           [0, 1, 2].map(() => api.createInjectedTransaction({ destination: programId, payload: PAYLOAD })),
         );
-        let startingNonce = await publicClient.getTransactionCount({
+        const startingNonce = await publicClient.getTransactionCount({
           address: await signer.getAddress(),
           blockTag: 'pending',
         });
