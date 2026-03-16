@@ -29,8 +29,6 @@ export const expectNumeric = (value: unknown) => {
 export const expectMaybeHash = (value: unknown) => {
   if (value === null) return;
   expect(typeof value).toBe('string');
-  // expect(typeof (value as any).hash).toBe('string');
-  // expect(typeof (value as any).len).toBe('number');
 };
 
 /** Asserts a Dispatch object has the expected shape and field types. */

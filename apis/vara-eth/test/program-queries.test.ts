@@ -50,7 +50,6 @@ describe('Program Queries', () => {
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();
-      console.log(`Program id: ${programId}`);
 
       expect(programId).toBeDefined();
 
@@ -70,9 +69,6 @@ describe('Program Queries', () => {
         }
 
         const ids = await api.query.program.getIds();
-        if (!ids.includes(programId)) {
-          process.exit(1);
-        }
         expect(ids).toContain(programId);
       },
       config.blockTime * 20_000,
@@ -403,13 +399,11 @@ describe('Program Queries', () => {
         if (!('Active' in state.program) || !state.program.Active.pagesHash) return;
 
         const pages = await api.query.program.readPages(state.program.Active.pagesHash);
-        console.log(pages);
         const pageHash = pages.find((p) => p !== null);
 
         if (!pageHash) return;
 
         const data = await api.query.program.readPageData(pageHash);
-        console.log(data);
         expectHex(data);
         expect(data.length).toBeGreaterThan(2);
       },
