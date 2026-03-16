@@ -1,8 +1,8 @@
 import type { Address, Hash, Hex } from 'viem';
 
 import type { ReplyCode } from '../../errors/index.js';
-import { Dispatch, MessageId } from './message.js';
-import { Expiring } from './common.js';
+import type { Dispatch, MessageId } from './message.js';
+import type { Expiring } from './common.js';
 
 export interface ReplyInfo {
   readonly payload: Hex;
@@ -14,9 +14,10 @@ export interface ProgramState {
   readonly program: Program;
   readonly queueHash: MaybeHash;
   readonly waitlistHash: MaybeHash;
+  readonly stashHash: MaybeHash;
   readonly mailboxHash: MaybeHash;
-  readonly balance: number;
-  readonly executableBalance: number;
+  readonly balance: bigint;
+  readonly executableBalance: bigint;
 }
 
 export type Program = ActiveProgram | ExitedProgram | TerminatedProgram;
@@ -38,7 +39,9 @@ interface TerminatedProgram {
   readonly Terminated: string;
 }
 
-export type MaybeHash = { readonly hash: string; readonly len: number } | null;
+export type MaybeHash = Hash | null;
+
+export type MessageQueue = Dispatch[];
 
 export interface Waitlist {
   readonly inner: Record<MessageId, Expiring<Dispatch>>;
@@ -52,10 +55,12 @@ export interface Mailbox {
   readonly changed: boolean;
 }
 
+export type MemoryPages = (Hex | null)[];
+
 export interface FullProgramState {
   readonly program: Program;
-  readonly canonicalQueue: Array<Dispatch>;
-  readonly injectedQueue: Array<Dispatch>;
+  readonly canonicalQueue: MessageQueue | null;
+  readonly injectedQueue: MessageQueue | null;
   readonly waitlist: Waitlist | null;
   readonly stash: DispatchStash | null;
   readonly mailbox: Mailbox | null;

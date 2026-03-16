@@ -1,12 +1,12 @@
 import type { Hex, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { anvil } from 'viem/chains';
 
 import { MirrorClient, VaraEthApi, WsVaraEthProvider, createVaraEthApi, getMirrorClient } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { hasProps } from './common';
+import { expectDispatch, expectHex, expectMaybeHash, expectNumeric, hasProps } from './common';
 import { config } from './config';
-import { anvil } from 'viem/chains';
 
 let api: VaraEthApi;
 let publicClient: PublicClient;
@@ -43,7 +43,7 @@ afterAll(async () => {
   await api.provider.disconnect();
 });
 
-describe('Program Quries', () => {
+describe('Program Queries', () => {
   describe('setup', () => {
     test('should create program', async () => {
       const tx = await api.eth.router.createProgram(config.codeId);
@@ -221,59 +221,199 @@ describe('Program Quries', () => {
 
         expect(stateHashes.length).toBeGreaterThanOrEqual(5);
         for (const hash of stateHashes) {
-          expect(typeof hash).toBe('string');
-          expect(hash.startsWith('0x')).toBe(true);
+          expectHex(hash);
         }
 
         expect(messageIds).toHaveLength(10);
         for (const id of messageIds) {
-          expect(typeof id).toBe('string');
-          expect(id.startsWith('0x')).toBe(true);
+          expectHex(id);
         }
       },
       config.longRunningTestTimeout,
     );
 
     test('should unsubscribe from StateChanged event', () => {
-      console.log(stateHashes);
       unwatch();
     });
   });
 
-  describe('read full state', () => {
-    test('read full state (1st hash)', async () => {
+  describe('query methods', () => {
+    test('should return array of program IDs including created program', async () => {
+      const ids = await api.query.program.getIds();
+
+      expect(Array.isArray(ids)).toBe(true);
+      for (const id of ids) expectHex(id);
+      expect(ids).toContain(programId);
+    });
+
+    test('should return hex code ID matching uploaded code', async () => {
+      const codeId = await api.query.program.codeId(programId);
+
+      expectHex(codeId);
+      expect(codeId).toBe(config.codeId);
+    });
+
+    test('should return program state with MaybeHash fields', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
+
+      expect(typeof state.program).toBe('object');
+      expectMaybeHash(state.queueHash);
+      expectMaybeHash(state.waitlistHash);
+      expectMaybeHash(state.stashHash);
+      expectMaybeHash(state.mailboxHash);
+      expectNumeric(state.balance);
+      expectNumeric(state.executableBalance);
+    });
+
+    test('should return full program state with correct field types', async () => {
       const state = await api.query.program.readFullState(stateHashes[0]);
 
-      console.log(state);
+      expect(typeof state.program).toBe('object');
+      const programVariants = ['Active', 'Exited', 'Terminated'];
+      expect(programVariants.find((v) => v in state.program)).toBeDefined();
+
+      if ('Active' in state.program) {
+        const { Active } = state.program;
+        expectMaybeHash(Active.allocationsHash);
+        expectMaybeHash(Active.pagesHash);
+        expect(typeof Active.memoryInfix).toBe('number');
+        expect(typeof Active.initialized).toBe('boolean');
+      }
+
+      expect(state.canonicalQueue === null || Array.isArray(state.canonicalQueue)).toBe(true);
+      expect(state.injectedQueue === null || Array.isArray(state.injectedQueue)).toBe(true);
+
+      if (state.canonicalQueue !== null) {
+        for (const d of state.canonicalQueue) expectDispatch(d);
+      }
+      if (state.injectedQueue !== null) {
+        for (const d of state.injectedQueue) expectDispatch(d);
+      }
+
+      expect(state.waitlist === null || typeof state.waitlist === 'object').toBe(true);
+      expect(state.stash === null || typeof state.stash === 'object').toBe(true);
+      expect(state.mailbox === null || typeof state.mailbox === 'object').toBe(true);
+
+      if (state.waitlist !== null) {
+        expect(typeof state.waitlist.changed).toBe('boolean');
+        for (const entry of Object.values(state.waitlist.inner)) {
+          expect(typeof entry.expiry).toBe('number');
+          expectDispatch(entry.value);
+        }
+      }
+
+      if (state.stash !== null) {
+        for (const entry of Object.values(state.stash)) {
+          expect(typeof entry.expiry).toBe('number');
+          expect(Array.isArray(entry.value)).toBe(true);
+          expectDispatch(entry.value[0]);
+          expect(entry.value[1] === null || typeof entry.value[1] === 'string').toBe(true);
+        }
+      }
+
+      if (state.mailbox !== null) {
+        expect(typeof state.mailbox.changed).toBe('boolean');
+        for (const hash of Object.values(state.mailbox.inner)) {
+          expectHex(hash);
+        }
+      }
+
+      expectNumeric(state.balance);
+      expectNumeric(state.executableBalance);
     });
-    test('read full state (2nd hash)', async () => {
-      const state = await api.query.program.readFullState(stateHashes[1]);
 
-      console.log(state);
+    test('should return message queue as array of dispatches', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
+
+      if (!state.queueHash) return;
+
+      const queue = await api.query.program.readQueue(state.queueHash);
+
+      expect(Array.isArray(queue)).toBe(true);
+      for (const d of queue) expectDispatch(d);
     });
 
-    test('read full state (3rd hash)', async () => {
-      const state = await api.query.program.readFullState(stateHashes[2]);
+    test('should return waitlist as record of expiring dispatches', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
 
-      console.log(state);
+      if (!state.waitlistHash) return;
+
+      const waitlist = await api.query.program.readWaitlist(state.waitlistHash);
+
+      expect(typeof waitlist).toBe('object');
+      expect(typeof waitlist.changed).toBe('boolean');
+      for (const entry of Object.values(waitlist.inner)) {
+        expect(typeof entry.expiry).toBe('number');
+        expectDispatch(entry.value);
+      }
     });
 
-    test('read full state (4th hash)', async () => {
-      const state = await api.query.program.readFullState(stateHashes[3]);
+    test('should return stash as record of expiring dispatch tuples', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
 
-      console.log(state);
+      if (!state.stashHash) return;
+
+      const stash = await api.query.program.readStash(state.stashHash);
+
+      expect(typeof stash).toBe('object');
+      for (const entry of Object.values(stash)) {
+        expect(typeof entry.expiry).toBe('number');
+        expect(Array.isArray(entry.value)).toBe(true);
+        expectDispatch(entry.value[0]);
+        expect(entry.value[1] === null || typeof entry.value[1] === 'string').toBe(true);
+      }
     });
 
-    test('read full state (5th hash)', async () => {
-      const state = await api.query.program.readFullState(stateHashes[4]);
+    test('should return mailbox as record of hex hashes', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
 
-      console.log(state);
+      if (!state.mailboxHash) return;
+
+      const mailbox = await api.query.program.readMailbox(state.mailboxHash);
+
+      expect(typeof mailbox).toBe('object');
+      expect(typeof mailbox.changed).toBe('boolean');
+      for (const hash of Object.values(mailbox.inner)) {
+        expectHex(hash);
+      }
     });
 
-    test('read full state (6th hash)', async () => {
-      const state = await api.query.program.readFullState(stateHashes[5]);
+    test('should return memory pages as array of 16 nullable hashes', async () => {
+      const state = await api.query.program.readState(stateHashes[0]);
 
-      console.log(state);
+      expect('Active' in state.program).toBeTruthy();
+      if (!('Active' in state.program) || !state.program.Active.pagesHash) return;
+
+      const pages = await api.query.program.readPages(state.program.Active.pagesHash);
+
+      expect(Array.isArray(pages)).toBe(true);
+      expect(pages.length).toBe(16);
+      for (const page of pages) {
+        expect(page === null || typeof page === 'string').toBe(true);
+        if (page !== null) expectHex(page);
+      }
     });
+
+    test.skip(
+      'should return page data as hex string',
+      async () => {
+        const state = await api.query.program.readState(stateHashes[0]);
+
+        expect('Active' in state.program).toBeTruthy();
+        if (!('Active' in state.program) || !state.program.Active.pagesHash) return;
+
+        const pages = await api.query.program.readPages(state.program.Active.pagesHash);
+        console.log(pages);
+        const pageHash = pages.find((p) => p !== null);
+
+        if (!pageHash) return;
+
+        const data = await api.query.program.readPageData(pageHash);
+        console.log(data);
+        expectHex(data);
+        expect(data.length).toBeGreaterThan(2);
+      },
+      config.longRunningTestTimeout,
+    );
   });
 });

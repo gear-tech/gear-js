@@ -44,7 +44,7 @@ export interface Dispatch {
   /// Message previous executions context.
   readonly context: ContextStore | null;
   /// Type of the message.
-  readonly message_type: MessageType;
+  readonly messageType: MessageType;
   /// If to call on eth.
   readonly call: boolean;
 }

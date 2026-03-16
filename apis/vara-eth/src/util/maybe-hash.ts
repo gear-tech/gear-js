@@ -1,8 +1,13 @@
+import { Hash } from 'viem';
+
 import { MaybeHash } from '../types';
 
 export function transformMaybeHash(value: any): MaybeHash {
   if (value == undefined) {
     return null;
+  }
+  if (typeof value === 'string') {
+    return value as Hash;
   }
   if (value == 'Empty') {
     return null;
@@ -10,7 +15,6 @@ export function transformMaybeHash(value: any): MaybeHash {
   if (typeof value !== 'object') {
     return value;
   }
-
   return value.Hash as MaybeHash;
 }
 

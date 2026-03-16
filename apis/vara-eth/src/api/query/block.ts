@@ -1,4 +1,4 @@
-import { BlockHeader, IVaraEthProvider } from '../../types/index.js';
+import { BlockHeader, BlockRequestEvent, IVaraEthProvider, StateTransition } from '../../types/index.js';
 
 export class Block {
   constructor(private _provider: IVaraEthProvider) {}
@@ -12,5 +12,15 @@ export class Block {
       hash: response[0],
       ...response[1],
     };
+  }
+
+  async events(hash?: string): Promise<BlockRequestEvent[]> {
+    const parameters = hash ? [hash] : [];
+    return this._provider.send<BlockRequestEvent[]>('block_events', parameters);
+  }
+
+  async outcome(hash?: string): Promise<StateTransition[]> {
+    const parameters = hash ? [hash] : [];
+    return this._provider.send<StateTransition[]>('block_outcome', parameters);
   }
 }
