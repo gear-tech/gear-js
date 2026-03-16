@@ -29,6 +29,7 @@ type SendMessageActivity = ReceiptActivity & {
   type: typeof TransactionTypes.programMessage;
   serviceName: string;
   messageName: string;
+  to: string;
   params?: Record<string, unknown>;
 };
 
