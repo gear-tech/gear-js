@@ -7,4 +7,8 @@ export class CodeQueries {
   async getOriginal(id: Hex): Promise<Hex> {
     return this._provider.send<Hex>('code_getOriginal', [id]);
   }
+
+  async getInstrumented(runtimeId: number, codeId: Hex): Promise<Hex> {
+    return this._provider.send<Hex>('code_getInstrumented', [runtimeId, codeId]);
+  }
 }

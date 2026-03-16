@@ -18,7 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `api.query.block.events()` method to fetch block request events (optionally by block hash) in https://github.com/gear-tech/gear-js/pull/2385
 - `api.query.block.outcome()` method to fetch state transitions produced by a block (optionally by block hash) in https://github.com/gear-tech/gear-js/pull/2385
 - `api.query.code.getOriginal()` method to fetch original Wasm bytecode by code ID in https://github.com/gear-tech/gear-js/pull/2385
-- `api.query.code.getInstrumented()` method to fetch instrumented Wasm bytecode by runtime ID and code ID in https://github.com/gear-tech/gear-js/pull/2385
 - `api.query.program.readQueue()` method to fetch the message queue for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
 - `api.query.program.readWaitlist()` method to fetch the waitlist for a program state hash in https://github.com/gear-tech/gear-js/pull/2385
 - `api.query.program.readStash()` method to fetch the dispatch stash for a program state hash in https://github.com/gear-tech/gear-js/pull/2385

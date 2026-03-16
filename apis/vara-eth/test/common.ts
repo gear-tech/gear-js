@@ -19,7 +19,8 @@ export const expectHex = (value: unknown) => {
 
 /**
  * Asserts value is numeric (number or bigint).
- * JSON-RPC returns plain numbers; bigint is accepted for future-proofing.
+ * Fields normalized in the query layer (balances, dispatch values, block outcomes) are bigint;
+ * un-normalized fields from JSON-RPC are plain numbers.
  */
 export const expectNumeric = (value: unknown) => {
   expect(['number', 'bigint']).toContain(typeof value);

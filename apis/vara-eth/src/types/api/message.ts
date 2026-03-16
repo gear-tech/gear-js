@@ -1,4 +1,4 @@
-import { Address, Hash, Hex } from 'viem';
+import type { Address, Hash, Hex } from 'viem';
 
 import { ReplyCode } from '../../errors/reply-code.js';
 

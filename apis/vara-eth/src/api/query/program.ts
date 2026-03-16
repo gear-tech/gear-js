@@ -51,14 +51,18 @@ export class ProgramQueries {
   }
 
   async readWaitlist(hash: string): Promise<Waitlist> {
-    const waitlist = await this._provider.send<any>('program_readWaitlist', [hash]);
-    for (const entry of Object.values(waitlist.inner) as any[]) normalizeDispatch(entry.value);
+    const waitlist = await this._provider.send<Waitlist>('program_readWaitlist', [hash]);
+    for (const entry of Object.values(waitlist.inner)) {
+      normalizeDispatch(entry.value);
+    }
     return waitlist;
   }
 
   async readStash(hash: string): Promise<DispatchStash> {
-    const stash = await this._provider.send<any>('program_readStash', [hash]);
-    for (const entry of Object.values(stash) as any[]) normalizeDispatch(entry.value[0]);
+    const stash = await this._provider.send<DispatchStash>('program_readStash', [hash]);
+    for (const entry of Object.values(stash)) {
+      normalizeDispatch(entry.value[0]);
+    }
     return stash;
   }
 
@@ -67,7 +71,7 @@ export class ProgramQueries {
   }
 
   async readFullState(hash: string): Promise<FullProgramState> {
-    const state = await this._provider.send<any>('program_readFullState', [hash]);
+    const state = await this._provider.send<FullProgramState>('program_readFullState', [hash]);
 
     if ('Active' in state.program) {
       transformMaybeHashes(state.program.Active, ['allocationsHash', 'pagesHash']);
@@ -79,10 +83,10 @@ export class ProgramQueries {
     state.injectedQueue?.forEach(normalizeDispatch);
 
     if (state.waitlist) {
-      for (const entry of Object.values(state.waitlist.inner) as any[]) normalizeDispatch(entry.value);
+      for (const entry of Object.values(state.waitlist.inner)) normalizeDispatch(entry.value);
     }
     if (state.stash) {
-      for (const entry of Object.values(state.stash) as any[]) normalizeDispatch(entry.value[0]);
+      for (const entry of Object.values(state.stash)) normalizeDispatch(entry.value[0]);
     }
 
     return state;

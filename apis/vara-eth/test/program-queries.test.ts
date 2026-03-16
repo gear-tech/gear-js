@@ -390,6 +390,8 @@ describe('Program Queries', () => {
       }
     });
 
+    // Skipped: program_readPageData doesn't respond.
+    // TODO: figure it out
     test.skip(
       'should return page data as hex string',
       async () => {

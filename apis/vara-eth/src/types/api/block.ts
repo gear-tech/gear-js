@@ -1,3 +1,5 @@
+import type { MessageDetails, ReplyDetails } from './message.js';
+
 export interface BlockHeader {
   readonly hash: string;
   readonly height: number;
@@ -86,7 +88,7 @@ export interface OutgoingMessage {
   readonly destination: string;
   readonly payload: number[];
   readonly value: bigint;
-  readonly replyDetails: unknown | null;
+  readonly replyDetails: ReplyDetails | null;
   readonly call: boolean;
 }
 

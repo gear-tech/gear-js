@@ -13,7 +13,7 @@ export function transformMaybeHash(value: any): MaybeHash {
     return value as Hash;
   }
   if (typeof value !== 'object') {
-    return value;
+    throw new Error(`Unexpected MaybeHash value: ${value}`);
   }
   return value.Hash as MaybeHash;
 }
