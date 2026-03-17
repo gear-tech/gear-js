@@ -98,6 +98,8 @@ const Program = () => {
   if (!program || !programState || !codeId || isUndefined(decimals))
     return <ChainEntity.NotFound entity="program" id={programId} />;
 
+  const hasExecutableBalance = BigInt(programState.executableBalance) > 0n;
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -133,6 +135,7 @@ const Program = () => {
             <TopUpExecBalance
               programId={programId}
               isEnabled={!watchBalance.isPending}
+              hasExecutableBalance={hasExecutableBalance}
               onSuccess={handleSuccessfulTopUp}
             />
           </div>
@@ -148,6 +151,7 @@ const Program = () => {
             programId={programId}
             idl={idl}
             init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
+            hasExecutableBalance={hasExecutableBalance}
           />
         ) : (
           <div className={styles.emptyState}>

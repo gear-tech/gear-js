@@ -5,3 +5,13 @@
 .list {
   overflow-y: auto;
 }
+
+.constructors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.constructorsNotice {
+  color: rgb(168, 245, 147);
+}

@@ -14,9 +14,10 @@ type Props = {
   programId: Hex;
   isEnabled: boolean;
   onSuccess: (value: bigint) => void;
+  hasExecutableBalance: boolean;
 };
 
-const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
+const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalance }: Props) => {
   const { data: api } = useApi();
   const mirrorContract = useMirrorContract(programId);
   const { decimals } = useWrappedVaraBalance();
@@ -107,7 +108,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
         onClick={handleOpenModal}
         loadingPosition="start"
         isLoading={isLoading}
-        variant="secondary"
+        variant={hasExecutableBalance ? 'secondary' : 'default'}
         disabled={!isEnabled}>
         {getButtonText()}
       </Button>
