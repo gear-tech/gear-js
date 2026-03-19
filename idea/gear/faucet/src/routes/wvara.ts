@@ -1,5 +1,6 @@
 import { createLogger } from 'gear-idea-common';
 import { Request, Response } from 'express';
+import { Hex } from 'viem';
 
 import { rateLimitMiddleware } from './middleware';
 import { RequestService } from '../services';
@@ -10,9 +11,17 @@ import config from '../config';
 const logger = createLogger('wvara-router');
 
 export class WvaraRouter extends BaseRouter {
+  private _wvaraAddress: Hex;
+
   constructor(private _requestService: RequestService) {
     super();
     this.router.post('/request', rateLimitMiddleware, this._handler.bind(this));
+
+    if (!config.wvara.address) {
+      throw new Error('WVARA_ADDRESS is not configured');
+    }
+
+    this._wvaraAddress = config.wvara.address;
   }
 
   private async _handler({ body: { address } }: Request, res: Response) {
@@ -20,7 +29,7 @@ export class WvaraRouter extends BaseRouter {
       return res.status(400).send('User address is required');
     }
 
-    const target = config.wvara.address;
+    const target = this._wvaraAddress;
 
     try {
       await this._requestService.newRequest(address, target, FaucetType.WVara);

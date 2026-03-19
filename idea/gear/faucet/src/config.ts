@@ -13,12 +13,11 @@ const getEnv = (envName: string, defaultValue?: string): string => {
   return env as string;
 };
 
-const getPrivateKey = (envName: string) => {
-  const key = getEnv(envName);
-  if (!key.startsWith('0x')) {
-    throw new Error(`${envName} must start with 0x`);
-  }
-  return key as Hex;
+const getOptionalHex = (envName: string): Hex | undefined => {
+  const val = process.env[envName];
+  if (!val) return undefined;
+  if (!val.startsWith('0x')) throw new Error(`${envName} must start with 0x`);
+  return val as Hex;
 };
 
 export default {
@@ -33,13 +32,13 @@ export default {
     providerAddresses: getEnv('VARA_PROVIDER', 'ws://127.0.0.1:9944').split(','),
     accountSeed: getEnv('VARA_ACCOUNT_SEED', '//Alice'),
     balanceToTransfer: Number(getEnv('VARA_TRANSFER_VALUE', '1000')),
-    genesis: getEnv('VARA_GENESIS', '0x<vara_genesis>'),
+    genesis: getOptionalHex('VARA_GENESIS'),
     cronTime: getEnv('VARA_PROCESSOR_CRON_TIME', '*/6 * * * * *'),
   },
   bridge: {
     tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
-    ethProvider: getEnv('ETH_PROVIDER', 'wss://<eth_provider>'),
-    ethPrivateKey: getPrivateKey('ETH_PRIVATE_KEY'),
+    ethProvider: process.env.ETH_PROVIDER,
+    ethPrivateKey: getOptionalHex('ETH_PRIVATE_KEY'),
     erc20Contracts: ((process.env.ETH_ERC20_CONTRACTS || undefined)?.split(',') || []).map((data) => {
       const [addr, value] = data.split(':');
       assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
@@ -48,10 +47,7 @@ export default {
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   wvara: {
-    address: getEnv('WVARA_ADDRESS', '0x<address>') as Hex,
-    amount: getEnv('WVARA_AMOUNT', '1000'),
-    privateKey: getPrivateKey('WVARA_PRIVATE_KEY'),
-    cronTime: getEnv('WVARA_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
+    address: getOptionalHex('WVARA_ADDRESS'),
   },
   server: {
     port: parseInt(getEnv('PORT', '3010')),

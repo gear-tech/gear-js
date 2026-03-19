@@ -35,6 +35,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     const chainId = await this._publicClient.getChainId();
     logger.info(`Public client created. Chain ID: ${chainId}`);
 
+    if (!config.bridge.ethPrivateKey) throw new Error('ETH_PRIVATE_KEY is required');
     this._account = privateKeyToAccount(config.bridge.ethPrivateKey);
     logger.info('Account created', { addr: this._account.address });
 
@@ -58,7 +59,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
   }
 
   protected get type(): FaucetType[] {
-    return [FaucetType.BridgeErc20];
+    return [FaucetType.BridgeErc20, FaucetType.WVara];
   }
 
   protected async handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }> {
