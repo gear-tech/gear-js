@@ -15,13 +15,13 @@ export class RequestService {
   private _requesting: Set<string>;
 
   constructor(
-    private _varaTestnetGenesis: string,
+    private _varaTestnetGenesis: string | undefined,
     private _lastSeenService: LastSeenService,
   ) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
     this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
-    this._targets.push(_varaTestnetGenesis.toLowerCase());
-    this._targets.push(config.wvara.address.toLowerCase());
+    if (_varaTestnetGenesis) this._targets.push(_varaTestnetGenesis.toLowerCase());
+    if (config.wvara.address) this._targets.push(config.wvara.address.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
   }
