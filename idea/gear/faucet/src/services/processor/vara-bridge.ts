@@ -52,6 +52,10 @@ export class VaraBridgeProcessor extends FaucetProcessor {
       this._contracts.set(address, parseUnits(value, decimals));
       logger.info(`Contract added`, { address, value: this._contracts.get(address) });
     }
+
+    if (config.wvara.address && !this._contracts.has(config.wvara.address.toLowerCase())) {
+      throw new Error('WVARA_ADDRESS is configured but is not present in ETH_ERC20_CONTRACTS');
+    }
   }
 
   protected get cronInterval(): string {
@@ -71,7 +75,8 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     for (const { id, target, address } of requests) {
       const value = this._contracts.get(target);
       if (!value) {
-        logger.error(`Contract not found for target ${target}. Skipping request ${id}`);
+        logger.error(`Contract not found for target ${target}. Failing request ${id}`);
+        fail.push(id);
         continue;
       }
 

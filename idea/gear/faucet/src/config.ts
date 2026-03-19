@@ -17,7 +17,7 @@ const getOptionalHex = (envName: string): Hex | undefined => {
   const val = process.env[envName];
   if (!val) return undefined;
   if (!val.startsWith('0x')) throw new Error(`${envName} must start with 0x`);
-  return val as Hex;
+  return val.toLowerCase() as Hex;
 };
 
 export default {
