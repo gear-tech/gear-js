@@ -16,3 +16,4 @@ export { LinkButton } from './link-button';
 export { PageContainer } from './page-container';
 export { ChainEntity } from './chain-entity';
 export { Skeleton } from './skeleton';
+export { ActionButton } from './action-button';

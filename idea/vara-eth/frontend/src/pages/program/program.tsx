@@ -98,7 +98,7 @@ const Program = () => {
   if (!program || !programState || !codeId || isUndefined(decimals))
     return <ChainEntity.NotFound entity="program" id={programId} />;
 
-  const hasExecutableBalance = BigInt(programState.executableBalance) > 0n;
+  const hasExecutableBalance = programState.executableBalance > 0;
 
   return (
     <div className={styles.container}>
@@ -150,7 +150,12 @@ const Program = () => {
           <SailsProgramActions
             programId={programId}
             idl={idl}
-            init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
+            init={{
+              isRequired: !isInitialized,
+              isEnabled: hasExecutableBalance && !watchInit.isPending,
+              tooltip: hasExecutableBalance ? '' : 'Executable balance top up is required',
+              onSuccess: handleSuccessfulInit,
+            }}
             hasExecutableBalance={hasExecutableBalance}
           />
         ) : (

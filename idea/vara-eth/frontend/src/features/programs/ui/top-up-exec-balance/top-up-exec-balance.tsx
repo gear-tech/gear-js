@@ -4,9 +4,8 @@ import { parseUnits, Hex } from 'viem';
 
 import { useMirrorContract, useApi, useWrappedVaraBalance } from '@/app/api';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
-import { Button } from '@/components';
+import { ActionButton, Button, Modal } from '@/components';
 import { Input } from '@/components/form/input';
-import { Modal } from '@/components/ui/modal';
 
 import styles from './top-up-exec-balance.module.scss';
 
@@ -17,17 +16,10 @@ type Props = {
   hasExecutableBalance: boolean;
 };
 
-const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalance }: Props) => {
+function useApprove(programId: Hex) {
   const { data: api } = useApi();
-  const mirrorContract = useMirrorContract(programId);
-  const { decimals } = useWrappedVaraBalance();
 
-  const addMyActivity = useAddMyActivity();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [amount, setAmount] = useState('10');
-
-  const approveFn = async (value: bigint) => {
+  const approve = async (value: bigint) => {
     if (!api) throw new Error('API is not initialized');
 
     const tx = await api.eth.wvara.approve(programId, value);
@@ -35,8 +27,13 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
     return tx.sendAndWaitForReceipt();
   };
 
-  const topUpFn = async (value: bigint) => {
-    if (!api) throw new Error('API is not initialized');
+  return { ...useMutation({ mutationFn: approve }), isLoading: !api };
+}
+
+function useTopUp(programId: Hex) {
+  const mirrorContract = useMirrorContract(programId);
+
+  const topUp = async (value: bigint) => {
     if (!mirrorContract) throw new Error('Mirror contract is not found');
 
     const tx = await mirrorContract.executableBalanceTopUp(value);
@@ -44,8 +41,19 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
     return tx.sendAndWaitForReceipt();
   };
 
-  const approve = useMutation({ mutationFn: approveFn });
-  const topUp = useMutation({ mutationFn: topUpFn });
+  return { ...useMutation({ mutationFn: topUp }), isLoading: !mirrorContract };
+}
+
+const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalance }: Props) => {
+  const approve = useApprove(programId);
+  const topUp = useTopUp(programId);
+  const { decimals } = useWrappedVaraBalance();
+  const addMyActivity = useAddMyActivity();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [amount, setAmount] = useState('10');
+
+  const isLoading = approve.isLoading || topUp.isLoading || approve.isPending || topUp.isPending;
 
   const handleOpenModal = () => {
     if (!isEnabled) return;
@@ -90,8 +98,6 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
       .catch((error) => console.error(error));
   };
 
-  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
-
   const getButtonText = () => {
     if (approve.isPending) return 'Approving';
     if (topUp.isPending) return 'Topping Up';
@@ -103,7 +109,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
 
   return (
     <>
-      <Button
+      <ActionButton
         size="xs"
         onClick={handleOpenModal}
         loadingPosition="start"
@@ -111,7 +117,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
         variant={hasExecutableBalance ? 'secondary' : 'default'}
         disabled={!isEnabled}>
         {getButtonText()}
-      </Button>
+      </ActionButton>
 
       {isModalOpen && (
         <Modal

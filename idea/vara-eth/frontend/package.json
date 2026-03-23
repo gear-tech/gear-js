@@ -10,6 +10,7 @@
     "clean": "echo \"clean varaeth-idea-frontend\" && rm -rf dist"
   },
   "dependencies": {
+    "@base-ui/react": "1.2.0",
     "@gear-js/sails-payload-form": "workspace:*",
     "@hookform/resolvers": "5.2.2",
     "@reown/appkit": "1.8.19",
