@@ -15,11 +15,12 @@ type TableColumn<T> = {
 };
 
 type TableProps<T> = {
-  columns: TableColumn<T>[];
+  columns: readonly TableColumn<T>[];
   data: T[] | undefined;
   isLoading: boolean;
   pageSize?: number;
   lineHeight?: 'md' | 'lg';
+  positionedAt?: 'top' | 'bottom';
   headerRight?: React.ReactNode;
 };
 
@@ -29,6 +30,7 @@ const Table = <T extends { id: string | number }>({
   isLoading,
   pageSize = 5,
   lineHeight = 'md',
+  positionedAt = 'top',
   headerRight,
 }: TableProps<T>) => {
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
@@ -59,6 +61,7 @@ const Table = <T extends { id: string | number }>({
   }, [data, sortKey, sortOrder]);
 
   const hasExtraColumn = Boolean(headerRight);
+  const isEmpty = !isLoading && !data?.length;
 
   const render = () => {
     const placeholderData = Array.from<undefined>({ length: pageSize });
@@ -78,7 +81,7 @@ const Table = <T extends { id: string | number }>({
   };
 
   return (
-    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`])}>
+    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], styles[positionedAt])}>
       <thead>
         <tr>
           {columns.map((column: TableColumn<T>) => (
@@ -98,7 +101,23 @@ const Table = <T extends { id: string | number }>({
         </tr>
       </thead>
 
-      <tbody>{render()}</tbody>
+      <tbody>
+        {isEmpty ? (
+          <tr className={styles.emptyRow}>
+            <td colSpan={columns.length + Number(hasExtraColumn)}>
+              <div className={styles.emptyContainer}>
+                <span className={styles.title}>
+                  <span className={styles.comment}>{'//_'}</span>No Items Yet
+                </span>
+
+                <p className={styles.text}>Items will appear in this table as soon as they are available.</p>
+              </div>
+            </td>
+          </tr>
+        ) : (
+          render()
+        )}
+      </tbody>
     </table>
   );
 };

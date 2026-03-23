@@ -33,7 +33,7 @@ type TitleProps = {
 const Title = ({ id, explorerLink }: TitleProps) => {
   return (
     <h1 className={styles.title}>
-      <HashLink hash={id} truncateSize="xxl" />
+      <HashLink hash={id} truncateSize="xxl" maxLength={48} />
       {explorerLink && <ExplorerLink path="address" id={id} />}
     </h1>
   );
