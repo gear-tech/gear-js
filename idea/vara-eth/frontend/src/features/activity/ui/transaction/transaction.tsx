@@ -1,6 +1,9 @@
+import { generatePath } from 'react-router-dom';
+
 import { useWrappedVaraBalance } from '@/app/api';
 import { MyActivity, TransactionTypes } from '@/app/store';
 import { Badge, Balance, CopyButton, ExpandableItem, HashLink } from '@/components';
+import { routes } from '@/shared/config';
 import { formatBalance } from '@/shared/utils';
 
 import { Params } from '../params';
@@ -23,7 +26,8 @@ const Transaction = ({ item }: Props) => {
           <>
             <Badge>Code approved</Badge>
             <div className={styles.transaction}>
-              Code <HashLink hash={item.codeId} /> was approved.
+              Code <HashLink hash={item.codeId} href={generatePath(routes.code, { codeId: item.codeId })} /> was
+              approved.
             </div>
           </>
         ) : (
@@ -42,7 +46,8 @@ const Transaction = ({ item }: Props) => {
   if (item.type === TransactionTypes.createProgram) {
     return (
       <div className={styles.transaction}>
-        Program <HashLink hash={item.programId} /> was created.
+        Program <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />{' '}
+        was created.
       </div>
     );
   }
@@ -53,7 +58,7 @@ const Transaction = ({ item }: Props) => {
     return (
       <div className={styles.transaction}>
         Approve <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
-        <HashLink hash={item.spender} />
+        <HashLink hash={item.spender} href={generatePath(routes.program, { programId: item.spender })} />
       </div>
     );
   }
@@ -63,7 +68,8 @@ const Transaction = ({ item }: Props) => {
 
     return (
       <div className={styles.transaction}>
-        Top up executable balance <Balance value={value} units="WVARA" /> to <HashLink hash={item.programId} />
+        Top up executable balance <Balance value={value} units="WVARA" /> to{' '}
+        <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />
       </div>
     );
   }
@@ -73,7 +79,8 @@ const Transaction = ({ item }: Props) => {
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Init Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
+            Init Message {item.hash && <HashLink hash={item.hash} />} to{' '}
+            <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />
           </div>
         }>
         <div className={styles.params}>
@@ -93,7 +100,8 @@ const Transaction = ({ item }: Props) => {
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
+            Message {item.hash && <HashLink hash={item.hash} />} to{' '}
+            <HashLink hash={item.to} href={generatePath(routes.program, { programId: item.to })} />
           </div>
         }>
         <div className={styles.params}>{item.params && <Params params={item.params} />}</div>
@@ -108,7 +116,8 @@ const Transaction = ({ item }: Props) => {
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Reply {'hash' in item && <HashLink hash={item.hash} />} from <HashLink hash={item.from || '-'} />
+            Reply {'hash' in item && <HashLink hash={item.hash} />} from{' '}
+            <HashLink hash={item.from} href={generatePath(routes.program, { programId: item.from })} />
           </div>
         }>
         <div className={styles.params}>{params && <Params params={params} />}</div>

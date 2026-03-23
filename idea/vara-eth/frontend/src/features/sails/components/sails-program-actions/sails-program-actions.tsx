@@ -15,9 +15,10 @@ type Props = {
   programId: Hex;
   idl: string;
   init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
+  hasExecutableBalance: boolean;
 };
 
-const SailsProgramActions = ({ programId, idl, init }: Props) => {
+const SailsProgramActions = ({ programId, idl, init, hasExecutableBalance }: Props) => {
   const { data: sails } = useSails(idl);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -59,7 +60,7 @@ const SailsProgramActions = ({ programId, idl, init }: Props) => {
       id: `ctor:${ctorName}`,
       name: ctorName,
       action: 'Initialize',
-      isEnabled: init.isEnabled,
+      isEnabled: init.isEnabled && hasExecutableBalance,
       tooltip: init.tooltip,
       args: meta.args,
       encode: meta.encodePayload,
@@ -67,7 +68,16 @@ const SailsProgramActions = ({ programId, idl, init }: Props) => {
         initProgram.mutateAsync({ ctorName, payload }).then(() => init.onSuccess()),
     }));
 
-    return <SailsActionGroup name="Constructors" sails={sails} items={items} />;
+    return (
+      <div className={styles.constructors}>
+        <SailsActionGroup name="Constructors" sails={sails} items={items} />
+        {!hasExecutableBalance && (
+          <p className={styles.constructorsNotice}>
+            Please top up Executable Balance first before initializing the program.
+          </p>
+        )}
+      </div>
+    );
   };
 
   return (

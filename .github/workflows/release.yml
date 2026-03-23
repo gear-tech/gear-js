@@ -92,7 +92,7 @@ jobs:
 
       - name: Check if gear-api-code has been modified
         id: gear-api-code-modified
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             code-changed:
@@ -100,7 +100,7 @@ jobs:
 
       - name: Check if vara-eth-api-code has been modified
         id: vara-eth-api-code-modified
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             code-changed:

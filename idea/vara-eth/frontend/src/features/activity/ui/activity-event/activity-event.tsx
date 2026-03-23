@@ -1,5 +1,8 @@
+import { generatePath } from 'react-router-dom';
+
 import { useWrappedVaraBalance } from '@/app/api';
 import { Badge, Balance, ExpandableItem, HashLink } from '@/components';
+import { routes } from '@/shared/config';
 import { formatBalance } from '@/shared/utils';
 
 import { Event, EventArgs } from '../../lib/use-activity';
@@ -41,7 +44,7 @@ const CodeValidatedEvent = ({ valid, codeId }: EventArgs<'CodeGotValidated'>) =>
 const ProgramCreatedEvent = ({ actorId }: EventArgs<'ProgramCreated'>) => {
   return (
     <div className={styles.transaction}>
-      Program <HashLink hash={actorId} /> was created.
+      Program <HashLink hash={actorId} href={generatePath(routes.program, { programId: actorId })} /> was created.
     </div>
   );
 };

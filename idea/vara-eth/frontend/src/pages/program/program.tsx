@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { generatePath, useParams } from 'react-router-dom';
 import { formatEther, formatUnits, Hex } from 'viem';
 
@@ -23,6 +24,7 @@ type Params = {
 
 const Program = () => {
   const { programId } = useParams() as Params;
+  const queryClient = useQueryClient();
 
   const { data: program, isLoading } = useGetProgramByIdQuery(programId);
   const codeId = program?.code?.id; // TODO: program.codeId property should be present?
@@ -54,7 +56,10 @@ const Program = () => {
         isChanged: (current, incoming) =>
           BigInt(incoming.executableBalance) - BigInt(current.executableBalance) === value,
       })
-      .then(() => refetch())
+      .then(() => {
+        void refetch();
+        void queryClient.invalidateQueries({ queryKey: ['wrappedVaraBalance'] });
+      })
       .catch((error) => console.error(error));
   };
 
@@ -130,6 +135,7 @@ const Program = () => {
             <TopUpExecBalance
               programId={programId}
               isEnabled={!watchBalance.isPending}
+              hasExecutableBalance={hasExecutableBalance}
               onSuccess={handleSuccessfulTopUp}
             />
           </div>
@@ -150,6 +156,7 @@ const Program = () => {
               tooltip: hasExecutableBalance ? '' : 'Executable balance top up is required',
               onSuccess: handleSuccessfulInit,
             }}
+            hasExecutableBalance={hasExecutableBalance}
           />
         ) : (
           <div className={styles.emptyState}>

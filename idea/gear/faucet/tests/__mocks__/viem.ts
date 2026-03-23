@@ -10,10 +10,7 @@ jest.mock('viem', () => {
         return {
           request: {
             address,
-            abi:
-              functionName === 'mint'
-                ? actual.parseAbi(['function mint(address to, uint256 amount)'])
-                : actual.parseAbi(['function transfer(address to, uint256 amount)']),
+            abi: actual.parseAbi(['function transfer(address to, uint256 amount)']),
             functionName,
             args,
           },

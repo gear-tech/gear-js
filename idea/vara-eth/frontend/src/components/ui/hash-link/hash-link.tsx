@@ -16,6 +16,7 @@ type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   isDisabled?: boolean;
   truncateSize?: BreakpointSize;
   explorerLinkPath?: ComponentProps<typeof ExplorerLink>['path'];
+  maxLength?: number;
 };
 
 const HashLink = ({
@@ -25,12 +26,14 @@ const HashLink = ({
   isDisabled,
   truncateSize = 'xl',
   explorerLinkPath,
+  maxLength,
   ...props
 }: Props) => {
   const className = clsx(styles.link, isDisabled && styles.disabled);
 
   const MediaQuerySize = MediaQuery[truncateSize];
-  const displayHash = <MediaQuerySize above={hash} below={getTruncatedText(hash)} />;
+  const defaultTruncatedHash = maxLength ? getTruncatedText(hash, maxLength / 2) : hash;
+  const displayHash = <MediaQuerySize above={defaultTruncatedHash} below={getTruncatedText(hash)} />;
 
   return (
     <span className={styles.container}>
