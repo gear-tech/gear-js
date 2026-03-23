@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { generatePath, useParams } from 'react-router-dom';
 import { formatEther, formatUnits, Hex } from 'viem';
 
@@ -23,6 +24,7 @@ type Params = {
 
 const Program = () => {
   const { programId } = useParams() as Params;
+  const queryClient = useQueryClient();
 
   const { data: program, isLoading } = useGetProgramByIdQuery(programId);
   const codeId = program?.code?.id; // TODO: program.codeId property should be present?
@@ -54,7 +56,10 @@ const Program = () => {
         isChanged: (current, incoming) =>
           BigInt(incoming.executableBalance) - BigInt(current.executableBalance) === value,
       })
-      .then(() => refetch())
+      .then(() => {
+        void refetch();
+        void queryClient.invalidateQueries({ queryKey: ['wrappedVaraBalance'] });
+      })
       .catch((error) => console.error(error));
   };
 
@@ -93,6 +98,8 @@ const Program = () => {
   if (!program || !programState || !codeId || isUndefined(decimals))
     return <ChainEntity.NotFound entity="program" id={programId} />;
 
+  const hasExecutableBalance = BigInt(programState.executableBalance) > 0n;
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -128,6 +135,7 @@ const Program = () => {
             <TopUpExecBalance
               programId={programId}
               isEnabled={!watchBalance.isPending}
+              hasExecutableBalance={hasExecutableBalance}
               onSuccess={handleSuccessfulTopUp}
             />
           </div>
@@ -143,6 +151,7 @@ const Program = () => {
             programId={programId}
             idl={idl}
             init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
+            hasExecutableBalance={hasExecutableBalance}
           />
         ) : (
           <div className={styles.emptyState}>

@@ -15,27 +15,36 @@
 
 .modal {
   width: 438px;
-  padding: 16px 16px 24px 16px;
+  padding: 16px 16px 20px 16px;
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.small {
+  width: 316px;
+}
+
 .header {
-  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .body {
+  margin-top: 16px;
 }
 
 .heading {
-
   font-size: 12px;
-  font-weight: 400px;
+  font-weight: 500;
 }
 
 .closeButton {
   margin-left: auto;
-  display: block;
+}
+
+.footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
 }
