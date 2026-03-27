@@ -1,8 +1,8 @@
 import { CronJob } from 'cron';
-
-import { LastSeenService, RequestService } from '../db';
-import { FaucetRequest, FaucetType } from '../../database';
 import { Logger } from 'winston';
+
+import { FaucetRequest, FaucetType } from '../../database/index.js';
+import { LastSeenService, RequestService } from '../db/index.js';
 
 export abstract class FaucetProcessor {
   private _job: CronJob<any, this>;

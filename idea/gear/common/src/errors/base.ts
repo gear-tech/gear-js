@@ -1,4 +1,4 @@
-import { JSONRPC_ERRORS } from './jsonrpc-errors';
+import { JSONRPC_ERRORS } from './jsonrpc-errors.js';
 
 export class GearJsonRPCError extends Error {
   name = 'GearJsonRPCError';

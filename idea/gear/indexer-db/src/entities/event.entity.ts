@@ -1,5 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import { BaseEntity } from './base.entity';
+
+import { hexToBytea } from '../transformers.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Event extends BaseEntity {
@@ -8,17 +10,17 @@ export class Event extends BaseEntity {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
   public id: string;
 
   @Index()
-  @Column()
+  @Column({ type: 'bytea', transformer: hexToBytea })
   public source: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
   public payload: string | null;
 
-  @Column({ nullable: true, name: 'parent_id' })
+  @Column({ type: 'bytea', nullable: true, name: 'parent_id', transformer: hexToBytea })
   public parentId: string | null;
 
   @Column({ nullable: true })

@@ -1,10 +1,10 @@
 import { createLogger } from 'gear-idea-common';
 import { Request, Response } from 'express';
 
-import { captchaMiddleware, rateLimitMiddleware } from './middleware';
-import { RequestService } from '../services';
-import { FaucetType } from '../database';
-import { BaseRouter } from './base';
+import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
+import { RequestService } from '../services/index.js';
+import { FaucetType } from '../database/index.js';
+import { BaseRouter } from './base.js';
 import { Hex } from 'viem';
 
 const logger = createLogger('vara-router');

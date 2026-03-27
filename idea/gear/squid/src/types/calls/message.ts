@@ -1,5 +1,5 @@
-import { Calls } from '../../common';
-import { Call } from '../../processor';
+import { Calls } from '../../common/index.js';
+import { Call } from '../../processor.js';
 
 export interface ASendMessage {
   destination: string;

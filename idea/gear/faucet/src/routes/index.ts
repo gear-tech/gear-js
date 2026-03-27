@@ -1,3 +1,3 @@
-export * from './vara-bridge';
-export * from './vara-testnet';
-export * from './wvara';
+export * from './vara-bridge.js';
+export * from './vara-testnet.js';
+export * from './wvara.js';

@@ -1,50 +1,52 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import { hexToBytea } from '../transformers.js';
+
 @Entity()
 export class Voucher {
   constructor(props?: Voucher) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-    id!: string;
+  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
+  id!: string;
 
-  @Column()
-    owner!: string;
+  @Column({ type: 'bytea', transformer: hexToBytea })
+  owner!: string;
 
-  @Column()
-    spender!: string;
-
-  @Column('bigint')
-    amount!: bigint;
+  @Column({ type: 'bytea', transformer: hexToBytea })
+  spender!: string;
 
   @Column('bigint')
-    balance!: bigint;
+  amount!: bigint;
+
+  @Column('bigint')
+  balance!: bigint;
 
   @Column('jsonb', { default: [] })
-    programs?: string[];
+  programs?: string[];
 
   @Column({ name: 'code_uploading' })
-    codeUploading!: boolean;
+  codeUploading!: boolean;
 
   @Column('bigint', { name: 'duration' })
-    expiryAtBlock!: bigint;
+  expiryAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'expiry_at' })
-    expiryAt!: Date;
+  expiryAt!: Date;
 
   @Column('bigint', { name: 'issued_at_block' })
-    issuedAtBlock!: bigint;
+  issuedAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'issued_at' })
-    issuedAt!: Date;
+  issuedAt!: Date;
 
   @Column('bigint', { name: 'updated_at_block' })
-    updatedAtBlock!: bigint;
+  updatedAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'created_at' })
-    updatedAt!: Date;
+  updatedAt!: Date;
 
   @Column({ name: 'is_declined', default: false })
-    isDeclined?: boolean;
+  isDeclined?: boolean;
 }

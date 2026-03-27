@@ -1,6 +1,6 @@
 import { decodeAddress } from '@polkadot/util-crypto';
 import { isEthereumAddress, registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { FaucetType } from '../model/enums';
+import { FaucetType } from '../model/enums.js';
 
 export function isValidAddress(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {

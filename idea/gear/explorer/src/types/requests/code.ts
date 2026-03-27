@@ -1,7 +1,7 @@
 import { CodeStatus, MetaType } from 'gear-idea-indexer-db';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { IsOneOf } from '../../decorators';
-import { ParamGenesis, ParamPagination } from './common';
+import { IsOneOf } from '../../decorators/index.js';
+import { ParamGenesis, ParamPagination } from './common.js';
 
 export class ParamGetCode extends ParamGenesis {
   @IsString()

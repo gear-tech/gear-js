@@ -1,54 +1,52 @@
-import { Store } from '@subsquid/typeorm-store';
 import { Block } from '@subsquid/substrate-processor';
-import { ZERO_ADDRESS } from 'sails-js';
-import {
-  Code,
-  MessageEntryPoint,
-  MessageFromProgram,
-  MessageToProgram,
-  MetaType,
-  Program,
-  CodeStatus,
-  MessageReadReason,
-  ProgramStatus,
-  Voucher,
-} from './model';
+import { Store } from '@subsquid/typeorm-store';
 
-import { Event, Fields, ProcessorContext } from './processor';
-import { TempState } from './temp-state';
-import {
-  isCreateProgram,
-  isUploadCode,
-  isUploadProgram,
-  isSendMessageCall,
-  isSendReplyCall,
-  isVoucherCall,
-} from './types/calls';
-import {} from './model';
-import { getMetahash } from './util';
 import {
   handleCreateProgram,
   handleSendMessageCall,
   handleSendReplyCall,
   handleUploadProgram,
   handleVoucherCall,
-} from './call.route';
+} from './call.route.js';
 import {
-  ECodeChanged,
-  EProgramChanged,
-  EMessageQueuedEvent,
-  EMessagesDispatched,
-  EUserMessageRead,
-  EUserMessageSent,
-  ReplyCode,
-} from './types';
+  Code,
+  CodeStatus,
+  MessageEntryPoint,
+  MessageFromProgram,
+  MessageReadReason,
+  MessageToProgram,
+  MetaType,
+  Program,
+  ProgramStatus,
+  Voucher,
+} from './model/index.js';
+import { Event, Fields, ProcessorContext } from './processor.js';
+import { TempState } from './temp-state.js';
+import {
+  isCreateProgram,
+  isSendMessageCall,
+  isSendReplyCall,
+  isUploadCode,
+  isUploadProgram,
+  isVoucherCall,
+} from './types/calls/index.js';
 import {
   EBalanceTransfer,
   EVoucherDeclined,
   EVoucherIssued,
   EVoucherRevoked,
   EVoucherUpdated,
-} from './types/events/voucher';
+} from './types/events/voucher.js';
+import {
+  ECodeChanged,
+  EMessageQueuedEvent,
+  EMessagesDispatched,
+  EProgramChanged,
+  EUserMessageRead,
+  EUserMessageSent,
+  ReplyCode,
+} from './types/index.js';
+import { getMetahash } from './util.js';
 
 export interface IHandleEventProps<E = Event> {
   ctx: ProcessorContext<Store>;
@@ -118,11 +116,7 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
 
   msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);
 
-  if (event.args.message.destination === ZERO_ADDRESS) {
-    tempState.addEvent(msg);
-  } else {
-    tempState.addMsgFromProgram(msg);
-  }
+  tempState.addMsgFromProgram(msg);
 }
 
 const statuses = {

@@ -3,14 +3,14 @@ import {
   DataHandlerContext,
   SubstrateBatchProcessor,
   SubstrateBatchProcessorFields,
-  Event as _Event,
   Call as _Call,
+  Event as _Event,
   Extrinsic as _Extrinsic,
 } from '@subsquid/substrate-processor';
-
-import { Events } from './common';
-import { config } from './config';
 import { hostname } from 'os';
+
+import { Events } from './common/index.js';
+import { config } from './config.js';
 
 export const processor = new SubstrateBatchProcessor()
   .setGateway(config.squid.gateway)

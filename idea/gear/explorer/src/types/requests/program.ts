@@ -1,7 +1,7 @@
 import { IsString, Contains } from 'class-validator';
 import { ProgramStatus } from 'gear-idea-indexer-db';
-import { ParamGenesis, ParamPagination } from './common';
-import { IsOneOf } from '../../decorators';
+import { ParamGenesis, ParamPagination } from './common.js';
+import { IsOneOf } from '../../decorators/index.js';
 
 export class ParamGetProgram extends ParamGenesis {
   @IsString()

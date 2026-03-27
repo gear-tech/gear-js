@@ -1,8 +1,8 @@
-import { Repository } from 'typeorm';
-import * as crypto from 'node:crypto';
-
-import { AppDataSource, UserLastSeen } from '../../database';
 import { logger } from 'gear-idea-common';
+import * as crypto from 'node:crypto';
+import { Repository } from 'typeorm';
+
+import { AppDataSource, UserLastSeen } from '../../database/index.js';
 
 const $24_HOURS = 24 * 60 * 60 * 1000;
 

@@ -1,5 +1,5 @@
 import { IsDateString } from 'class-validator';
-import { ParamGenesis, ParamPagination } from './common';
+import { ParamGenesis, ParamPagination } from './common.js';
 
 export interface ParamGetEvent extends ParamGenesis {
   id: string;

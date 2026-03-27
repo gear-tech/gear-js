@@ -1,9 +1,10 @@
 import { Event } from 'gear-idea-indexer-db';
 import { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { ParamGetEvent, ParamGetEvents, ResManyResult } from '../types';
-import { EventNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
+import { Pagination } from '../decorators/index.js';
+import { ParamGetEvent, ParamGetEvents, ResManyResult } from '../types/index.js';
+import { EventNotFound } from '../errors/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { hexToBuffer } from '../utils.js';
 
 export class EventService {
   private _repo: Repository<Event>;
@@ -37,11 +38,11 @@ export class EventService {
     const builder = this._repo.createQueryBuilder('event');
 
     if (source) {
-      builder.andWhere('event.source = :source', { source });
+      builder.andWhere('event.source = :source', { source: hexToBuffer(source) });
     }
 
     if (parentId) {
-      builder.andWhere('event.parent_id = :parentId', { parentId });
+      builder.andWhere('event.parentId = :parentId', { parentId: hexToBuffer(parentId) });
     }
 
     if (service) {

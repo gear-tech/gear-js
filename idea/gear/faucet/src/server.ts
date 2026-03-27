@@ -1,12 +1,12 @@
-import swaggerUi from 'swagger-ui-express';
-import { logger } from 'gear-idea-common';
 import express, { Express } from 'express';
-import YAML from 'yamljs';
+import { logger } from 'gear-idea-common';
 import http from 'node:http';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
-import { WvaraRouter, VaraBridgeRouter, VaraTestnetRouter } from './routes';
-import { RequestService } from './services';
-import config from './config';
+import config from './config.js';
+import { VaraBridgeRouter, VaraTestnetRouter, WvaraRouter } from './routes/index.js';
+import { RequestService } from './services/index.js';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 

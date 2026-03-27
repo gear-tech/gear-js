@@ -1,3 +1,3 @@
-export * from './captcha';
-export * from './log';
-export * from './rate-limiter';
+export * from './captcha.js';
+export * from './log.js';
+export * from './rate-limiter.js';

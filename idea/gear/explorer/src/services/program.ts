@@ -1,9 +1,10 @@
 import { Program } from 'gear-idea-indexer-db';
 import { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types';
-import { ProgramNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
+import { Pagination } from '../decorators/index.js';
+import { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types/index.js';
+import { ProgramNotFound } from '../errors/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { hexToBuffer } from '../utils.js';
 
 export class ProgramService {
   private _repo: Repository<Program>;
@@ -36,11 +37,11 @@ export class ProgramService {
     const qb = this._repo.createQueryBuilder('program');
 
     if (owner) {
-      qb.andWhere('program.owner = :owner', { owner });
+      qb.andWhere('program.owner = :owner', { owner: hexToBuffer(owner) });
     }
 
     if (codeId) {
-      qb.andWhere('program.code_id = :codeId', { codeId });
+      qb.andWhere('program.codeId = :codeId', { codeId: hexToBuffer(codeId) });
     }
 
     if (name) {
@@ -56,7 +57,7 @@ export class ProgramService {
     }
 
     if (query) {
-      qb.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query.toLowerCase()}%` });
+      qb.andWhere("(encode(program.id, 'hex') ILIKE :query OR program.name ILIKE :query)", { query: `%${query.toLowerCase().replace('0x', '')}%` });
     }
 
     qb.orderBy('program.timestamp', 'DESC').limit(limit).offset(offset);
