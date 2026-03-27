@@ -95,10 +95,10 @@ const Program = () => {
     );
   }
 
-  if (!program || !programState || !codeId || isUndefined(decimals))
-    return <ChainEntity.NotFound entity="program" id={programId} />;
+  if (!program || !codeId || isUndefined(decimals)) return <ChainEntity.NotFound entity="program" id={programId} />;
 
-  const hasExecutableBalance = programState.executableBalance > 0;
+  const hasExecutableBalance = Boolean(programState && programState.executableBalance > 0);
+  const programStateFallback = <div>Unable to read program state</div>;
 
   return (
     <div className={styles.container}>
@@ -123,22 +123,29 @@ const Program = () => {
           <HashLink hash={program.txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
           <ChainEntity.Key>Program Balance</ChainEntity.Key>
-          <Balance value={formatEther(BigInt(programState.balance))} units="ETH" />
+          {programState ? (
+            <Balance value={formatEther(BigInt(programState.balance))} units="ETH" />
+          ) : (
+            programStateFallback
+          )}
 
           <ChainEntity.Key>Executable Balance</ChainEntity.Key>
+          {programState ? (
+            <div className={styles.balance}>
+              {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
 
-          <div className={styles.balance}>
-            {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
+              <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
 
-            <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
-
-            <TopUpExecBalance
-              programId={programId}
-              isEnabled={!watchBalance.isPending}
-              hasExecutableBalance={hasExecutableBalance}
-              onSuccess={handleSuccessfulTopUp}
-            />
-          </div>
+              <TopUpExecBalance
+                programId={programId}
+                isEnabled={!watchBalance.isPending}
+                hasExecutableBalance={hasExecutableBalance}
+                onSuccess={handleSuccessfulTopUp}
+              />
+            </div>
+          ) : (
+            programStateFallback
+          )}
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>
           <ChainEntity.BlockNumber value={program.blockNumber} date={program.createdAt} />
