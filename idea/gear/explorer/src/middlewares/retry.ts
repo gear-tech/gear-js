@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import { client, hash, isRedisConnected } from './redis';
+import { client, hash, isRedisConnected } from './redis.js';
 import { logger } from 'gear-idea-common';
 
 export function retryMethodsJob(classInstance: any) {

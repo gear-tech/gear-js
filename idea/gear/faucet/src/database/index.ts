@@ -1,2 +1,2 @@
-export * from './model';
-export * from './app-data-source';
+export * from './model/index.js';
+export * from './app-data-source.js';

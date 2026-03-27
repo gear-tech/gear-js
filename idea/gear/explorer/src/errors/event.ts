@@ -1,4 +1,4 @@
-import { JsonRpcError } from '../types';
+import { JsonRpcError } from '../types/index.js';
 
 export class EventNotFound implements JsonRpcError {
   code = -32404;

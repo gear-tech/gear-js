@@ -1,9 +1,9 @@
-import { IMessage } from './message';
-import { IPaginationResult } from './pagination';
-import { IProgram } from './program';
-import { ICode } from './code';
-import { RpcErrorCode } from '../enums';
-import { IState } from './state';
+import { IMessage } from './message.js';
+import { IPaginationResult } from './pagination.js';
+import { IProgram } from './program.js';
+import { ICode } from './code.js';
+import { RpcErrorCode } from '../enums/index.js';
+import { IState } from './state.js';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];

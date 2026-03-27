@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { Code } from './code.entity';
+import { Code } from './code.entity.js';
 
 @Entity()
 export class SailsIdl {

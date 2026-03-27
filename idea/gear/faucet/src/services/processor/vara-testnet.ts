@@ -1,12 +1,12 @@
 import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { createLogger } from 'gear-idea-common';
 import { BN } from '@polkadot/util';
+import { createLogger } from 'gear-idea-common';
 import { Hex } from 'viem';
 
-import { FaucetType, FaucetRequest } from '../../database';
-import { FaucetProcessor } from './abstract';
-import config from '../../config';
+import config from '../../config.js';
+import { FaucetRequest, FaucetType } from '../../database/index.js';
+import { FaucetProcessor } from './abstract.js';
 
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;

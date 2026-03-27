@@ -1,13 +1,13 @@
-import 'reflect-metadata';
-import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
-import { validateOrReject } from 'class-validator';
 import { decodeAddress } from '@gear-js/api';
+import { validateOrReject } from 'class-validator';
+import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
+import 'reflect-metadata';
 import { In, Repository } from 'typeorm';
-
-import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
-import { hash, LastSeenService } from './last-seen';
-import config from '../../config';
 import { Hex } from 'viem';
+
+import config from '../../config.js';
+import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database/index.js';
+import { hash, LastSeenService } from './last-seen.js';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;

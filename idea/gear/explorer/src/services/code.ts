@@ -1,9 +1,10 @@
 import { Code } from 'gear-idea-indexer-db';
 import { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types';
-import { CodeNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
+import { Pagination } from '../decorators/index.js';
+import { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types/index.js';
+import { CodeNotFound } from '../errors/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { hexToBuffer } from '../utils.js';
 
 export class CodeService {
   private _repo: Repository<Code>;
@@ -28,7 +29,7 @@ export class CodeService {
     const qb = this._repo.createQueryBuilder('code');
 
     if (uploadedBy) {
-      qb.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy });
+      qb.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy: hexToBuffer(uploadedBy) });
     }
 
     if (name) {
@@ -44,7 +45,7 @@ export class CodeService {
     }
 
     if (query) {
-      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', { query: `%${query.toLowerCase()}%` });
+      qb.andWhere("(encode(code.id, 'hex') ILIKE :query OR code.name ILIKE :query)", { query: `%${query.toLowerCase().replace('0x', '')}%` });
     }
 
     qb.orderBy('code.timestamp', 'DESC').limit(limit).offset(offset);

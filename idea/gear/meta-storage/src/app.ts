@@ -1,5 +1,5 @@
-import { MetaRouter } from './meta.router';
-import { MetaService } from './service';
+import { MetaRouter } from './meta.router.js';
+import { MetaService } from './service.js';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';

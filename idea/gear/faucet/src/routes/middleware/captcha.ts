@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { logger } from 'gear-idea-common';
 
-import config from '../../config';
+import config from '../../config.js';
 
 const SECRET_KEY = config.server.captchaSecret;
 const VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';

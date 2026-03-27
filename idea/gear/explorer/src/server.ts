@@ -1,6 +1,10 @@
 import express, { Express } from 'express';
-import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
-import { AllInOneService } from './services/all-in-one';
+
+import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method.js';
+import { Cache } from './middlewares/caching.js';
+import { redisConnect } from './middlewares/redis.js';
+import { Retry } from './middlewares/retry.js';
+import { AllInOneService } from './services/all-in-one.js';
 import {
   ParamGetCode,
   ParamGetCodes,
@@ -15,10 +19,7 @@ import {
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ParamSetProgramMeta,
-} from './types';
-import { Cache } from './middlewares/caching';
-import { redisConnect } from './middlewares/redis';
-import { Retry } from './middlewares/retry';
+} from './types/index.js';
 
 export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;
