@@ -98,7 +98,7 @@ const Program = () => {
   if (!program || !codeId || isUndefined(decimals)) return <ChainEntity.NotFound entity="program" id={programId} />;
 
   const hasExecutableBalance = Boolean(programState && programState.executableBalance > 0);
-  const programStateFallback = <div>Unable to read program state</div>;
+  const programStateFallback = <span className={styles.unavailable}>Unable to read program state</span>;
 
   return (
     <div className={styles.container}>
