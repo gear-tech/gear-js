@@ -7,8 +7,12 @@ export function requestLoggerMiddleware(req: Request, res: Response, next: NextF
   if (!req.body) return res.status(400).send('Bad Request');
 
   if (Object.keys(req.body).length > 0) {
-    const { token, ...body } = req.body;
-    logger.debug(`method: ${req.method}, url: ${req.originalUrl}`, { token: token?.slice(0, 10), ...body });
+    const { token, signature, ...body } = req.body;
+    logger.debug(`method: ${req.method}, url: ${req.originalUrl}`, {
+      token: token?.slice(0, 10),
+      ...(signature ? { signature: signature.slice(0, 10) + '...' } : {}),
+      ...body,
+    });
   }
   return next();
 }
