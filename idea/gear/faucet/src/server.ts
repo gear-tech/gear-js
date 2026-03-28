@@ -4,8 +4,8 @@ import express, { Express } from 'express';
 import YAML from 'yamljs';
 import http from 'node:http';
 
-import { WvaraRouter, VaraBridgeRouter, VaraTestnetRouter } from './routes';
-import { RequestService } from './services';
+import { WvaraRouter, VaraBridgeRouter, VaraTestnetRouter, AgentRouter } from './routes';
+import { RequestService, ChallengeService } from './services';
 import config from './config';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
@@ -13,12 +13,14 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 export class Server {
   private _app: Express;
   private _server: http.Server;
+  private _challengeService: ChallengeService | null = null;
 
   constructor(
     requestService: RequestService,
     runBridgeFaucet = true,
     runVaraTestnetFaucet = true,
     runWvaraFaucet = true,
+    runAgentFaucet = true,
   ) {
     this._app = express();
     this._app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -31,6 +33,11 @@ export class Server {
     if (runWvaraFaucet) {
       this._app.use('/wvara', new WvaraRouter(requestService).router);
     }
+    if (runAgentFaucet && config.agent.enabled) {
+      this._challengeService = new ChallengeService(config.agent.challengeTtlMs);
+      this._app.use('/', new AgentRouter(requestService, this._challengeService).router);
+      logger.info('Agent faucet enabled');
+    }
   }
 
   run() {
@@ -41,6 +48,9 @@ export class Server {
 
   close() {
     this._server.close();
+    if (this._challengeService) {
+      this._challengeService.stop();
+    }
   }
 
   get app() {
