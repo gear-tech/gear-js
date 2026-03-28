@@ -225,8 +225,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
    * @returns A transaction manager with validation-specific helper functions, including
    *          the code ID and a function to wait for the code to be validated
    */
-  private async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
-    throw new Error('Not implemented');
+  public async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
 
     const data = encodeFunctionData({
@@ -245,6 +244,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     const tx = {
       type: 'eip4844' as const,
+      blobVersion: '7594' as const,
       data,
       to: this.address,
       gas: 5_000_000n,
@@ -259,6 +259,16 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
           const result = kzg.computeBlobKZGProof(bytesToHex(blob), bytesToHex(commitment)) as Hex;
           return hexToBytes(result);
         },
+        computeCellsAndKzgProofs: (blob: Uint8Array): [Uint8Array[], Uint8Array[]] => {
+          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [
+            `0x${string}`[],
+            `0x${string}`[],
+          ]
+          return [
+            cells.map((cell) => hexToBytes(cell)),
+            proofs.map((proof) => hexToBytes(proof)),
+          ]
+        }
       },
       chain: null,
     };

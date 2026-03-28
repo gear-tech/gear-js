@@ -881,14 +881,14 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "counter"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "sails-rs",
 ]
 
 [[package]]
 name = "counter-idl"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "counter",
  "sails-rs",
@@ -2458,7 +2458,7 @@ dependencies = [
 
 [[package]]
 name = "injected"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "ethexe-common",
  "gear-core 1.10.0 (git+https://github.com/gear-tech/gear)",

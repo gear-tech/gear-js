@@ -86,6 +86,8 @@ jobs:
 
       - name: "Install: Foundry"
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
 
       - name: 'Install dependencies'
         run: yarn workspaces focus gear-js @gear-js/api
@@ -153,7 +155,7 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: v1.5.0-rc1
+          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
 
       - name: 'Install dependencies'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'

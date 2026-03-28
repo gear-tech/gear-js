@@ -10098,11 +10098,11 @@ __metadata:
     "@noble/hashes": "npm:1.8.0"
     "@types/ws": "npm:8.18.1"
     kzg-wasm: "npm:1.0.0"
-    viem: "npm:2.47.4"
+    viem: "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
     ws: "npm:8.18.3"
   peerDependencies:
     kzg-wasm: 1.0.0
-    viem: ^2.39.0
+    viem: "*"
   languageName: unknown
   linkType: soft
 
@@ -15940,7 +15940,7 @@ __metadata:
     supertest: "npm:^7.1.4"
     swagger-ui-express: "npm:5.0.1"
     typeorm: "npm:0.3.28"
-    viem: "npm:^2.40.2"
+    viem: "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
     winston: "npm:3.19.0"
     xxhashjs: "npm:0.2.2"
     yamljs: "npm:0.3.0"
@@ -20510,6 +20510,27 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/229cd389a81d7388649216b6d68e65fc95efddc952450493bb275869066727c2a490a1b74946c433f24b0439552d9a31550f3edb6e5593b652fdc89f1dfecb52
+  languageName: node
+  linkType: hard
+
+"ox@npm:0.14.7":
+  version: 0.14.7
+  resolution: "ox@npm:0.14.7"
+  dependencies:
+    "@adraffy/ens-normalize": "npm:^1.11.0"
+    "@noble/ciphers": "npm:^1.3.0"
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:^1.8.0"
+    "@scure/bip32": "npm:^1.7.0"
+    "@scure/bip39": "npm:^1.6.0"
+    abitype: "npm:^1.2.3"
+    eventemitter3: "npm:5.0.1"
+  peerDependencies:
+    typescript: ">=5.4.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/c4bc216b4e689a0d4e6d6640be30bcc7e82209e4d69c1dd2d2c10c6b3b709f658c6b3e7ebe68e590602d6b0ef15785090d890b75cc7e67a094fe50d84778b9f9
   languageName: node
   linkType: hard
 
@@ -25415,7 +25436,7 @@ __metadata:
     react-syntax-highlighter: "npm:15.6.6"
     sails-js: "npm:0.5.1"
     sails-js-parser: "npm:0.5.1"
-    viem: "npm:2.47.4"
+    viem: "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
     wagmi: "npm:2.19.4"
     zod: "npm:4.3.6"
   languageName: unknown
@@ -25449,7 +25470,7 @@ __metadata:
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
     typeorm: "npm:0.3.28"
-    viem: "npm:2.47.4"
+    viem: "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
     xxhash-addon: "npm:^2.0.3"
   languageName: unknown
   linkType: soft
@@ -25458,6 +25479,27 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
+  languageName: node
+  linkType: hard
+
+"viem@https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516":
+  version: 2.47.7-98e8516.0
+  resolution: "viem@https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
+  dependencies:
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:1.8.0"
+    "@scure/bip32": "npm:1.7.0"
+    "@scure/bip39": "npm:1.6.0"
+    abitype: "npm:1.2.3"
+    isows: "npm:1.0.7"
+    ox: "npm:0.14.7"
+    ws: "npm:8.18.3"
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/00343320da047babb7697ea2aab7f94c302f2762ba9d2d3f322933b4fd7eb2fe9986dea3f22cf6632b2a8bde6417399bde7e6f0a05b0120bf67ab0783e9d398a
   languageName: node
   linkType: hard
 
@@ -25482,7 +25524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:2.47.4, viem@npm:>=2.29.0, viem@npm:>=2.45.0, viem@npm:^2.1.1, viem@npm:^2.21.26, viem@npm:^2.27.2, viem@npm:^2.31.7, viem@npm:^2.40.2":
+"viem@npm:>=2.29.0, viem@npm:>=2.45.0, viem@npm:^2.1.1, viem@npm:^2.21.26, viem@npm:^2.27.2, viem@npm:^2.31.7":
   version: 2.47.4
   resolution: "viem@npm:2.47.4"
   dependencies:
