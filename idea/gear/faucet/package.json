@@ -27,7 +27,7 @@
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",
     "typeorm": "0.3.28",
-    "viem": "^2.40.2",
+    "viem": "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516",
     "winston": "3.19.0",
     "xxhashjs": "0.2.2",
     "yamljs": "0.3.0"

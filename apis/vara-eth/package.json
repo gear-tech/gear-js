@@ -39,12 +39,12 @@
   },
   "peerDependencies": {
     "kzg-wasm": "1.0.0",
-    "viem": "^2.39.0"
+    "viem": "*"
   },
   "devDependencies": {
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "2.47.4",
+    "viem": "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516",
     "ws": "8.18.3"
   },
   "files": [

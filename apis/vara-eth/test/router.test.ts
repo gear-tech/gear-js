@@ -7,15 +7,16 @@ import path from 'path';
 import { CodeState, getMirrorClient, getRouterClient, RouterClient, type ITransactionSigner } from '../src';
 import { config } from './config';
 import { walletClientToSigner } from '../src/signer';
+import { waitNBlocks } from "./common";
 
-// const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
+const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: `0x${string}`;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ITransactionSigner;
 let router: RouterClient;
 
-// let codeValidatedPromise: Promise<boolean>;
+let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
@@ -41,24 +42,24 @@ afterAll(async () => {
 
 describe('router', () => {
   describe('upload code', () => {
-    // test.skip('should request code validation', async () => {
-    //   const tx = await ethereumClient.router.requestCodeValidation(code);
-    //   codeId = tx.codeId;
-    //   const receipt = await tx.sendAndWaitForReceipt();
-    //   expect(receipt.blockHash).toBeDefined();
-    //   codeValidatedPromise = tx.waitForCodeGotValidated();
-    // }, 60_000);
+    test('should request code validation', async () => {
+      const tx = await router.requestCodeValidation(code);
+      codeId = tx.codeId;
+      const receipt = await tx.sendAndWaitForReceipt();
+      expect(receipt.blockHash).toBeDefined();
+      codeValidatedPromise = tx.waitForCodeGotValidated();
+    }, 60_000);
 
-    // test.skip(
-    //   'should wait when code got validated',
-    //   async () => {
-    //     expect(await codeValidatedPromise).toBeTruthy();
-    //     await waitNBlocks(5);
+    test.skip(
+      'should wait when code got validated',
+      async () => {
+        expect(await codeValidatedPromise).toBeTruthy();
+        await waitNBlocks(5);
 
-    //     console.log(codeId);
-    //   },
-    //   config.longRunningTestTimeout,
-    // );
+        console.log(codeId);
+      },
+      config.longRunningTestTimeout,
+    );
 
     test('should check that code state is Validated', async () => {
       expect(await router.codeState(codeId)).toBe(CodeState.Validated);
