@@ -16,6 +16,10 @@ const useReadContractState = (programId: Hex) => {
       return api!.query.program.readState(hash);
     },
     enabled: Boolean(mirrorContract && api && isAddress(programId)),
+    throwOnError: (error) => {
+      console.error(error);
+      return false;
+    },
   });
 };
 
