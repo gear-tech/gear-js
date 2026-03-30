@@ -1,7 +1,7 @@
 import { IsString, Contains, IsDateString } from 'class-validator';
 import { MessageEntryPoint } from 'gear-idea-indexer-db';
-import { ParamGenesis, ParamPagination } from './common';
-import { IsOneOf } from '../../decorators';
+import { ParamGenesis, ParamPagination } from './common.js';
+import { IsOneOf } from '../../decorators/index.js';
 
 export class ParamMsgToProgram extends ParamGenesis {
   @IsString()

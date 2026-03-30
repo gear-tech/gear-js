@@ -1,4 +1,4 @@
-import { InvalidParams } from '../errors';
+import { InvalidParams } from '../errors/index.js';
 
 export function RequiredParams(params: string[]) {
   return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {

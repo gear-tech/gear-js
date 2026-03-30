@@ -1,17 +1,17 @@
 import { MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
 import { DataSource, Repository } from 'typeorm';
 
-import { Pagination } from '../decorators';
+import { Pagination } from '../decorators/index.js';
 import {
   ResManyResult,
   ParamGetMsgsFromProgram,
   ParamGetMsgsToProgram,
   ParamMsgFromProgram,
   ParamMsgToProgram,
-} from '../types';
-import { InvalidParams, MessageNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
-import { isHex } from '../utils';
+} from '../types/index.js';
+import { InvalidParams, MessageNotFound } from '../errors/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { hexToBuffer, isHex } from '../utils.js';
 
 export class MessageService {
   private _repoTo: Repository<MessageToProgram>;
@@ -60,11 +60,11 @@ export class MessageService {
     const qb = this._repoTo.createQueryBuilder('msg');
 
     if (source) {
-      qb.andWhere('msg.source = :source', { source });
+      qb.andWhere('msg.source = :source', { source: hexToBuffer(source) });
     }
 
     if (destination) {
-      qb.andWhere('msg.destination = :destination', { destination });
+      qb.andWhere('msg.destination = :destination', { destination: hexToBuffer(destination) });
     }
 
     if (entry) {
@@ -82,7 +82,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
+      qb.andWhere('msg.id = :query', { query: hexToBuffer(query) });
     }
 
     if (from) {
@@ -120,19 +120,19 @@ export class MessageService {
     const qb = this._repoFrom.createQueryBuilder('msg');
 
     if (source) {
-      qb.andWhere('msg.source = :source', { source });
+      qb.andWhere('msg.source = :source', { source: hexToBuffer(source) });
     }
 
     if (destination) {
-      qb.andWhere('msg.destination = :destination', { destination });
+      qb.andWhere('msg.destination = :destination', { destination: hexToBuffer(destination) });
     }
 
     if (parentId) {
-      qb.andWhere('msg.parent_id = :parentId', { parentId });
+      qb.andWhere('msg.parentId = :parentId', { parentId: hexToBuffer(parentId) });
     }
 
     if (isInMailbox) {
-      qb.andWhere('msg.readReson = NULL').andWhere('msg.expiration != NULL');
+      qb.andWhere('msg.readReason IS NULL').andWhere('msg.expiration IS NOT NULL');
     }
 
     if (service) {
@@ -146,7 +146,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
+      qb.andWhere('msg.id = :query', { query: hexToBuffer(query) });
     }
 
     if (from) {

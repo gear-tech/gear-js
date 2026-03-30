@@ -1,9 +1,10 @@
-import { createDbConnection, DbConfig } from 'gear-idea-indexer-db';
 import { readFileSync } from 'fs';
-import { AllInOneService } from './services/all-in-one';
-import { config } from './config';
-import { HybridApiServer } from './server';
-import { retryMethodsJob } from './middlewares/retry';
+import { createDbConnection, DbConfig } from 'gear-idea-indexer-db';
+
+import { config } from './config.js';
+import { retryMethodsJob } from './middlewares/retry.js';
+import { HybridApiServer } from './server.js';
+import { AllInOneService } from './services/all-in-one.js';
 
 const main = async () => {
   const spec = JSON.parse(readFileSync(config.spec, 'utf8')) as Record<string, DbConfig>;

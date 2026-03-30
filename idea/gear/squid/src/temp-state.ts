@@ -1,31 +1,38 @@
-import { Store } from '@subsquid/typeorm-store';
 import { HexString } from '@gear-js/api';
-import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
-import { xxhashAsHex } from '@polkadot/util-crypto';
-import { TypeRegistry, Metadata } from '@polkadot/types';
+import { Metadata, TypeRegistry } from '@polkadot/types';
 import { SiLookupTypeId } from '@polkadot/types/interfaces';
+import { hexToU8a } from '@polkadot/util';
+import { xxhashAsHex } from '@polkadot/util-crypto';
+import { Store } from '@subsquid/typeorm-store';
+import { RedisClientType } from 'redis';
+import { getFnNamePrefix, getServiceNamePrefix, ZERO_ADDRESS } from 'sails-js';
+import { SailsMessageHeader } from 'sails-js/parser';
+import { In } from 'typeorm';
 
+import { MessageStatus } from './common/index.js';
 import {
-  ProgramStatus,
-  CodeStatus,
-  MessageReadReason,
   Code,
+  CodeStatus,
   Event,
   MessageFromProgram,
+  MessageReadReason,
   MessageToProgram,
   Program,
+  ProgramStatus,
   Voucher,
-} from './model';
-import { Block, ProcessorContext } from './processor';
-import { MessageStatus } from './common';
-import { In } from 'typeorm';
-import { RedisClientType } from 'redis';
-import { findChildMessageId, SPEC_VERSION } from './util';
+} from './model/index.js';
+import { Block, ProcessorContext } from './processor.js';
+import { findChildMessageId, SPEC_VERSION } from './util.js';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
 const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
 
 const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2);
+
+function parseSailsHeader(payload: string | null) {
+  if (!payload) return { ok: false, header: undefined };
+  return SailsMessageHeader.tryFromBytes(hexToU8a(payload));
+}
 
 function getServiceAndFn(payload: string | null) {
   if (payload === null) {
@@ -121,10 +128,20 @@ export class TempState {
   }
 
   addMsgToProgram(msg: MessageToProgram) {
-    const [service, name] = getServiceAndFn(msg.payload);
+    const { ok, header } = parseSailsHeader(msg.payload);
 
-    msg.service = service;
-    msg.fn = name;
+    msg.isSailsIdlV2 = ok;
+
+    if (ok && header) {
+      msg.header = '0x' + Buffer.from(header.toBytes()).toString('hex');
+      const routeIdxBuf = Buffer.allocUnsafe(4);
+      routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
+      msg.routeIdx = '0x' + routeIdxBuf.toString('hex');
+    } else {
+      const [service, name] = getServiceAndFn(msg.payload);
+      msg.service = service;
+      msg.fn = name;
+    }
 
     this.saveParentMsgId(msg.id);
 
@@ -132,35 +149,49 @@ export class TempState {
   }
 
   addMsgFromProgram(msg: MessageFromProgram) {
-    const [service, name] = getServiceAndFn(msg.payload);
+    if (msg.payload) {
+      const { ok, header } = parseSailsHeader(msg.payload);
 
-    msg.service = service;
-    msg.fn = name;
+      msg.isSailsIdlV2 = ok;
 
-    this.messagesFromProgram.set(msg.id, msg);
+      if (ok && header) {
+        msg.header = '0x' + Buffer.from(header.toBytes()).toString('hex');
+        const routeIdxBuf = Buffer.allocUnsafe(4);
+        routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
+        msg.routeIdx = '0x' + routeIdxBuf.toString('hex');
+      } else {
+        const [service, name] = getServiceAndFn(msg.payload);
+
+        msg.service = service;
+        msg.fn = name;
+      }
+    }
+
+    if (msg.destination === ZERO_ADDRESS && msg.service && msg.fn) {
+      return this.addEvent(msg);
+    } else {
+      this.messagesFromProgram.set(msg.id, msg);
+    }
   }
 
-  addEvent(msg: MessageFromProgram) {
-    const [service, name] = getServiceAndFn(msg.payload);
-
-    if (service === null || name === null) {
-      this.addMsgFromProgram(msg);
-    } else {
-      this.events.set(
-        msg.id,
-        new Event({
-          timestamp: msg.timestamp,
-          blockHash: msg.blockHash,
-          blockNumber: msg.blockNumber,
-          id: msg.id,
-          parentId: msg.parentId,
-          source: msg.source,
-          payload: msg.payload,
-          service,
-          name,
-        }),
-      );
+  private addEvent(msg: MessageFromProgram) {
+    if (msg.service === null || msg.fn === null) {
+      throw new Error(`Failed to parse event from message ${msg.id}`);
     }
+    this.events.set(
+      msg.id,
+      new Event({
+        timestamp: msg.timestamp,
+        blockHash: msg.blockHash,
+        blockNumber: msg.blockNumber,
+        id: msg.id,
+        parentId: msg.parentId,
+        source: msg.source,
+        payload: msg.payload,
+        service: msg.service,
+        name: msg.fn,
+      }),
+    );
   }
 
   addVoucher(voucher: Voucher) {

@@ -1,5 +1,5 @@
-import { JSONRPC_ERRORS, isExistError } from './errors/jsonrpc-errors';
-import { logger } from './logger';
+import { JSONRPC_ERRORS, isExistError } from './errors/jsonrpc-errors.js';
+import { logger } from './logger.js';
 
 export function FormResponse(_target: unknown, _propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
   const originalMethod = descriptor.value;

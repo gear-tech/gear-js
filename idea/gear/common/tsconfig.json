@@ -2,8 +2,8 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "declaration": true,
+    "declaration": false,
     "forceConsistentCasingInFileNames": true,
-    "strict": false
+    "strict": false,
   }
 }

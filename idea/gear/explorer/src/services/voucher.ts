@@ -1,9 +1,10 @@
 import { DataSource, Repository } from 'typeorm';
 import { Voucher } from 'gear-idea-indexer-db';
-import { Pagination } from '../decorators';
-import { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types';
-import { VoucherNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
+import { Pagination } from '../decorators/index.js';
+import { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types/index.js';
+import { VoucherNotFound } from '../errors/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { hexToBuffer } from '../utils.js';
 
 export class VoucherService {
   private _repo: Repository<Voucher>;
@@ -40,9 +41,9 @@ export class VoucherService {
 
     if (id) {
       if (id.length === 66) {
-        qb.andWhere('v.id = :id', { id });
+        qb.andWhere('v.id = :id', { id: hexToBuffer(id) });
       } else {
-        qb.andWhere('v.id LIKE :id', { id: `%${id}%` });
+        qb.andWhere("encode(v.id, 'hex') LIKE :id", { id: `%${id.toLowerCase().replace('0x', '')}%` });
       }
     }
 
@@ -80,11 +81,11 @@ export class VoucherService {
     }
 
     if (owner && spender) {
-      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', { owner, spender });
+      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', { owner: hexToBuffer(owner), spender: hexToBuffer(spender) });
     } else if (owner) {
-      qb.andWhere('v.owner = :owner', { owner });
+      qb.andWhere('v.owner = :owner', { owner: hexToBuffer(owner) });
     } else if (spender) {
-      qb.andWhere('v.spender = :spender', { spender });
+      qb.andWhere('v.spender = :spender', { spender: hexToBuffer(spender) });
     }
 
     qb.limit(limit || 20);

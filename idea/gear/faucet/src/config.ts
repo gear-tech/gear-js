@@ -1,6 +1,7 @@
-import { config } from 'dotenv';
 import { strict as assert } from 'assert';
+import { config } from 'dotenv';
 import { Hex } from 'viem';
+
 config();
 
 const getEnv = (envName: string, defaultValue?: string): string => {

@@ -1,5 +1,5 @@
-import { Events } from '../../common';
-import { Event } from '../../processor';
+import { Events } from '../../common/index.js';
+import { Event } from '../../processor.js';
 
 export interface AProgramChanged {
   id: string;

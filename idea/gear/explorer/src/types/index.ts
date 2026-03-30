@@ -1,3 +1,3 @@
-export * from './requests';
-export * from './responses';
-export * from './jsonrpc';
+export * from './requests/index.js';
+export * from './responses/index.js';
+export * from './jsonrpc.js';

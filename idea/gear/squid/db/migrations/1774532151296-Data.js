@@ -1,0 +1,157 @@
+export default class Data1774532151296 {
+  name = 'Data1774532151296';
+
+  async up(db) {
+    await db.query(`DROP INDEX "public"."IDX_5c319551135829c361aa583432"`);
+    await db.query(`DROP INDEX "public"."IDX_136fc941e4570dcbf0d43b1cfe"`);
+    await db.query(`DROP INDEX "public"."IDX_856cca228fa032025dd88fbb31"`);
+    await db.query(`DROP INDEX "public"."IDX_8544e1c56bf52277d5875c30de"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "is_sails_idl_v2" boolean NOT NULL DEFAULT false`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "header" bytea`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "route_idx" bytea`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "is_sails_idl_v2" boolean NOT NULL DEFAULT false`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "header" bytea`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "route_idx" bytea`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "program" ADD "block_hash" bytea`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "program" ADD "block_number" bigint NOT NULL`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "owner"`);
+    await db.query(`ALTER TABLE "program" ADD "owner" bytea`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "code_id"`);
+    await db.query(`ALTER TABLE "program" ADD "code_id" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "code" ADD "block_hash" bytea`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "code" ADD "block_number" bigint NOT NULL`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "uploaded_by"`);
+    await db.query(`ALTER TABLE "code" ADD "uploaded_by" bytea`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "block_hash" bytea`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "block_number" bigint NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "destination"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "destination" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "source" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "payload" bytea`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "parent_id"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "parent_id" bytea`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "reply_to_msg_id"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "reply_to_msg_id" bytea`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "block_hash" bytea`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "block_number" bigint NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "destination"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "destination" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "source" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "payload" bytea`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "reply_to_msg_id"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "reply_to_msg_id" bytea`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "event" ADD "block_hash" bytea`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "event" ADD "block_number" bigint NOT NULL`);
+    await db.query(`DROP INDEX "public"."IDX_155b245dee66708209ac2883de"`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "event" ADD "source" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "event" ADD "payload" bytea`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "parent_id"`);
+    await db.query(`ALTER TABLE "event" ADD "parent_id" bytea`);
+    await db.query(`ALTER TABLE "voucher" DROP COLUMN "owner"`);
+    await db.query(`ALTER TABLE "voucher" ADD "owner" bytea NOT NULL`);
+    await db.query(`ALTER TABLE "voucher" DROP COLUMN "spender"`);
+    await db.query(`ALTER TABLE "voucher" ADD "spender" bytea NOT NULL`);
+    await db.query(
+      `CREATE INDEX "IDX_efb03e97b43c2467d0a710f2e0" ON "message_from_program" ("parent_id") WHERE "parent_id" IS NOT NULL`,
+    );
+    await db.query(`CREATE INDEX "IDX_23b9bed872dd32fb59b75ae34b" ON "message_from_program" ("source", "timestamp") `);
+    await db.query(
+      `CREATE INDEX "IDX_f968d93d9312061b84b85a7b39" ON "message_from_program" ("destination", "timestamp") `,
+    );
+    await db.query(`CREATE INDEX "IDX_442e06c7a691260f740032fcad" ON "message_to_program" ("source", "timestamp") `);
+    await db.query(
+      `CREATE INDEX "IDX_f54ab3e3cda6fcdb7447b9afe4" ON "message_to_program" ("destination", "timestamp") `,
+    );
+    await db.query(`CREATE INDEX "IDX_155b245dee66708209ac2883de" ON "event" ("source") `);
+  }
+
+  async down(db) {
+    await db.query(`CREATE INDEX "IDX_5c319551135829c361aa583432" ON "message_from_program" ("destination") `);
+    await db.query(`CREATE INDEX "IDX_136fc941e4570dcbf0d43b1cfe" ON "message_from_program" ("source") `);
+    await db.query(`CREATE INDEX "IDX_856cca228fa032025dd88fbb31" ON "message_to_program" ("destination") `);
+    await db.query(`CREATE INDEX "IDX_8544e1c56bf52277d5875c30de" ON "message_to_program" ("source") `);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "is_sails_idl_v2"`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "header"`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "route_idx"`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "is_sails_idl_v2"`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "header"`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "route_idx"`);
+    await db.query(`ALTER TABLE "program" ADD "block_hash" character varying(66)`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "program" ADD "block_number" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "program" ADD "owner" character varying`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "owner"`);
+    await db.query(`ALTER TABLE "program" ADD "code_id" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "program" DROP COLUMN "code_id"`);
+    await db.query(`ALTER TABLE "code" ADD "block_hash" character varying(66)`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "code" ADD "block_number" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "code" ADD "uploaded_by" character varying`);
+    await db.query(`ALTER TABLE "code" DROP COLUMN "uploaded_by"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "block_hash" character varying(66)`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "block_number" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "destination" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "destination"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "source" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "payload" character varying`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "parent_id" character varying`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "parent_id"`);
+    await db.query(`ALTER TABLE "message_from_program" ADD "reply_to_msg_id" character varying`);
+    await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "reply_to_msg_id"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "block_hash" character varying(66)`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "block_number" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "block_number"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "destination" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "destination"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "source" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "payload" character varying`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "message_to_program" ADD "reply_to_msg_id" character varying`);
+    await db.query(`ALTER TABLE "message_to_program" DROP COLUMN "reply_to_msg_id"`);
+    await db.query(`ALTER TABLE "event" ADD "block_hash" character varying(66)`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "block_hash"`);
+    await db.query(`ALTER TABLE "event" ADD "block_number" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "block_number"`);
+    await db.query(`CREATE INDEX "IDX_155b245dee66708209ac2883de" ON "event" ("source") `);
+    await db.query(`ALTER TABLE "event" ADD "source" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "source"`);
+    await db.query(`ALTER TABLE "event" ADD "payload" character varying`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "payload"`);
+    await db.query(`ALTER TABLE "event" ADD "parent_id" character varying`);
+    await db.query(`ALTER TABLE "event" DROP COLUMN "parent_id"`);
+    await db.query(`ALTER TABLE "voucher" ADD "owner" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "voucher" DROP COLUMN "owner"`);
+    await db.query(`ALTER TABLE "voucher" ADD "spender" character varying NOT NULL`);
+    await db.query(`ALTER TABLE "voucher" DROP COLUMN "spender"`);
+    await db.query(`DROP INDEX "public"."IDX_efb03e97b43c2467d0a710f2e0"`);
+    await db.query(`DROP INDEX "public"."IDX_23b9bed872dd32fb59b75ae34b"`);
+    await db.query(`DROP INDEX "public"."IDX_f968d93d9312061b84b85a7b39"`);
+    await db.query(`DROP INDEX "public"."IDX_442e06c7a691260f740032fcad"`);
+    await db.query(`DROP INDEX "public"."IDX_f54ab3e3cda6fcdb7447b9afe4"`);
+    await db.query(`DROP INDEX "public"."IDX_155b245dee66708209ac2883de"`);
+  }
+}

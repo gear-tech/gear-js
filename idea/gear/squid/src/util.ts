@@ -1,7 +1,8 @@
-import { CUploadCode, CUploadProgram, CVoucherCall, isUploadCode, isUploadProgram } from './types/calls';
-import { getGrReply, CreateType } from '@gear-js/api';
-import { u8aToHex, u8aToU8a, u8aConcat, stringToU8a } from '@polkadot/util';
+import { CreateType, getGrReply } from '@gear-js/api';
+import { stringToU8a, u8aConcat, u8aToHex, u8aToU8a } from '@polkadot/util';
 import { blake2AsHex } from '@polkadot/util-crypto';
+
+import { CUploadCode, CUploadProgram, CVoucherCall, isUploadCode, isUploadProgram } from './types/calls/index.js';
 
 export async function getMetahash(call: CUploadCode | CUploadProgram | CVoucherCall): Promise<string | null> {
   const code =

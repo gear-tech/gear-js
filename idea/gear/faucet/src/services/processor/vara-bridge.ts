@@ -1,12 +1,12 @@
+import { createLogger } from 'gear-idea-common';
 import { createPublicClient, createWalletClient, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { Account, privateKeyToAccount } from 'viem/accounts';
-import { parseAbi, parseUnits } from 'viem/utils';
-import { createLogger } from 'gear-idea-common';
 import { hoodi } from 'viem/chains';
+import { parseAbi, parseUnits } from 'viem/utils';
 
-import { FaucetType, FaucetRequest } from '../../database';
-import { FaucetProcessor } from './abstract';
-import config from '../../config';
+import config from '../../config.js';
+import { FaucetRequest, FaucetType } from '../../database/index.js';
+import { FaucetProcessor } from './abstract.js';
 
 const ERC20_ABI = parseAbi([
   'function transfer(address to, uint256 amount)',

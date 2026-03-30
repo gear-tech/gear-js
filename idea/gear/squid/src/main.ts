@@ -1,36 +1,36 @@
-import { TypeormDatabase, Store } from '@subsquid/typeorm-store';
+import { GearApi } from '@gear-js/api';
+import { Store, TypeormDatabase } from '@subsquid/typeorm-store';
+import { createClient, RedisClientType } from 'redis';
 
-import { processor, ProcessorContext } from './processor';
-import { TempState } from './temp-state';
+import { config } from './config.js';
 import {
+  handleBalanceTransfer,
+  handleCodeChanged,
+  handleMessageQueued,
+  handleMessagesDispatched,
+  handleProgramChanged,
+  handleUserMessageRead,
+  handleUserMessageSent,
+  handleVoucherDeclined,
+  handleVoucherIssued,
+  handleVoucherRevoked,
+  handleVoucherUpdated,
+} from './event.route.js';
+import { processor, ProcessorContext } from './processor.js';
+import { TempState } from './temp-state.js';
+import {
+  isBalanceTransfer,
   isCodeChanged,
   isMessageQueued,
   isMessagesDispatched,
   isProgramChanged,
   isUserMessageRead,
   isUserMessageSent,
-  isVoucherIssued,
-  isVoucherUpdated,
   isVoucherDeclined,
+  isVoucherIssued,
   isVoucherRevoked,
-  isBalanceTransfer,
-} from './types';
-import {
-  handleCodeChanged,
-  handleBalanceTransfer,
-  handleVoucherDeclined,
-  handleVoucherIssued,
-  handleVoucherRevoked,
-  handleVoucherUpdated,
-  handleMessageQueued,
-  handleMessagesDispatched,
-  handleProgramChanged,
-  handleUserMessageRead,
-  handleUserMessageSent,
-} from './event.route';
-import { createClient, RedisClientType } from 'redis';
-import { config } from './config';
-import { GearApi } from '@gear-js/api';
+  isVoucherUpdated,
+} from './types/index.js';
 
 let tempState: TempState;
 

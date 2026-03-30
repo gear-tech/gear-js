@@ -26,6 +26,14 @@ export default [
       'json/no-duplicate-keys': 'error',
     },
   },
+  {
+    ...json.configs.recommended,
+    files: ['**/tsconfig*.json'],
+    language: 'json/json5',
+    rules: {
+      'json/no-duplicate-keys': 'error',
+    },
+  },
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
@@ -45,6 +53,7 @@ export default [
     tsConfigs: [
       'idea/{gear,vara-eth}/frontend/tsconfig.json',
       'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect,sails-payload-form}/tsconfig.json',
+      'utils/gear-ui/tsconfig.test.json',
     ],
   }).map((conf) => ({
     ...conf,

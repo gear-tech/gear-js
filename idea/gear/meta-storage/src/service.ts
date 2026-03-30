@@ -12,9 +12,9 @@ import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 
-import { Meta, AppDataSource, SailsIdl } from './database';
-import { validateMetaHex } from './util/validate';
-import { Code } from './database/entities/code.entity';
+import { Meta, AppDataSource, SailsIdl } from './database/index.js';
+import { validateMetaHex } from './util/validate.js';
+import { Code } from './database/entities/code.entity.js';
 
 const getHash = (data: string) => crypto.createHash('sha256').update(data).digest('hex');
 

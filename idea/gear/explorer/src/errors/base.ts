@@ -1,4 +1,4 @@
-import { JsonRpcError } from '../types';
+import { JsonRpcError } from '../types/index.js';
 
 export class GenesisNotFound implements JsonRpcError {
   code = -32601;

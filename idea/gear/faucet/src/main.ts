@@ -1,10 +1,10 @@
 import { logger } from 'gear-idea-common';
-
-import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services';
-import { AppDataSource } from './database';
-import { Server } from './server';
-import config from './config';
 import { webSocket } from 'viem';
+
+import config from './config.js';
+import { AppDataSource } from './database/index.js';
+import { Server } from './server.js';
+import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services/index.js';
 
 export class FaucetApp {
   private _lastSeenService: LastSeenService;
