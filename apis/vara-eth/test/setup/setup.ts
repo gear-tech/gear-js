@@ -104,17 +104,8 @@ async function setupVaraEth() {
   process.env.ROUTER_ADDRESS = routerAddress;
 }
 
-function _uploadCode() {
-  execSync(
-    `${pathToEthexeBin} tx --ethereum-rpc ${ANVIL_RPC} --ethereum-router ${routerAddress} --sender ${SENDER_ADDRESS} --key-store "${keyStore}" upload ${COUNTER_CODE} -w`,
-    { stdio: 'inherit' },
-  );
-}
-
 export default async () => {
   setupCodeId();
 
   await setupVaraEth();
-
-  // _uploadCode();
 };

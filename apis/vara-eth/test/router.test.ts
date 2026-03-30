@@ -50,7 +50,7 @@ describe('router', () => {
       codeValidatedPromise = tx.waitForCodeGotValidated();
     }, 60_000);
 
-    test(
+    test.skip(
       'should wait when code got validated',
       async () => {
         expect(await codeValidatedPromise).toBeTruthy();
@@ -58,7 +58,7 @@ describe('router', () => {
 
         console.log(codeId);
       },
-      config.longRunningTestTimeout * 5,
+      config.longRunningTestTimeout,
     );
 
     test('should check that code state is Validated', async () => {

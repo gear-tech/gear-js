@@ -234,12 +234,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       args: [codeId],
     });
 
-    const blob = prepareBlob(code);
-
-    if (blob.length != 4096 * 32) {
-      throw new Error('Invalid blob size');
-    }
-
+    const blobs = simpleSidecarEncode(code);
     const kzg = await loadKZG();
 
     const tx = {
@@ -249,7 +244,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       to: this.address,
       gas: 5_000_000n,
       maxFeePerBlobGas: 400_000_000_000n,
-      blobs: [blob],
+      blobs,
       kzg: {
         blobToKzgCommitment: (blob: Uint8Array) => {
           const result = kzg.blobToKZGCommitment(bytesToHex(blob)) as Hex;
@@ -386,25 +381,49 @@ export function getRouterClient(params: ContractClientParams): RouterClient {
   return new RouterClient(params);
 }
 
-function prepareBlob(data: Uint8Array) {
-  // https://docs.rs/alloy/latest/alloy/consensus/struct.SimpleCoder.html#behavior
-  const BLOB_SIZE = 131_072;
-  const paddedData = new Uint8Array(BLOB_SIZE);
+const BYTES_PER_BLOB = 131_072;
+const FIELD_ELEMENTS_PER_BLOB = 4096;
+const FE_BYTES = 32;
+const USABLE_BYTES_PER_FE = 31;
 
-  const dataLength = numberToBytes(data.length, { size: 32 });
-  const length = new Uint8Array(32);
-  length.set(dataLength, 0);
+export function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
+  const blobs: Uint8Array[] = [];
+  let feCount = 0;
 
-  paddedData.set(length, 0);
+  const pushEmptyBlob = () => {
+    blobs.push(new Uint8Array(BYTES_PER_BLOB));
+  };
 
-  let offset = 32;
+  const currentBlob = () => {
+    const index = Math.floor(feCount / FIELD_ELEMENTS_PER_BLOB);
+    while (blobs.length <= index) pushEmptyBlob();
+    return blobs[index];
+  };
 
-  while (data.length > 0) {
-    const chunk = data.slice(0, 31);
-    paddedData.set(chunk, offset + 1);
-    offset += 32;
-    data = data.slice(31);
+  const feOffsetInCurrentBlob = () => (feCount % FIELD_ELEMENTS_PER_BLOB) * FE_BYTES;
+
+  const ingestFE = (fe: Uint8Array) => {
+    const blob = currentBlob();
+    const offset = feOffsetInCurrentBlob();
+    blob.set(fe, offset);
+    feCount++;
+  };
+
+  if (data.length === 0) return blobs;
+
+  const lenFE = new Uint8Array(FE_BYTES);
+  const lenBytes = new DataView(lenFE.buffer);
+  lenBytes.setBigUint64(1, BigInt(data.length));
+  ingestFE(lenFE);
+
+  let offset = 0;
+  while (offset < data.length) {
+    const fe = new Uint8Array(FE_BYTES);
+    const chunkSize = Math.min(USABLE_BYTES_PER_FE, data.length - offset);
+    fe.set(data.subarray(offset, offset + chunkSize), 1);
+    offset += chunkSize;
+    ingestFE(fe);
   }
 
-  return paddedData;
+  return blobs;
 }
