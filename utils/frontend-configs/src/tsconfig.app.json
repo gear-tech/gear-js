@@ -30,5 +30,5 @@
     "types": ["vite/client", "vite-plugin-svgr/client"],
   },
   "include": ["${configDir}/src"],
-  "exclude": ["${configDir}/src/**.test.ts"],
+  "exclude": ["${configDir}/src/**/*.test.ts", "${configDir}/src/**/*.test.tsx"],
 }
