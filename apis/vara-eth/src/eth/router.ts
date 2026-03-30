@@ -1,5 +1,5 @@
 import type { Address, Hex, TransactionRequest } from 'viem';
-import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
+import { toHex, zeroAddress, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
 
