@@ -43,6 +43,10 @@ async function setupVaraEth() {
     {
       stdio: 'pipe',
       detached: true,
+      env: {
+        ...process.env,
+        RUST_LOG: 'debug',
+      },
     },
   );
 
@@ -100,7 +104,7 @@ async function setupVaraEth() {
   process.env.ROUTER_ADDRESS = routerAddress;
 }
 
-function uploadCode() {
+function _uploadCode() {
   execSync(
     `${pathToEthexeBin} tx --ethereum-rpc ${ANVIL_RPC} --ethereum-router ${routerAddress} --sender ${SENDER_ADDRESS} --key-store "${keyStore}" upload ${COUNTER_CODE} -w`,
     { stdio: 'inherit' },
@@ -112,5 +116,5 @@ export default async () => {
 
   await setupVaraEth();
 
-  uploadCode();
+  // _uploadCode();
 };

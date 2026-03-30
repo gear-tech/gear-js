@@ -7,7 +7,7 @@ import path from 'path';
 import { CodeState, getMirrorClient, getRouterClient, RouterClient, type ITransactionSigner } from '../src';
 import { config } from './config';
 import { walletClientToSigner } from '../src/signer';
-import { waitNBlocks } from "./common";
+import { waitNBlocks } from './common';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: `0x${string}`;
@@ -50,7 +50,7 @@ describe('router', () => {
       codeValidatedPromise = tx.waitForCodeGotValidated();
     }, 60_000);
 
-    test.skip(
+    test(
       'should wait when code got validated',
       async () => {
         expect(await codeValidatedPromise).toBeTruthy();
@@ -58,7 +58,7 @@ describe('router', () => {
 
         console.log(codeId);
       },
-      config.longRunningTestTimeout,
+      config.longRunningTestTimeout * 5,
     );
 
     test('should check that code state is Validated', async () => {

@@ -260,15 +260,9 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
           return hexToBytes(result);
         },
         computeCellsAndKzgProofs: (blob: Uint8Array): [Uint8Array[], Uint8Array[]] => {
-          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [
-            `0x${string}`[],
-            `0x${string}`[],
-          ]
-          return [
-            cells.map((cell) => hexToBytes(cell)),
-            proofs.map((proof) => hexToBytes(proof)),
-          ]
-        }
+          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [`0x${string}`[], `0x${string}`[]];
+          return [cells.map((cell) => hexToBytes(cell)), proofs.map((proof) => hexToBytes(proof))];
+        },
       },
       chain: null,
     };
@@ -288,6 +282,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
             eventName: 'CodeGotValidated',
             onLogs: (logs) => {
               for (const log of logs) {
+                console.log(log);
                 if (log.args.codeId == codeId) {
                   if (log.args.valid) {
                     resolve(true);
