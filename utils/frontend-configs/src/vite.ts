@@ -1,12 +1,38 @@
-import { resolve } from 'path';
+import { readFileSync } from 'fs';
+import { createRequire } from 'module';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
 
 import react from '@vitejs/plugin-react-swc';
-import { defineConfig } from 'vite';
+import { defineConfig, type PluginOption } from 'vite';
 import { checker } from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgr from 'vite-plugin-svgr';
 import dts from 'vite-plugin-dts';
 import { externalizeDeps } from 'vite-plugin-externalize-deps';
+
+const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const serveKzgWasmFromViteCachePath = (): PluginOption => {
+  const kzgEntry = require.resolve('kzg-wasm', { paths: [process.cwd()] });
+  const wasmPath = resolve(dirname(kzgEntry), '..', 'wasm', 'kzg.wasm');
+
+  return {
+    name: 'serve-kzg-wasm-vite-cache-path',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/node_modules/.vite/wasm/kzg.wasm', (_req, res) => {
+        const wasm = readFileSync(wasmPath);
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/wasm');
+        res.setHeader('Cache-Control', 'no-store');
+        res.end(wasm);
+      });
+    },
+  };
+};
 
 const options = {
   server: { port: 3000, open: true },
@@ -17,7 +43,8 @@ const options = {
 const plugins = [
   react(),
   svgr(),
-  nodePolyfills(),
+  serveKzgWasmFromViteCachePath(),
+  nodePolyfills({ globals: { process: false } }),
   checker({ typescript: { buildMode: true }, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
 ];
 
