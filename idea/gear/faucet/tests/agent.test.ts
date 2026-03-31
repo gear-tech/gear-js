@@ -26,16 +26,10 @@ describe('Agent requests', () => {
   let app: FaucetApp;
 
   const challenge = (address?: string) =>
-    request(app.server.app)
-      .post('/agent/challenge')
-      .send({ address })
-      .set('Accept', 'application/json');
+    request(app.server.app).post('/agent/challenge').send({ address }).set('Accept', 'application/json');
 
   const claim = (body: Record<string, unknown>) =>
-    request(app.server.app)
-      .post('/agent/vara-testnet/request')
-      .send(body)
-      .set('Accept', 'application/json');
+    request(app.server.app).post('/agent/vara-testnet/request').send(body).set('Accept', 'application/json');
 
   beforeAll(async () => {
     app = new FaucetApp(false, true, false);
@@ -142,7 +136,7 @@ describe('Agent requests', () => {
       expect(lastEntry).toHaveProperty('status', RequestStatus.Pending);
     });
 
-    it('should return 401 for reused nonce', async () => {
+    it('should return 429 for the second request', async () => {
       const pair = createKeyPair();
 
       const challengeRes = await challenge(pair.address);
@@ -165,7 +159,7 @@ describe('Agent requests', () => {
         signature,
         nonce,
       });
-      expect(res2.statusCode).toBe(401);
+      expect(res2.statusCode).toBe(429);
     });
 
     it('should return 403 for 24h cooldown', async () => {
