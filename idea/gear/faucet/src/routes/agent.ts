@@ -2,10 +2,7 @@ import { createLogger } from 'gear-idea-common';
 import { Request, Response } from 'express';
 import { decodeAddress } from '@gear-js/api';
 
-import {
-  agentRateLimitMiddleware,
-  agentChallengeRateLimitMiddleware,
-} from './middleware';
+import { agentRateLimitMiddleware, agentChallengeRateLimitMiddleware } from './middleware';
 import { createSignatureAuthMiddleware } from './middleware';
 import { handleVaraTestnetRequest } from './handlers';
 import { ChallengeService, RequestService } from '../services';
@@ -51,12 +48,7 @@ export class AgentRouter extends BaseRouter {
 
     this.router.post('/agent/challenge', agentChallengeRateLimitMiddleware, this._challenge.bind(this));
 
-    this.router.post(
-      '/agent/vara-testnet/request',
-      signatureAuth,
-      agentRateLimitMiddleware,
-      this._request.bind(this),
-    );
+    this.router.post('/agent/vara-testnet/request', agentRateLimitMiddleware, signatureAuth, this._request.bind(this));
   }
 
   private _challenge({ body: { address } }: Request, res: Response) {
