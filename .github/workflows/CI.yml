@@ -30,9 +30,6 @@ jobs:
       - name: 'Install dependencies'
         run: yarn install
 
-      - name: 'Build idea/frontend deps'
-        run: yarn build:gear-api && yarn build:utils && yarn build:vara-eth-api
-
       - name: 'Run linter'
         run: yarn lint
 
