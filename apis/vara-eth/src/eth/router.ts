@@ -262,9 +262,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       chain: null,
     };
 
-    const request = await this._pc.prepareTransactionRequest(tx);
-
-    console.log(request);
+    await this._pc.prepareTransactionRequest(tx);
 
     const txManager: ITxManager = new TxManager(this._pc, this._signer!, tx, IROUTER_ABI, undefined, {
       codeId,
@@ -277,7 +275,6 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
             eventName: 'CodeGotValidated',
             onLogs: (logs) => {
               for (const log of logs) {
-                console.log(log);
                 if (log.args.codeId == codeId) {
                   if (log.args.valid) {
                     resolve(true);
@@ -386,7 +383,7 @@ const FIELD_ELEMENTS_PER_BLOB = 4096;
 const FE_BYTES = 32;
 const USABLE_BYTES_PER_FE = 31;
 
-export function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
+function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
   const blobs: Uint8Array[] = [];
   let feCount = 0;
 
