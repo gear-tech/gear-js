@@ -40,6 +40,35 @@ components:
         - address
         - contract
 
+    AgentChallengeRequest:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Vara account address (SS58 or hex)
+      required:
+        - address
+    AgentClaimRequest:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Vara account address (SS58 or hex)
+        genesis:
+          type: string
+          description: Genesis block hash
+        signature:
+          type: string
+          description: sr25519 signature of the challenge nonce
+        nonce:
+          type: string
+          description: Challenge nonce from /agent/challenge
+      required:
+        - address
+        - genesis
+        - signature
+        - nonce
+
 paths:
   /balance:
     post:
@@ -77,6 +106,69 @@ paths:
           content:
             application/json:
               example: { error: 'InternalError' }
+  /agent/challenge:
+    post:
+      summary: Request a challenge nonce for agent authentication
+      description: Returns a one-time nonce that must be signed by the agent's sr25519 key. Nonce expires in 60 seconds.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentChallengeRequest'
+            example:
+              address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+      responses:
+        '200':
+          description: Challenge created
+          content:
+            application/json:
+              example: { nonce: '0xabcdef...', expiresIn: 60 }
+        '400':
+          description: Invalid address
+        '429':
+          description: Rate limited
+  /agent/vara-testnet/request:
+    post:
+      summary: Request testnet TVARA tokens (agent authentication via signed challenge)
+      description: Submit a signed challenge nonce to prove address ownership and request test tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentClaimRequest'
+            example:
+              address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+              genesis: '0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6'
+              signature: '0x...'
+              nonce: '0xabcdef...'
+      responses:
+        '200':
+          description: Request submitted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              examples:
+                MissingFields: { error: 'Address, signature, and nonce are required' }
+                InvalidAddress: { error: 'Invalid account address' }
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              examples:
+                ExpiredChallenge: { error: 'Invalid or expired challenge' }
+                BadSignature: { error: 'Invalid signature' }
+        '403':
+          description: Faucet limit reached
+          content:
+            application/json:
+              example: { error: 'The limit for requesting test balance has been reached.' }
+        '429':
+          description: Rate limited or daily cap reached
+        '500':
+          description: Server error
   /bridge/request:
     post:
       summary: Request test tokens on ERC20 contracts used by Vara bridge
