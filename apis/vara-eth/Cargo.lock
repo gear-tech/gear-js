@@ -89,6 +89,7 @@ dependencies = [
  "const-hex",
  "derive_more 2.1.1",
  "foldhash 0.2.0",
+ "hashbrown 0.16.1",
  "indexmap",
  "itoa",
  "k256",
@@ -680,6 +681,9 @@ name = "bytes"
 version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e748733b7cbc798e1434b6ac524f0c1ff2ab456fe201501e6497c8417a4fc33"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "camino"
@@ -1423,21 +1427,22 @@ dependencies = [
 [[package]]
 name = "ethexe-common"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "alloy-primitives",
  "anyhow",
  "auto_impl",
  "derive_more 2.1.1",
- "gear-core 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "gsigner",
  "hex",
  "k256",
  "nonempty",
  "parity-scale-codec",
  "roast-secp256k1-evm",
+ "scale-info",
  "serde",
  "sha3",
  "sp-core",
@@ -1764,23 +1769,23 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "blake2",
  "bytemuck",
  "byteorder",
  "derive_more 2.1.1",
  "enum-iterator",
- "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gear-wasm-instrument 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
+ "gear-wasm-instrument 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gsys 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
+ "gsys 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "hex",
  "impl-serde",
  "log",
  "num-traits",
- "numerated 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "numerated 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "parity-scale-codec",
  "paste",
  "scale-decode",
@@ -1808,7 +1813,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "enum-iterator",
  "gear-workspace-hack",
@@ -1847,7 +1852,7 @@ dependencies = [
 [[package]]
 name = "gear-ss58"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "blake2",
  "bs58",
@@ -1898,7 +1903,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "derive_more 2.1.1",
  "enum-iterator",
@@ -2016,11 +2021,11 @@ dependencies = [
 [[package]]
 name = "gprimitives"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "bytemuck",
  "derive_more 2.1.1",
- "gear-ss58 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-ss58 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "gear-workspace-hack",
  "hex",
  "primitive-types 0.12.2",
@@ -2045,7 +2050,7 @@ dependencies = [
 [[package]]
 name = "gsigner"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "alloy-primitives",
  "anyhow",
@@ -2053,12 +2058,13 @@ dependencies = [
  "derive_more 2.1.1",
  "dirs",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "hex",
  "k256",
  "nacl",
  "parity-scale-codec",
  "rand 0.8.5",
+ "scale-info",
  "secrecy",
  "serde",
  "serde_json",
@@ -2117,7 +2123,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "bytemuck",
  "gear-workspace-hack",
@@ -2196,6 +2202,11 @@ name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
+dependencies = [
+ "foldhash 0.2.0",
+ "serde",
+ "serde_core",
+]
 
 [[package]]
 name = "heapless"
@@ -2461,8 +2472,8 @@ name = "injected"
 version = "0.1.0"
 dependencies = [
  "ethexe-common",
- "gear-core 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
+ "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable)",
  "hex",
 ]
 
@@ -2838,7 +2849,7 @@ dependencies = [
 [[package]]
 name = "numerated"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#933a9b74a82b30e2a32a278dfcac5f5fcb990ce0"
+source = "git+https://github.com/gear-tech/gear?branch=av%2Fethexe-cli-configurable#fb6e31b1559768f613176c258eaf4eeceb84a9ff"
 dependencies = [
  "derive_more 2.1.1",
  "gear-workspace-hack",
@@ -3294,6 +3305,7 @@ checksum = "6db2770f06117d490610c7488547d543617b21bfa07796d7a12f6f1bd53850d1"
 dependencies = [
  "rand_chacha 0.9.0",
  "rand_core 0.9.5",
+ "serde",
 ]
 
 [[package]]
@@ -3332,6 +3344,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76afc826de14238e6e8c374ddcc1fa19e374fd8dd986b0d2af0d02377261d83c"
 dependencies = [
  "getrandom 0.3.4",
+ "serde",
 ]
 
 [[package]]

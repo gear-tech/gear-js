@@ -11,7 +11,7 @@ members = ["programs/counter", "programs/counter-idl", "programs/injected"]
 
 [workspace.dependencies]
 sails-rs = "0.10.3"
-ethexe-common = { git = "https://github.com/gear-tech/gear" }
-gear-core = { git = "https://github.com/gear-tech/gear" }
-gear-core-errors = { git = "https://github.com/gear-tech/gear" }
+ethexe-common = { git = "https://github.com/gear-tech/gear", branch = "av/ethexe-cli-configurable" }
+gear-core = { git = "https://github.com/gear-tech/gear", branch = "av/ethexe-cli-configurable" }
+gear-core-errors = { git = "https://github.com/gear-tech/gear", branch = "av/ethexe-cli-configurable" }
 hex = "0.4"
