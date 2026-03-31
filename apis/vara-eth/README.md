@@ -46,7 +46,7 @@ npm install @vara-eth/api
 Install required peer dependencies:
 
 ```bash
-npm install viem@^2.39.0 kzg-wasm@1.0.0
+npm install viem@npm:@vara-eth/viem@2.47.6 kzg-wasm@1.0.0
 ```
 
 ## Quick Start

@@ -16271,7 +16271,7 @@ __metadata:
     supertest: "npm:^7.1.4"
     swagger-ui-express: "npm:5.0.1"
     typeorm: "npm:0.3.28"
-    viem: "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
+    viem: "npm:@vara-eth/viem@2.47.6"
     winston: "npm:3.19.0"
     xxhashjs: "npm:0.2.2"
     yamljs: "npm:0.3.0"
@@ -25810,27 +25810,6 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
-  languageName: node
-  linkType: hard
-
-"viem@https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516":
-  version: 2.47.7-98e8516.0
-  resolution: "viem@https://pkg.pr.new/StackOverflowExcept1on/viem/viem@98e8516"
-  dependencies:
-    "@noble/curves": "npm:1.9.1"
-    "@noble/hashes": "npm:1.8.0"
-    "@scure/bip32": "npm:1.7.0"
-    "@scure/bip39": "npm:1.6.0"
-    abitype: "npm:1.2.3"
-    isows: "npm:1.0.7"
-    ox: "npm:0.14.7"
-    ws: "npm:8.18.3"
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/00343320da047babb7697ea2aab7f94c302f2762ba9d2d3f322933b4fd7eb2fe9986dea3f22cf6632b2a8bde6417399bde7e6f0a05b0120bf67ab0783e9d398a
   languageName: node
   linkType: hard
 
