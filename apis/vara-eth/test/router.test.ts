@@ -10,7 +10,7 @@ import { walletClientToSigner } from '../src/signer';
 import { waitNBlocks } from './common';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
-let codeId: `0x${string}`;
+let codeId: Hex;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ITransactionSigner;
@@ -97,7 +97,7 @@ describe('router', () => {
 
       const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
 
-      const contractAddr = receipt.contractAddress?.toLowerCase() as `0x${string}` | undefined;
+      const contractAddr = receipt.contractAddress?.toLowerCase() as Hex | undefined;
 
       if (!contractAddr) {
         throw new Error('Counter ABI deployment failed');
@@ -232,14 +232,14 @@ describe('router', () => {
 
     test('should check if addresses are validators', async () => {
       const validators = await router.validators();
-      const isValid = await router.areValidators(validators as `0x${string}`[]);
+      const isValid = await router.areValidators(validators as Hex[]);
       expect(isValid).toBeDefined();
       expect(typeof isValid).toBe('boolean');
     });
 
     test('should return false for non-validator addresses', async () => {
       const notValidator = '0x0000000000000000000000000000000000000001';
-      const isValid = await router.areValidators([notValidator as `0x${string}`]);
+      const isValid = await router.areValidators([notValidator as Hex]);
       expect(isValid).toBe(false);
     });
 

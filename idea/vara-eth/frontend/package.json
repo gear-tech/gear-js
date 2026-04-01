@@ -26,7 +26,7 @@
     "react-syntax-highlighter": "15.6.6",
     "sails-js": "0.5.1",
     "sails-js-parser": "0.5.1",
-    "viem": "npm:@vara-eth/viem@2.47.7",
+    "viem": "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@a2e9357",
     "wagmi": "2.19.4",
     "zod": "4.3.6"
   },
