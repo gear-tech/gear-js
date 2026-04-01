@@ -2,7 +2,7 @@ name: 'Vara.Eth Idea Release'
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'prod/vara-eth-idea']
     paths:
       - idea/vara-eth/**
   workflow_dispatch:
@@ -18,7 +18,6 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
@@ -26,7 +25,6 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 permissions:
   contents: read
@@ -45,7 +43,17 @@ jobs:
 
       - name: Get environment
         id: get_env
-        run: echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
+          else
+            # For push events, determine environment based on branch
+            if [[ "${{ github.ref }}" == "refs/heads/prod/vara-eth-idea" ]]; then
+              echo "environment=vara-eth-idea-production" >> $GITHUB_OUTPUT
+            else
+              echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
+            fi
+          fi
 
   check-changes:
     runs-on: ubuntu-latest
@@ -81,7 +89,7 @@ jobs:
             else
               echo "frontend=false" >> "$GITHUB_OUTPUT"
             fi
-            
+
             if [[ "${{ github.event.inputs.service }}" == "indexer" || "${{ github.event.inputs.service }}" == "all" ]]; then
               echo "indexer=true" >> "$GITHUB_OUTPUT"
             else
@@ -159,8 +167,9 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   deploy-indexer:
-    needs: [build-indexer-image]
+    needs: [build-indexer-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
 
     steps:
       - name: Configure AWS credentials
@@ -173,11 +182,12 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment vara-eth-indexer -n dev-1
+          args: rollout restart deployment ${{ vars.INDEXER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-frontend:
-    needs: [build-frontend-image]
+    needs: [build-frontend-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
 
     steps:
       - name: Configure AWS credentials
@@ -190,4 +200,4 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment vara-eth-frontend -n dev-1
+          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMEPSACE }}
