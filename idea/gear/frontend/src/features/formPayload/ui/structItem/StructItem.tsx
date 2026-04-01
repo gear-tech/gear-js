@@ -1,7 +1,7 @@
 import { Fieldset } from '@/shared/ui';
 
 import { getItemLabel, getNextLevelName } from '../../helpers';
-import { PayloadItemProps } from '../../model';
+import type { PayloadItemProps } from '../../model';
 
 const StructItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const itemLabel = getItemLabel(typeStructure.name, title);

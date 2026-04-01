@@ -1,13 +1,13 @@
 import { useAppKit } from '@reown/appkit/react';
-import { MouseEvent, useState } from 'react';
-import { Sails } from 'sails-js';
+import { type MouseEvent, useState } from 'react';
+import type { Sails } from 'sails-js';
 import { useAccount } from 'wagmi';
 
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button, Tooltip } from '@/components';
 import { cx } from '@/shared/utils';
 
-import { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
+import type { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
 import { SailsPayloadForm } from '../sails-payload-form';
 
 import styles from './sails-action.module.scss';

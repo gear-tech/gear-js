@@ -1,4 +1,4 @@
-import { Select as GearSelect, SelectProps } from '@gear-js/ui';
+import { Select as GearSelect, type SelectProps } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 // TODO: omit onChange and onBlur, options types start to freak out

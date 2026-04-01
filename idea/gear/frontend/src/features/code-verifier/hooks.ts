@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';

@@ -1,12 +1,18 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["**/dist", "**/dist-temp", ".yarn", "**/node_modules"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/dist-temp",
+      "!**/.yarn",
+      "!**/node_modules"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -22,6 +28,9 @@
       "bracketSpacing": true,
       "bracketSameLine": true,
       "arrowParentheses": "always"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "linter": {
@@ -31,18 +40,32 @@
       "correctness": {
         "noUnusedVariables": "warn",
         "noUnusedFunctionParameters": "warn",
-        "noUnusedImports": "warn"
+        "noUnusedImports": "warn",
+        "noChildrenProp": "off",
+        "useExhaustiveDependencies": "warn"
       },
       "style": {
-        "noParameterAssign": "error",
-        "useImportType": "error"
+        "noParameterAssign": "off",
+        "useImportType": "error",
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noStaticOnlyClass": "off",
+        "noUselessFragments": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noArrayIndexKey": "off",
+        "noFallthroughSwitchClause": "off",
+        "noShadowRestrictedNames": "off",
+        "useGetterReturn": "off"
+      },
+      "performance": {
+        "noAccumulatingSpread": "off"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
-  }
+  "assist": { "actions": { "source": { "organizeImports": "on" } } }
 }

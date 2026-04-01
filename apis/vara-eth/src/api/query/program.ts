@@ -1,5 +1,5 @@
-import { Hex } from 'viem';
-import {
+import type { Hex } from 'viem';
+import type {
   DispatchStash,
   FullProgramState,
   IVaraEthProvider,

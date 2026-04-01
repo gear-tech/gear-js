@@ -1,7 +1,10 @@
-import express, { Express } from 'express';
+import express, { type Express } from 'express';
 import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
-import { AllInOneService } from './services/all-in-one';
-import {
+import { Cache } from './middlewares/caching';
+import { redisConnect } from './middlewares/redis';
+import { Retry } from './middlewares/retry';
+import type { AllInOneService } from './services/all-in-one';
+import type {
   ParamGetCode,
   ParamGetCodes,
   ParamGetEvent,
@@ -16,9 +19,6 @@ import {
   ParamMsgToProgram,
   ParamSetProgramMeta,
 } from './types';
-import { Cache } from './middlewares/caching';
-import { redisConnect } from './middlewares/redis';
-import { Retry } from './middlewares/retry';
 
 export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;

@@ -1,4 +1,4 @@
-import { Balance } from '@polkadot/types/interfaces';
+import type { Balance } from '@polkadot/types/interfaces';
 import { useEffect, useState } from 'react';
 
 import { useAlert, useApi } from '@/context';

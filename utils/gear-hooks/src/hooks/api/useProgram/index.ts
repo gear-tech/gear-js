@@ -1,9 +1,9 @@
-import { GasLimit, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import type { GasLimit, ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
 
 import { useAccount, useAlert, useApi } from '@/context';
 
-import { TransactionName, Options, Code, CodeId, UseProgram } from './types';
+import { type Code, type CodeId, type Options, TransactionName, type UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';
 
@@ -78,4 +78,4 @@ function useCreateProgram(codeId: CodeId | undefined, metadata?: ProgramMetadata
   return useProgram('create', codeId, metadata, payloadType);
 }
 
-export { useUploadProgram, useCreateProgram };
+export { useCreateProgram, useUploadProgram };

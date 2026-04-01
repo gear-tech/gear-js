@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ReactNode, useEffect, useState, ReactPortal, MouseEvent } from 'react';
+import { type MouseEvent, type ReactNode, type ReactPortal, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import CrossIcon from '@/assets/icons/cross.svg?react';
@@ -59,5 +59,5 @@ const Modal = ({ heading, close, children, className, size = 'normal', action }:
   return root ? createPortal(component, root) : null;
 };
 
-export { Modal };
 export type { Props as ModalProps };
+export { Modal };

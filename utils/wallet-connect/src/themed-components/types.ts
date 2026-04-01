@@ -1,4 +1,4 @@
-import { HTMLAttributes, Ref } from 'react';
+import type { HTMLAttributes, Ref } from 'react';
 
 type ThemeProps = {
   theme: 'gear' | 'vara';
@@ -10,4 +10,4 @@ type HTMLProps<T = any> = HTMLAttributes<T> & {
   ref?: Ref<T> | undefined;
 };
 
-export type { ThemeProps, HTMLProps };
+export type { HTMLProps, ThemeProps };

@@ -4,7 +4,7 @@ import { INFINITE_QUERY } from '@/api';
 import { useChain, useErrorAlert } from '@/hooks';
 
 import { getEvents } from '../requests';
-import { GetEventsParameters } from '../types';
+import type { GetEventsParameters } from '../types';
 
 function useEvents(parameters: GetEventsParameters) {
   const { isDevChain } = useChain();

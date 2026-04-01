@@ -13,7 +13,7 @@ import { useLoading, useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
 
-import { FUNCTION_NAME, SailsProgram } from '../consts';
+import { type FUNCTION_NAME, SailsProgram } from '../consts';
 import { getDnsProgramId } from '../utils';
 
 const SERVICE_NAME = 'dns';

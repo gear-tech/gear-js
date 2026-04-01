@@ -1,13 +1,13 @@
 import 'reflect-metadata';
-import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
-import { validateOrReject } from 'class-validator';
 import { decodeAddress } from '@gear-js/api';
-import { In, Repository } from 'typeorm';
+import { validateOrReject } from 'class-validator';
+import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
+import { In, type Repository } from 'typeorm';
 
-import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
-import { hash, LastSeenService } from './last-seen';
+import type { Hex } from 'viem';
 import config from '../../config';
-import { Hex } from 'viem';
+import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
+import { hash, type LastSeenService } from './last-seen';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
@@ -15,12 +15,12 @@ export class RequestService {
   private _requesting: Set<string>;
 
   constructor(
-    private _varaTestnetGenesis: string | undefined,
+    varaTestnetGenesis: string | undefined,
     private _lastSeenService: LastSeenService,
   ) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
     this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
-    if (_varaTestnetGenesis) this._targets.push(_varaTestnetGenesis.toLowerCase());
+    if (varaTestnetGenesis) this._targets.push(varaTestnetGenesis.toLowerCase());
     if (config.wvara.address) this._targets.push(config.wvara.address.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
@@ -62,7 +62,7 @@ export class RequestService {
   }
 
   public async newRequest(address: Hex, target: Hex, type: FaucetType) {
-    logger.info(`New request`, { address, target, type });
+    logger.info('New request', { address, target, type });
     target = this._validateTarget(target);
 
     const req = await this._createAndValidateRequest(address, target, type);

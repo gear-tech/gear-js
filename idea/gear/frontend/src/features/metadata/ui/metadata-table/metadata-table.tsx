@@ -1,11 +1,11 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
 
 import { getFlatNamedTypeEntries, getNamedTypes } from '@/features/uploadMetadata';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
-import { TableRow, Table } from '@/shared/ui/table';
+import { Table, TableRow } from '@/shared/ui/table';
 import tableStyles from '@/shared/ui/table/ui/Table.module.scss';
 
 type Props = {

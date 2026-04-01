@@ -2,8 +2,8 @@ export * from './common';
 export * from './extrinsic';
 export * from './reply';
 export {
+  PayloadFilter,
+  UserMessageSentSubscriptionFilter,
   UserMessageSentSubscriptionItem,
   UserMessageSentSubscriptionReplyDetails,
-  UserMessageSentSubscriptionFilter,
-  PayloadFilter,
 } from './rpc';

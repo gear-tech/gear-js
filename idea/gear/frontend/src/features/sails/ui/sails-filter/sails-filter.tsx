@@ -1,6 +1,6 @@
-import { FieldValues, Path, useController, useFormContext } from 'react-hook-form';
+import { type FieldValues, type Path, useController, useFormContext } from 'react-hook-form';
 
-import { Services } from '../../types';
+import type { Services } from '../../types';
 
 import { Dropdown } from './dropdown';
 

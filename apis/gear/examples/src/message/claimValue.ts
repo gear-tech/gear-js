@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring, decodeAddress } from '@gear-js/api';
+import { decodeAddress, GearApi, GearKeyring } from '@gear-js/api';
 
 const main = async () => {
   const api = await GearApi.create();
@@ -21,11 +21,9 @@ const main = async () => {
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {
           if (event.method === 'UserMessageRead') {
-            return console.log(event.toHuman());
-          }
-
-          if (event.method === 'ExtrinsicFailed') {
-            return reject(api.getExtrinsicFailedError(event).docs.join('/n'));
+            console.log(event.toHuman());
+          } else if (event.method === 'ExtrinsicFailed') {
+            reject(api.getExtrinsicFailedError(event).docs.join('/n'));
           }
         });
       });

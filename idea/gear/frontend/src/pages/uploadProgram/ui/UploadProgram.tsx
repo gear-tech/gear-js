@@ -5,7 +5,7 @@ import { useWasmFile } from '@/features/code';
 import { ProgramFileInput } from '@/features/program';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
-import { Values } from '@/hooks/useProgramActions/types';
+import type { Values } from '@/hooks/useProgramActions/types';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
 import { BackButton, Box } from '@/shared/ui';

@@ -1,6 +1,6 @@
-import { MessagesDispatched, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import type { MessagesDispatched, ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
 import { useAlert, useApi } from '@/context';

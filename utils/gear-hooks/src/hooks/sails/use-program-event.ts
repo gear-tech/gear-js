@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { EventReturn, FunctionName, ServiceName, Event, EventCallbackArgs } from './types';
+import type { Event, EventCallbackArgs, EventReturn, FunctionName, ServiceName } from './types';
 
 type UseProgramEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs extends unknown[]> = {
   program: TProgram | undefined;
@@ -37,5 +37,5 @@ function useProgramEvent<
   }, [programId, serviceName, functionName]);
 }
 
-export { useProgramEvent };
 export type { UseProgramEventParameters };
+export { useProgramEvent };

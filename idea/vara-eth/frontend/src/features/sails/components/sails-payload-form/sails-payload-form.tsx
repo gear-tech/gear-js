@@ -3,19 +3,19 @@ import {
   getDefaultPayloadValue,
   getPayloadSchema,
   getResetPayloadValue,
-  ISailsFuncArg,
+  type ISailsFuncArg,
 } from '@gear-js/sails-payload-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ComponentProps, useMemo } from 'react';
+import { type ComponentProps, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Sails } from 'sails-js';
-import { Hex } from 'viem';
+import type { Sails } from 'sails-js';
+import type { Hex } from 'viem';
 import { z } from 'zod';
 
 import { Checkbox, Input, Textarea } from '@/components';
 import { Select } from '@/components/form/select';
 
-import { FormattedPayloadValue } from '../../lib';
+import type { FormattedPayloadValue } from '../../lib';
 import { Fieldset } from '../fieldset';
 
 import styles from './sails-payload-form.module.scss';

@@ -1,7 +1,7 @@
 import { Checkbox } from '@gear-js/ui';
-import { Codec } from '@polkadot/types/types';
+import type { Codec } from '@polkadot/types/types';
 import { isHex } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
 import { useMetadata } from '@/features/metadata';
@@ -10,12 +10,12 @@ import { isNullOrUndefined } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
 import { Method } from '../../consts';
-import {
-  FormattedUserMessageSentData,
+import type {
+  FormattedCreateProgramData,
   FormattedSendMessageData,
   FormattedSendReplyData,
   FormattedUploadProgramData,
-  FormattedCreateProgramData,
+  FormattedUserMessageSentData,
 } from '../../types';
 
 import styles from './decoded-preformatted-block.module.scss';

@@ -1,11 +1,11 @@
-import { useApi, useAccount } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import { useAccount, useApi } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
 
 import { useAddIdl } from '@/features/sails';
 import { useAddCodeName, useAddMetadata, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 
-import { ParamsToUploadCode } from './types';
+import type { ParamsToUploadCode } from './types';
 
 const useCodeUpload = () => {
   const { api, isApiReady } = useApi();

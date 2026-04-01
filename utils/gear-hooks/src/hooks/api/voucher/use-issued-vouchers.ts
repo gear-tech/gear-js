@@ -30,4 +30,4 @@ function useAccountIssuedVouchers() {
   return useIssuedVouchers(account?.address);
 }
 
-export { useIssuedVouchers, useAccountIssuedVouchers };
+export { useAccountIssuedVouchers, useIssuedVouchers };

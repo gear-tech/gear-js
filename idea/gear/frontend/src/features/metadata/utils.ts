@@ -1,4 +1,4 @@
-import { HumanTypesRepr, ProgramMetadata } from '@gear-js/api';
+import type { HumanTypesRepr, ProgramMetadata } from '@gear-js/api';
 import isPlainObject from 'lodash.isplainobject';
 
 import { isNullOrUndefined } from '@/shared/helpers';

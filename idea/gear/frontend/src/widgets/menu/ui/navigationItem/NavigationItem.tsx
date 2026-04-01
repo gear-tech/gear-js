@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { NavLink, type NavLinkProps } from 'react-router-dom';
 
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';

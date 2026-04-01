@@ -1,6 +1,6 @@
-import { cloneElement, ReactElement, useRef } from 'react';
+import { cloneElement, type ReactElement, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
+import type { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 
 type Props = CSSTransitionProps & {
   // intended behavior: https://github.com/facebook/react/issues/31824

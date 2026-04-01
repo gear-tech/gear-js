@@ -1,6 +1,6 @@
-import { STATUS_CODES } from 'http';
+import { STATUS_CODES } from 'node:http';
 
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -78,4 +78,4 @@ function useDockerImageVersions() {
   return query;
 }
 
-export { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions };
+export { useDockerImageVersions, useIsCodeVerified, useVerificationStatus, useVerifyCode };

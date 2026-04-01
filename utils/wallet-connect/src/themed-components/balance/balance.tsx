@@ -1,7 +1,7 @@
 import { Wallet } from '@/components';
 import { cx } from '@/utils';
 
-import { ThemeProps } from '../types';
+import type { ThemeProps } from '../types';
 
 import styles from './balance.module.scss';
 

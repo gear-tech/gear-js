@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
-import { Input, Textarea, InputWrapper, Button } from '@gear-js/ui';
+import { Button, Input, InputWrapper, Textarea } from '@gear-js/ui';
 import cx from 'clsx';
 import { useMemo } from 'react';
-import { Link, generatePath, useParams } from 'react-router-dom';
+import { generatePath, Link, useParams } from 'react-router-dom';
 
 import {
   getDecodedMessagePayload,

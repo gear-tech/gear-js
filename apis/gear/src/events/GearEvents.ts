@@ -1,6 +1,6 @@
-import { GenericEvent, GenericEventData } from '@polkadot/types';
+import type { GenericEvent, GenericEventData } from '@polkadot/types';
 
-import {
+import type {
   CodeChangedData,
   MessageQueuedData,
   MessagesDispatchedData,

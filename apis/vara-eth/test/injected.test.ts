@@ -1,21 +1,21 @@
-import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
-import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
+import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 
 import {
-  InjectedTxPromise,
-  VaraEthApi,
-  getMirrorClient,
-  WsVaraEthProvider,
-  InjectedTx,
-  IInjectedTransaction,
   createVaraEthApi,
+  getMirrorClient,
+  type IInjectedTransaction,
+  InjectedTx,
+  InjectedTxPromise,
+  type VaraEthApi,
+  WsVaraEthProvider,
 } from '../src';
+import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
-import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;

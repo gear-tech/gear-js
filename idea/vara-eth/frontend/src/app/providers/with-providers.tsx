@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { EthProvider } from './eth';

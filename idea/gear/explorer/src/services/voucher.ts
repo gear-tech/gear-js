@@ -1,9 +1,9 @@
-import { DataSource, Repository } from 'typeorm';
 import { Voucher } from 'gear-idea-indexer-db';
+import type { DataSource, Repository } from 'typeorm';
 import { Pagination } from '../decorators';
-import { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types';
-import { VoucherNotFound } from '../errors';
 import { RequiredParams } from '../decorators/required';
+import { VoucherNotFound } from '../errors';
+import type { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types';
 
 export class VoucherService {
   private _repo: Repository<Voucher>;
@@ -64,7 +64,7 @@ export class VoucherService {
         }) || [];
 
       if (includeAllPrograms) {
-        conditions.push(`jsonb_array_length(v.programs) = 0`);
+        conditions.push('jsonb_array_length(v.programs) = 0');
       }
 
       qb.andWhere(`(${conditions.join(' OR ')})`, params);

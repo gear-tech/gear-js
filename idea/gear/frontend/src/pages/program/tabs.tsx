@@ -1,6 +1,6 @@
-import { HexString, ProgramMetadata } from '@gear-js/api';
+import type { HexString, ProgramMetadata } from '@gear-js/api';
 import { useOutletContext } from 'react-router-dom';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { ProgramMessages } from '@/features/message';
 import { MetadataTable } from '@/features/metadata';
@@ -45,5 +45,5 @@ function MetadataTab() {
   );
 }
 
-export { MessagesTab, EventsTab, VouchersTab, MetadataTab };
 export type { TabsContext };
+export { EventsTab, MessagesTab, MetadataTab, VouchersTab };

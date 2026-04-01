@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { PropsWithChildren, ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
 import styles from './label-container.module.scss';
 
@@ -23,5 +23,5 @@ function LabelContainer({ size = 'medium', label, className, block, children, er
   );
 }
 
-export { LabelContainer };
 export type { Props as LabelContainerProps };
+export { LabelContainer };

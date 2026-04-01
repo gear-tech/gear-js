@@ -1,4 +1,4 @@
-import { Input as GearInput, InputProps } from '@gear-js/ui';
+import { Input as GearInput, type InputProps } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 // TODO: omit onChange and onBlur, direction types start to freak out

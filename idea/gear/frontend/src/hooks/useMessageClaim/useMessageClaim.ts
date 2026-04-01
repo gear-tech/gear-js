@@ -1,15 +1,15 @@
-import { UserMessageRead } from '@gear-js/api';
-import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
-import { EventRecord } from '@polkadot/types/interfaces';
+import type { UserMessageRead } from '@gear-js/api';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS, useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import type { EventRecord } from '@polkadot/types/interfaces';
 import { useCallback } from 'react';
 
-import { OperationCallbacks } from '@/entities/hooks';
+import type { OperationCallbacks } from '@/entities/hooks';
 import { Method } from '@/features/explorer';
 import { useModal } from '@/hooks';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from '@/shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 
-import { ParamsToClaimMessage } from './types';
+import type { ParamsToClaimMessage } from './types';
 
 const useMessageClaim = () => {
   const { api, isApiReady } = useApi();

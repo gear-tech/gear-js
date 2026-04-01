@@ -1,17 +1,17 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
-import { PayloadValue } from '@gear-js/sails-payload-form';
+import type { PayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AnyJson } from '@polkadot/types/types';
+import type { AnyJson } from '@polkadot/types/types';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
+import { type Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
 
 import { useProgram } from '@/features/program';
-import { useService, useSails, PayloadForm } from '@/features/sails';
+import { PayloadForm, useSails, useService } from '@/features/sails';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { getPreformattedText, isUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';

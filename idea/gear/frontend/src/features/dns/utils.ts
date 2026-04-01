@@ -1,10 +1,10 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
 import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { DNS_API_URL } from './consts';
-import { Dns, DnsParams, DnsResponse } from './types';
+import type { Dns, DnsParams, DnsResponse } from './types';
 
 type Genesis = {
   genesis: HexString;
@@ -39,4 +39,4 @@ const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {
   return fetchedCount < totalCount ? fetchedCount : undefined;
 };
 
-export { getDnsProgramId, getDns, getSingleDns, getNextPageParam };
+export { getDns, getDnsProgramId, getNextPageParam, getSingleDns };

@@ -1,12 +1,12 @@
-import { Unsubcall } from '@polkadot/extension-inject/types';
+import type { Unsubcall } from '@polkadot/extension-inject/types';
 import TWA from '@twa-dev/sdk';
 import { injectVaranWallet } from '@varan-wallet/varan-connect';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ProviderProps } from '../../types';
+import type { ProviderProps } from '../../types';
 
-import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
-import { Account, Wallet, Wallets } from './types';
+import { DEFAULT_INJECT_TIMEOUT_MS, LOCAL_STORAGE_KEY } from './consts';
+import type { Account, Wallet, Wallets } from './types';
 import { getLoggedInAccount, getWallets, isTelegramMiniApp } from './utils';
 
 type Value = {

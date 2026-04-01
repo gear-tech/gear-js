@@ -9,7 +9,7 @@ import { Input } from '@/shared/ui';
 
 import { DEFAULT_VALUES, FIELD_NAME, FUNCTION_NAME } from '../../consts';
 import { useDnsSchema, useSendDnsTransaction } from '../../hooks';
-import { Values } from '../../types';
+import type { Values } from '../../types';
 
 import styles from './dns-modal.module.scss';
 

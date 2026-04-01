@@ -1,4 +1,4 @@
-import { cloneElement, CSSProperties, ReactNode, ReactElement, useState } from 'react';
+import { type CSSProperties, cloneElement, type ReactElement, type ReactNode, useState } from 'react';
 
 import { useRootPortal } from '../../hooks';
 
@@ -56,5 +56,5 @@ function Tooltip({ value, position = 'top', children }: Props) {
   );
 }
 
-export { Tooltip };
 export type { Props as TooltipProps };
+export { Tooltip };

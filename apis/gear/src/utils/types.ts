@@ -20,9 +20,8 @@ export function typeIsGeneric(type: string) {
   const matches = type.match(REGULAR_EXP.generic);
   if (matches) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 export function typeIsString(type: string): boolean {

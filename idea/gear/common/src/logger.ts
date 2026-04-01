@@ -10,7 +10,7 @@ export const createLogger = (ctx?: string) => {
         format.colorize(),
         format.timestamp({ format: TIMESTAMP_FORMAT }),
         format.printf(({ timestamp, level, message, ...meta }) => {
-          return `${timestamp}${ctx ? ' [' + ctx + ']' : ''} ${level}: ${message} ${
+          return `${timestamp}${ctx ? ` [${ctx}]` : ''} ${level}: ${message} ${
             Object.keys(meta).length
               ? JSON.stringify(meta, (_, value) => (typeof value === 'bigint' ? value.toString() : value))
               : ''

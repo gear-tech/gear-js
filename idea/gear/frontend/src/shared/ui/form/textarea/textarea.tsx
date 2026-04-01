@@ -1,4 +1,4 @@
-import { Textarea as GearTextarea, TextareaProps } from '@gear-js/ui';
+import { Textarea as GearTextarea, type TextareaProps } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 // TODO: omit onChange and onBlur, direction types start to freak out

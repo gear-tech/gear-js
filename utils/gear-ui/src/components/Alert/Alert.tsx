@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { Button } from '../Button/Button';
 
 import styles from './Alert.module.scss';
-import { Props } from './Alert.types';
+import type { Props } from './Alert.types';
 import xSVG from './images/x.svg?react';
 
 function Alert({ alert, close }: Props) {
@@ -22,7 +22,7 @@ function Alert({ alert, close }: Props) {
   );
 }
 
+export type { Props as AlertProps };
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components
 export { Alert, styles as alertStyles };
-export type { Props as AlertProps };

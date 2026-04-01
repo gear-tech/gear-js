@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/utils';

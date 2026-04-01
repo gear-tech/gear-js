@@ -1,4 +1,4 @@
-import { Block } from '@polkadot/types/interfaces';
+import type { Block } from '@polkadot/types/interfaces';
 import { clsx } from 'clsx';
 import { Link } from 'react-router-dom';
 

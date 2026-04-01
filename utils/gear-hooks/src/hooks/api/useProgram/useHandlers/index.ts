@@ -1,7 +1,7 @@
 import { DEFAULT_ERROR_OPTIONS } from '@/consts';
 import { useAlert } from '@/context';
 
-import { HandleInitParams, ProgramStatus, HandleErrorParams } from '../types';
+import { type HandleErrorParams, type HandleInitParams, ProgramStatus } from '../types';
 
 import { useHandleSignStatus } from './useHandleSignStatus';
 

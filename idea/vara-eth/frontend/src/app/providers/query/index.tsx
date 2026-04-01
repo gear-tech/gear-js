@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 0,
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
       refetchOnWindowFocus: false,
       retry: false,
     },

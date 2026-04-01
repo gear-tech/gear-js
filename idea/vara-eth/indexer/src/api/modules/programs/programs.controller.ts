@@ -1,9 +1,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { ProgramsService } from './programs.service.js';
-import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
+import type { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+import type { ProgramsService } from './programs.service.js';
 
 @ApiTags('programs')
 @Controller('programs')

@@ -1,11 +1,10 @@
 import { clsx } from 'clsx';
-import { ReactNode, useEffect, useState, MouseEvent, useCallback, ReactPortal } from 'react';
+import { type MouseEvent, type ReactNode, type ReactPortal, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Button } from '../Button/Button';
-
-import styles from './Modal.module.scss';
 import xSVG from './images/x.svg?react';
+import styles from './Modal.module.scss';
 
 type Props = {
   heading: string;
@@ -85,7 +84,7 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   return root ? createPortal(component, root) : null;
 };
 
+export type { Props as ModalProps };
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components
 export { Modal, styles as modalStyles };
-export type { Props as ModalProps };

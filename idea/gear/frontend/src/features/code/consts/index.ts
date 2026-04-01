@@ -5,4 +5,4 @@ enum CodeStatus {
   Inactive = 'Inactive',
 }
 
-export { WASM_FILE_TYPE, CodeStatus };
+export { CodeStatus, WASM_FILE_TYPE };

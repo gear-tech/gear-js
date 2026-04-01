@@ -1,7 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useMemo, useState } from 'react';
 
-import { SortDirection } from '../types';
+import type { SortDirection } from '../types';
 
 const DEFAULT_FILTER_VALUES = {
   owner: 'all',

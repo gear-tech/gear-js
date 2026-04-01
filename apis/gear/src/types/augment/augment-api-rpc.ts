@@ -1,16 +1,16 @@
 import '@polkadot/rpc-core/types/jsonrpc';
 
-import type { AnyNumber, Codec } from '@polkadot/types-codec/types';
 import type { AugmentedRpc } from '@polkadot/rpc-core/types';
 import type { BlockHash } from '@polkadot/types/interfaces/chain';
-import type { Bytes, u64 } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
+import type { Bytes, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, Codec } from '@polkadot/types-codec/types';
 
-import { GasInfo, ReplyInfo, UserMessageSentSubscriptionFilter } from '../interfaces';
-import { ProgramStateChange } from '../interfaces/program/rpc';
-import { InflationInfo, Proof } from '../common';
-import { UserMessageSentSubItem } from '../interfaces/message/rpc';
+import type { InflationInfo, Proof } from '../common';
+import type { GasInfo, ReplyInfo, UserMessageSentSubscriptionFilter } from '../interfaces';
+import type { UserMessageSentSubItem } from '../interfaces/message/rpc';
+import type { ProgramStateChange } from '../interfaces/program/rpc';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 

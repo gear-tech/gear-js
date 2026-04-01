@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { CodeTable, useCode as useStorageCode } from '@/features/code';

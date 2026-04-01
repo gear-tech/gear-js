@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { AnimationTimeout } from '../../config';
 import { CSSTransitionWithRef } from '../css-transition-with-ref';

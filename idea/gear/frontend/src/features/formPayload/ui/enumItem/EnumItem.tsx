@@ -1,12 +1,12 @@
 import { Select } from '@gear-js/ui';
-import { useState, useMemo, ChangeEvent } from 'react';
+import { type ChangeEvent, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
 import { Fieldset } from '@/shared/ui';
 
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
-import { PayloadItemProps } from '../../model';
+import type { PayloadItemProps } from '../../model';
 
 const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { name, type } = typeStructure;

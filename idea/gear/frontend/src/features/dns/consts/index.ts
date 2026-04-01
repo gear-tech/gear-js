@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { GENESIS } from '@/shared/config';
 
-import { Values } from '../types';
+import type { Values } from '../types';
 
 import { SailsProgram } from './sails';
 
@@ -32,4 +32,4 @@ const FUNCTION_NAME = {
   REMOVE_ADMIN: 'removeAdminFromProgram',
 } as const;
 
-export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, SailsProgram };
+export { DEFAULT_VALUES, DNS_API_URL, FIELD_NAME, FUNCTION_NAME, NAME_SCHEMA, SailsProgram };

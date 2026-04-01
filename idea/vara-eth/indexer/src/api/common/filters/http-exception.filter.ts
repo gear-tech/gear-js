@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
 import { createLogger } from '@gear-js/logger';
+import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import type { FastifyReply } from 'fastify';
 
 const logger = createLogger('api');
 

@@ -1,4 +1,4 @@
-import { FieldProps } from '../types';
+import type { FieldProps } from '../types';
 import { getLabel, getNestedName } from '../utils';
 
 function FixedSizeArrayField({ def, name, label, render, renderField }: FieldProps) {

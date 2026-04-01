@@ -7,10 +7,10 @@ jest.mock('typeorm', () => {
   class FakeDataSource {
     initialize = jest.fn(async () => this);
     getRepository = jest.fn((entity: any) => {
-      if (entity == FaucetRequest) {
+      if (entity === FaucetRequest) {
         return repos.FaucetRequest;
       }
-      if (entity == UserLastSeen) {
+      if (entity === UserLastSeen) {
         return repos.UserLastSeen;
       }
       throw new Error('Unknown entity');

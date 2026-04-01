@@ -1,6 +1,6 @@
 import { useAccount, useDeriveBalancesAll, useDeriveStakingAccount } from '@gear-js/react-hooks';
-import { Balance as BalanceType } from '@polkadot/types/interfaces';
-import { Ref, useMemo } from 'react';
+import type { Balance as BalanceType } from '@polkadot/types/interfaces';
+import { type Ref, useMemo } from 'react';
 
 import { useModalState, useOutsideClick } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';

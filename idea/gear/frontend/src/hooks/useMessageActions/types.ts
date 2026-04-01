@@ -1,8 +1,8 @@
-import { ProgramMetadata, MessageSendOptions, MessageSendReplyOptions } from '@gear-js/api';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
+import type { MessageSendOptions, MessageSendReplyOptions, ProgramMetadata } from '@gear-js/api';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { ISubmittableResult } from '@polkadot/types/types';
 
-import { OperationCallbacks, ParamsToSignAndSend as CommonParamsToSignAndSend } from '@/entities/hooks';
+import type { ParamsToSignAndSend as CommonParamsToSignAndSend, OperationCallbacks } from '@/entities/hooks';
 
 type ParamsToSendMessage = OperationCallbacks & {
   message: MessageSendOptions;
@@ -23,4 +23,4 @@ type ParamsToSignAndSend = CommonParamsToSignAndSend & {
   title?: string;
 };
 
-export type { ParamsToSendMessage, ParamsToReplyMessage, ParamsToSignAndSend };
+export type { ParamsToReplyMessage, ParamsToSendMessage, ParamsToSignAndSend };

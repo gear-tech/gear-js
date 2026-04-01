@@ -1,6 +1,6 @@
 import { Events } from '../../common';
-import { Event } from '../../processor';
-import { CVoucherIssued, CVoucherUpdated } from '../calls';
+import type { Event } from '../../processor';
+import type { CVoucherIssued, CVoucherUpdated } from '../calls';
 
 export interface AVoucherIssued {
   owner: string;

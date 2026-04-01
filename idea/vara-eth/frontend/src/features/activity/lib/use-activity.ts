@@ -1,11 +1,11 @@
 import { IROUTER_ABI, IWRAPPEDVARA_ABI } from '@vara-eth/api/abi';
 import { useEffect, useState } from 'react';
-import {
-  ContractEventName,
-  WatchContractEventOnLogsParameter,
-  AbiEventParametersToPrimitiveTypes,
+import type {
   Abi,
+  AbiEventParametersToPrimitiveTypes,
+  ContractEventName,
   Hex,
+  WatchContractEventOnLogsParameter,
 } from 'viem';
 import { useConfig } from 'wagmi';
 import { watchContractEvent } from 'wagmi/actions';
@@ -105,5 +105,5 @@ const useActivity = () => {
   return state;
 };
 
-export { useActivity };
 export type { Event, EventArgs };
+export { useActivity };

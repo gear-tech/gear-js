@@ -1,11 +1,11 @@
 import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from '@/api/consts';
-import { Filters, FilterGroup, Radio, StatusCheckbox, Checkbox } from '@/features/filters';
+import { Checkbox, FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
 import { useIsVftWhitelistAvailable } from '@/features/vft-whitelist';
 import { BulbStatus } from '@/shared/ui';
 
-import { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES } from '../../consts';
+import { DEFAULT_FILTER_VALUES, PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
 
 type Props = {
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;

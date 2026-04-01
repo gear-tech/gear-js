@@ -1,5 +1,5 @@
-import { HexString } from '@gear-js/api';
-import { useState, useEffect } from 'react';
+import type { HexString } from '@gear-js/api';
+import { useEffect, useState } from 'react';
 
 import { useAccount, useAlert, useApi } from '@/context';
 
@@ -31,4 +31,4 @@ function useIsAccountVoucherExists(programId: HexString | undefined) {
   return useIsVoucherExists(programId, account?.decodedAddress);
 }
 
-export { useIsVoucherExists, useIsAccountVoucherExists };
+export { useIsAccountVoucherExists, useIsVoucherExists };

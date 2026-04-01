@@ -1,5 +1,5 @@
-import { useApi, ProviderProps } from '@gear-js/react-hooks';
-import { useState, useEffect } from 'react';
+import { type ProviderProps, useApi } from '@gear-js/react-hooks';
+import { useEffect, useState } from 'react';
 
 import '@polkadot/api-augment';
 import { IdeaEvent, Section } from '@/features/explorer';

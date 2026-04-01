@@ -1,16 +1,16 @@
-import { JSX } from 'react';
+import type { JSX } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { LocalProgram } from '@/features/local-indexer';
+import type { LocalProgram } from '@/features/local-indexer';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
-import { routes, absoluteRoutes } from '@/shared/config';
+import { absoluteRoutes, routes } from '@/shared/config';
 import { BulbBlock } from '@/shared/ui/bulbBlock';
 import { ContentLoader } from '@/shared/ui/contentLoader';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { Table, TableRow } from '@/shared/ui/table';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
-import { Program } from '../../api';
+import type { Program } from '../../api';
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
 

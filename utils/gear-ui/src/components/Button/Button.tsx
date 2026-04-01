@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
 import styles from './Button.module.scss';
-import { Props } from './Button.types';
+import type { Props } from './Button.types';
 
 const Button = (props: Props) => {
   const {
@@ -35,7 +35,7 @@ const Button = (props: Props) => {
   );
 };
 
+export type { Props as ButtonProps };
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components
 export { Button, styles as buttonStyles };
-export type { Props as ButtonProps };

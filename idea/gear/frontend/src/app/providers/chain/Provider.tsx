@@ -1,4 +1,4 @@
-import { ProviderProps, useApi } from '@gear-js/react-hooks';
+import { type ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { GENESIS } from '@/shared/config';

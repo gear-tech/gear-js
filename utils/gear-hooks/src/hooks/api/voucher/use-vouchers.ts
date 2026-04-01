@@ -1,5 +1,5 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
-import { useState, useEffect } from 'react';
+import type { HexString, IVoucherDetails } from '@gear-js/api';
+import { useEffect, useState } from 'react';
 
 import { useAccount, useAlert, useApi } from '@/context';
 
@@ -34,4 +34,4 @@ function useAccountVouchers(programId?: HexString) {
   return useVouchers(...args);
 }
 
-export { useVouchers, useAccountVouchers };
+export { useAccountVouchers, useVouchers };

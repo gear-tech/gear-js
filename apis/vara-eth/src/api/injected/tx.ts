@@ -14,7 +14,7 @@ import type {
 } from '../../types/index.js';
 import { bigint128ToBytes } from '../../util/index.js';
 import { VARA_ETH_RPC_METHODS } from '../rpc.js';
-import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
+import { type InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
 
 export class InjectedTx {
   private _destination: Address;

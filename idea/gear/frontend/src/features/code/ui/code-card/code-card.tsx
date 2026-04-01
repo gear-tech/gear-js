@@ -1,6 +1,6 @@
-import { Link, generatePath } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 
-import { LocalCode } from '@/features/local-indexer';
+import type { LocalCode } from '@/features/local-indexer';
 import CreateProgramSVG from '@/shared/assets/images/actions/create-program.svg?react';
 import RelatedrelatedProgramsSVG from '@/shared/assets/images/actions/related-programs.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
@@ -8,7 +8,7 @@ import { IdBlock } from '@/shared/ui';
 import { ActionLink } from '@/shared/ui/ActionLink';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
-import { Code } from '../../api';
+import type { Code } from '../../api';
 
 import styles from './code-card.module.scss';
 

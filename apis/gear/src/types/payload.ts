@@ -1,4 +1,4 @@
-import { AnyJson } from '@polkadot/types/types';
-import { Bytes } from '@polkadot/types';
+import type { Bytes } from '@polkadot/types';
+import type { AnyJson } from '@polkadot/types/types';
 
 export type PayloadType = Uint8Array | Bytes | AnyJson;

@@ -1,12 +1,12 @@
+import { WsVaraEthProvider } from '../../src/provider/ws.js';
 import {
-  mockWebSocket,
-  createJsonRpcResponse,
+  createConnectedProvider,
   createJsonRpcError,
+  createJsonRpcResponse,
   createSubscriptionMessage,
   delay,
-  createConnectedProvider,
+  mockWebSocket,
 } from './ws.mock.js';
-import { WsVaraEthProvider } from '../../src/provider/ws.js';
 
 const TEST_WS_URL = 'ws://localhost:9944';
 const TEST_WS_URL_CUSTOM = 'ws://example.com:8080';
@@ -820,9 +820,9 @@ describe('WsVaraEthProvider - Error Handling', () => {
 
     // Make WebSocket constructor throw
     const originalMockWs = mock.mockWs;
-    const ErrorThrowingMockWs = function (_url: string) {
+    const ErrorThrowingMockWs = ((_url: string) => {
       throw new Error('WebSocket constructor failed');
-    } as any;
+    }) as any;
 
     ErrorThrowingMockWs.CONNECTING = originalMockWs.CONNECTING;
     ErrorThrowingMockWs.OPEN = originalMockWs.OPEN;
@@ -885,7 +885,9 @@ describe('WsVaraEthProvider - Error Handling', () => {
 
     // Simulate invalid JSON message
     const event = new MessageEvent('message', { data: 'invalid json' });
-    ws['messageHandlers'].forEach((handler: any) => handler(event));
+    ws.messageHandlers.forEach((handler: any) => {
+      handler(event);
+    });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to parse JsonRPC response:', expect.any(Error));
     expect(provider.isConnected).toBe(true); // Provider should still be functional

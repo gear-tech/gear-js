@@ -1,15 +1,15 @@
-import { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
-import { AnyJson } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import type { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
+import type { AnyJson } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
 import { Method } from '../../consts';
-import {
-  FormattedSendReplyData,
-  FormattedSendMessageData,
-  FormattedUploadProgramData,
+import type {
   FormattedCreateProgramData,
+  FormattedSendMessageData,
+  FormattedSendReplyData,
+  FormattedUploadProgramData,
 } from '../../types';
 import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
 import { ExpansionPanel } from '../expansion-panel';

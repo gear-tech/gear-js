@@ -27,7 +27,7 @@ export class MockWebSocket {
 
   public readyState: number = MockWebSocket.CONNECTING;
   public url: string;
-  public shouldThrowOnSend: boolean = false;
+  public shouldThrowOnSend = false;
 
   private messageHandlers: MessageHandler[] = [];
   private errorHandlers: ErrorHandler[] = [];
@@ -88,23 +88,32 @@ export class MockWebSocket {
   // Test utilities
   simulateOpen(): void {
     this.readyState = MockWebSocket.OPEN;
-    this.openHandlers.forEach((handler) => handler());
+    for (const handler of this.openHandlers) {
+      handler();
+    }
   }
 
   simulateError(_error?: Error): void {
     const event = new Event('error');
-    this.errorHandlers.forEach((handler) => handler(event));
+
+    for (const handler of this.errorHandlers) {
+      handler(event);
+    }
   }
 
-  simulateClose(code: number = 1000, reason: string = '', wasClean: boolean = true): void {
+  simulateClose(code = 1000, reason = '', wasClean = true): void {
     this.readyState = MockWebSocket.CLOSED;
     const event = new CloseEvent('close', { code, reason, wasClean });
-    this.closeHandlers.forEach((handler) => handler(event));
+    for (const handler of this.closeHandlers) {
+      handler(event);
+    }
   }
 
   simulateMessage(data: any): void {
     const event = new MessageEvent('message', { data: JSON.stringify(data) }) as any;
-    this.messageHandlers.forEach((handler) => handler(event));
+    for (const handler of this.messageHandlers) {
+      handler(event);
+    }
   }
 }
 

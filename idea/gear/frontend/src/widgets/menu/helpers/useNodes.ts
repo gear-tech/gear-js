@@ -1,13 +1,13 @@
 import { useAlert } from '@gear-js/react-hooks';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { getNodes } from '@/api';
-import { NodeSection } from '@/entities/node';
+import type { NodeSection } from '@/entities/node';
 import { LocalStorage } from '@/shared/config';
 
 import { DEVELOPMENT_SECTION } from '../model/consts';
 
-import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
+import { concatNodes, getLocalNodes, getLocalNodesFromLS, isDevSection } from './helpers';
 
 const useNodes = () => {
   const alert = useAlert();

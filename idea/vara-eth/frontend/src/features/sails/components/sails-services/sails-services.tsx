@@ -1,4 +1,4 @@
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { Badge } from '@/components';
 import { cx } from '@/shared/utils';

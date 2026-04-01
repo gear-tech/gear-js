@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
 
 import { useLocalProgram } from '@/features/local-indexer';

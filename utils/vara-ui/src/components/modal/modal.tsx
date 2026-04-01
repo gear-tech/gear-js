@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ReactNode, MouseEvent } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { useRootPortal } from '../../hooks';
@@ -49,5 +49,5 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
   );
 };
 
-export { Modal };
 export type { Props as ModalProps };
+export { Modal };

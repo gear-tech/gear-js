@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GearApi, BaseGearProgram } from '@gear-js/api';
+import { BaseGearProgram, type GearApi } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
-import { TransactionBuilder, ActorId } from 'sails-js';
+import { type ActorId, TransactionBuilder } from 'sails-js';
 
 export interface ContractInfo {
   admins: Array<ActorId>;
@@ -33,7 +33,7 @@ export class SailsProgram {
   }
 
   public get programId(): `0x${string}` {
-    if (!this._program) throw new Error(`Program ID is not set`);
+    if (!this._program) throw new Error('Program ID is not set');
     return this._program.id;
   }
 }

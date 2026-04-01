@@ -1,8 +1,8 @@
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
 import { Method } from '../../consts';
-import { IdeaEvent } from '../../idea-event';
-import { FormattedUserMessageSentData } from '../../types';
+import type { IdeaEvent } from '../../idea-event';
+import type { FormattedUserMessageSentData } from '../../types';
 import { DecodedLogBlock } from '../decoded-log-block';
 import { ExpansionPanel } from '../expansion-panel';
 

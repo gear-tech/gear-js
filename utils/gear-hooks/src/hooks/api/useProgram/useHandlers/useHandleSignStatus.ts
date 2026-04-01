@@ -1,11 +1,11 @@
-import { EventRecord } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
+import type { EventRecord } from '@polkadot/types/interfaces';
+import type { HexString } from '@polkadot/util/types';
 
-import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@/consts';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@/consts';
 import { useAlert, useApi } from '@/context';
 import { getExtrinsicFailedMessage } from '@/utils';
 
-import { Callbacks, Method, HandleSignStatusParams, TransactionStatus, ProgramError } from '../types';
+import { type Callbacks, type HandleSignStatusParams, Method, ProgramError, TransactionStatus } from '../types';
 
 function useHandleSignStatus() {
   const { api, isApiReady } = useApi();

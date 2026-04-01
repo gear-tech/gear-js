@@ -1,10 +1,10 @@
-import { ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import type { ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
 import isPlainObject from 'lodash.isplainobject';
 
 import { isNullOrUndefined } from '@/shared/helpers';
 
-import { MetadataTypes, MedatadaTypesValue } from '../model';
+import type { MedatadaTypesValue, MetadataTypes } from '../model';
 
 const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as object).length;
 
@@ -16,7 +16,7 @@ const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => 
       return metadata.getTypeName(type);
     } catch (error) {
       onError(error instanceof Error ? error.message : `Something went wrong on metadata.getTypeName(${type})`);
-      return `Invalid metadata`;
+      return 'Invalid metadata';
     }
   };
 
@@ -48,4 +48,4 @@ const getFlatNamedTypeEntries = (types: object, parentKey = ''): any =>
     return isPlainObject(value) ? getFlatNamedTypeEntries(value as object, nestedKey) : [[nestedKey, value]];
   });
 
-export { getNamedTypes, getFlatNamedTypeEntries };
+export { getFlatNamedTypeEntries, getNamedTypes };

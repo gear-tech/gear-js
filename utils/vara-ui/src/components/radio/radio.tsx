@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ComponentPropsWithRef, ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 import styles from './radio.module.scss';
 
@@ -21,5 +21,5 @@ const Radio = ({ label, className, size = 'default', error, ...attrs }: Props) =
   );
 };
 
-export { Radio };
 export type { Props as RadioProps };
+export { Radio };

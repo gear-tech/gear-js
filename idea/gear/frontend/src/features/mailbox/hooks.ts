@@ -1,8 +1,8 @@
 import { useAccount, useApi } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
-import { MailboxItem } from './types';
+import type { MailboxItem } from './types';
 
 function useMailbox() {
   const { api, isApiReady } = useApi();

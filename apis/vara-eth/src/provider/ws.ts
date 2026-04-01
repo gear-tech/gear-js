@@ -56,7 +56,7 @@ interface ISubscriptionParameters<Error = unknown, Result = unknown> {
 export class WsVaraEthProvider implements IVaraEthProvider {
   private _conn?: WebSocket;
   private _state: ConnectionState = 'disconnected';
-  private _nextId: number = 1;
+  private _nextId = 1;
   private _pendingRequests: Map<
     number,
     {
@@ -76,7 +76,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
   private _connectionStartTime?: number;
   private _url: WsUrl;
 
-  constructor(url: string = 'ws://127.0.0.1:9944', options: ConnectionOptions = {}) {
+  constructor(url = 'ws://127.0.0.1:9944', options: ConnectionOptions = {}) {
     if (!isWsUrl(url)) {
       throw new Error(ERRORS.INVALID_URL(url));
     }
@@ -302,7 +302,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     }
   }
 
-  private async _attemptConnection(attempt: number = 1): Promise<void> {
+  private async _attemptConnection(attempt = 1): Promise<void> {
     return new Promise((resolve, reject) => {
       this._state = 'connecting';
       this._connectionStartTime = Date.now();
@@ -396,7 +396,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
         this._pendingRequests.set(request.id, { resolve, reject, timeoutId });
         try {
-          this._conn!.send(JSON.stringify(request));
+          this._conn?.send(JSON.stringify(request));
         } catch (error) {
           if (timeoutId) clearTimeout(timeoutId);
           this._pendingRequests.delete(request.id);
@@ -432,7 +432,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       this._subscriptions.set(request.id, subscription);
       try {
         // TODO: check for connection before sending request
-        this._conn!.send(JSON.stringify(request));
+        this._conn?.send(JSON.stringify(request));
       } catch (error) {
         this._subscriptions.delete(request.id);
         throw error;
@@ -470,7 +470,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
     const request = this._createRequest(unsubscribeMethod, [subscriptionId]);
 
-    this._conn!.send(JSON.stringify(request));
+    this._conn?.send(JSON.stringify(request));
 
     this._subscriptions.delete(subscriptionId);
     this._subscriptionIds.delete(requestId);

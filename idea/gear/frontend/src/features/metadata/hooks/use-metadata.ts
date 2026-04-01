@@ -1,4 +1,4 @@
-import { HexString, ProgramMetadata } from '@gear-js/api';
+import { type HexString, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 

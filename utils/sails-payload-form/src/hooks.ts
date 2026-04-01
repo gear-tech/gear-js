@@ -1,7 +1,7 @@
-import { EffectCallback, DependencyList, useRef, useEffect } from 'react';
+import { type DependencyList, type EffectCallback, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { PayloadValue } from './types';
+import type { PayloadValue } from './types';
 
 function useChangeEffect(callback: EffectCallback, dependencies?: DependencyList) {
   const mounted = useRef(false);

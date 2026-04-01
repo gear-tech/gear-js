@@ -1,5 +1,5 @@
-import { Radio as UIRadio, RadioProps } from '@gear-js/ui';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
+import { type RadioProps, Radio as UIRadio } from '@gear-js/ui';
+import { type FieldValues, type Path, type PathValue, useFormContext } from 'react-hook-form';
 
 type Props<T> = Omit<RadioProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;

@@ -1,13 +1,13 @@
 /* eslint-disable */
 
-import { GearApi, BaseGearProgram, HexString } from '@gear-js/api';
+import { BaseGearProgram, type GearApi, type HexString } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
 import {
-  TransactionBuilder,
-  ActorId,
-  QueryBuilder,
-  getServiceNamePrefix,
+  type ActorId,
   getFnNamePrefix,
+  getServiceNamePrefix,
+  QueryBuilder,
+  TransactionBuilder,
   ZERO_ADDRESS,
 } from 'sails-js';
 
@@ -33,7 +33,7 @@ export class SailsProgram {
   }
 
   public get programId(): `0x${string}` {
-    if (!this._program) throw new Error(`Program ID is not set`);
+    if (!this._program) throw new Error('Program ID is not set');
     return this._program.id;
   }
 

@@ -1,10 +1,10 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Block as DotBlock } from '@polkadot/types/interfaces';
+import type { Block as DotBlock } from '@polkadot/types/interfaces';
 import { isHex } from '@polkadot/util';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { EventRecords } from '../../types';
+import type { EventRecords } from '../../types';
 import { MainTable } from '../main-table';
 import { Summary } from '../summary';
 import { System } from '../system';

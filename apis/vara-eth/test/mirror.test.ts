@@ -1,13 +1,19 @@
+import fs from 'node:fs';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { deployContract } from 'viem/actions';
-import fs from 'node:fs';
 
-import { getMirrorClient, VaraEthApi, HttpVaraEthProvider, createVaraEthApi, type ITransactionSigner } from '../src';
+import {
+  createVaraEthApi,
+  getMirrorClient,
+  HttpVaraEthProvider,
+  type ITransactionSigner,
+  type VaraEthApi,
+} from '../src';
+import { walletClientToSigner } from '../src/signer';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
-import { walletClientToSigner } from '../src/signer';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
@@ -197,7 +203,7 @@ describe('balance', () => {
     async () => {
       const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 
-      let newStateHash: Hex | undefined = undefined;
+      let newStateHash: Hex | undefined;
 
       const currentStateHash = await mirror.stateHash();
 

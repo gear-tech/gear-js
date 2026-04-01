@@ -16,8 +16,8 @@ function useSailsInit() {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     retry: false,
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    gcTime: Number.POSITIVE_INFINITY,
   });
 
   return data;

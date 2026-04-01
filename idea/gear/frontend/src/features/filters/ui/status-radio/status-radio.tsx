@@ -1,8 +1,8 @@
-import { RadioProps, radioStyles } from '@gear-js/ui';
+import { type RadioProps, radioStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
+import { type FieldValues, type Path, type PathValue, useFormContext } from 'react-hook-form';
 
-import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
+import { BulbBlock, type BulbStatus } from '@/shared/ui/bulbBlock';
 
 type Props<T> = Omit<RadioProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;

@@ -1,12 +1,12 @@
 import { clsx } from 'clsx';
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getTruncatedText } from '@/shared/utils';
 
 import { CopyButton } from '../copy-button';
 import { ExplorerLink } from '../explorer-link';
-import { MediaQuery, BreakpointSize } from '../media-query';
+import { type BreakpointSize, MediaQuery } from '../media-query';
 
 import styles from './hash-link.module.scss';
 

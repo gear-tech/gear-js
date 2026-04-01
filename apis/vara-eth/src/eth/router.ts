@@ -1,14 +1,14 @@
-import type { Address, Hex, TransactionRequest } from 'viem';
-import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
+import type { Address, Hex, TransactionRequest } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, numberToBytes, toHex, zeroAddress } from 'viem';
 
-import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
-import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
-import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { generateCodeHash } from '../util/index.js';
+import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
+import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
+import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { TxManager } from './tx-manager.js';
-import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -225,6 +225,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
    * @returns A transaction manager with validation-specific helper functions, including
    *          the code ID and a function to wait for the code to be validated
    */
+  // biome-ignore-start lint: it's a temporary solution
   private async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     throw new Error('Not implemented');
     const codeId = generateCodeHash(code);
@@ -237,7 +238,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     const blob = prepareBlob(code);
 
-    if (blob.length != 4096 * 32) {
+    if (blob.length !== 4096 * 32) {
       throw new Error('Invalid blob size');
     }
 
@@ -278,7 +279,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
             eventName: 'CodeGotValidated',
             onLogs: (logs) => {
               for (const log of logs) {
-                if (log.args.codeId == codeId) {
+                if (log.args.codeId === codeId) {
                   if (log.args.valid) {
                     resolve(true);
                   } else {
@@ -293,6 +294,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     return txManager as TxManagerWithHelpers<CodeValidationHelpers>;
   }
+  // biome-ignore-end lint: it's a temporary solution
 
   /**
    * Creates a new program from validated code.

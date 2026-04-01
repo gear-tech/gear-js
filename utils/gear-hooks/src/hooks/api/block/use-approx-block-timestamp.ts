@@ -1,7 +1,7 @@
-import { INumber } from '@polkadot/types/types';
+import type { INumber } from '@polkadot/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useApi, useAlert } from '@/context';
+import { useAlert, useApi } from '@/context';
 
 function useGetApproxBlockTimestamp() {
   const { api, isApiReady } = useApi();

@@ -1,9 +1,9 @@
-import { HexString } from '@polkadot/util/types';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import type { HexString } from '@polkadot/util/types';
 
+import { getApi } from './common';
 import { TEST_CODE } from './config';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { getApi } from './common';
 
 const api = getApi();
 const accounts = {};
@@ -12,7 +12,7 @@ let codeId: HexString;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  accounts['alice'] = await getAccount('//Alice');
+  accounts.alice = await getAccount('//Alice');
 });
 
 afterAll(async () => {
@@ -25,7 +25,7 @@ describe('Upload code', () => {
     const { codeHash } = await api.code.upload(code);
     expect(codeHash).toBeDefined();
     codeId = codeHash;
-    const [txData] = await sendTransaction(api.code, accounts['alice'], ['CodeChanged']);
+    const [txData] = await sendTransaction(api.code, accounts.alice, ['CodeChanged']);
     expect(txData.id.toHex()).toBe(codeHash);
     expect(txData.change.isActive).toBeTruthy();
     expect(txData.change.asActive).toHaveProperty('expiration');

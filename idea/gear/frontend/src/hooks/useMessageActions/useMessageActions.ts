@@ -1,4 +1,4 @@
-import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
+import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { useCallback } from 'react';
 
 import { Method } from '@/features/explorer';
@@ -6,7 +6,7 @@ import { useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
 import { checkWallet } from '@/shared/helpers';
 
-import { ParamsToSendMessage, ParamsToReplyMessage } from './types';
+import type { ParamsToReplyMessage, ParamsToSendMessage } from './types';
 
 const useMessageActions = () => {
   const { api, isApiReady } = useApi();

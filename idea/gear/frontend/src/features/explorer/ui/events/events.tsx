@@ -5,8 +5,8 @@ import { Placeholder } from '@/entities/placeholder';
 import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
 
 import { FILTER_VALUES, LOCAL_STORAGE } from '../../consts';
-import { IdeaEvent } from '../../idea-event';
-import { FilterValues } from '../../types';
+import type { IdeaEvent } from '../../idea-event';
+import type { FilterValues } from '../../types';
 import { Event } from '../event';
 import { Filter } from '../filter';
 

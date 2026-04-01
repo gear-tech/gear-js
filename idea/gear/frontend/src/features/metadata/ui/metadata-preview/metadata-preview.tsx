@@ -1,4 +1,4 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Input, Textarea } from '@gear-js/ui';
 import { useMemo } from 'react';

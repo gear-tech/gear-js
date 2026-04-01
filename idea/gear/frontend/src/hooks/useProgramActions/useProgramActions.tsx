@@ -1,5 +1,5 @@
-import { useApi, useAccount } from '@gear-js/react-hooks';
-import { ISubmittableResult } from '@polkadot/types/types';
+import { useAccount, useApi } from '@gear-js/react-hooks';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { generatePath } from 'react-router-dom';
 
 import { addLocalProgram } from '@/features/local-indexer';
@@ -9,7 +9,7 @@ import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend }
 import { absoluteRoutes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 
-import { ContractApi, Program, Values } from './types';
+import type { ContractApi, Program, Values } from './types';
 
 const useProgramActions = () => {
   const { api, isApiReady } = useApi();
@@ -55,9 +55,9 @@ const useProgramActions = () => {
 
     if (!isDevChain) await addProgramName({ id: programId, codeId, name, metaHex: metadata?.hex, idl: sails?.idl });
     // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
-    if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    if (metadata?.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
-    if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
+    if (sails?.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
   return async (

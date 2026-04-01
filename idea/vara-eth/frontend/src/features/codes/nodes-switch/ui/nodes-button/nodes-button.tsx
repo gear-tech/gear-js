@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 
 import ArrowDownIcon from '@/assets/icons/arrow-down.svg?react';
 import GearIcon from '@/assets/icons/gear.svg?react';

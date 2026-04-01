@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, Between } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
+import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 import { Program } from '../../../model/index.js';
-import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
 
 @Injectable()
 export class ProgramsService {
   constructor(
     @InjectRepository(Program)
-    private readonly programRepository: Repository<Program>,
+    private readonly _programRepository: Repository<Program>,
   ) {}
 
   async findAll(query: QueryProgramsWithBlockRangeDto): Promise<PaginatedResponse<ProgramResponseDto>> {
@@ -31,7 +31,7 @@ export class ProgramsService {
       where.blockNumber = Between(BigInt(0), BigInt(toBlock));
     }
 
-    const [data, total] = await this.programRepository.findAndCount({
+    const [data, total] = await this._programRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -53,7 +53,7 @@ export class ProgramsService {
   }
 
   async findOne(id: string): Promise<ProgramResponseDto> {
-    const program = await this.programRepository.findOne({
+    const program = await this._programRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['code'],
     });

@@ -1,9 +1,9 @@
 import { GearApi } from '@gear-js/api';
-import { WsProvider, ScProvider } from '@polkadot/api';
+import { ScProvider, WsProvider } from '@polkadot/api';
 import * as Sc from '@substrate/connect';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ProviderProps } from '../types';
+import type { ProviderProps } from '../types';
 
 type WsProviderArgs = {
   endpoint: string | string[];

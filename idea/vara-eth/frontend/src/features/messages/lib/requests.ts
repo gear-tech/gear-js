@@ -1,8 +1,8 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { Program } from '@/features/programs/lib/queries';
+import type { Program } from '@/features/programs/lib/queries';
 import { EXPLORER_URL } from '@/shared/config';
-import { PaginatedResponse } from '@/shared/types';
+import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard, isUndefined } from '@/shared/utils';
 
 export type MessageRequest = {

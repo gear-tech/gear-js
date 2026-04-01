@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import { ReactNode } from 'react';
-import { useForm, FormProvider, FieldValues, DefaultValues } from 'react-hook-form';
+import type { ReactNode } from 'react';
+import { type DefaultValues, type FieldValues, FormProvider, useForm } from 'react-hook-form';
 
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';

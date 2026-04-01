@@ -1,8 +1,8 @@
-import { toJSON, ProgramMetadata, StateMetadata } from '@gear-js/api';
+import { type ProgramMetadata, type StateMetadata, toJSON } from '@gear-js/api';
 import isPlainObject from 'lodash.isplainobject';
 import isString from 'lodash.isstring';
 
-import { TypeStructure, PayloadValue } from '@/entities/formPayload';
+import type { PayloadValue, TypeStructure } from '@/entities/formPayload';
 import { getPreformattedText, isNumeric } from '@/shared/helpers';
 
 const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
@@ -131,9 +131,9 @@ const getResetPayloadValue = (payload: PayloadValue): PayloadValue => {
 
 export {
   getItemLabel,
-  getPayloadValue,
   getNextLevelName,
-  getSubmitPayload,
   getPayloadFormValues,
+  getPayloadValue,
   getResetPayloadValue,
+  getSubmitPayload,
 };

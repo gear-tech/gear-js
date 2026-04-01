@@ -1,7 +1,7 @@
 import { useAlert } from '@gear-js/react-hooks';
-import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
+import { Checkbox, FileInput, type InputProps, InputWrapper, Textarea } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
@@ -9,7 +9,7 @@ import { FileTypes } from '@/shared/config';
 import { checkFileFormat, readFileAsync } from '@/shared/helpers';
 import { formStyles } from '@/shared/ui/form';
 
-import { FormPayloadValues } from '../model/types';
+import type { FormPayloadValues } from '../model/types';
 
 import styles from './FormPayload.module.scss';
 import { PayloadStructure } from './payloadStructure';

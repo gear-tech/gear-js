@@ -1,19 +1,19 @@
 import type { Address, Hex, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
 
-import {
+import { convertEventParams } from '../util/index.js';
+import { IMIRROR_ABI, type IMirrorContract } from './abi/IMirror.js';
+import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import type {
+  ITxManager,
   MessageHelpers,
-  ReplyHelpers,
   MessageQueuingRequestedLog,
   Reply,
-  ITxManager,
+  ReplyHelpers,
+  TxManagerWithHelpers,
   ValueClaimingRequestedLog,
-  type TxManagerWithHelpers,
 } from './interfaces/index.js';
-import { convertEventParams } from '../util/index.js';
-import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
 import { TxManager } from './tx-manager.js';
-import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with a Mirror contract.

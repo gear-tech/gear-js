@@ -1,4 +1,4 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { createContext, useContext } from 'react';
 
 export type AccountItemContextValue = {

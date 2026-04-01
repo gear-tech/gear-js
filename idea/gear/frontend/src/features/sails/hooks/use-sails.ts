@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';

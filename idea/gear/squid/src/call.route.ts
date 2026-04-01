@@ -1,10 +1,9 @@
 import { generateCodeHash } from '@gear-js/api';
-import { MessageToProgram, Program, ProgramStatus } from './model';
-
-import { IHandleEventProps } from './event.route';
-import { Call } from './processor';
-import { EMessageQueuedEvent } from './types';
-import { CCreateProgram, CSendMessage, CSendReply, CUploadProgram, CVoucherCall } from './types/calls';
+import type { IHandleEventProps } from './event.route';
+import { type MessageToProgram, Program, ProgramStatus } from './model';
+import type { Call } from './processor';
+import type { EMessageQueuedEvent } from './types';
+import type { CCreateProgram, CSendMessage, CSendReply, CUploadProgram, CVoucherCall } from './types/calls';
 
 export interface IHandleCallProps<C = Call> extends IHandleEventProps<EMessageQueuedEvent> {
   msg: MessageToProgram;

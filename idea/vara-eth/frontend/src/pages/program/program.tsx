@@ -1,14 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { generatePath, useParams } from 'react-router-dom';
-import { formatEther, formatUnits, Hex } from 'viem';
+import { formatEther, formatUnits, type Hex } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
 import { Badge, Balance, ChainEntity, HashLink, Skeleton, UploadIdlButton } from '@/components';
 import {
   TopUpExecBalance,
-  useReadContractState,
   useGetProgramByIdQuery,
+  useReadContractState,
   useWatchProgramStateChange,
 } from '@/features/programs';
 import { SailsProgramActions } from '@/features/sails';

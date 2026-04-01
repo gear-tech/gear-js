@@ -1,5 +1,5 @@
-import { Compact, GenericEvent } from '@polkadot/types';
-import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+import { type Compact, GenericEvent } from '@polkadot/types';
+import type { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 
 import { generateRandomId } from '@/shared/helpers';
 

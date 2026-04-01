@@ -44,4 +44,4 @@ function useVoucherStatus(expirationBlock: number | undefined) {
     : { ...status, isVoucherStatusReady: true as const };
 }
 
-export { useVoucherStatus, useGetVoucherStatus };
+export { useGetVoucherStatus, useVoucherStatus };

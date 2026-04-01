@@ -5,7 +5,7 @@ import { formatEther } from 'viem';
 import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
-import { MessageRequest, MessageSent, ReplyRequest, ReplySent } from '../../lib';
+import type { MessageRequest, MessageSent, ReplyRequest, ReplySent } from '../../lib';
 
 const MessageRequestData = (props: MessageRequest) => {
   const { sourceAddress, programId, value, callReply, txHash, blockNumber, createdAt } = props;

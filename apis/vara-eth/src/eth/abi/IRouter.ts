@@ -1,5 +1,5 @@
-import { Hex } from 'viem';
-import { CodeState } from '../interfaces/index.js';
+import type { Hex } from 'viem';
+import type { CodeState } from '../interfaces/index.js';
 
 export const IROUTER_ABI = [
   {

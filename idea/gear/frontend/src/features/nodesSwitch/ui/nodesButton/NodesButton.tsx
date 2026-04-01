@@ -1,6 +1,6 @@
 import { buttonStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 
 import { useNetworkIcon } from '@/hooks';
 import { AnimationTimeout } from '@/shared/config';

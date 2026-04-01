@@ -1,3 +1,3 @@
-import { INDEXER_ENTITY, getIndexerEntity } from './requests';
+import { getIndexerEntity, INDEXER_ENTITY } from './requests';
 
-export { INDEXER_ENTITY, getIndexerEntity };
+export { getIndexerEntity, INDEXER_ENTITY };

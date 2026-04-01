@@ -1,6 +1,6 @@
-import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
-import { AlertContainerFactory } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import { encodeAddress, type Transfer, type UserMessageSent } from '@gear-js/api';
+import type { AlertContainerFactory } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
 import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';

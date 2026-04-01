@@ -1,10 +1,10 @@
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ModalProps } from '@/entities/modal';
+import type { ModalProps } from '@/entities/modal';
 import { useAddIdl } from '@/features/sails';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';

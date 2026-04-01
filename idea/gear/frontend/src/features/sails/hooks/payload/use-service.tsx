@@ -1,6 +1,6 @@
 import { getDefaultPayloadValue, getPayloadSchema } from '@gear-js/sails-payload-form';
-import { ChangeEvent, useMemo } from 'react';
-import { Sails } from 'sails-js';
+import { type ChangeEvent, useMemo } from 'react';
+import type { Sails } from 'sails-js';
 
 import { isAnyKey } from '@/shared/helpers';
 

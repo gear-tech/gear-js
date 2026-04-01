@@ -1,12 +1,12 @@
-import { HexString, generateCodeHash } from '@gear-js/api';
-import { useApi, useAlert } from '@gear-js/react-hooks';
+import { generateCodeHash, type HexString } from '@gear-js/api';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { generatePath } from 'react-router-dom';
 
 import { FileTypes, routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 
 import { WASM_FILE_TYPE } from '../consts';
-import { WasmFileType } from '../types';
+import type { WasmFileType } from '../types';
 
 type OnChange = (value: File | undefined, buffer: Buffer | undefined) => void;
 

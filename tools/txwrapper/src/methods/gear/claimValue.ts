@@ -1,4 +1,10 @@
-import { Args, BaseTxInfo, defineMethod, OptionsWithMeta, UnsignedTransaction } from '@substrate/txwrapper-core';
+import {
+  type Args,
+  type BaseTxInfo,
+  defineMethod,
+  type OptionsWithMeta,
+  type UnsignedTransaction,
+} from '@substrate/txwrapper-core';
 
 export interface ClaimValueArgs extends Args {
   /**

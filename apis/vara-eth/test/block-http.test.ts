@@ -1,11 +1,7 @@
 import { createPublicClient, webSocket } from 'viem';
 
-import { createVaraEthApi, VaraEthApi, HttpVaraEthProvider } from '../src';
-import {
-  expectBlockRequestEvent,
-  expectHex,
-  expectStateTransition,
-} from './common';
+import { createVaraEthApi, HttpVaraEthProvider, type VaraEthApi } from '../src';
+import { expectBlockRequestEvent, expectHex, expectStateTransition } from './common';
 import { config } from './config';
 
 let provider: HttpVaraEthProvider;

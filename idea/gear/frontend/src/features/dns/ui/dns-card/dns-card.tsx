@@ -6,7 +6,7 @@ import { IdBlock, OwnerBlock } from '@/shared/ui';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
 import AdminSVG from '../../assets/admin.svg?react';
-import { Dns } from '../../types';
+import type { Dns } from '../../types';
 import { DeleteDns } from '../delete-dns';
 import { EditDns } from '../edit-dns';
 

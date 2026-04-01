@@ -1,10 +1,10 @@
-import { DeriveStakingAccount } from '@polkadot/api-derive/types';
+import type { DeriveStakingAccount } from '@polkadot/api-derive/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from '@/context';
 
-import { QueryParameters } from '../../../types';
+import type { QueryParameters } from '../../../types';
 import { useQuery } from '../../use-query';
 
 type UseDeriveStakingAccountParameters<T> = QueryParameters<DeriveStakingAccount, T> & {
@@ -54,5 +54,5 @@ function useDeriveStakingAccount<T = DeriveStakingAccount>({
   });
 }
 
-export { useDeriveStakingAccount };
 export type { UseDeriveStakingAccountParameters };
+export { useDeriveStakingAccount };

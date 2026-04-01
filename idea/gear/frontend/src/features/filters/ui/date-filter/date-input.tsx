@@ -1,6 +1,6 @@
 import { Input } from '@gear-js/ui';
-import { HTMLProps, Ref } from 'react';
-import { DateRange } from 'react-day-picker';
+import type { HTMLProps, Ref } from 'react';
+import type { DateRange } from 'react-day-picker';
 
 import CalendarSVG from '../../assets/calendar.svg?react';
 

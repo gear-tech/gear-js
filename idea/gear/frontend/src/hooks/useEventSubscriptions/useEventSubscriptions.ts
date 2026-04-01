@@ -1,10 +1,10 @@
-import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import type { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
 
 import { Method } from '@/features/explorer';
 
-import { transferEventsHandler, messageSentEventsHandler } from './helpers';
+import { messageSentEventsHandler, transferEventsHandler } from './helpers';
 
 const useEventSubscriptions = () => {
   const { api, isApiReady } = useApi();

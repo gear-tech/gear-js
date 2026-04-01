@@ -1,3 +1,3 @@
-import { WasmFileType } from './file';
+import type { WasmFileType } from './file';
 
 export type { WasmFileType };

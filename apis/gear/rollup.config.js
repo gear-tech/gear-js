@@ -1,4 +1,4 @@
-import { cpSync, writeFileSync } from 'fs';
+import { cpSync, writeFileSync } from 'node:fs';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';

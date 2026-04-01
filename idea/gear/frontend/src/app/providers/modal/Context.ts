@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { ModalContainerFactory } from './types';
+import type { ModalContainerFactory } from './types';
 
 const ModalContext = createContext({} as ModalContainerFactory);
 

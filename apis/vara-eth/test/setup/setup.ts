@@ -1,7 +1,7 @@
-import * as fs from 'fs';
+import { execSync, spawn } from 'node:child_process';
+import * as fs from 'node:fs';
 import { config } from 'dotenv';
 import { generateCodeHash } from '../../src/util/hash';
-import { execSync, spawn } from 'child_process';
 
 if (typeof WebSocket === 'undefined') {
   import('ws').then((module) => {

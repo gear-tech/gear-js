@@ -1,11 +1,11 @@
-import { FrameSystemAccountInfo, FrameSystemEventRecord } from '@polkadot/types/lookup';
-import { UnsubscribePromise } from '@polkadot/api/types';
-import { Vec } from '@polkadot/types-codec';
+import type { UnsubscribePromise } from '@polkadot/api/types';
+import type { FrameSystemAccountInfo, FrameSystemEventRecord } from '@polkadot/types/lookup';
+import type { Vec } from '@polkadot/types-codec';
 
-import { IBalanceCallback, IBlocksCallback, HexString } from '../types';
-import { IGearEvent, IGearVoucherEvent } from './types';
-import { Transfer, UserMessageSent } from './GearEvents';
-import { GearApi } from '../GearApi';
+import type { GearApi } from '../GearApi';
+import type { HexString, IBalanceCallback, IBlocksCallback } from '../types';
+import type { Transfer, UserMessageSent } from './GearEvents';
+import type { IGearEvent, IGearVoucherEvent } from './types';
 
 export class GearEvents {
   private api: GearApi;

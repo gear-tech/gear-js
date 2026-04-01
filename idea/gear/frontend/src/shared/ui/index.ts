@@ -3,7 +3,7 @@ import { Box } from './box';
 import { BulbStatus } from './bulbBlock';
 import { ConfirmModal } from './confirm-modal';
 import { CSSTransitionWithRef } from './css-transition-with-ref';
-import { Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea, FormButtons } from './form';
+import { Checkbox, Fieldset, FormButtons, Input, Radio, SearchForm, Select, Textarea, ValueField } from './form';
 import { IdBlock } from './idBlock';
 import { LabeledCheckbox } from './labeled-checkbox';
 import { List } from './list';
@@ -19,32 +19,32 @@ import { withAccount } from './with-account';
 import { withDeprecatedFallback } from './with-deprecated-fallback';
 
 export {
-  LabeledCheckbox,
-  withAccount,
-  Input,
-  ValueField,
-  Checkbox,
-  Radio,
-  Select,
-  withDeprecatedFallback,
-  List,
-  Skeleton,
-  SearchForm,
-  PreformattedBlock,
-  IdBlock,
-  OwnerBlock,
-  Subheader,
-  UILink,
-  Fieldset,
-  Textarea,
-  FormButtons,
-  Box,
-  ProgramTabLayout,
-  BulbStatus,
   BackButton,
-  TimestampBlock,
-  Table,
-  TableRow,
+  Box,
+  BulbStatus,
+  Checkbox,
   ConfirmModal,
   CSSTransitionWithRef,
+  Fieldset,
+  FormButtons,
+  IdBlock,
+  Input,
+  LabeledCheckbox,
+  List,
+  OwnerBlock,
+  PreformattedBlock,
+  ProgramTabLayout,
+  Radio,
+  SearchForm,
+  Select,
+  Skeleton,
+  Subheader,
+  Table,
+  TableRow,
+  Textarea,
+  TimestampBlock,
+  UILink,
+  ValueField,
+  withAccount,
+  withDeprecatedFallback,
 };

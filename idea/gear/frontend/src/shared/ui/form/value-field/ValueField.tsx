@@ -1,7 +1,7 @@
-import { inputStyles, InputProps, InputWrapper } from '@gear-js/ui';
+import { type InputProps, InputWrapper, inputStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { NumericFormat, NumericFormatProps } from 'react-number-format';
+import { NumericFormat, type NumericFormatProps } from 'react-number-format';
 
 import { BalanceUnit } from '../balance-unit';
 

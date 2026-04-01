@@ -1,7 +1,7 @@
-import { SelectHTMLAttributes, OptionHTMLAttributes, PropsWithChildren } from 'react';
-import { JSX } from 'react/jsx-runtime';
-import { Sails } from 'sails-js';
-import { ISailsTypeDef } from 'sails-js-types';
+import type { OptionHTMLAttributes, PropsWithChildren, SelectHTMLAttributes } from 'react';
+import type { JSX } from 'react/jsx-runtime';
+import type { Sails } from 'sails-js';
+import type { ISailsTypeDef } from 'sails-js-types';
 
 type FieldsetProps = PropsWithChildren & { legend: string };
 

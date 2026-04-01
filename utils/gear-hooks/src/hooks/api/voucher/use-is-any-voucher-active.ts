@@ -1,5 +1,5 @@
-import { HexString } from '@gear-js/api';
-import { useState, useEffect, useMemo } from 'react';
+import type { HexString } from '@gear-js/api';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useAccount, useAlert } from '@/context';
 
@@ -47,4 +47,4 @@ function useIsAnyAccountVoucherActive(programId: HexString | undefined) {
   return useIsAnyVoucherActive(account?.address, programId);
 }
 
-export { useIsAnyVoucherActive, useIsAnyAccountVoucherActive };
+export { useIsAnyAccountVoucherActive, useIsAnyVoucherActive };

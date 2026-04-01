@@ -21,8 +21,10 @@ export function normalizeBlockEvent(e: any): void {
   }
   if ('Mirror' in e) {
     const ev = e.Mirror.event;
-    if ('OwnedBalanceTopUpRequested' in ev) ev.OwnedBalanceTopUpRequested.value = BigInt(ev.OwnedBalanceTopUpRequested.value);
-    if ('ExecutableBalanceTopUpRequested' in ev) ev.ExecutableBalanceTopUpRequested.value = BigInt(ev.ExecutableBalanceTopUpRequested.value);
+    if ('OwnedBalanceTopUpRequested' in ev)
+      ev.OwnedBalanceTopUpRequested.value = BigInt(ev.OwnedBalanceTopUpRequested.value);
+    if ('ExecutableBalanceTopUpRequested' in ev)
+      ev.ExecutableBalanceTopUpRequested.value = BigInt(ev.ExecutableBalanceTopUpRequested.value);
     if ('MessageQueueingRequested' in ev) ev.MessageQueueingRequested.value = BigInt(ev.MessageQueueingRequested.value);
     if ('ReplyQueueingRequested' in ev) ev.ReplyQueueingRequested.value = BigInt(ev.ReplyQueueingRequested.value);
   }

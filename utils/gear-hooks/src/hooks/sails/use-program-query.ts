@@ -1,13 +1,13 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
 import { useAccount, useApi } from '@/context';
 
-import { QueryParameters } from '../../types';
+import type { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
-import { FunctionName, GenericQueryReturn, Query, QueryArgs, QueryReturn, ServiceName } from './types';
+import type { FunctionName, GenericQueryReturn, Query, QueryArgs, QueryReturn, ServiceName } from './types';
 
 type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn, TData> = QueryParameters<
   TQueryReturn,
@@ -110,5 +110,5 @@ function useProgramQuery<
   });
 }
 
-export { useProgramQuery };
 export type { UseProgramQueryParameters };
+export { useProgramQuery };

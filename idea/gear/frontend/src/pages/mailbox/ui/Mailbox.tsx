@@ -1,5 +1,5 @@
 import { isHex } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 

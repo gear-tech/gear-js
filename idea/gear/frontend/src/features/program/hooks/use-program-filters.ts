@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { OwnerFilter } from '@/api/consts';
 import { useVftWhitelist } from '@/features/vft-whitelist';
 
-import { ProgramsParameters } from '../api';
+import type { ProgramsParameters } from '../api';
 import { DEFAULT_FILTER_VALUES } from '../consts';
 
 type Location = {

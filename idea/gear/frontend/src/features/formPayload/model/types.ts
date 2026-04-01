@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { TypeStructure, PayloadValue } from '@/entities/formPayload';
+import type { PayloadValue, TypeStructure } from '@/entities/formPayload';
 
 type FormPayloadValues = {
   payload: PayloadValue;
@@ -20,4 +20,4 @@ type PayloadItemProps = PayloadStructureProps & {
   renderNextItem: (props: PayloadStructureProps) => ReactNode;
 };
 
-export type { PayloadItemProps, PayloadStructureProps, FormPayloadValues };
+export type { FormPayloadValues, PayloadItemProps, PayloadStructureProps };

@@ -1,4 +1,4 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
+import type { HexString, IVoucherDetails } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 
 import { useAccount, useAlert, useApi } from '@/context';
@@ -31,4 +31,4 @@ function useAccountVoucher(voucherId: HexString | undefined) {
   return useVoucher(voucherId, account?.address);
 }
 
-export { useVoucher, useAccountVoucher };
+export { useAccountVoucher, useVoucher };

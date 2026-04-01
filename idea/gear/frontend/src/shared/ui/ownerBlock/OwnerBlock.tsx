@@ -4,7 +4,7 @@ import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
 
 import CopySVG from '../../assets/images/actions/copyGreen.svg?react';
-import { getShortName, copyToClipboard } from '../../helpers';
+import { copyToClipboard, getShortName } from '../../helpers';
 
 import styles from './OwnerBlock.module.scss';
 

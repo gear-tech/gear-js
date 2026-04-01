@@ -1,6 +1,6 @@
 import { getDefaultPayloadValue, getPayloadSchema } from '@gear-js/sails-payload-form';
 import { useMemo } from 'react';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { useSelect } from './use-select';
 

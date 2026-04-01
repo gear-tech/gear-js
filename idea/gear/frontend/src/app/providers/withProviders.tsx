@@ -1,6 +1,6 @@
-import { AccountProvider as GearAccountProvider, ProviderProps } from '@gear-js/react-hooks';
+import { AccountProvider as GearAccountProvider, type ProviderProps } from '@gear-js/react-hooks';
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AlertProvider } from './alert';

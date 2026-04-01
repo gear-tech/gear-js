@@ -13,7 +13,7 @@ import { Box } from '@/shared/ui/box';
 
 import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
-import { FormValues, INITIAL_VALUES } from '../../model';
+import { type FormValues, INITIAL_VALUES } from '../../model';
 
 import styles from './Full.module.scss';
 

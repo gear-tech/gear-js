@@ -1,11 +1,12 @@
 import '@polkadot/api-augment';
-export { GearApi } from './GearApi';
-export { GearKeyring } from './Keyring';
+
 export { SPEC_VERSION, VARA_SS58_FORMAT } from './consts';
-export * from './wasm';
 export * from './events';
-export * from './utils';
 export * from './events';
-export * from './types';
-export * from './metadata';
+export { GearApi } from './GearApi';
 export { BaseGearProgram, Program } from './GearProgram';
+export { GearKeyring } from './Keyring';
+export * from './metadata';
+export * from './types';
+export * from './utils';
+export * from './wasm';

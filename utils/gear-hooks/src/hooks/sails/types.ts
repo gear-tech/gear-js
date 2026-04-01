@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HexString } from '@gear-js/api';
-import { SignerOptions } from '@polkadot/api/types';
-import { IKeyringPair } from '@polkadot/types/types';
-import { QueryBuilder, TransactionBuilder } from 'sails-js';
+import type { HexString } from '@gear-js/api';
+import type { SignerOptions } from '@polkadot/api/types';
+import type { IKeyringPair } from '@polkadot/types/types';
+import type { QueryBuilder, TransactionBuilder } from 'sails-js';
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
 
@@ -72,20 +72,20 @@ type QueryArgs<T> = Parameters<Query<T>>;
 type QueryReturn<T> = Query<T> extends (...args: any[]) => GenericQueryReturn<infer R> ? R : never;
 
 export type {
-  ServiceName,
-  FunctionName,
-  GenericTransactionReturn,
-  Transaction,
-  TransactionReturn,
-  UseSendProgramTransactionParameters,
-  UsePrepareProgramTransactionParameters,
-  SignAndSendOptions,
-  SendTransactionParameters,
-  EventReturn,
   Event,
   EventCallbackArgs,
+  EventReturn,
+  FunctionName,
   GenericQueryReturn,
+  GenericTransactionReturn,
   Query,
   QueryArgs,
   QueryReturn,
+  SendTransactionParameters,
+  ServiceName,
+  SignAndSendOptions,
+  Transaction,
+  TransactionReturn,
+  UsePrepareProgramTransactionParameters,
+  UseSendProgramTransactionParameters,
 };

@@ -1,6 +1,6 @@
-import { Skeleton, List } from '@/shared/ui';
+import { List, Skeleton } from '@/shared/ui';
 
-import { Voucher } from '../../api';
+import type { Voucher } from '../../api';
 import VoucherCardPlaceholder from '../../assets/voucher-card-placeholder.svg?react';
 import { VoucherCard } from '../voucher-card';
 

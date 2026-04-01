@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { PaginationParameters, PaginationResponse } from '@/api';
-import { IBase } from '@/shared/types';
+import type { PaginationParameters, PaginationResponse } from '@/api';
+import type { IBase } from '@/shared/types';
 
-import { MessageEntryPoint, MessageReadReason } from '../types';
+import type { MessageEntryPoint, MessageReadReason } from '../types';
 
 type MessagesParameters = PaginationParameters & {
   destination?: string;
@@ -47,9 +47,9 @@ type MessageFromProgram = Message & {
 };
 
 export type {
-  MessageToProgram,
   MessageFromProgram,
-  MessagesToProgramParameters,
   MessagesFromProgramParameters,
+  MessagesToProgramParameters,
+  MessageToProgram,
   PaginationResponse,
 };

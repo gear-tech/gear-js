@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
 import styles from './Checkbox.module.scss';
 
@@ -21,7 +21,7 @@ const Checkbox = ({ label, className, type, ...attrs }: Props) => {
   );
 };
 
+export type { Props as CheckboxProps };
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components
 export { Checkbox, styles as checkboxStyles };
-export type { Props as CheckboxProps };

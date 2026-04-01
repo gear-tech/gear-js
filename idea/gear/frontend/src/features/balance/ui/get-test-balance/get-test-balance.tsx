@@ -1,7 +1,7 @@
 import { GearKeyring } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
-import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 

@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { getVaraAddress, useProgram, useProgramQuery } from '@gear-js/react-hooks';
 import { Checkbox } from '@gear-js/ui';
 import { useCallback, useMemo, useState } from 'react';
@@ -7,7 +7,7 @@ import { useErrorAlert } from '@/hooks';
 import { isUndefined } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
-import { SailsProgram, Vft } from '../../sails';
+import { SailsProgram, type Vft } from '../../sails';
 
 type ApproveEvent = Parameters<Parameters<Vft['subscribeToApprovalEvent']>[0]>[0];
 type MintEvent = Parameters<Parameters<Vft['subscribeToMintedEvent']>[0]>[0];
