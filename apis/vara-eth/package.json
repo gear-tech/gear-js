@@ -44,7 +44,7 @@
   "devDependencies": {
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@d7d28b6",
+    "viem": "npm:@vara-eth/viem@2.47.7",
     "ws": "8.18.3"
   },
   "files": [
