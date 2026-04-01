@@ -77,7 +77,11 @@ export class RequestService {
     try {
       const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
         this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
-        this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
+        this._repo.findBy({
+          address: req.address,
+          target,
+          status: In([RequestStatus.Pending, RequestStatus.Processing]),
+        }),
       ]);
 
       const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;

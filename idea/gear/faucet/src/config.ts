@@ -55,4 +55,10 @@ export default {
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
     rateLimitMs: Number(getEnv('RATE_LIMIT_SEC', '60000')),
   },
+  agent: {
+    enabled: getEnv('AGENT_FAUCET_ENABLED', 'false') === 'true',
+    dailyCap: Number(getEnv('AGENT_DAILY_CAP', '20')),
+    rateLimitMs: Number(getEnv('AGENT_RATE_LIMIT_MS', '300000')),
+    challengeTtlMs: Number(getEnv('AGENT_CHALLENGE_TTL_MS', '60000')),
+  },
 };

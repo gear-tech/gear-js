@@ -1,7 +1,7 @@
 {
   "name": "gear-idea-meta-storage",
   "private": true,
-  "version": "1.3.26",
+  "version": "1.4.26",
   "devDependencies": {
     "@types/express": "5.0.6",
     "@types/supertest": "^6.0.3",
@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "@gear-js/api": "0.44.2",
-    "@polkadot/api": "16.5.4",
+    "@polkadot/api": "16.5.6",
     "dotenv": "17.3.1",
     "express": "5.2.1",
-    "gear-idea-common": "1.3.26",
+    "gear-idea-common": "1.4.26",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",
