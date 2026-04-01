@@ -243,7 +243,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       blockTag: 'latest',
     });
 
-    const baseFeePerBlobGas = feeHistory.baseFeePerBlobGas!.at(-1) ?? 0n;
+    const baseFeePerBlobGas = (feeHistory.baseFeePerBlobGas ?? []).at(-1) ?? 1n;
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
     const tx = {
