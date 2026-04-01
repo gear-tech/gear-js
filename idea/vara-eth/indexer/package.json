@@ -36,7 +36,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "typeorm": "0.3.28",
-    "viem": "npm:@vara-eth/viem@2.47.6",
+    "viem": "https://pkg.pr.new/StackOverflowExcept1on/viem/viem@d7d28b6",
     "xxhash-addon": "^2.0.3"
   },
   "devDependencies": {

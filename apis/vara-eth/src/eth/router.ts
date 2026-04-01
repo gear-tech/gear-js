@@ -237,13 +237,22 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     const blobs = simpleSidecarEncode(code);
     const kzg = await loadKZG();
 
+    const feeHistory = await this._pc.getFeeHistory({
+      blockCount: 2,
+      rewardPercentiles: [],
+      blockTag: 'latest',
+    });
+
+    const baseFeePerBlobGas = feeHistory.baseFeePerBlobGas!.at(-1) ?? 0n;
+    const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
+
     const tx = {
       type: 'eip4844' as const,
       blobVersion: '7594' as const,
       data,
       to: this.address,
-      gas: 5_000_000n,
-      maxFeePerBlobGas: 400_000_000_000n,
+      gas: 100_000n,
+      maxFeePerBlobGas,
       blobs,
       kzg: {
         blobToKzgCommitment: (blob: Uint8Array) => {
@@ -255,12 +264,14 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
           return hexToBytes(result);
         },
         computeCellsAndKzgProofs: (blob: Uint8Array): [Uint8Array[], Uint8Array[]] => {
-          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [`0x${string}`[], `0x${string}`[]];
+          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [Hex[], Hex[]];
           return [cells.map((cell) => hexToBytes(cell)), proofs.map((proof) => hexToBytes(proof))];
         },
       },
       chain: null,
     };
+
+    tx.gas = await this._pc.estimateGas(tx);
 
     await this._pc.prepareTransactionRequest(tx);
 
