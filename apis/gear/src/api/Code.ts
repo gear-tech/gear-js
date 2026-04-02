@@ -45,14 +45,14 @@ export class GearCode extends GearTransaction {
     if (this._api.specVersion >= SPEC_VERSION.V1900) {
       return this._api.query.gearProgram.codeMetadataStorage(codeId);
     }
-    throw new Error('Unsupported version');
+    throw new Error(`Unsupported version ${this._api.specVersion}. Only versions >= 1900 are supported`);
   }
 
   private _storageBeforeV1900(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900>> {
     if (this._api.specVersion < SPEC_VERSION.V1900) {
       return this._api.query.gearProgram.codeStorage(codeId);
     }
-    throw new Error('Unsupported version');
+    throw new Error(`Unsupported version ${this._api.specVersion}. Only versions < 1900 are supported`);
   }
 
   /**
