@@ -68,8 +68,8 @@ export class GearEvents {
     });
   }
 
-  #umsActorsMatch(from: HexString, to: HexString, event: UserMessageSent): boolean {
-    if (event.data.message.source.eq(from) || event.data.message.destination.eq(to)) {
+  #umsActorsMatch(from: HexString | undefined, to: HexString | undefined, event: UserMessageSent): boolean {
+    if ((from && event.data.message.source.eq(from)) || (to && event.data.message.destination.eq(to))) {
       return true;
     }
     return false;

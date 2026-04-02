@@ -1,5 +1,5 @@
 export interface ExtrinsicFailedData {
-  docs: string;
+  docs: string | null;
   method: string;
   name: string;
 }

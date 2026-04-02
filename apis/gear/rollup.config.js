@@ -32,7 +32,6 @@ export default [
         preserveModules: true,
       },
     ],
-
     plugins: [
       typescript({
         tsconfig: 'tsconfig.json',

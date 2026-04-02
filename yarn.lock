@@ -6548,7 +6548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-commonjs@npm:^29.0.0":
+"@rollup/plugin-commonjs@npm:^29.0.2":
   version: 29.0.2
   resolution: "@rollup/plugin-commonjs@npm:29.0.2"
   dependencies:
@@ -11446,7 +11446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:30.3.0, babel-jest@npm:^30.2.0":
+"babel-jest@npm:30.3.0, babel-jest@npm:^30.3.0":
   version: 30.3.0
   resolution: "babel-jest@npm:30.3.0"
   dependencies:
@@ -15200,7 +15200,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.28.5"
     "@biomejs/biome": "npm:^2.4.10"
-    "@rollup/plugin-commonjs": "npm:^29.0.0"
+    "@rollup/plugin-commonjs": "npm:^29.0.2"
     "@rollup/plugin-json": "npm:^6.1.0"
     "@rollup/plugin-node-resolve": "npm:^16.0.3"
     "@rollup/plugin-typescript": "npm:^12.3.0"
@@ -15213,14 +15213,14 @@ __metadata:
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
     "@types/react-transition-group": "npm:4.4.12"
-    babel-jest: "npm:^30.2.0"
+    babel-jest: "npm:^30.3.0"
     dotenv: "npm:^17.2.3"
-    jest: "npm:^30.2.0"
-    lerna: "npm:^9.0.3"
-    rollup: "npm:^4.53.3"
-    rollup-plugin-typescript2: "npm:^0.36.0"
+    jest: "npm:^30.3.0"
+    lerna: "npm:^9.0.7"
+    rollup: "npm:^4.60.1"
+    rollup-plugin-typescript2: "npm:^0.37.0"
     sass: "npm:^1.83.4"
-    ts-jest: "npm:^29.4.5"
+    ts-jest: "npm:^29.4.9"
     ts-node: "npm:^10.9.2"
     ts-node-dev: "npm:^2.0.0"
     typescript: "npm:^5.9.3"
@@ -17510,7 +17510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^30.2.0":
+"jest@npm:^30.3.0":
   version: 30.3.0
   resolution: "jest@npm:30.3.0"
   dependencies:
@@ -17796,7 +17796,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lerna@npm:^9.0.3":
+"lerna@npm:^9.0.7":
   version: 9.0.7
   resolution: "lerna@npm:9.0.7"
   dependencies:
@@ -21669,9 +21669,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-typescript2@npm:^0.36.0":
-  version: 0.36.0
-  resolution: "rollup-plugin-typescript2@npm:0.36.0"
+"rollup-plugin-typescript2@npm:^0.37.0":
+  version: 0.37.0
+  resolution: "rollup-plugin-typescript2@npm:0.37.0"
   dependencies:
     "@rollup/pluginutils": "npm:^4.1.2"
     find-cache-dir: "npm:^3.3.2"
@@ -21681,11 +21681,11 @@ __metadata:
   peerDependencies:
     rollup: ">=1.26.3"
     typescript: ">=2.4.0"
-  checksum: 10c0/3c8d17cd852ded36eaad2759caf170f90e091d8f86ff7b016d1823bc8b507b8f689156bcccda348fc88471681dc79cc9eb13ddb09a4dfcf0d07ac9a249e2d79b
+  checksum: 10c0/737a9ab65df5fe1d222f58e4a5bec83d84518d0319541b1e46d3aec291d51e61c04a566d95a9b240a75bc42feb2cee040f118d0771db9a78333e4d5e9691ee10
   languageName: node
   linkType: hard
 
-"rollup@npm:^4.43.0, rollup@npm:^4.53.3":
+"rollup@npm:^4.43.0, rollup@npm:^4.60.1":
   version: 4.60.1
   resolution: "rollup@npm:4.60.1"
   dependencies:
@@ -23271,7 +23271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.4.5":
+"ts-jest@npm:^29.4.9":
   version: 29.4.9
   resolution: "ts-jest@npm:29.4.9"
   dependencies:
