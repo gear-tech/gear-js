@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import react from '@vitejs/plugin-react-swc';
@@ -14,11 +15,18 @@ const options = {
   resolve: { alias: { '@': resolve(process.cwd(), 'src') } },
 };
 
+const hasEslintConfig = ['eslint.config.js', 'eslint.config.mjs', 'eslint.config.cjs'].some((f) =>
+  existsSync(resolve(process.cwd(), f)),
+);
+
 const plugins = [
   react(),
   svgr(),
   nodePolyfills(),
-  checker({ typescript: { buildMode: true }, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
+  checker({
+    typescript: { buildMode: true },
+    ...(hasEslintConfig ? { eslint: { lintCommand: 'eslint .', useFlatConfig: true } } : {}),
+  }),
 ];
 
 const app = defineConfig({ ...options, plugins });
