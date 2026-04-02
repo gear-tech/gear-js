@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `IVaraEthValidatorPoolProvider.hasValidator()` method to check whether a given address is present in the pool
 - `InjectedTx.setSlotValidator()` method that targets the validator assigned to the current slot via round-robin scheduling (`floor(timestamp / blockDuration) % validators.length`, projected two blocks ahead)
+- `InjectedTx.setDefaultValidator()` method that sets the recipient to the zero address, allowing any validator to process the transaction
 
 ### Changed
 

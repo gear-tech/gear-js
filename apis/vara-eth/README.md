@@ -503,14 +503,14 @@ const inPool = pool.hasValidator('0xValidator2...');
 
 **How routing works with injected transactions:**
 
-When you call `setRecipient()` or `setNextValidator()` on an `InjectedTx`, the library:
+When you call `setRecipient()`, `setSlotValidator()`, or `setDefaultValidator()` on an `InjectedTx`, the library:
 
-1. Computes the target validator address (either the one you specified, or the validator scheduled to produce the next block)
+1. Computes the target validator address (either the one you specified, the slot-scheduled validator, or the zero address)
 2. Sets that address as the transaction `recipient` field
 3. If the provider is a pool **and** the target address is in the pool, routes the send/subscribe calls through that validator's dedicated WebSocket connection
 4. If the address is not in the pool (e.g. a new validator added on-chain that hasn't been added to the pool yet), the transaction is sent via the currently active pool connection — the receiving node will forward it to the intended validator
 
-**Selecting the scheduled validator explicitly:**
+**Targeting a specific validator:**
 
 ```typescript
 const injected = await api.createInjectedTransaction({ destination: programId, payload });
@@ -518,10 +518,26 @@ const injected = await api.createInjectedTransaction({ destination: programId, p
 // Target the validator scheduled to produce the imminent block
 await injected.setSlotValidator();
 
+// Or target a specific validator by address
+await injected.setRecipient('0xValidator1...');
+
 await injected.send();
 ```
 
 `setSlotValidator()` derives the assigned validator from the current slot (`floor(timestamp / blockDuration) % validators.length`), where `timestamp` is projected two blocks ahead to account for network propagation.
+
+**Sending without targeting a specific validator:**
+
+```typescript
+const injected = await api.createInjectedTransaction({ destination: programId, payload });
+
+// Set zero address — any validator can process this transaction
+injected.setDefaultValidator();
+
+await injected.send();
+```
+
+Use `setDefaultValidator()` when validator targeting is not important. The transaction will be processed by whichever validator produces the next available slot.
 
 ### 3. Injected Transactions
 

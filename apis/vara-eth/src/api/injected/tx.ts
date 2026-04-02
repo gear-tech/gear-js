@@ -2,7 +2,7 @@ import { blake2b } from '@noble/hashes/blake2.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import { randomBytes } from '@noble/hashes/utils.js';
 import type { Address, Hash, Hex } from 'viem';
-import { bytesToHex, concatBytes, hexToBytes } from 'viem';
+import { bytesToHex, concatBytes, hexToBytes, zeroAddress } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
 import { isPoolProvider } from '../../provider/util.js';
@@ -213,6 +213,23 @@ export class InjectedTx {
   /** @deprecated Use {@link setSlotValidator} instead */
   public setNextValidator() {
     return this.setSlotValidator();
+  }
+
+  /**
+   * ## Let any validator process the transaction
+   *
+   * Sets the recipient to the zero address, signalling that no specific validator is
+   * targeted. The receiving node will include the transaction in the next available slot
+   * regardless of which validator produces it.
+   *
+   * Use this when validator targeting is not important and you want the simplest, most
+   * reliable delivery path.
+   *
+   * @returns The zero address
+   */
+  public setDefaultValidator(): Address {
+    this._recipient = zeroAddress;
+    return this._recipient;
   }
 
   private get _rpcData() {
