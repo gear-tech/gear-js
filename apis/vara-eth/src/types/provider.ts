@@ -20,6 +20,7 @@ export interface IVaraEthProvider {
 export interface IVaraEthValidatorPoolProvider extends IVaraEthProvider {
   readonly isPool: true;
   readonly validatorAddresses: Address[];
+  hasValidator(address: Address): boolean;
   setActiveValidator(address: Address): void;
   removeValidator(address: Address): Promise<void>;
   addValidator(address: Address, url: string): Promise<void>;

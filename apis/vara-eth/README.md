@@ -29,9 +29,10 @@ TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepape
   - [5. Working with TxManager](#5-working-with-txmanager)
 - [Vara.Eth Side Operations](#varaeth-side-operations)
   - [1. Instantiating VaraEthApi](#1-instantiating-varaethapi)
-  - [2. Injected Transactions](#2-injected-transactions)
-  - [3. Querying Program Data](#3-querying-program-data)
-  - [4. Reading Program State via calculateReplyForHandle](#4-reading-program-state-via-calculatereplyforhandle)
+  - [2. Validator Pool](#2-validator-pool)
+  - [3. Injected Transactions](#3-injected-transactions)
+  - [4. Querying Program Data](#4-querying-program-data)
+  - [5. Reading Program State via calculateReplyForHandle](#5-reading-program-state-via-calculatereplyforhandle)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -459,7 +460,70 @@ await api.provider.disconnect();
 - **HttpVaraEthProvider**: Best for one-time queries and calls. Simpler, no persistent connection.
 - **WsVaraEthProvider**: Required for subscriptions and real-time event listening. Maintains persistent connection.
 
-### 2. Injected Transactions
+### 2. Validator Pool
+
+By default, injected transactions are sent to a single provider endpoint. A **validator pool** maintains a direct WebSocket connection to each known validator node, allowing the library to route each transaction to the validator that is scheduled to produce the next block. This eliminates one network hop and reduces confirmation latency.
+
+**When to use a pool:**
+
+- You know the RPC endpoints of the active validator set
+- You want transactions delivered directly to the producing validator rather than relying on peer-to-peer forwarding
+
+**Creating a pool:**
+
+```typescript
+import { createVaraEthApi, VaraEthValidatorWsPool } from '@vara-eth/api';
+
+const pool = new VaraEthValidatorWsPool([
+  { address: '0xValidator1...', url: 'wss://validator-1.example.com' },
+  { address: '0xValidator2...', url: 'wss://validator-2.example.com' },
+  { address: '0xValidator3...', url: 'wss://validator-3.example.com' },
+]);
+
+const api = await createVaraEthApi(pool, publicClient, routerAddress, signer);
+```
+
+Each entry maps a validator's Ethereum address to its WebSocket RPC URL. Addresses are compared case-insensitively.
+
+**Managing pool membership at runtime:**
+
+```typescript
+// Add a new validator (connects immediately)
+await pool.addValidator('0xNewValidator...', 'wss://validator-4.example.com');
+
+// Remove a validator (disconnects its WebSocket)
+await pool.removeValidator('0xValidator1...');
+
+// Inspect current pool members
+console.log(pool.validatorAddresses);
+
+// Check whether a specific address is in the pool
+const inPool = pool.hasValidator('0xValidator2...');
+```
+
+**How routing works with injected transactions:**
+
+When you call `setRecipient()` or `setNextValidator()` on an `InjectedTx`, the library:
+
+1. Computes the target validator address (either the one you specified, or the validator scheduled to produce the next block)
+2. Sets that address as the transaction `recipient` field
+3. If the provider is a pool **and** the target address is in the pool, routes the send/subscribe calls through that validator's dedicated WebSocket connection
+4. If the address is not in the pool (e.g. a new validator added on-chain that hasn't been added to the pool yet), the transaction is sent via the currently active pool connection — the receiving node will forward it to the intended validator
+
+**Selecting the scheduled validator explicitly:**
+
+```typescript
+const injected = await api.createInjectedTransaction({ destination: programId, payload });
+
+// Target the validator scheduled to produce the imminent block
+await injected.setSlotValidator();
+
+await injected.send();
+```
+
+`setSlotValidator()` derives the assigned validator from the current slot (`floor(timestamp / blockDuration) % validators.length`), where `timestamp` is projected two blocks ahead to account for network propagation.
+
+### 3. Injected Transactions
 
 Injected transactions are Vara.Eth-native transactions sent directly to the network, bypassing Ethereum. They provide faster execution and lower costs for operations that don't require Ethereum settlement.
 
@@ -529,7 +593,7 @@ await injected.setRecipient(validatorAddress);
 await injected.send();
 ```
 
-### 3. Querying Program Data
+### 4. Querying Program Data
 
 Query program information from Vara.Eth network:
 
@@ -551,7 +615,7 @@ if ('Active' in state.program) {
 }
 ```
 
-### 4. Reading Program State via `calculateReplyForHandle`
+### 5. Reading Program State via `calculateReplyForHandle`
 
 Perform read-only queries on program state without sending transactions:
 

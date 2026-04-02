@@ -2,7 +2,7 @@ import { blake2b } from '@noble/hashes/blake2.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import { randomBytes } from '@noble/hashes/utils.js';
 import type { Address, Hash, Hex } from 'viem';
-import { bytesToHex, concatBytes, hexToBytes, zeroAddress } from 'viem';
+import { bytesToHex, concatBytes, hexToBytes } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
 import { isPoolProvider } from '../../provider/util.js';
@@ -40,9 +40,13 @@ export class InjectedTx {
     this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
     if (tx.recipient) {
       this._recipient = tx.recipient.toLowerCase() as Address;
-      if (isPoolProvider(this._varaethProvider)) {
-        this._varaethProvider.setActiveValidator(this._recipient);
-      }
+      this._trySetActiveValidator(this._recipient);
+    }
+  }
+
+  private _trySetActiveValidator(address: Address): void {
+    if (isPoolProvider(this._varaethProvider) && this._varaethProvider.hasValidator(address)) {
+      this._varaethProvider.setActiveValidator(address);
     }
   }
 
@@ -160,33 +164,37 @@ export class InjectedTx {
    * @returns the validator address
    */
   public async setRecipient(address?: Address): Promise<Address> {
-    if (isPoolProvider(this._varaethProvider)) {
-      if (!address) {
-        return this.setNextValidator();
-      }
-      this._varaethProvider.setActiveValidator(address);
+    if (!address) {
+      return this.setSlotValidator();
     }
 
     const validators = await this._ethClient.router.validators();
 
-    if (address) {
-      const lcAddr = address.toLowerCase() as Address;
-      if (!validators.includes(lcAddr)) {
-        throw new Error('Address is not a validator');
-      }
-      this._recipient = lcAddr;
-    } else {
-      this._recipient = zeroAddress;
+    const lcAddr = address.toLowerCase() as Address;
+    if (!validators.includes(lcAddr)) {
+      throw new Error('Address is not a validator');
     }
+    this._recipient = lcAddr;
+    this._trySetActiveValidator(lcAddr);
 
     return this._recipient;
   }
 
-  public async setNextValidator() {
-    if (!isPoolProvider(this._varaethProvider)) {
-      throw new Error('Next validator can only be set for pool providers');
-    }
-
+  /**
+   * ## Target the validator assigned to the current slot
+   *
+   * Computes the validator scheduled to process the imminent block using slot-based
+   * round-robin (`floor(timestamp / blockDuration) % validators.length`), where the
+   * timestamp is projected two blocks ahead to account for network propagation.
+   *
+   * Sets the computed address as the transaction {@link recipient}. If the provider is a
+   * {@link IVaraEthValidatorPoolProvider | validator pool} and the address is present in the
+   * pool, subsequent sends are routed directly to that validator's RPC connection. Otherwise
+   * the transaction is forwarded by the receiving node.
+   *
+   * @returns The selected validator address
+   */
+  public async setSlotValidator() {
     const validators = await this._ethClient.router.validators();
 
     const latestBlockTimestamp = await this._ethClient.getLatestBlockTimestamp();
@@ -194,10 +202,17 @@ export class InjectedTx {
     const slot = Math.floor(timestamp / this._ethClient.blockDuration);
 
     const validatorIndex = slot % validators.length;
+    const nextValidator = validators[validatorIndex].toLowerCase() as Address;
 
-    this._varaethProvider.setActiveValidator(validators[validatorIndex]);
-    this._recipient = validators[validatorIndex].toLowerCase() as Address;
+    this._recipient = nextValidator;
+    this._trySetActiveValidator(nextValidator);
+
     return this._recipient;
+  }
+
+  /** @deprecated Use {@link setSlotValidator} instead */
+  public setNextValidator() {
+    return this.setSlotValidator();
   }
 
   private get _rpcData() {

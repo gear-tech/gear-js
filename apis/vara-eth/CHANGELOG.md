@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.2]
+
+### Added
+
+- `IVaraEthValidatorPoolProvider.hasValidator()` method to check whether a given address is present in the pool
+- `InjectedTx.setSlotValidator()` method that targets the validator assigned to the current slot via round-robin scheduling (`floor(timestamp / blockDuration) % validators.length`, projected two blocks ahead)
+
+### Changed
+
+- `InjectedTx.setNextValidator()` and `InjectedTx.setRecipient()` no longer require a pool provider — both work with any provider; if the provider is a pool and the target address is in the pool, the send is routed directly to that validator's connection, otherwise the transaction is forwarded by the receiving node
+- `InjectedTx.setRecipient()` with an explicit address no longer unconditionally calls `setActiveValidator` — it only does so when the provider is a pool and the address is present in the pool
+- Constructor: setting `tx.recipient` now only calls `setActiveValidator` when the provider is a pool and the address is in the pool (same routing logic as above)
+
+### Deprecated
+
+- `InjectedTx.setNextValidator()` — use `InjectedTx.setSlotValidator()` instead; the old method remains as a thin wrapper
+
 ## [0.3.1]
 
 ### Added

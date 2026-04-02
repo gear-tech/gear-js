@@ -5,15 +5,6 @@ import { type ConnectionOptions, WsVaraEthProvider } from './ws.js';
 
 export type ValidatorPool = { url: string; address: Address }[];
 
-export function getDefaultVaraEthTestnetValidatorPool(): ValidatorPool {
-  return [
-    { address: '0x7462303A1Aae98C96F8CAd6ECeC91DaD29537518', url: 'wss://vara-eth-validator-1.gear-tech.io' },
-    { address: '0xaEe0Cc6CAa1cFbee638470a995b9Bb75c1aB0972', url: 'wss://vara-eth-validator-2.gear-tech.io' },
-    { address: '0xCC4E78EA999374E348E6D583af19b0F0E6689DE8', url: 'wss://vara-eth-validator-3.gear-tech.io' },
-    { address: '0x2aD8150a579E12f6Dfb418100dbcA0B0255E8dBA', url: 'wss://vara-eth-validator-4.gear-tech.io' },
-  ];
-}
-
 export class VaraEthValidatorWsPool implements IVaraEthValidatorPoolProvider {
   private _validators: Map<string, WsVaraEthProvider>;
   private _activeValidator: string;
@@ -40,6 +31,10 @@ export class VaraEthValidatorWsPool implements IVaraEthValidatorPoolProvider {
 
   get validatorAddresses(): Address[] {
     return Array.from(this._validators.keys()) as Address[];
+  }
+
+  hasValidator(address: Address): boolean {
+    return this._validators.has(address.toLowerCase());
   }
 
   setActiveValidator(address: Address): void {
