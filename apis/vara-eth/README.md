@@ -503,7 +503,7 @@ const inPool = pool.hasValidator('0xValidator2...');
 
 **How routing works with injected transactions:**
 
-When you call `setRecipient()`, `setSlotValidator()`, or `setDefaultValidator()` on an `InjectedTx`, the library:
+When you call `setRecipient()`, `setSlotValidator()` (or the deprecated but still supported `setNextValidator()`), or `setDefaultValidator()` on an `InjectedTx`, the library:
 
 1. Computes the target validator address (either the one you specified, the slot-scheduled validator, or the zero address)
 2. Sets that address as the transaction `recipient` field

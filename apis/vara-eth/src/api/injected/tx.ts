@@ -160,7 +160,7 @@ export class InjectedTx {
 
   /**
    * ## Specify validator address the transaction is intended for
-   * @param address - (optional) the validator address. Default: zero address
+   * @param address - (optional) the validator address. If omitted, defaults to the validator assigned to the current slot via {@link setSlotValidator}. Use {@link setDefaultValidator} to explicitly target no specific validator.
    * @returns the validator address
    */
   public async setRecipient(address?: Address): Promise<Address> {
@@ -197,12 +197,16 @@ export class InjectedTx {
   public async setSlotValidator() {
     const validators = await this._ethClient.router.validators();
 
+    if (validators.length === 0) {
+      throw new Error('No validators found in the router');
+    }
+
     const latestBlockTimestamp = await this._ethClient.getLatestBlockTimestamp();
     const timestamp = latestBlockTimestamp + this._ethClient.blockDuration * 2;
     const slot = Math.floor(timestamp / this._ethClient.blockDuration);
 
     const validatorIndex = slot % validators.length;
-    const nextValidator = validators[validatorIndex].toLowerCase() as Address;
+    const nextValidator = validators[validatorIndex];
 
     this._recipient = nextValidator;
     this._trySetActiveValidator(nextValidator);
