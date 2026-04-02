@@ -53,7 +53,7 @@ contract CounterCaller is ICounterCallbacks {
         _;
     }
 
-    function _onlyVaraEthProgram() internal {
+    function _onlyVaraEthProgram() internal view {
         if (msg.sender != address(VAR_ETH_PROGRAM)) {
             revert UnauthorizedCaller();
         }
