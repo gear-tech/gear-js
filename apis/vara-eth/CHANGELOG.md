@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.1]
+
+### Added
+
+- `RouterClient.requestCodeValidation()` method (previously private and unimplemented) for uploading Wasm program code as an EIP-7594 blob transaction (https://github.com/gear-tech/gear-js/pull/2405)
+- EIP-7594 multi-blob encoding via `simpleSidecarEncode()` — replaces the old single-blob `prepareBlob()` and correctly encodes arbitrary-length data across multiple blobs following the Simple Sidecar Encoding format (https://github.com/gear-tech/gear-js/pull/2405)
+- `computeCellsAndKzgProofs` KZG hook required by EIP-7594 (https://github.com/gear-tech/gear-js/pull/2405)
+
+### Changed
+
+- Peer dependency `viem` switched from `^2.39.0` to `@vara-eth/viem@2.47.7-1` — a temporary fork at https://github.com/StackOverflowExcept1on/viem/tree/feat/eip-7594-support-for-blob-txs that adds EIP-7594 blob transaction support not yet available upstream; will revert to the official package once merged (https://github.com/gear-tech/gear-js/pull/2405)
+- `requestCodeValidation` blob transactions now use `blobVersion: '7594'` (EIP-7594) instead of the standard EIP-4844 format (https://github.com/gear-tech/gear-js/pull/2405)
+- `maxFeePerBlobGas` is now derived dynamically from `getFeeHistory` (3× the latest base fee) instead of the previous hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+- Gas limit for code validation transactions is now estimated via `estimateGas` instead of a hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+
 ## [0.3.0]
 
 ### Added
