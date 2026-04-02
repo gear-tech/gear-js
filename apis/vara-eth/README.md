@@ -46,8 +46,10 @@ npm install @vara-eth/api
 Install required peer dependencies:
 
 ```bash
-npm install viem@^2.39.0 kzg-wasm@1.0.0
+npm install viem@npm:@vara-eth/viem@2.47.7-1 kzg-wasm@1.0.0
 ```
+
+> **Note:** `@vara-eth/viem` is a temporary fork of [viem](https://viem.sh) that adds support for [EIP-7594](https://eips.ethereum.org/EIPS/eip-7594), which is not yet available in the upstream package. Once EIP-7594 support lands in the official viem release, this library will switch back to the original package.
 
 ## Quick Start
 
