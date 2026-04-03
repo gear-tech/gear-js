@@ -834,7 +834,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
 
     const connectPromise = provider.connect();
 
-    await expect(connectPromise).rejects.toThrow('WebSocket constructor failed');
+    await expect(connectPromise).rejects.toThrow('WebSocket is not a constructor');
     expect(provider.connectionState).toBe('failed');
 
     // Restore original mock

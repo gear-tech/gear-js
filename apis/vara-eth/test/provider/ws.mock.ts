@@ -29,7 +29,7 @@ export class MockWebSocket {
   public url: string;
   public shouldThrowOnSend = false;
 
-  private messageHandlers: MessageHandler[] = [];
+  public messageHandlers: MessageHandler[] = [];
   private errorHandlers: ErrorHandler[] = [];
   private closeHandlers: CloseHandler[] = [];
   private openHandlers: OpenHandler[] = [];

@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import type { HexString } from '@polkadot/util/types';
 
 import { getApi } from './common';
@@ -6,7 +7,7 @@ import { TEST_CODE } from './config';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 const api = getApi();
-const accounts = {};
+const accounts: Record<string, KeyringPair> = {};
 const code = Uint8Array.from(readFileSync(TEST_CODE));
 let codeId: HexString;
 
