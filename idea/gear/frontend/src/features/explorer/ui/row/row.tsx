@@ -46,7 +46,7 @@ const Row = ({ extrinsic, events }: Props) => {
   const { isSigned, signer } = extrinsic;
   const { weight } = getDispatchInfo() || {};
 
-  const formattedSigner = isSigned && (signer.toHuman() as { Id: string });
+  const formattedSigner = isSigned ? (signer.toHuman() as { Id: string }) : undefined;
   const formattedWeight = weight && (weight.toHuman() as { refTime: string; proofSize: string });
   const rowClassName = clsx(commonStyles.row, styles.row);
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);

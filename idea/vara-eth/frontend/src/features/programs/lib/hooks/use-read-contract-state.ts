@@ -11,7 +11,7 @@ const useReadContractState = (programId: Hex) => {
   return useQuery({
     queryKey: ['program', programId, mirrorContract],
     queryFn: async () => {
-      const hash = await mirrorContract?.stateHash();
+      const hash = await mirrorContract!.stateHash();
 
       return api?.query.program.readState(hash);
     },
