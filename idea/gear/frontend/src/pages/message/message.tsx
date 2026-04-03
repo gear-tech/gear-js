@@ -47,10 +47,8 @@ const Message = () => {
   const decodedPayload = useMemo(
     () =>
       message && !isPayloadLoading && api
-        ? // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
-          getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error, api.specVersion)
+        ? getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error, api.specVersion)
         : undefined,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading, api],
   );
 

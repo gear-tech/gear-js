@@ -73,7 +73,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
     const preparedValues = {
       ...values,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };
 
@@ -97,7 +96,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       value,
       gasLimit,
       payloadType: metadata ? undefined : payloadType,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,
       programName,
       keepAlive,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseGearProgram, type GearApi } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
 import { type ActorId, TransactionBuilder } from 'sails-js';

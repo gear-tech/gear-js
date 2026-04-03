@@ -20,6 +20,4 @@ const Radio = ({ label, className, ...attrs }: Props) => {
 };
 
 export type { Props as RadioProps };
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { Radio, styles as radioStyles };

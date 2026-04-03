@@ -23,6 +23,4 @@ function Alert({ alert, close }: Props) {
 }
 
 export type { Props as AlertProps };
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { Alert, styles as alertStyles };

@@ -20,11 +20,9 @@ function useHandleSignStatus() {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
         if (onError) onError();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
       } else if (method === Method.MessageQueued) {
         alert.success('Success', alertOptions);
         if (onSuccess) onSuccess(programId);

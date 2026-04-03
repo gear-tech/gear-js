@@ -30,10 +30,8 @@ function useProgramEvent<
     const unsub = (program[serviceName][functionName] as TEvent)(onData) as EventReturn;
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId, serviceName, functionName]);
 }
 

@@ -131,6 +131,4 @@ const FileInput = (props: Props) => {
 };
 
 export type { Props as FileInputProps };
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { FileInput, styles as fileInputStyles };

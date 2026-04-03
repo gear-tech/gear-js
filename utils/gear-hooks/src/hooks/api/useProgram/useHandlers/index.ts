@@ -13,7 +13,6 @@ function useHandlers() {
   const handleInitStatus = (params: HandleInitParams) => {
     const { status, programId, onError } = params;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
     if (status === ProgramStatus.Failed) {
       alert.error(programId, { title: 'Program initialization' });
       if (onError) onError();

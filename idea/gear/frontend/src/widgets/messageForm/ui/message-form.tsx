@@ -94,7 +94,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const baseValues = {
       value,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
       gasLimit,
       keepAlive,
@@ -118,7 +117,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const preparedValues = {
       ...values,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };
 

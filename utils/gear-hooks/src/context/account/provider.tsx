@@ -76,7 +76,6 @@ function AccountProvider({ appName, children }: Props) {
     if (isTelegramMiniApp()) injectVaranWallet(TWA);
 
     const timeoutId = setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {
         setWallets(result);
         setAccount(getLoggedInAccount(result));
@@ -89,7 +88,6 @@ function AccountProvider({ appName, children }: Props) {
       unsubsRef.current.forEach((unsub) => void unsub());
       unsubsRef.current = [];
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(
@@ -100,6 +98,4 @@ function AccountProvider({ appName, children }: Props) {
   return <Provider value={value}>{children}</Provider>;
 }
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { AccountProvider, useAccount };

@@ -21,10 +21,8 @@ const Row = ({ extrinsic, events }: Props) => {
 
   const getInfoEvent = () =>
     events?.find(({ section, method }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isSystem = section === Section.System;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isExtrinsic = method === Method.ExtrinsicFailed || method === Method.ExtrinsicSuccess;
 
       return isSystem && isExtrinsic;
@@ -35,7 +33,6 @@ const Row = ({ extrinsic, events }: Props) => {
 
     if (infoEvent) {
       const { method, data } = infoEvent;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isSuccess = method === Method.ExtrinsicSuccess;
       const index = isSuccess ? 0 : 1;
 
@@ -52,7 +49,6 @@ const Row = ({ extrinsic, events }: Props) => {
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
 
   // get programId for extrinsics decoding
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
   const messageQueued = events?.find(({ method }) => method === Method.MessageQueued);
   const formattedMessageQueued = messageQueued?.toHuman() as FormattedMessageQueuedData | undefined;
 

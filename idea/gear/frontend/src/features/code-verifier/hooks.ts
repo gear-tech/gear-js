@@ -13,7 +13,6 @@ function useDefaultCodeId() {
 
   useEffect(() => {
     if (codeId && !isCodeIdValid(codeId)) alert.error('Code hash provided in the URL is invalid');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return defaultCodeId;

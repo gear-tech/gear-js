@@ -48,23 +48,17 @@ function useProgram(
     const { address, signer } = account;
 
     // @ts-expect-error - TODO(#1738): explain why it should be ignored
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
     const { programId } = api.program[method](program, metadata, payloadType);
 
     const alertId = alert.loading('SignIn', { title });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1816): resolve eslint comments
     const initialization = waitForProgramInit(api, programId);
 
-    return (
-      api.program
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
-        .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
-        .then(() => initialization)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
-        .then((status) => handleInitStatus({ status, programId, onError }))
-        .catch(({ message }: Error) => handleError({ message, alertId, onError }))
-    );
+    return api.program
+      .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
+      .then(() => initialization)
+      .then((status) => handleInitStatus({ status, programId, onError }))
+      .catch(({ message }: Error) => handleError({ message, alertId, onError }));
   };
 
   return action;

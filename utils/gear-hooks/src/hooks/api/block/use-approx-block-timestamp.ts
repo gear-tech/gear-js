@@ -41,7 +41,6 @@ function useApproxBlockTimestamp(blockNumber: number | undefined) {
     getApproxBlockTimestamp(blockNumber)
       .then((result) => setBlockTimestamp(result))
       .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockNumber]);
 
   return blockTimestamp === undefined

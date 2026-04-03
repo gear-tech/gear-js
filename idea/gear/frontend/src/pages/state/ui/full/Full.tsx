@@ -30,7 +30,6 @@ const Full = () => {
 
   useEffect(() => {
     resetState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payloadValue]);
 
   const payloadFormValues = useMemo(
@@ -44,7 +43,6 @@ const Full = () => {
   const handleSubmit = ({ payload }: FormValues) => {
     if (!metadata) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     readFullState(metadata, getSubmitPayload(payload) || '0x');
   };
 

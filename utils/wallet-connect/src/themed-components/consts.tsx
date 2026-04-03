@@ -18,7 +18,6 @@ const UI_CONFIG = {
       </VaraButton>
     ),
 
-    // eslint-disable-next-line react/no-children-prop
     CopyAccountAddressTrigger: <VaraButton children={undefined} icon={CopySVG} size="medium" color="transparent" />,
 
     ChangeWalletTrigger: <VaraButton text="" color="transparent" />,

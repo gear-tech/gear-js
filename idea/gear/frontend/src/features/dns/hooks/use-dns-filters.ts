@@ -23,7 +23,6 @@ function useDnsFilters() {
     return owner === 'all' ? {} : { createdBy: decodedAddress };
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), orderByField, orderByDirection }), [values, account]);
 
   return [values, params, setValues] as const;

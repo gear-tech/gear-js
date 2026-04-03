@@ -51,10 +51,8 @@ const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unkn
   }));
 
 const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const schema = useMemo(() => z.object({ payload: getSchema(sails, args, encode) }), []);
 
   const form = useForm({

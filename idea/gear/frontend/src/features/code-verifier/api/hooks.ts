@@ -36,7 +36,6 @@ function useIsCodeVerified(codeId: HexString | null | undefined) {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;
@@ -54,7 +53,6 @@ function useVerificationStatus(id: string) {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;
@@ -72,7 +70,6 @@ function useDockerImageVersions() {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;

@@ -21,7 +21,6 @@ const EventsProvider = ({ children }: ProviderProps) => {
 
       const newEvents = records
         .map(({ event }) => new IdeaEvent(event, blockNumber))
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
         .filter(({ section }) => section !== Section.System)
         .reverse();
 
@@ -29,10 +28,8 @@ const EventsProvider = ({ children }: ProviderProps) => {
     });
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       unsub.then((unsubscribe) => unsubscribe());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return <EventsContext.Provider value={events}>{children}</EventsContext.Provider>;

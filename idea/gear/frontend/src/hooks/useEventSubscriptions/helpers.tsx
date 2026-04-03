@@ -26,7 +26,6 @@ const messageSentEventsHandler = (
   const code = details.unwrap().code;
   const isError = details.isSome && !code.isSuccess;
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
   const showAlert = isError ? alert.error : alert.success;
 
   showAlert(

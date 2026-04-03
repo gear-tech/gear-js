@@ -4,7 +4,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { Identicon } from '@polkadot/react-identicon';
 
 type IdenticonType = typeof Identicon;
-type Props = useRender.ComponentProps<IdenticonType, { address: HexString }>;
+type Props = useRender.ComponentProps<IdenticonType, { address?: HexString }>;
 type ElementProps = useRender.ElementProps<IdenticonType>;
 
 function ConnectedAccountIcon({ render, ...props }: Props) {

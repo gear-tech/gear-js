@@ -4,7 +4,6 @@ import type { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 
 type Props = CSSTransitionProps & {
   // intended behavior: https://github.com/facebook/react/issues/31824
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: ReactElement<any>;
 };
 

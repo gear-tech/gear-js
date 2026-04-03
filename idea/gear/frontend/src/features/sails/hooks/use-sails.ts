@@ -32,7 +32,6 @@ function useSails(codeId: HexString | null | undefined) {
     if (error.message === errorMessage.sailsIdlNotFound) return;
 
     alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   const isLoading = codeId !== null && isPending;

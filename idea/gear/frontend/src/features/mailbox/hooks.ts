@@ -17,12 +17,10 @@ function useMailbox() {
 
     if (!isApiReady || !decodedAddress) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.mailbox
       .read(decodedAddress)
       .then((items) => items.map((item) => item.toHuman() as MailboxItem))
       .then((result) => setMailbox(result));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, decodedAddress]);
 
   // hide message on value claim e.g.
@@ -46,14 +44,12 @@ function useMailboxItem(messageId: HexString | undefined) {
     if (!isApiReady || !decodedAddress || !messageId) return;
 
     // TODO: error should be thrown in @gear-js/api
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.mailbox
       .read(decodedAddress, messageId)
       .then((item) =>
         Array.isArray(item) ? (item.toHuman() as MailboxItem) : Promise.reject(new Error('Message not found')),
       )
       .then((result) => setMailboxItem(result));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, decodedAddress, messageId]);
 
   return mailboxItem;

@@ -14,7 +14,6 @@ function useChangeEffect(callback: EffectCallback, dependencies?: DependencyList
     if (mounted.current) return callback();
 
     mounted.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 }
 

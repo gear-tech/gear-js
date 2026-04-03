@@ -36,6 +36,4 @@ const Button = (props: Props) => {
 };
 
 export type { Props as ButtonProps };
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { Button, styles as buttonStyles };

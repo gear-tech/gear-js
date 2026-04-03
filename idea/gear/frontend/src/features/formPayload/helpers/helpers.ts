@@ -11,7 +11,6 @@ const getNextLevelName = (currentLevelName: string, nextLevelName: string | numb
   `${currentLevelName}.${nextLevelName}`;
 
 // TODO(#1737): fix any
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSubmitPayload = (payload: PayloadValue): any => {
   if (isString(payload)) {
     const trimmedPayload = payload.trim();
@@ -20,14 +19,12 @@ const getSubmitPayload = (payload: PayloadValue): any => {
   }
 
   if (isPlainObject(payload)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- TODO(#1800): resolve eslint comments
     const preparedValues = Object.entries(payload!).map((item) => [item[0], getSubmitPayload(item[1])]);
 
     return Object.fromEntries(preparedValues);
   }
 
   if (Array.isArray(payload)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- TODO(#1800): resolve eslint comments
     return payload.map((item) => getSubmitPayload(item));
   }
 
@@ -68,12 +65,9 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
 
         return {};
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       const [firstKey, firstValue] = Object.entries(type)[0];
 
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
         [firstKey]: getPayloadValue(firstValue),
       };
     }
@@ -85,10 +79,8 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
         return {};
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
       const structure = Object.entries(type).map((item) => [item[0], getPayloadValue(item[1])]);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- TODO(#1800): resolve eslint comments
       return Object.fromEntries(structure);
     }
 
@@ -122,7 +114,6 @@ const getResetPayloadValue = (payload: PayloadValue): PayloadValue => {
   if (isPlainObject(payload)) {
     const preparedValues = Object.entries(payload!).map(([key, value]) => [key, getResetPayloadValue(value)]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- TODO(#1800): resolve eslint comments
     return Object.fromEntries(preparedValues);
   }
 

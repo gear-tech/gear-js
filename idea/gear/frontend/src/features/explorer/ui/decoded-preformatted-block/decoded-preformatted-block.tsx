@@ -106,7 +106,6 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
     const lastTypeIndex = types.length - 1;
 
     types.some((type, index) => decodeType(type, index === lastTypeIndex));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
   const handleCheckboxChange = () => setIsDecodedPayload((prevValue) => !prevValue);

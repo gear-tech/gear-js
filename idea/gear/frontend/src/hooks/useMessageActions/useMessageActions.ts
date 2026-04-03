@@ -48,7 +48,6 @@ const useMessageActions = () => {
         if (reject) reject();
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [api, account],
   );
 
@@ -85,7 +84,6 @@ const useMessageActions = () => {
         if (reject) reject();
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [api, account],
   );
 

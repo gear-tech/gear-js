@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { HexString } from '@gear-js/api';
 import type { SignerOptions } from '@polkadot/api/types';
 import type { IKeyringPair } from '@polkadot/types/types';

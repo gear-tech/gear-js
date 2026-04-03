@@ -23,15 +23,10 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
   const functionSelect = useSelect(functions, { label: key === 'functions' ? 'Function' : 'Query' });
   const { args, encodePayload, decodeResult } = functions[functionSelect.value];
 
-  const defaultValues = useMemo(
-    () => getDefaultPayloadValue(sails, args),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [select.value, functionSelect.value],
-  );
+  const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [select.value, functionSelect.value]);
 
   const schema = useMemo(
     () => getPayloadSchema(sails, args, encodePayload).transform((value) => value.encoded),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value, functionSelect.value],
   );
 

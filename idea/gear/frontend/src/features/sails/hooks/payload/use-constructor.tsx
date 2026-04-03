@@ -10,15 +10,10 @@ function useConstructor(sails: Sails) {
   const select = useSelect(ctors, { label: 'Constructor' });
   const { args, encodePayload } = ctors[select.value];
 
-  const defaultValues = useMemo(
-    () => getDefaultPayloadValue(sails, args),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [select.value],
-  );
+  const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [select.value]);
 
   const schema = useMemo(
     () => getPayloadSchema(sails, args, encodePayload).transform((value) => value.encoded),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value],
   );
 

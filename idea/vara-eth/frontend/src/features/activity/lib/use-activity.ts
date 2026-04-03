@@ -17,7 +17,6 @@ type WVaraAbi = typeof IWRAPPEDVARA_ABI;
 
 type GetEvent<
   TAbi extends Abi,
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   TEvents extends { type: 'event'; name: string; inputs: readonly any[] } = Extract<TAbi[number], { type: 'event' }>,
 > = TEvents extends any
   ? {

@@ -26,7 +26,6 @@ type ServiceProps = BaseProps & {
 type Props = ConstructorProps | ServiceProps;
 
 function PayloadSelect(props: Omit<ComponentProps<typeof Select>, 'direction' | 'gap'>) {
-  // eslint-disable-next-line react/no-children-prop
   return <Select {...props} direction="y" children="" />;
 }
 

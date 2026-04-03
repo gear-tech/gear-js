@@ -17,7 +17,5 @@ export const useChangeEffect = (callback: EffectCallback, dependencies: Dependen
 
     mounted.current = true;
     return undefined;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };

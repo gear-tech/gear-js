@@ -22,7 +22,6 @@ const Filters = <T extends FieldValues>({ initialValues, values, children, onSub
 
   const handleResetClick = () => {
     reset();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     handleSubmit(onSubmit)();
   };
 

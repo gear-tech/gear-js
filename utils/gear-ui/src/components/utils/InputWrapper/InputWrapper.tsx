@@ -51,6 +51,4 @@ const InputWrapper = (props: Props) => {
 };
 
 export type { Props as InputWrapperProps };
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { InputWrapper, styles as inputWrapperStyles };

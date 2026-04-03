@@ -77,9 +77,7 @@ function ApiProvider({ initialArgs, children }: Props) {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
     switchNetwork(initialArgs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(
@@ -95,6 +93,4 @@ function ApiProvider({ initialArgs, children }: Props) {
 
 const useApi = () => useContext(ApiContext);
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { ApiProvider, useApi };

@@ -16,21 +16,18 @@ type Props = {
 const ModalProvider = ({ children }: Props) => {
   const [modalName, setModalName] = useState<ModalName | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any -- TODO(#1800): resolve eslint comments
   const [modalProps, setModalProps] = useState<any>(null);
 
   const { isOnboardingActive } = useOnboarding();
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- TODO(#1800): resolve eslint comments
       modalProps.onClose();
 
       // only exists in transaction modal and actually should extend onClose prop
       // however, cuz of Object.assign(defaultProps, props) it would be overrided
       // maybe it's worth to do a deep merge to handle such cases?
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call -- TODO(#1800): resolve eslint comments
       if (modalProps.onAbort) modalProps.onAbort();
     }
   };
@@ -70,7 +67,6 @@ const ModalProvider = ({ children }: Props) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown, false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalName, modalProps]);
 
   const currentModal = useMemo(() => {

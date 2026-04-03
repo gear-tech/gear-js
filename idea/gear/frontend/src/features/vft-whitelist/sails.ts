@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { BaseGearProgram, type GearApi, type HexString } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
 import {

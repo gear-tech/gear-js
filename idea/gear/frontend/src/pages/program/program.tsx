@@ -47,7 +47,6 @@ function Program() {
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       if (name) refetchProgram();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
@@ -63,7 +62,6 @@ function Program() {
       codeId: program.codeId,
       isNameEditable: isStorageProgram,
       onClose: closeModal,
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       onSuccess,
     });
   };

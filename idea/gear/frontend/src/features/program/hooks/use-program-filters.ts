@@ -27,7 +27,6 @@ function useProgramFilters(query: string, onBatch: () => void) {
     const status = filterValues.status && filterValues.status.length > 0 ? filterValues.status : undefined;
 
     return { owner, status, codeId };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues, account]);
 
   const searchParams = useMemo(() => ({ ...params, query }), [params, query]);
@@ -36,7 +35,6 @@ function useProgramFilters(query: string, onBatch: () => void) {
 
   useEffect(() => {
     if (isBatch) onBatch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBatch]);
 
   return [{ searchParams, vftParams, isBatch }, setFilterValues] as const;

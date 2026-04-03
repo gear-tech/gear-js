@@ -38,7 +38,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
 
   const getBody = () => {
     switch (method) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.SendMessage:
         return (
           <DecodedPreformattedBlock
@@ -48,7 +47,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.SendReply:
         return (
           <DecodedPreformattedBlock
@@ -58,7 +56,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.UploadProgram:
         return (
           <DecodedPreformattedBlock
@@ -68,7 +65,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.CreateProgram:
         return (
           <DecodedPreformattedBlock
