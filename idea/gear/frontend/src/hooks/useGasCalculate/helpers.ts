@@ -1,6 +1,6 @@
-import { GasInfo } from '@gear-js/api';
+import type { GasInfo } from '@gear-js/api';
 
-import { Result } from './types';
+import type { Result } from './types';
 
 const preparedGasInfo = (gasInfo: GasInfo): Result => ({
   limit: gasInfo.min_limit.toNumber(),

@@ -1,13 +1,13 @@
 import { generatePath } from 'react-router-dom';
 
-import { LocalCode } from '@/features/local-indexer/types';
+import type { LocalCode } from '@/features/local-indexer/types';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { absoluteRoutes } from '@/shared/config';
 import { ContentLoader } from '@/shared/ui/contentLoader';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { Table, TableRow } from '@/shared/ui/table';
 
-import { Code } from '../../api';
+import type { Code } from '../../api';
 
 type Props = {
   code: Code | LocalCode | undefined;

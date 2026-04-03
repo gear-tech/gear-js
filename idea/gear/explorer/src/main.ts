@@ -1,9 +1,9 @@
-import { createDbConnection, DbConfig } from 'gear-idea-indexer-db';
-import { readFileSync } from 'fs';
-import { AllInOneService } from './services/all-in-one';
+import { readFileSync } from 'node:fs';
+import { createDbConnection, type DbConfig } from 'gear-idea-indexer-db';
 import { config } from './config';
-import { HybridApiServer } from './server';
 import { retryMethodsJob } from './middlewares/retry';
+import { HybridApiServer } from './server';
+import { AllInOneService } from './services/all-in-one';
 
 const main = async () => {
   const spec = JSON.parse(readFileSync(config.spec, 'utf8')) as Record<string, DbConfig>;

@@ -1,4 +1,4 @@
-import { HexString, ReplyCode } from '@gear-js/api';
+import { type HexString, ReplyCode } from '@gear-js/api';
 
 const getReplyErrorReason = (code: HexString | Uint8Array, specVersion: number, userspacePayload: string) => {
   const replyCode = new ReplyCode(code, specVersion);

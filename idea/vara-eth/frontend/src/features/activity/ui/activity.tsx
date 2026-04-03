@@ -4,12 +4,11 @@ import { useState } from 'react';
 
 import { myActivityAtom } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
-import { Button, Tabs, ExpandableItem } from '@/components';
+import { Button, ExpandableItem, Tabs } from '@/components';
 
 import { useActivity } from '../lib';
-
-import { ActivityEvent } from './activity-event';
 import styles from './activity.module.scss';
+import { ActivityEvent } from './activity-event';
 import { Block } from './block';
 import { Transaction } from './transaction';
 

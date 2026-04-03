@@ -1,5 +1,5 @@
 import { Dialog } from '@base-ui-components/react/dialog';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import styles from './default-dialog.module.scss';
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { RESULT } from '../consts';
 import { useSetPayloadValue } from '../hooks';
-import { FieldProps, Result } from '../types';
+import type { FieldProps, Result } from '../types';
 import { getDefaultValue, getLabel, getNestedName } from '../utils';
 
 const OPTIONS = [

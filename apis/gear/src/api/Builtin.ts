@@ -1,6 +1,6 @@
 import { BuiltinQueryIdError } from '../errors';
-import { HexString } from '../types';
-import { GearApi } from '../GearApi';
+import type { GearApi } from '../GearApi';
+import type { HexString } from '../types';
 
 export class GearBuiltin {
   constructor(private _api: GearApi) {}

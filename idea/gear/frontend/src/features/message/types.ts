@@ -1,8 +1,8 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { IBase } from '@/shared/types';
+import type { IBase } from '@/shared/types';
 
-import { MESSAGE_ENTRY_POINT, MESSAGE_READ_REASON, MESSAGE_TYPE } from './consts';
+import type { MESSAGE_ENTRY_POINT, MESSAGE_READ_REASON, MESSAGE_TYPE } from './consts';
 
 type MessageType = (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];
 type MessageReadReason = (typeof MESSAGE_READ_REASON)[keyof typeof MESSAGE_READ_REASON];
@@ -23,4 +23,4 @@ type Message = IBase & {
   metahash?: HexString | null;
 };
 
-export type { Message, MessageReadReason, MessageEntryPoint };
+export type { Message, MessageEntryPoint, MessageReadReason };

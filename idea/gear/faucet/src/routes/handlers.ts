@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { Logger } from 'winston';
-import { Hex } from 'viem';
-
-import { RequestService } from '../services';
+import type { Response } from 'express';
+import type { Hex } from 'viem';
+import type { Logger } from 'winston';
 import { FaucetType } from '../database';
+import type { RequestService } from '../services';
 
 export async function handleVaraTestnetRequest(
   address: Hex,

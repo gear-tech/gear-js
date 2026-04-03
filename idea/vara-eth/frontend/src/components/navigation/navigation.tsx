@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';

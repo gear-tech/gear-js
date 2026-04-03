@@ -1,9 +1,17 @@
-import { useRef, MouseEvent, useImperativeHandle, useState, ChangeEvent, useId, ComponentPropsWithRef } from 'react';
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type MouseEvent,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import { useChangeEffect } from '../../hooks';
-import { InputProps } from '../../types';
+import type { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
-import { Button, ButtonProps } from '../Button/Button';
+import { Button, type ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
 
 import styles from './FileInput.module.scss';
@@ -122,7 +130,5 @@ const FileInput = (props: Props) => {
   );
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { FileInput, styles as fileInputStyles };
 export type { Props as FileInputProps };
+export { FileInput, styles as fileInputStyles };

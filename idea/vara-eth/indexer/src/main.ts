@@ -1,6 +1,6 @@
-import { Worker } from 'node:worker_threads';
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Worker } from 'node:worker_threads';
 import { createLogger } from '@gear-js/logger';
 
 const logger = createLogger('main');

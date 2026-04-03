@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
@@ -85,4 +85,4 @@ function YearPicker({ onClick, onBackClick }: YearPickerProps) {
   );
 }
 
-export { HeaderButton, NextButton, PrevButton, MonthPicker, YearPicker };
+export { HeaderButton, MonthPicker, NextButton, PrevButton, YearPicker };

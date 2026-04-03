@@ -1,4 +1,4 @@
-import { cloneElement, CSSProperties, ReactNode, ReactElement, useState } from 'react';
+import { type CSSProperties, cloneElement, type ReactElement, type ReactNode, useState } from 'react';
 
 import { useRootPortal } from '../../hooks';
 
@@ -6,8 +6,6 @@ import { getPosition } from './get-position';
 import styles from './tooltip.module.scss';
 
 type Props = {
-  // intended behavior - https://github.com/facebook/react/issues/31824
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: ReactElement<any>;
   value?: ReactNode;
   position?:
@@ -56,5 +54,5 @@ function Tooltip({ value, position = 'top', children }: Props) {
   );
 }
 
-export { Tooltip };
 export type { Props as TooltipProps };
+export { Tooltip };

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { WsVaraEthProvider, createVaraEthApi } from '@vara-eth/api';
+import { createVaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
 import { useEffect } from 'react';
 import { usePublicClient } from 'wagmi';
 

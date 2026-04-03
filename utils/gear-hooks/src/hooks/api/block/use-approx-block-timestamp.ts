@@ -1,7 +1,7 @@
-import { INumber } from '@polkadot/types/types';
+import type { INumber } from '@polkadot/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useApi, useAlert } from '@/context';
+import { useAlert, useApi } from '@/context';
 
 function useGetApproxBlockTimestamp() {
   const { api, isApiReady } = useApi();
@@ -41,7 +41,6 @@ function useApproxBlockTimestamp(blockNumber: number | undefined) {
     getApproxBlockTimestamp(blockNumber)
       .then((result) => setBlockTimestamp(result))
       .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockNumber]);
 
   return blockTimestamp === undefined

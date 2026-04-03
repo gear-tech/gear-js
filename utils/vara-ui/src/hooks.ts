@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 function useRootPortal(id: string, element: ReactNode) {

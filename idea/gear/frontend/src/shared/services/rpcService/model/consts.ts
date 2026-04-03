@@ -8,4 +8,4 @@ enum RPCErrorCode {
 
 const RPC_VERSION = '2.0';
 
-export { RPCErrorCode, RPC_VERSION };
+export { RPC_VERSION, RPCErrorCode };

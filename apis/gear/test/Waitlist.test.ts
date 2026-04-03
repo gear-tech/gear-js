@@ -1,11 +1,10 @@
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-
-import { CreateType, MessageWaitedData } from '../src';
+import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { HexString } from '@polkadot/util/types';
+import { CreateType, type MessageWaitedData } from '../src';
+import { getApi } from './common';
 import { TEST_CODE } from './config';
 import { checkInit, createPayload, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
-import { readFileSync } from 'fs';
-import { getApi } from './common';
 
 const api = getApi();
 

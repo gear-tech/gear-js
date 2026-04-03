@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@gear-js/ui';
+import { Button, type ButtonProps } from '@gear-js/ui';
 import { useNavigate } from 'react-router-dom';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';

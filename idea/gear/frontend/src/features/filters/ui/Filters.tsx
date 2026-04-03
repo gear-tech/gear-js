@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import { ReactNode } from 'react';
-import { useForm, FormProvider, FieldValues, DefaultValues } from 'react-hook-form';
+import type { ReactNode } from 'react';
+import { type DefaultValues, type FieldValues, FormProvider, useForm } from 'react-hook-form';
 
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
@@ -22,7 +22,6 @@ const Filters = <T extends FieldValues>({ initialValues, values, children, onSub
 
   const handleResetClick = () => {
     reset();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     handleSubmit(onSubmit)();
   };
 

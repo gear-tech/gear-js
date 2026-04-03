@@ -1,6 +1,6 @@
 import { AuthoritySetHashError, ClearTimerError, GetQueueMerkleRootError } from '../../errors';
-import { GearApi } from '../../GearApi';
-import { HexString, Proof } from '../../types';
+import type { GearApi } from '../../GearApi';
+import type { HexString, Proof } from '../../types';
 import { GearEthBridgeEvents } from './events';
 import { GearEthBridgeTransactions } from './tx';
 

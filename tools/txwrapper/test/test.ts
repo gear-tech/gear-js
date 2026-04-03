@@ -1,7 +1,7 @@
+import { methods } from '../src';
+import TEST_BASE_TX_INFO from './TEST_BASE_TX_INFO';
 import TEST_METHOD_ARGS, { CODE_TO_UPLOAD } from './TEST_METHOD_ARGS';
 import TEST_OPTIONS from './TEST_OPTIONS';
-import TEST_BASE_TX_INFO from './TEST_BASE_TX_INFO';
-import { methods } from '../src';
 
 describe('gear', () => {
   test('send_message', () => {
@@ -23,17 +23,14 @@ describe('gear', () => {
   test('upload_code', () => {
     const unsigned = methods.gear.uploadCode(TEST_METHOD_ARGS.gear.uploadCode, TEST_BASE_TX_INFO, TEST_OPTIONS);
 
-    expect(unsigned.method).toBe('0x6800827b0200' + CODE_TO_UPLOAD.slice(2));
+    expect(unsigned.method).toBe(`0x6800827b0200${CODE_TO_UPLOAD.slice(2)}`);
   });
 
   test('upload_program', () => {
     const unsigned = methods.gear.uploadProgram(TEST_METHOD_ARGS.gear.uploadProgram, TEST_BASE_TX_INFO, TEST_OPTIONS);
 
     expect(unsigned.method).toBe(
-      '0x6801827b0200' +
-        CODE_TO_UPLOAD.slice(2) +
-        '1c307831323334350000e876481700000000000000000000000000000000000000' +
-        '01',
+      `0x6801827b0200${CODE_TO_UPLOAD.slice(2)}1c307831323334350000e87648170000000000000000000000000000000000000001`,
     );
   });
 

@@ -1,5 +1,5 @@
-import { TooltipWrapper, TooltipWrapperStyles } from './TooltipWrapper';
 import type { TooltipWrapperProps } from './TooltipWrapper';
+import { TooltipWrapper, TooltipWrapperStyles } from './TooltipWrapper';
 
-export { TooltipWrapper, TooltipWrapperStyles };
 export type { TooltipWrapperProps };
+export { TooltipWrapper, TooltipWrapperStyles };

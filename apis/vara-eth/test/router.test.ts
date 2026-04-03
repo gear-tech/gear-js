@@ -1,13 +1,13 @@
-import { createPublicClient, createWalletClient, webSocket } from 'viem';
+import * as fs from 'node:fs';
+import path from 'node:path';
 import type { Abi, Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import * as fs from 'fs';
-import path from 'path';
 
-import { CodeState, getMirrorClient, getRouterClient, RouterClient, type ITransactionSigner } from '../src';
-import { config } from './config';
+import { CodeState, getMirrorClient, getRouterClient, type ITransactionSigner, type RouterClient } from '../src';
 import { walletClientToSigner } from '../src/signer';
 import { waitNBlocks } from './common';
+import { config } from './config';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: Hex;

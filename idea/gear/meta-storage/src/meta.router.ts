@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { type Request, type Response, Router } from 'express';
 import {
   InvalidMetadataError,
   InvalidParamsError,
@@ -7,12 +7,13 @@ import {
   SailsIdlNotFoundError,
 } from 'gear-idea-common';
 
-import { MetaService } from './service';
+import type { MetaService } from './service';
 
 const errorChecker = (err: Error) => {
   if (err instanceof InvalidParamsError || err instanceof InvalidMetadataError) {
     return 400;
-  } else if (err instanceof MetaNotFoundError || err instanceof SailsIdlNotFoundError) {
+  }
+  if (err instanceof MetaNotFoundError || err instanceof SailsIdlNotFoundError) {
     return 404;
   }
 

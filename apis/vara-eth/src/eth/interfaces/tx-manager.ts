@@ -1,4 +1,4 @@
-import type { TransactionReceipt, Hash } from 'viem';
+import type { Hash, TransactionReceipt } from 'viem';
 
 /**
  * A type that combines a TxManager with helper functions.

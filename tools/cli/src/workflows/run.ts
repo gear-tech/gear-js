@@ -1,14 +1,14 @@
 import fs from 'node:fs';
-import { parse } from 'yaml';
 import { GearApi } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { parse } from 'yaml';
 
-import { getCodes, uploadCode, sendMessage, getPrograms, uploadProgram, fundAccounts, getAccounts } from '../gear';
-import { validateScheme } from './validate';
-import { getPayload } from './payload';
-import { CLIArguments, IScheme, WsAddress } from '../types';
+import { fundAccounts, getAccounts, getCodes, getPrograms, sendMessage, uploadCode, uploadProgram } from '../gear';
+import type { CLIArguments, IScheme, WsAddress } from '../types';
 import { logger } from '../utils';
+import { getPayload } from './payload';
 import { replaceCliArgs } from './replace';
+import { validateScheme } from './validate';
 
 export async function runWorkflow(pathToScheme: string, cliArguments: CLIArguments, wsAddress?: WsAddress) {
   const schemeFile = fs.readFileSync(pathToScheme, 'utf-8');
@@ -85,7 +85,6 @@ export async function runWorkflow(pathToScheme: string, cliArguments: CLIArgumen
       }
       await sendMessage(api, acc, program.address, program.meta, payload, tx.value, tx.increase_gas);
       console.log();
-      continue;
     }
   }
 }

@@ -1,8 +1,8 @@
-import { GearApi, HexString } from '@gear-js/api';
+import type { GearApi, HexString } from '@gear-js/api';
 
 import { useApi } from '@/context';
 
-import { QueryParameters } from '../../types';
+import type { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
 type Program<T> = {
@@ -36,5 +36,5 @@ function useProgram<TQueryFnData, TData = TQueryFnData>({
   });
 }
 
-export { useProgram };
 export type { UseProgramParameters };
+export { useProgram };

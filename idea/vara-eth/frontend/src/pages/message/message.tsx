@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { ChainEntity, PageContainer, Skeleton } from '@/components';
 import {

@@ -1,6 +1,6 @@
-import { MessagesDispatched, ProgramMetadata, getStateMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import { getStateMetadata, type MessagesDispatched, type ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
 import { useAlert, useApi } from '@/context';
@@ -64,21 +64,17 @@ function useReadWasmState<T = AnyJson>(args: Args, isReadOnError?: boolean) {
     const unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, wasm, programMetadata, functionName, argument, payload]);
 
   useEffect(() => {
     readWasmState(true);
     setError('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, wasm, programMetadata, functionName, argument, payload]);
 
   useEffect(() => {
     if (error) alert.error(error);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return { state, isStateRead, error };

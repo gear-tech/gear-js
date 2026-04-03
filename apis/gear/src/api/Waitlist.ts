@@ -1,7 +1,7 @@
-import { Option } from '@polkadot/types';
+import type { Option } from '@polkadot/types';
 
-import { WaitlistItem, HexString } from '../types';
-import { GearApi } from '../GearApi';
+import type { GearApi } from '../GearApi';
+import type { HexString, WaitlistItem } from '../types';
 
 export class GearWaitlist {
   constructor(private _api: GearApi) {}
@@ -50,20 +50,19 @@ export class GearWaitlist {
         waitlist,
       );
       return typedWaitlist.unwrapOr(null);
-    } else {
-      const keyPrefix = this._api.query.gearMessenger.waitlist.keyPrefix(programId);
-      const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, numberOfMessages, keyPrefix);
-      if (keysPaged.length === 0) {
-        return [];
-      }
-      const waitlist = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<WaitlistItem>[];
-      return waitlist.map((item) => {
-        const typedItem = this._api.createType<Option<WaitlistItem>>(
-          'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
-          item,
-        );
-        return typedItem.unwrapOr(null);
-      });
     }
+    const keyPrefix = this._api.query.gearMessenger.waitlist.keyPrefix(programId);
+    const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, numberOfMessages, keyPrefix);
+    if (keysPaged.length === 0) {
+      return [];
+    }
+    const waitlist = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<WaitlistItem>[];
+    return waitlist.map((item) => {
+      const typedItem = this._api.createType<Option<WaitlistItem>>(
+        'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
+        item,
+      );
+      return typedItem.unwrapOr(null);
+    });
   }
 }

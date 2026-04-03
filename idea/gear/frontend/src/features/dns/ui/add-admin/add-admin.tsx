@@ -1,5 +1,5 @@
-import { HexString } from '@gear-js/api';
-import { Button, Modal, ModalProps } from '@gear-js/ui';
+import type { HexString } from '@gear-js/api';
+import { Button, Modal, type ModalProps } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -46,7 +46,6 @@ function AddAdminModal({ name, admins, onSuccess, close }: Pick<ModalProps, 'clo
       onSuccess();
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name, address], _onSuccess);
   });
 

@@ -1,5 +1,5 @@
-import { Address, PublicClient } from 'viem';
-import { ITransactionSigner } from '../types/signer.js';
+import type { Address, PublicClient } from 'viem';
+import type { ITransactionSigner } from '../types/signer.js';
 
 export interface ContractClientParams {
   /**

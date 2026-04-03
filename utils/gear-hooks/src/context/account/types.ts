@@ -1,8 +1,8 @@
-import { HexString } from '@gear-js/api';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { Signer } from '@polkadot/types/types';
+import type { HexString } from '@gear-js/api';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import type { Signer } from '@polkadot/types/types';
 
-import { WALLET_STATUS } from './consts';
+import type { WALLET_STATUS } from './consts';
 
 type WalletStatus = (typeof WALLET_STATUS)[keyof typeof WALLET_STATUS];
 
@@ -21,4 +21,4 @@ type Wallet = {
 
 type Wallets = Record<string, Wallet>;
 
-export type { WalletStatus, Account, Wallet, Wallets };
+export type { Account, Wallet, WalletStatus, Wallets };

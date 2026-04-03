@@ -1,7 +1,7 @@
 import { useAlert } from '@gear-js/react-hooks';
-import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
+import { Checkbox, FileInput, type InputProps, InputWrapper, Textarea } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
@@ -9,7 +9,7 @@ import { FileTypes } from '@/shared/config';
 import { checkFileFormat, readFileAsync } from '@/shared/helpers';
 import { formStyles } from '@/shared/ui/form';
 
-import { FormPayloadValues } from '../model/types';
+import type { FormPayloadValues } from '../model/types';
 
 import styles from './FormPayload.module.scss';
 import { PayloadStructure } from './payloadStructure';
@@ -27,7 +27,6 @@ type Props = {
 function ManualPayloadTextarea({ name }: { name: string }) {
   const { register, unregister } = useFormContext();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => unregister(name), []);
 
   return <Textarea id={name} rows={15} placeholder="// Enter your payload here" block {...register(name)} />;
@@ -77,11 +76,9 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   useEffect(() => {
     if (!values) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     const payloadValue = isManualView ? (jsonManualPayload.current ?? values.manualPayload) : values.payload;
 
     setValue(name, payloadValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManualView]);
 
   useChangeEffect(() => {

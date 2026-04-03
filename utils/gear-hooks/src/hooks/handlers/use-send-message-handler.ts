@@ -1,10 +1,10 @@
-import { ProgramMetadata } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
+import type { ProgramMetadata } from '@gear-js/api';
+import type { HexString } from '@polkadot/util/types';
 
 import { useAlert, useApi } from '@/context';
 import { getAutoGasLimit } from '@/utils';
 
-import { SendMessageOptions, UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
+import { type SendMessageOptions, type UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
 
 type UseSendMessageWithGasOptions = UseSendMessageOptions &
   (
@@ -49,5 +49,5 @@ function useSendMessageWithGas(
   };
 }
 
+export type { SendMessageWithGasOptions, UseSendMessageWithGasOptions };
 export { useSendMessageWithGas };
-export type { UseSendMessageWithGasOptions, SendMessageWithGasOptions };

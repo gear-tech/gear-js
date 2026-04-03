@@ -1,8 +1,8 @@
+import type { Express } from 'express';
+import { InvalidMetadataError, InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from 'gear-idea-common';
 import request from 'supertest';
-import { Express } from 'express';
 import { main } from '../src/app';
 import { MetaService } from '../src/service';
-import { InvalidMetadataError, InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from 'gear-idea-common';
 
 jest.mock('../src/service', () => {
   return {

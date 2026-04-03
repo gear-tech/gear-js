@@ -1,11 +1,10 @@
-import { AddressOrPair, SignerOptions, SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { Event } from '@polkadot/types/interfaces';
-
+import type { AddressOrPair, SignerOptions, SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
+import type { Event } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
+import type { MessageQueued } from './events';
+import type { GearApi } from './GearApi';
+import type { HexString } from './types';
 import { decodeAddress, ReplyCode } from './utils';
-import { GearApi } from './GearApi';
-import { HexString } from './types';
-import { MessageQueued } from './events';
 
 interface ICalculateReplyResult {
   /**
@@ -229,7 +228,7 @@ export class BaseGearProgram {
   public async on(action: 'programExited', callback: (inheritorId: HexString) => void | Promise<void>) {
     await this.waitForInitialization;
 
-    const listener = function (event: CustomEvent) {
+    const listener = (event: CustomEvent) => {
       callback(event.detail.inheritorId);
     };
 
@@ -289,13 +288,13 @@ export class BaseGearProgram {
   }
 
   public get accountAddress(): HexString {
-    if (typeof this._account == 'string') {
+    if (typeof this._account === 'string') {
       return decodeAddress(this._account);
-    } else if ('address' in this._account) {
-      return decodeAddress(this._account.address);
-    } else {
-      return this._account.toHex();
     }
+    if ('address' in this._account) {
+      return decodeAddress(this._account.address);
+    }
+    return this._account.toHex();
   }
 
   /**
@@ -376,7 +375,7 @@ export class BaseGearProgram {
       payload,
       origin: this.accountAddress,
       destination: this._id,
-      gasLimit: gasLimit == 'max' ? this._api.blockGasLimit : gasLimit,
+      gasLimit: gasLimit === 'max' ? this._api.blockGasLimit : gasLimit,
       value,
     });
 
@@ -448,15 +447,14 @@ export class BaseGearProgram {
         id: msgId,
         response: this._waitForResponseHandler(msgId, txResult.blockNumber).bind(this),
       };
-    } else {
-      return {
-        success: false,
-        error: txResult.error,
-        txHash: txResult.txHash,
-        blockHash: txResult.blockHash,
-        blockNumber: txResult.blockNumber,
-      };
     }
+    return {
+      success: false,
+      error: txResult.error,
+      txHash: txResult.txHash,
+      blockHash: txResult.blockHash,
+      blockNumber: txResult.blockNumber,
+    };
   }
 
   /**
@@ -482,8 +480,8 @@ export class BaseGearProgram {
     let sentMessages: ISentMessageInBatch[] = [];
 
     if (txResult.success === true) {
-      const mqEvents = txResult.eventsToReturn.filter(({ method }) => method == 'MessageQueued');
-      if (mqEvents.length == messages.length) {
+      const mqEvents = txResult.eventsToReturn.filter(({ method }) => method === 'MessageQueued');
+      if (mqEvents.length === messages.length) {
         sentMessages = mqEvents.map((event: MessageQueued) => {
           const id = event.data.id.toHex();
           return {
@@ -524,15 +522,14 @@ export class BaseGearProgram {
         blockNumber: txResult.blockNumber,
         sentMessages,
       };
-    } else {
-      return {
-        success: false,
-        error: txResult.error,
-        txHash: txResult.txHash,
-        blockHash: txResult.blockHash,
-        blockNumber: txResult.blockNumber,
-      };
     }
+    return {
+      success: false,
+      error: txResult.error,
+      txHash: txResult.txHash,
+      blockHash: txResult.blockHash,
+      blockNumber: txResult.blockNumber,
+    };
   }
 
   private _waitForResponseHandler(id: HexString, blockNumber: number) {
@@ -568,15 +565,15 @@ export class BaseGearProgram {
     try {
       if (gasLimit === 'max') {
         return this._api.blockGasLimit.toBigInt();
-      } else if (!gasLimit || gasLimit === 'auto') {
+      }
+      if (!gasLimit || gasLimit === 'auto') {
         const gas = await this.calculateGas(payload, value, keepAlive);
         return gas.minLimit;
-      } else {
-        try {
-          return BigInt(gasLimit);
-        } catch (_) {
-          throw new Error(`Invalid gas limit value: ${gasLimit}`);
-        }
+      }
+      try {
+        return BigInt(gasLimit);
+      } catch (_) {
+        throw new Error(`Invalid gas limit value: ${gasLimit}`);
       }
     } catch (error) {
       throw new Error(`Failed to resolve gas limit: ${error.message}`);

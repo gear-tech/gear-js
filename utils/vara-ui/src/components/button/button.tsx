@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ComponentPropsWithRef, FunctionComponent, ReactNode, SVGProps } from 'react';
+import type { ComponentPropsWithRef, FunctionComponent, ReactNode, SVGProps } from 'react';
 
 import styles from './button.module.scss';
 
@@ -70,5 +70,5 @@ const Button = (props: Props) => {
   );
 };
 
-export { Button };
 export type { Props as ButtonProps };
+export { Button };

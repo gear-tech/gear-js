@@ -1,18 +1,17 @@
-import { Modal, buttonStyles } from '@gear-js/ui';
+import { buttonStyles, Modal } from '@gear-js/ui';
 import cx from 'clsx';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useNavigate } from 'react-router-dom';
 
-import { ModalProps } from '@/entities/modal';
+import type { ModalProps } from '@/entities/modal';
 import { useWasmFileHandler } from '@/features/code';
 import UploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
-import { FileTypes, absoluteRoutes, routes } from '@/shared/config';
+import { absoluteRoutes, FileTypes, routes } from '@/shared/config';
 
 import { FILE_INPUT_ID } from '../model/const';
-
-import styles from './UploadFileModal.module.scss';
 import { DropTarget } from './dropTarget';
+import styles from './UploadFileModal.module.scss';
 
 type Props = ModalProps & {
   name: 'code' | 'program';

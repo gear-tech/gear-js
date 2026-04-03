@@ -1,6 +1,6 @@
-import { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes } from 'react';
 
-import { Radio, RadioProps } from './Radio';
+import { Radio, type RadioProps } from './Radio';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   buttons: RadioProps[];
@@ -18,5 +18,5 @@ const RadioGroup = ({ buttons, value, ...attrs }: Props) => {
   return <>{getButtons()}</>;
 };
 
-export { RadioGroup };
 export type { Props as RadioGroupProps };
+export { RadioGroup };

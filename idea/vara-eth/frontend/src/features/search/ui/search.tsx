@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getBytecode } from '@wagmi/core';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { isAddress, isHash, Hex } from 'viem';
+import { type Hex, isAddress, isHash } from 'viem';
 import { useConfig } from 'wagmi';
 import { z } from 'zod';
 

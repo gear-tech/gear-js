@@ -1,4 +1,4 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Input, Textarea } from '@gear-js/ui';
 import { useMemo } from 'react';
@@ -17,12 +17,9 @@ function MetadataPreview({ value }: Props) {
   const namedTypeEntries = useMemo(() => {
     if (!value) return [];
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     const types = getNamedTypes(value, (message) => alert.error(message));
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     return Object.entries(types);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const registryTypes = useMemo(() => value.getAllTypes(), [value]);

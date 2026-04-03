@@ -1,7 +1,7 @@
-import { BalanceOf } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { HexString } from '../common';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { BalanceOf } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
+import type { HexString } from '../common';
 
 export type ICallOptions =
   | { SendMessage: SubmittableExtrinsic<'promise', ISubmittableResult> }

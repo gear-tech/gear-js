@@ -1,6 +1,7 @@
+import { strict as assert } from 'node:assert';
 import { config } from 'dotenv';
-import { strict as assert } from 'assert';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
+
 config();
 
 const getEnv = (envName: string, defaultValue?: string): string => {
@@ -22,7 +23,7 @@ const getOptionalHex = (envName: string): Hex | undefined => {
 
 export default {
   db: {
-    port: parseInt(getEnv('DB_PORT', '5432')),
+    port: Number.parseInt(getEnv('DB_PORT', '5432'), 10),
     user: getEnv('DB_USER', 'postgres'),
     password: getEnv('DB_PASSWORD', 'postgres'),
     name: getEnv('DB_NAME', 'faucet'),
@@ -41,7 +42,7 @@ export default {
     ethPrivateKey: getOptionalHex('ETH_PRIVATE_KEY'),
     erc20Contracts: ((process.env.ETH_ERC20_CONTRACTS || undefined)?.split(',') || []).map((data) => {
       const [addr, value] = data.split(':');
-      assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
+      assert.ok(!Number.isNaN(Number(value)), `Invalid value for ${addr}`);
       return [addr.toLowerCase(), value] as [Hex, string];
     }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
@@ -50,7 +51,7 @@ export default {
     address: getOptionalHex('WVARA_ADDRESS'),
   },
   server: {
-    port: parseInt(getEnv('PORT', '3010')),
+    port: Number.parseInt(getEnv('PORT', '3010'), 10),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
     rateLimitMs: Number(getEnv('RATE_LIMIT_SEC', '60000')),
   },

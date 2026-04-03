@@ -1,5 +1,5 @@
 import { CLI_REGEX, replaceMatch } from '../common';
-import { CLIArguments, IScheme } from '../types';
+import type { CLIArguments, IScheme } from '../types';
 
 export function replaceCliArgs(scheme: IScheme, args: CLIArguments) {
   // Find and replace CLI arguments in account definitions

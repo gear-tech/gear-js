@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 const PROJECT_ID = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID as string;
 const VARA_ETH_NODE_ADDRESS = import.meta.env.VITE_VARA_ETH_NODE_ADDRESS as `ws://${string}`;
@@ -17,4 +17,4 @@ console.log('envs', {
   ROUTER_CONTRACT_ADDRESS,
 });
 
-export { PROJECT_ID, VARA_ETH_NODE_ADDRESS, ETH_CHAIN_ID, ETH_NODE_ADDRESS, EXPLORER_URL, ROUTER_CONTRACT_ADDRESS };
+export { ETH_CHAIN_ID, ETH_NODE_ADDRESS, EXPLORER_URL, PROJECT_ID, ROUTER_CONTRACT_ADDRESS, VARA_ETH_NODE_ADDRESS };

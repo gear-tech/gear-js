@@ -1,13 +1,15 @@
-import { createLogger } from 'gear-idea-common';
-import { Request, Response } from 'express';
 import { decodeAddress } from '@gear-js/api';
-
-import { agentRateLimitMiddleware, agentChallengeRateLimitMiddleware } from './middleware';
-import { createSignatureAuthMiddleware } from './middleware';
-import { handleVaraTestnetRequest } from './handlers';
-import { ChallengeService, RequestService } from '../services';
-import { BaseRouter } from './base';
+import type { Request, Response } from 'express';
+import { createLogger } from 'gear-idea-common';
 import config from '../config';
+import type { ChallengeService, RequestService } from '../services';
+import { BaseRouter } from './base';
+import { handleVaraTestnetRequest } from './handlers';
+import {
+  agentChallengeRateLimitMiddleware,
+  agentRateLimitMiddleware,
+  createSignatureAuthMiddleware,
+} from './middleware';
 
 const logger = createLogger('agent-router');
 

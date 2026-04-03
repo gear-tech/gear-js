@@ -1,8 +1,8 @@
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS, useAccount, useAlert } from '@gear-js/react-hooks';
-import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
-import { Event } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { ReactNode } from 'react';
+import type { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Event } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
+import type { ReactNode } from 'react';
 
 import { getErrorMessage } from '@/shared/helpers';
 
@@ -75,7 +75,7 @@ function useSignAndSend() {
 
       onFinalized(result);
 
-      events.forEach(({ event }) => handleEvent(event, method, options));
+      events.forEach(({ event }) => void handleEvent(event, method, options));
     }
   };
 
@@ -87,7 +87,7 @@ function useSignAndSend() {
     const { onError, onFinally, addressOrPair } = optionsWithDefaults;
 
     const alertTitle = `${extrinsic.method.section}.${extrinsic.method.method}`;
-    const alertId = alert.loading(`SignIn`, { title: alertTitle });
+    const alertId = alert.loading('SignIn', { title: alertTitle });
 
     const statusCallback = (result: ISubmittableResult) => handleStatus(result, method, optionsWithDefaults, alertId);
 

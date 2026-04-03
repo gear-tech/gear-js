@@ -5,7 +5,7 @@ import Copy from '@/assets/icons/document-copy.svg?react';
 import { Button } from '@/components';
 import { copyToClipboard } from '@/shared/utils';
 
-import { ButtonProps } from '../button/button';
+import type { ButtonProps } from '../button/button';
 
 import styles from './copy-button.module.scss';
 

@@ -1,10 +1,10 @@
-import { Codec, Registry } from '@polkadot/types/types';
+import assert from 'node:assert';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
-import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
-import assert from 'assert';
+import type { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
+import type { Codec, Registry } from '@polkadot/types/types';
 import { hexToU8a } from '@polkadot/util';
 
-import { TypeStructure, HexString } from '../types';
+import type { HexString, TypeStructure } from '../types';
 
 const LOOKUP_REGEXP = /\bLookup\d+\b/g;
 const DIGITS_REGEXP = /\d+/;
@@ -161,7 +161,6 @@ export class GearMetadata {
       for (const { name, type } of def.asComposite.fields) {
         if (name.isSome) {
           result[name.unwrap().toString()] = this.getTypeDef(type, additionalFields);
-          continue;
         } else if (def.asComposite.fields.length === 1) {
           result = this.getTypeDef(type, additionalFields);
           return additionalFields ? { ...result, name: this.getTypeName(typeIndex) } : result;

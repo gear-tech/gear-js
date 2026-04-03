@@ -1,11 +1,11 @@
-import { AccountId32 } from '@polkadot/types/interfaces';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { Option } from '@polkadot/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Option } from '@polkadot/types';
+import type { AccountId32 } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
 
-import { MailboxItem, HexString } from '../types';
-import { GearTransaction } from './Transaction';
 import { ClaimValueError } from '../errors';
+import type { HexString, MailboxItem } from '../types';
+import { GearTransaction } from './Transaction';
 
 export class GearMailbox extends GearTransaction {
   /**
@@ -53,21 +53,20 @@ export class GearMailbox extends GearTransaction {
         mailbox,
       ) as Option<MailboxItem>;
       return typedMailbox.unwrapOr(null);
-    } else {
-      const keyPrefixes = this._api.query.gearMessenger.mailbox.keyPrefix(accountId);
-      const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, numberOfMessages, keyPrefixes);
-      if (keysPaged.length === 0) {
-        return [];
-      }
-      const mailbox = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
-      return mailbox.map((item) => {
-        const typedItem = this._api.createType(
-          'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
-          item,
-        ) as Option<MailboxItem>;
-        return typedItem.unwrapOr(null);
-      });
     }
+    const keyPrefixes = this._api.query.gearMessenger.mailbox.keyPrefix(accountId);
+    const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, numberOfMessages, keyPrefixes);
+    if (keysPaged.length === 0) {
+      return [];
+    }
+    const mailbox = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
+    return mailbox.map((item) => {
+      const typedItem = this._api.createType(
+        'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
+        item,
+      ) as Option<MailboxItem>;
+      return typedItem.unwrapOr(null);
+    });
   }
 
   /**

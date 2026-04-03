@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { LookupService } from './lookup.service.js';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { LookupService } from './lookup.service.js';
 
 @ApiTags('lookup')
 @Controller('lookup')

@@ -1,4 +1,4 @@
-import { BlockHeader, BlockRequestEvent, IVaraEthProvider, StateTransition } from '../../types/index.js';
+import type { BlockHeader, BlockRequestEvent, IVaraEthProvider, StateTransition } from '../../types/index.js';
 import { normalizeBlockEvent, normalizeStateTransition } from '../../util/normalize.js';
 
 export class Block {

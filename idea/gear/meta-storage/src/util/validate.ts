@@ -1,4 +1,4 @@
-import { HexString, generateCodeHash } from '@gear-js/api';
+import { generateCodeHash, type HexString } from '@gear-js/api';
 import { InvalidMetadataError } from 'gear-idea-common';
 
 export function validateMetaHex(hex: HexString, hash: string) {

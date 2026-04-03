@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { Program } from './program.js';
 import { Batch } from './batch.js';
+import { Program } from './program.js';
 
 @Entity('state_transition')
 export class StateTransition {

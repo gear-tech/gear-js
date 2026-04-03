@@ -1,7 +1,7 @@
-import { PropsWithClassName } from '@/shared/types';
+import type { PropsWithClassName } from '@/shared/types';
 import { cx } from '@/shared/utils';
 
-import { ButtonProps, buttonStyles } from '../button';
+import { type ButtonProps, buttonStyles } from '../button';
 
 import styles from './link-button.module.scss';
 

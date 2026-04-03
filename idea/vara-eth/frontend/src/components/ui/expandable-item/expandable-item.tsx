@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { type PropsWithChildren, type ReactNode, useState } from 'react';
 
 import ArrowDownSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button } from '@/components';

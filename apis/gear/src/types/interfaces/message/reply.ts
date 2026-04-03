@@ -1,8 +1,8 @@
-import { Struct, u128, u8, Vec } from '@polkadot/types-codec';
-import { AnyNumber } from '@polkadot/types-codec/types';
+import type { Struct, u8, u128, Vec } from '@polkadot/types-codec';
+import type { AnyNumber } from '@polkadot/types-codec/types';
 
-import { GearCoreErrorsSimpleReplyCode } from '../../lookup';
-import { HexString } from '../../common';
+import type { HexString } from '../../common';
+import type { GearCoreErrorsSimpleReplyCode } from '../../lookup';
 
 export interface ICalculateReplyForHandleOptions {
   /** Origin of the message */

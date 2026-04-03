@@ -1,8 +1,8 @@
-import { AppKitNetwork } from '@reown/appkit/networks';
+import type { AppKitNetwork } from '@reown/appkit/networks';
 import * as allNetworks from '@reown/appkit/networks';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { WagmiProvider, webSocket } from 'wagmi';
 
 import { ETH_CHAIN_ID, ETH_NODE_ADDRESS, PROJECT_ID } from '@/shared/config';

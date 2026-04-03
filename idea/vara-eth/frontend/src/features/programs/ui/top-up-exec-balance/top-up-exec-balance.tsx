@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { parseUnits, Hex } from 'viem';
+import { type Hex, parseUnits } from 'viem';
 
-import { useMirrorContract, useApi, useWrappedVaraBalance } from '@/app/api';
-import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
+import { useApi, useMirrorContract, useWrappedVaraBalance } from '@/app/api';
+import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 import { ActionButton, Button, Modal } from '@/components';
 import { Input } from '@/components/form/input';
 
@@ -105,7 +105,7 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalanc
     return 'Top Up';
   };
 
-  const isConfirmDisabled = isLoading || !amount.trim() || isNaN(Number(amount)) || Number(amount) <= 0;
+  const isConfirmDisabled = isLoading || !amount.trim() || Number.isNaN(Number(amount)) || Number(amount) <= 0;
 
   return (
     <>

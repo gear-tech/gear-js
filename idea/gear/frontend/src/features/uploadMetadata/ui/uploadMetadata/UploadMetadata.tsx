@@ -1,7 +1,7 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { FileInput } from '@gear-js/ui';
 import cx from 'clsx';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { MetadataPreview } from '@/features/metadata';
 import { SailsPreview } from '@/features/sails';

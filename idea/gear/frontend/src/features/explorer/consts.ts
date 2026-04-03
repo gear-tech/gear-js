@@ -39,4 +39,4 @@ const LOCAL_STORAGE = {
   EVENT_FILTERS: 'event_filters',
 };
 
-export { Section, Method, FILTER_VALUES, LOCAL_STORAGE };
+export { FILTER_VALUES, LOCAL_STORAGE, Method, Section };

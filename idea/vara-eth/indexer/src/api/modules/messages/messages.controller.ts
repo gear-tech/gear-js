@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { MessagesService } from './messages.service.js';
-import { QueryMessagesDto } from './dto/query-messages.dto.js';
+import type { QueryMessagesDto } from './dto/query-messages.dto.js';
+import type { MessagesService } from './messages.service.js';
 
 @ApiTags('messages')
 @Controller('messages')

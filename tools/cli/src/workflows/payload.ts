@@ -1,8 +1,8 @@
-import { KeyringPair } from '@polkadot/keyring/types';
 import { decodeAddress } from '@gear-js/api';
+import type { KeyringPair } from '@polkadot/keyring/types';
 
-import { CLIArguments, ICode, IProgram } from '../types';
 import { ACC_REGEX, CLI_REGEX, CODE_REGEX, PROG_REGEX, replaceMatch } from '../common';
+import type { CLIArguments, ICode, IProgram } from '../types';
 
 export function getPayload(
   accounts: Record<string, KeyringPair>,

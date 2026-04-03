@@ -1,4 +1,4 @@
-import { RPCErrorResponse } from './types';
+import type { RPCErrorResponse } from './types';
 
 class RPCError extends Error {
   code;

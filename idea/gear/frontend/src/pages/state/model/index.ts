@@ -1,5 +1,5 @@
 import { INITIAL_VALUES } from './consts';
-import { FormValues } from './types';
+import type { FormValues } from './types';
 
-export { INITIAL_VALUES };
 export type { FormValues };
+export { INITIAL_VALUES };

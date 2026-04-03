@@ -1,8 +1,8 @@
 import type { Address, PublicClient } from 'viem';
 
-import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
+import type { ITransactionSigner } from '../types/signer.js';
 import { getRouterClient, type RouterClient } from './router.js';
-import { ITransactionSigner } from '../types/signer.js';
+import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara.js';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,

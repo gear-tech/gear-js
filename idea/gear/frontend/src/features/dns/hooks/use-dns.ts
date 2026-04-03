@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { DEFAULT_LIMIT } from '@/shared/config';
 
-import { DnsFilterParams } from '../types';
+import type { DnsFilterParams } from '../types';
 import { getDns, getNextPageParam } from '../utils';
 
 function useDns(search: string, filterParams: DnsFilterParams) {

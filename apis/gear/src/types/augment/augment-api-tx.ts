@@ -1,16 +1,16 @@
 import '@polkadot/api-base/types/submittable';
 
+import type { ApiTypes } from '@polkadot/api-base/types';
 import type { AccountId32, H160, Percent } from '@polkadot/types/interfaces/runtime';
-import type { bool, BTreeSet, Bytes, Option, u128, u32, u64 } from '@polkadot/types-codec';
-import {
+import type { BTreeSet, Bytes, bool, Option, u32, u64, u128 } from '@polkadot/types-codec';
+import type { AnyNumber } from '@polkadot/types-codec/types';
+import type {
   GprimitivesActorId,
   GprimitivesCodeId,
   GprimitivesMessageId,
   PalletGearVoucherInternalPrepaidCall,
   PalletGearVoucherInternalVoucherId,
 } from '../lookup';
-import type { AnyNumber } from '@polkadot/types-codec/types';
-import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/submittable' {
   interface AugmentedSubmittables<ApiType extends ApiTypes> {

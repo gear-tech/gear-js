@@ -1,7 +1,7 @@
-import { ProgramMetadata } from '@gear-js/api';
-import { useApi, useAlert } from '@gear-js/react-hooks';
-import { AnyJson, Codec } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import type { ProgramMetadata } from '@gear-js/api';
+import { useAlert, useApi } from '@gear-js/react-hooks';
+import type { AnyJson, Codec } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 
 const useStateRead = (programId: HexString) => {

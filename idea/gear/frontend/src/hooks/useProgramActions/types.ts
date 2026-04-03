@@ -1,6 +1,6 @@
-import { IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import type { IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 
 type Program = (IProgramCreateResult | IProgramUploadResult) & {
   codeId: HexString;
@@ -29,4 +29,4 @@ type Values = {
   payloadType?: string;
 };
 
-export type { Program, ContractApi, Values };
+export type { ContractApi, Program, Values };

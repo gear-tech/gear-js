@@ -1,25 +1,24 @@
-import { Store } from '@subsquid/typeorm-store';
-import { HexString } from '@gear-js/api';
-import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import type { HexString } from '@gear-js/api';
+import { Metadata, TypeRegistry } from '@polkadot/types';
+import type { SiLookupTypeId } from '@polkadot/types/interfaces';
 import { xxhashAsHex } from '@polkadot/util-crypto';
-import { TypeRegistry, Metadata } from '@polkadot/types';
-import { SiLookupTypeId } from '@polkadot/types/interfaces';
-
+import type { Store } from '@subsquid/typeorm-store';
+import type { RedisClientType } from 'redis';
+import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
+import { In } from 'typeorm';
+import type { MessageStatus } from './common';
 import {
-  ProgramStatus,
-  CodeStatus,
-  MessageReadReason,
   Code,
+  type CodeStatus,
   Event,
   MessageFromProgram,
+  type MessageReadReason,
   MessageToProgram,
   Program,
+  type ProgramStatus,
   Voucher,
 } from './model';
-import { Block, ProcessorContext } from './processor';
-import { MessageStatus } from './common';
-import { In } from 'typeorm';
-import { RedisClientType } from 'redis';
+import type { Block, ProcessorContext } from './processor';
 import { findChildMessageId, SPEC_VERSION } from './util';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
@@ -333,10 +332,9 @@ export class TempState {
 
     if (decoded.isActive) {
       if (block._runtime.specVersion >= SPEC_VERSION['1.9.0']) return decoded.asActive.codeId.toHex();
-      else return decoded.asActive.codeHash.toHex();
-    } else {
-      return '0x';
+      return decoded.asActive.codeHash.toHex();
     }
+    return '0x';
   }
 
   async saveVouchers() {
@@ -433,7 +431,7 @@ export class TempState {
     }
   }
 
-  saveParentMsgId(parentId: string, nonce: number = 0) {
+  saveParentMsgId(parentId: string, nonce = 0) {
     this.cachedMessages[parentId] = nonce;
     return parentId;
   }

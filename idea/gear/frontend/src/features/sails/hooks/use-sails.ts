@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -32,7 +32,6 @@ function useSails(codeId: HexString | null | undefined) {
     if (error.message === errorMessage.sailsIdlNotFound) return;
 
     alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   const isLoading = codeId !== null && isPending;

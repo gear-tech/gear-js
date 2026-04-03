@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react';
+import { Component, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components';

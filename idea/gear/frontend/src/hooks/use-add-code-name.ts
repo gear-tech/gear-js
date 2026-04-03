@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { setCodeMeta } from '@/features/code';
@@ -18,8 +18,7 @@ function useAddCodeName() {
 
     return isDevChain
       ? Promise.resolve()
-      : // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
-        setCodeMeta({ ...parameters, metaType }).catch((error) => alert.error(error));
+      : setCodeMeta({ ...parameters, metaType }).catch((error) => alert.error(error));
   };
 }
 

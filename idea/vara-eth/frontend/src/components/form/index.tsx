@@ -1,5 +1,5 @@
-import { ComponentProps } from 'react';
-import { FieldError, get, useFormContext } from 'react-hook-form';
+import type { ComponentProps } from 'react';
+import { type FieldError, get, useFormContext } from 'react-hook-form';
 
 import { Checkbox as UICheckbox } from './checkbox';
 import { Input as UIInput } from './input';
@@ -39,4 +39,4 @@ const Select = ({ name, ...props }: ComponentProps<typeof UISelect> & { name: st
   return <UISelect {...props} {...register(name)} error={error?.message} />;
 };
 
-export { Textarea, Input, Checkbox, Select };
+export { Checkbox, Input, Select, Textarea };

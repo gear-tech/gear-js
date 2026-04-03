@@ -1,5 +1,5 @@
 import { Events } from '../../common';
-import { Event } from '../../processor';
+import type { Event } from '../../processor';
 
 export interface AProgramChanged {
   id: string;

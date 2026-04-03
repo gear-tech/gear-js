@@ -1,12 +1,13 @@
-import { resolve } from 'path';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import { checker } from 'vite-plugin-checker';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import svgr from 'vite-plugin-svgr';
 import dts from 'vite-plugin-dts';
 import { externalizeDeps } from 'vite-plugin-externalize-deps';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import svgr from 'vite-plugin-svgr';
 
 const options = {
   server: { port: 3000, open: true },
@@ -14,11 +15,18 @@ const options = {
   resolve: { alias: { '@': resolve(process.cwd(), 'src') } },
 };
 
+const hasEslintConfig = ['eslint.config.js', 'eslint.config.mjs', 'eslint.config.cjs'].some((f) =>
+  existsSync(resolve(process.cwd(), f)),
+);
+
 const plugins = [
   react(),
   svgr(),
   nodePolyfills(),
-  checker({ typescript: { buildMode: true }, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
+  checker({
+    typescript: { buildMode: true },
+    ...(hasEslintConfig ? { eslint: { lintCommand: 'eslint .', useFlatConfig: true } } : {}),
+  }),
 ];
 
 const app = defineConfig({ ...options, plugins });

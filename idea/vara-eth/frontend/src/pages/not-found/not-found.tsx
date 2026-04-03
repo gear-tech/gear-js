@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { Button, LinkButton } from '@/components';
 import { routes } from '@/shared/config';

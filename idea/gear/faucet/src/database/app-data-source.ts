@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
-import { FaucetRequest, UserLastSeen } from './model';
 import config from '../config';
+import { FaucetRequest, UserLastSeen } from './model';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

@@ -1,10 +1,10 @@
-import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import type { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
 
 import { Method } from '@/features/explorer';
 
-import { transferEventsHandler, messageSentEventsHandler } from './helpers';
+import { messageSentEventsHandler, transferEventsHandler } from './helpers';
 
 const useEventSubscriptions = () => {
   const { api, isApiReady } = useApi();
@@ -27,13 +27,11 @@ const useEventSubscriptions = () => {
 
     return () => {
       if (unsubs.length) {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         Promise.all(unsubs).then((result) => {
-          result.forEach((unsubscribe) => unsubscribe());
+          result.forEach((unsubscribe) => void unsubscribe());
         });
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedAddress, address, isApiReady]);
 };
 

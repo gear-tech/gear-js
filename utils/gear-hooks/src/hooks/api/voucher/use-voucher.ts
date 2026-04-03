@@ -1,4 +1,4 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
+import type { HexString, IVoucherDetails } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 
 import { useAccount, useAlert, useApi } from '@/context';
@@ -19,7 +19,6 @@ function useVoucher(voucherId: HexString | undefined, accountAddress: string | u
       .getDetails(accountAddress, voucherId)
       .then((result) => setVoucher(result))
       .catch((error) => alert.error(error instanceof Error ? error.message : String(error)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, accountAddress, voucherId]);
 
   return { voucher, isVoucherReady };
@@ -31,4 +30,4 @@ function useAccountVoucher(voucherId: HexString | undefined) {
   return useVoucher(voucherId, account?.address);
 }
 
-export { useVoucher, useAccountVoucher };
+export { useAccountVoucher, useVoucher };
