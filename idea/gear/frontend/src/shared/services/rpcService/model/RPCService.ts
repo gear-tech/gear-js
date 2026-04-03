@@ -50,7 +50,7 @@ class RPCService {
     const response = this.sendRequest<T>(requests, headers);
     const data = await response;
 
-    data.forEach((item) => this.checkError(item));
+    data.forEach((item) => void this.checkError(item));
 
     return Promise.resolve(data as RPCSuccessResponse<T>[]);
   }

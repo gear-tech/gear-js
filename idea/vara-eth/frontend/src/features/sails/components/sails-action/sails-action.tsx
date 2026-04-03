@@ -73,7 +73,7 @@ const SailsAction = ({ id, name, action, sails, args, isEnabled = true, tooltip,
 
   return (
     <div className={styles.container}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+      {/* biome-ignore lint/a11y: keyboard handling is provided by button inside the header */}
       <header className={cx(styles.header, isOpen && styles.open)} onClick={() => setIsOpen((prevValue) => !prevValue)}>
         <ArrowSVG className={styles.arrow} />
         <span className={styles.title}>{name}</span>

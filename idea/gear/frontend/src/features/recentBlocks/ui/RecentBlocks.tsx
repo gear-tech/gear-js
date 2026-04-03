@@ -1,7 +1,7 @@
 import { useApi } from '@gear-js/react-hooks';
 import type { U128 } from '@polkadot/types';
 import { clsx } from 'clsx';
-import { useEffect, useState } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
@@ -27,6 +27,13 @@ const RecentBlocks = () => {
 
   const toggleList = () => setIsOpen((prevValue) => !prevValue);
   const closeList = () => setIsOpen(false);
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleList();
+    }
+  };
 
   const sectionRef = useOutsideClick<HTMLSelectElement>(closeList, isOpen);
 
@@ -79,8 +86,8 @@ const RecentBlocks = () => {
       {/* TODO(#1780): remove nodeRef prop */}
       <CSSTransition nodeRef={sectionRef} in={isOpen} timeout={AnimationTimeout.Default}>
         <section ref={sectionRef} className={blocksClasses}>
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-          <div className={styles.content} onClick={toggleList}>
+          {/* biome-ignore lint/a11y/useSemanticElements: div acts as a clickable toggle */}
+          <div className={styles.content} onClick={toggleList} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
             <Graph blocks={blocks} className={styles.graph} />
 
             <div className={styles.blockInfo}>

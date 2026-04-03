@@ -5,15 +5,16 @@ import styles from './label-container.module.scss';
 
 type Props = PropsWithChildren & {
   size?: 'small' | 'medium' | 'large';
+  id?: string;
   label?: string;
   error?: ReactNode;
   block?: boolean;
   className?: string;
 };
 
-function LabelContainer({ size = 'medium', label, className, block, children, error }: Props) {
+function LabelContainer({ id, size = 'medium', label, className, block, children, error }: Props) {
   return (
-    <label className={cx(styles.container, styles[size], className, block && styles.block)}>
+    <label className={cx(styles.container, styles[size], className, block && styles.block)} htmlFor={id}>
       {label && <span className={styles.label}>{label}</span>}
 
       <span className={styles.inputWrapper}>{children}</span>

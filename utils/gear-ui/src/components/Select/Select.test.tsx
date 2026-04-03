@@ -19,7 +19,7 @@ describe('select tests', () => {
     const select = screen.getByRole('combobox');
     const options = screen.getAllByRole('option');
 
-    options.forEach((option) => expect(select).toContainElement(option));
+    options.forEach((option) => void expect(select).toContainElement(option));
   });
 
   it('renders select with label', () => {

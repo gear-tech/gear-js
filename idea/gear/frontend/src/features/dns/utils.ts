@@ -19,7 +19,7 @@ const getDnsProgramId = async ({ genesis }: Genesis) => {
 const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
   const url = new URL(getUrl(genesis, 'dns'));
 
-  Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
+  Object.entries(params).forEach(([key, value]) => void url.searchParams.append(key, String(value)));
 
   return fetchWithGuard<DnsResponse>({ url });
 };

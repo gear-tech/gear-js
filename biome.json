@@ -6,13 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!**/dist",
-      "!**/dist-temp",
-      "!**/.yarn",
-      "!**/node_modules"
-    ]
+    "includes": ["**", "!**/dist", "!**/dist-temp", "!**/.yarn", "!**/node_modules"]
   },
   "formatter": {
     "enabled": true,
@@ -42,7 +36,7 @@
         "noUnusedFunctionParameters": "warn",
         "noUnusedImports": "warn",
         "noChildrenProp": "off",
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "off"
       },
       "style": {
         "noParameterAssign": "off",

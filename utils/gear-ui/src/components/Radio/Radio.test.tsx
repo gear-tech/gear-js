@@ -55,7 +55,7 @@ describe('radio group tests', () => {
     const buttons = screen.getAllByRole('radio');
     const lastButton = screen.getByLabelText('third radio');
 
-    buttons.forEach((button) => expect(button).toHaveAttribute('name', 'test'));
+    buttons.forEach((button) => void expect(button).toHaveAttribute('name', 'test'));
     expect(lastButton).toHaveAttribute('value', '2');
     expect(lastButton).toBeChecked();
   });

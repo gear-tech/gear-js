@@ -58,7 +58,7 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   }, []);
 
   const component = (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- TODO(#1810): resolve eslint comments
+    // biome-ignore lint/a11y: keyboard handling is provided by controls inside the modal
     <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
       <div className={modalClassName} data-testid="modal">
         <header className={styles.header} ref={headerRef}>

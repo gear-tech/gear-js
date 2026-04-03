@@ -86,7 +86,7 @@ function AccountProvider({ appName, children }: Props) {
     return () => {
       clearTimeout(timeoutId);
 
-      unsubsRef.current.forEach((unsub) => unsub());
+      unsubsRef.current.forEach((unsub) => void unsub());
       unsubsRef.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

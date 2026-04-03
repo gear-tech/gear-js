@@ -98,7 +98,7 @@ const useActivity = () => {
     });
 
     return () => {
-      unwatchFunctions.forEach((unwatch) => unwatch());
+      unwatchFunctions.forEach((unwatch) => void unwatch());
     };
   }, [api, config]);
 

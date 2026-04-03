@@ -12,7 +12,6 @@ import { ModalProvider } from './modal';
 import { OnboardingProvider } from './onboarding';
 import { QueryProvider } from './query';
 
-// eslint-disable-next-line react-refresh/only-export-components -- TODO(#1800): resolve eslint comments
 function AccountProvider({ children }: ProviderProps) {
   return <GearAccountProvider appName="Gear Idea">{children}</GearAccountProvider>;
 }
@@ -32,6 +31,10 @@ const providers = [
 ];
 
 const withProviders = (Component: ComponentType) => () =>
-  providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);
+  providers.reduceRight(
+    // biome-ignore lint/correctness/useJsxKeyInIterable: reduceRight is not rendering a list
+    (children, Provider) => <Provider>{children}</Provider>,
+    <Component />,
+  );
 
 export { withProviders };

@@ -75,7 +75,7 @@ function useSignAndSend() {
 
       onFinalized(result);
 
-      events.forEach(({ event }) => handleEvent(event, method, options));
+      events.forEach(({ event }) => void handleEvent(event, method, options));
     }
   };
 

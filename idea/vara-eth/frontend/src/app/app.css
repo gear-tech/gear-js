@@ -50,10 +50,10 @@
 
   /* reown appkit overrides */
 
-  /* modal background, cuz there's no such setting */
+  /* biome-ignore lint/complexity/noImportantStyles: modal background, cuz there's no such setting */
   --apkt-tokens-theme-backgroundPrimary-base: rgb(0, 0, 0) !important;
 
-  /* secondary font, cuz font-family setting has no effect on it */
+  /* biome-ignore lint/complexity/noImportantStyles: secondary font, cuz font-family setting has no effect on it */
   --apkt-fontFamily-mono: "Roboto Mono", monospace !important;
 }
 
