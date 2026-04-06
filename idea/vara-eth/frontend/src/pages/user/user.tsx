@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { formatEther, formatUnits, isAddress, Hex } from 'viem';
+import { formatEther, formatUnits, type Hex, isAddress } from 'viem';
 import { useBalance } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';

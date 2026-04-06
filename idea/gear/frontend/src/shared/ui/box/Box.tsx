@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import styles from './Box.module.scss';
 

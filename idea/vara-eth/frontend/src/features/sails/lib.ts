@@ -1,8 +1,8 @@
-import { ISailsFuncArg } from '@gear-js/sails-payload-form';
+import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 const useSails = (idl: string | null) => {
   const initSails = async () => {
@@ -40,5 +40,5 @@ type SailsAction = {
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
 };
 
+export type { FormattedPayloadValue, SailsAction };
 export { useSails };
-export type { SailsAction, FormattedPayloadValue };

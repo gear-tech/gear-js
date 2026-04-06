@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
-import { OptionHTMLAttributes, useId, ReactNode, ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, type OptionHTMLAttributes, type ReactNode, useId } from 'react';
 
-import { InputProps } from '../../types';
+import type { InputProps } from '../../types';
 import { InputWrapper } from '../utils';
 
 import styles from './Select.module.scss';
@@ -62,7 +62,5 @@ const Select = (props: Props) => {
   );
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { Select, styles as selectStyles };
 export type { Props as SelectProps };
+export { Select, styles as selectStyles };

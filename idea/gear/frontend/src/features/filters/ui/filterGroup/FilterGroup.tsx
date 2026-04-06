@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import { ReactNode } from 'react';
-import { FieldValues, Path, useFormContext } from 'react-hook-form';
+import type { ReactNode } from 'react';
+import { type FieldValues, type Path, useFormContext } from 'react-hook-form';
 
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
@@ -21,7 +21,6 @@ const FilterGroup = <T extends FieldValues>({ name, title, withReset = false, on
 
   const handleFilterReset = () => {
     resetField(name);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     handleSubmit(onSubmit)();
   };
 

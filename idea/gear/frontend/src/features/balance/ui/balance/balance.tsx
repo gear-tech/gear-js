@@ -1,5 +1,5 @@
 import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
-import { Balance as BalanceType } from '@polkadot/types/interfaces';
+import type { Balance as BalanceType } from '@polkadot/types/interfaces';
 import cx from 'clsx';
 
 import styles from './balance.module.scss';

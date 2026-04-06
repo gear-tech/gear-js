@@ -2,7 +2,7 @@ import { Input } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 import { getItemLabel } from '../../helpers';
-import { PayloadItemProps } from '../../model';
+import type { PayloadItemProps } from '../../model';
 import styles from '../FormPayload.module.scss';
 
 const PrimitiveItem = ({ title, levelName, typeStructure }: PayloadItemProps) => {

@@ -1,4 +1,4 @@
-import { IScheme, SchemeProgram } from '../types';
+import type { IScheme, SchemeProgram } from '../types';
 
 function getValue(v: any) {
   return v;

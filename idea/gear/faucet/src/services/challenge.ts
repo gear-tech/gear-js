@@ -27,9 +27,9 @@ export class ChallengeService {
 
   createChallenge(address: string): string {
     const key = canonicalize(address);
-    const nonce = '0x' + crypto.randomBytes(32).toString('hex');
+    const nonce = `0x${crypto.randomBytes(32).toString('hex')}`;
     this._challenges.set(key, { nonce, createdAt: Date.now() });
-    logger.debug('Challenge created', { address: address.slice(0, 10) + '...' });
+    logger.debug('Challenge created', { address: `${address.slice(0, 10)}...` });
     return nonce;
   }
 

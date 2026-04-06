@@ -1,11 +1,11 @@
-import { useApi, useAccount } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import { useAccount, useApi } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
 
 import { useAddIdl } from '@/features/sails';
 import { useAddCodeName, useAddMetadata, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 
-import { ParamsToUploadCode } from './types';
+import type { ParamsToUploadCode } from './types';
 
 const useCodeUpload = () => {
   const { api, isApiReady } = useApi();
@@ -24,9 +24,7 @@ const useCodeUpload = () => {
     sails: ParamsToUploadCode['sails'],
   ) => {
     await addCodeName({ id: codeId, name: codeName, metaHex: metadata.hex, idl: sails.idl });
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
@@ -46,7 +44,6 @@ const useCodeUpload = () => {
       signAndSend(extrinsic, 'CodeChanged', {
         successAlert: <CopiedInfo title="Code hash" info={codeHash} />,
         onSuccess: resolve,
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
         onFinalized,
       });
 

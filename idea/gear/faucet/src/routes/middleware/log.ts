@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
 const logger = createLogger('request');
@@ -10,7 +10,7 @@ export function requestLoggerMiddleware(req: Request, res: Response, next: NextF
     const { token, signature, ...body } = req.body;
     logger.debug(`method: ${req.method}, url: ${req.originalUrl}`, {
       token: token?.slice(0, 10),
-      ...(signature ? { signature: signature.slice(0, 10) + '...' } : {}),
+      ...(signature ? { signature: `${signature.slice(0, 10)}...` } : {}),
       ...body,
     });
   }

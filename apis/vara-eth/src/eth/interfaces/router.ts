@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 /**
  * Helper functions for code validation.
@@ -32,9 +32,9 @@ export interface CreateProgramHelpers {
  */
 export enum CodeState {
   /** Code is not yet submitted for validation */
-  Unknown,
+  Unknown = 0,
   /** Code validation has been requested but not yet completed */
-  ValidationRequested,
+  ValidationRequested = 1,
   /** Code has been validated and is ready for use */
-  Validated,
+  Validated = 2,
 }

@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
-import React, { useMemo, useState } from 'react';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 
 import SortSVG from '@/assets/icons/sort.svg?react';
 

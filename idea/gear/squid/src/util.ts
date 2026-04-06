@@ -1,7 +1,7 @@
-import { CUploadCode, CUploadProgram, CVoucherCall, isUploadCode, isUploadProgram } from './types/calls';
-import { getGrReply, CreateType } from '@gear-js/api';
-import { u8aToHex, u8aToU8a, u8aConcat, stringToU8a } from '@polkadot/util';
+import { CreateType, getGrReply } from '@gear-js/api';
+import { stringToU8a, u8aConcat, u8aToHex, u8aToU8a } from '@polkadot/util';
 import { blake2AsHex } from '@polkadot/util-crypto';
+import { type CUploadCode, type CUploadProgram, type CVoucherCall, isUploadCode, isUploadProgram } from './types/calls';
 
 export async function getMetahash(call: CUploadCode | CUploadProgram | CVoucherCall): Promise<string | null> {
   const code =
@@ -29,7 +29,7 @@ export async function getMetahash(call: CUploadCode | CUploadProgram | CVoucherC
 const prefix = stringToU8a('outgoing');
 const nonces = Array.from({ length: 512 }, (_v, i) => CreateType.create('u32', i).toU8a());
 
-export async function findChildMessageId(parentId: string, idToFind: string, startNonce: number = 0) {
+export async function findChildMessageId(parentId: string, idToFind: string, startNonce = 0) {
   const msgId = u8aToU8a(parentId);
 
   for (let i = startNonce; i < nonces.length; i++) {

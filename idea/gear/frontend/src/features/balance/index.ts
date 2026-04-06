@@ -1,3 +1,3 @@
-import { ProgramBalance, BalanceDropdown, TransferBalanceModal } from './ui';
+import { BalanceDropdown, ProgramBalance, TransferBalanceModal } from './ui';
 
-export { ProgramBalance, BalanceDropdown, TransferBalanceModal };
+export { BalanceDropdown, ProgramBalance, TransferBalanceModal };

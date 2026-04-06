@@ -1,4 +1,4 @@
-import { ProviderProps, AlertProvider as GearAlertProvider } from '@gear-js/react-hooks';
+import { AlertProvider as GearAlertProvider, type ProviderProps } from '@gear-js/react-hooks';
 import { Alert, alertStyles } from '@gear-js/ui';
 
 const AlertProvider = ({ children }: ProviderProps) => (

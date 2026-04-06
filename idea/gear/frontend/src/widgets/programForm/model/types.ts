@@ -1,4 +1,4 @@
-import { PayloadValue } from '@/entities/formPayload';
+import type { PayloadValue } from '@/entities/formPayload';
 
 type FormValues = {
   value: string;
@@ -17,4 +17,4 @@ type SubmitHelpers = {
   resetForm: () => void;
 };
 
-export type { FormValues, SubmitHelpers, RenderButtonsProps };
+export type { FormValues, RenderButtonsProps, SubmitHelpers };

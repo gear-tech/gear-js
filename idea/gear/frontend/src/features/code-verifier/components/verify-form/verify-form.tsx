@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { getErrorMessage } from '@/shared/helpers';
@@ -14,7 +14,7 @@ import { useDockerImageVersions, useVerifyCode } from '../../api';
 import { VERIFY_ROUTES } from '../../consts';
 import { useDefaultCodeId } from '../../hooks';
 
-import { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS } from './consts';
+import { DEFAULT_VALUES, FIELD_NAME, NETWORK, NETWORK_OPTIONS, PROJECT_ID_TYPE, SCHEMA } from './consts';
 import styles from './verify-form.module.scss';
 
 type FormattedValues = z.infer<typeof SCHEMA>;

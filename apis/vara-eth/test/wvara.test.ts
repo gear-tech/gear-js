@@ -2,9 +2,9 @@ import type { Chain, PublicClient, WalletClient, WebSocketTransport } from 'viem
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { getWrappedVaraClient, RouterClient, type WrappedVaraClient } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { config } from './config';
-import { getWrappedVaraClient, RouterClient, type WrappedVaraClient } from '../src';
 
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport>;

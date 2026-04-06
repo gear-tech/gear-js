@@ -1,11 +1,11 @@
-import { EntityType, MessageRequest, Program, ReplyRequest } from '../model/index.js';
-import { toPgBytea } from '../util/index.js';
-import { BlockDataCommon } from '../types/index.js';
 import { MirrorAbi } from '../abi/mirror.abi.js';
 import { RouterAbi } from '../abi/router.abi.js';
-import { Context, Log } from '../processor.js';
-import { BaseHandler } from './base.js';
 import { config } from '../config.js';
+import { EntityType, MessageRequest, Program, ReplyRequest } from '../model/index.js';
+import type { Context, Log } from '../processor.js';
+import type { BlockDataCommon } from '../types/index.js';
+import { toPgBytea } from '../util/index.js';
+import { BaseHandler } from './base.js';
 
 export class MirrorHandler extends BaseHandler {
   private _programAddresses: Set<string>;

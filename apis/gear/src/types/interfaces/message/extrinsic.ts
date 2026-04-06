@@ -1,5 +1,5 @@
-import { GasLimit, HexString, Value } from '../../common';
-import { PayloadType } from '../../payload';
+import type { GasLimit, HexString, Value } from '../../common';
+import type { PayloadType } from '../../payload';
 
 export interface V1010MessageSendOptions {
   /**

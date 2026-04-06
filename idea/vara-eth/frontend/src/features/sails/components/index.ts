@@ -1,2 +1,2 @@
-export { SailsServices } from './sails-services';
 export { SailsProgramActions } from './sails-program-actions';
+export { SailsServices } from './sails-services';

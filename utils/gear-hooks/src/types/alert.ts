@@ -1,4 +1,4 @@
-import { ReactNode, CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 enum AlertType {
   INFO = 'info',
@@ -41,14 +41,13 @@ type AlertContainerFactory = {
 
 type DefaultTemplateOptions = Required<Omit<AlertOptions, 'customId' | 'title'>>;
 
-export { AlertType };
-
 export type {
-  AlertOptions,
-  TemplateAlertOptions,
-  AlertInstance,
-  AlertTimer,
-  AlertTemplateProps,
   AlertContainerFactory,
+  AlertInstance,
+  AlertOptions,
+  AlertTemplateProps,
+  AlertTimer,
   DefaultTemplateOptions,
+  TemplateAlertOptions,
 };
+export { AlertType };

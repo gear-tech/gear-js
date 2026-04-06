@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { EXPLORER_URL } from '@/shared/config';
-import { PaginatedResponse } from '@/shared/types';
+import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
-import { Code, getCode } from './requests';
+import { type Code, getCode } from './requests';
 
 export const CODE_STATUS = {
   VALIDATION_REQUESTED: 'ValidationRequested',

@@ -1,11 +1,10 @@
 import { clsx } from 'clsx';
-import { ReactNode, useEffect, useState, MouseEvent, useCallback, ReactPortal } from 'react';
+import { type MouseEvent, type ReactNode, type ReactPortal, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Button } from '../Button/Button';
-
-import styles from './Modal.module.scss';
 import xSVG from './images/x.svg?react';
+import styles from './Modal.module.scss';
 
 type Props = {
   heading: string;
@@ -59,7 +58,7 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   }, []);
 
   const component = (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- TODO(#1810): resolve eslint comments
+    // biome-ignore lint/a11y: keyboard handling is provided by controls inside the modal
     <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
       <div className={modalClassName} data-testid="modal">
         <header className={styles.header} ref={headerRef}>
@@ -85,7 +84,5 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   return root ? createPortal(component, root) : null;
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { Modal, styles as modalStyles };
 export type { Props as ModalProps };
+export { Modal, styles as modalStyles };

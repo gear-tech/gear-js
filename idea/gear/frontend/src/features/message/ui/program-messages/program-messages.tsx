@@ -1,16 +1,16 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { parseAsString, parseAsStringEnum } from 'nuqs';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { DateFilter, FilterGroup, Filters, parseAsIsoString, Radio } from '@/features/filters';
-import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
+import { getParsedSailsFilterValue, getValidSailsFilterValue, SailsFilter } from '@/features/sails';
 import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { isHex } from '@/shared/helpers';
 import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 
-import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
+import { useMessagesFromProgram, useMessagesToProgram } from '../../api';
 import { MessageCard } from '../message-card';
 
 type Props = {

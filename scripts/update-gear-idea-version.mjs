@@ -1,5 +1,5 @@
-import assert from 'assert';
-import * as fs from 'fs';
+import assert from 'node:assert';
+import * as fs from 'node:fs';
 import { GEAR_IDEA_VERSION, gearIdeaPkgs } from './check-gear-idea-version.mjs';
 
 const bump = process.argv[2];
@@ -10,7 +10,7 @@ assert.ok(strategies.includes(bump), `Invalid update strategy ${bump}. Use one o
 
 const index = strategies.indexOf(bump);
 const v = GEAR_IDEA_VERSION.split('.');
-v[index] = parseInt(v[index], 10) + 1;
+v[index] = Number.parseInt(v[index], 10) + 1;
 const newVersion = v.join('.');
 
 Array.from(gearIdeaPkgs.keys()).forEach((k) => {
@@ -29,5 +29,5 @@ Array.from(gearIdeaPkgs.keys()).forEach((k) => {
 console.log(`Updated version to ${newVersion}`);
 
 for (const [p, pkg] of gearIdeaPkgs) {
-  fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + '\n');
+  fs.writeFileSync(p, `${JSON.stringify(pkg, null, 2)}\n`);
 }

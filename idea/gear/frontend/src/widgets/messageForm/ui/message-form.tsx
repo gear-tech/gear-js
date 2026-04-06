@@ -1,18 +1,18 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { PayloadValue } from '@/entities/formPayload';
+import type { PayloadValue } from '@/entities/formPayload';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
-import { Result } from '@/hooks/useGasCalculate/types';
+import type { Result } from '@/hooks/useGasCalculate/types';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { GasMethod } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
@@ -94,7 +94,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const baseValues = {
       value,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
       gasLimit,
       keepAlive,
@@ -118,7 +117,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const preparedValues = {
       ...values,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };
 

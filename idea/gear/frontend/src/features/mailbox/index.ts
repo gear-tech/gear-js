@@ -1,5 +1,5 @@
 import { useMailbox, useMailboxItem } from './hooks';
-import { MailboxItem } from './types';
+import type { MailboxItem } from './types';
 
-export { useMailbox, useMailboxItem };
 export type { MailboxItem };
+export { useMailbox, useMailboxItem };

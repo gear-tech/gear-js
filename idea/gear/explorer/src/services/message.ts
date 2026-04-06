@@ -1,16 +1,16 @@
 import { MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import type { DataSource, Repository } from 'typeorm';
 
 import { Pagination } from '../decorators';
-import {
-  ResManyResult,
+import { RequiredParams } from '../decorators/required';
+import { InvalidParams, MessageNotFound } from '../errors';
+import type {
   ParamGetMsgsFromProgram,
   ParamGetMsgsToProgram,
   ParamMsgFromProgram,
   ParamMsgToProgram,
+  ResManyResult,
 } from '../types';
-import { InvalidParams, MessageNotFound } from '../errors';
-import { RequiredParams } from '../decorators/required';
 import { isHex } from '../utils';
 
 export class MessageService {

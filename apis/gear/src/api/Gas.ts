@@ -1,10 +1,9 @@
-import { U8aLike } from '@polkadot/util/types';
-
-import { Value, GasInfo, PayloadType, HexString } from '../types';
-import { ProgramMetadata } from '../metadata';
+import type { U8aLike } from '@polkadot/util/types';
 import { SPEC_VERSION } from '../consts';
+import type { GearApi } from '../GearApi';
+import type { ProgramMetadata } from '../metadata';
+import type { GasInfo, HexString, PayloadType, Value } from '../types';
 import { encodePayload } from '../utils';
-import { GearApi } from '../GearApi';
 
 export class GearGas {
   constructor(private _api: GearApi) {}

@@ -1,8 +1,8 @@
-import { PaginationResponse } from '@/api';
+import type { PaginationResponse } from '@/api';
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
 import { METHOD } from './consts';
-import { Voucher, VouchersParameters } from './types';
+import type { Voucher, VouchersParameters } from './types';
 
 const getVoucher = (id: string) => INDEXER_RPC_SERVICE.callRPC<Voucher>(METHOD.DATA, { id });
 

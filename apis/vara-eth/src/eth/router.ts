@@ -1,14 +1,14 @@
-import type { Address, Hex, TransactionRequest } from 'viem';
-import { toHex, zeroAddress, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
+import type { Address, Hex, TransactionRequest } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, toHex, zeroAddress } from 'viem';
 
-import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
-import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
-import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { generateCodeHash } from '../util/index.js';
+import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
+import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
+import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { TxManager } from './tx-manager.js';
-import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -289,7 +289,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
             eventName: 'CodeGotValidated',
             onLogs: (logs) => {
               for (const log of logs) {
-                if (log.args.codeId == codeId) {
+                if (log.args.codeId === codeId) {
                   if (log.args.valid) {
                     resolve(true);
                   } else {

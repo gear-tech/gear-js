@@ -1,9 +1,10 @@
-import { TransferData } from '../src';
-import { getAccount, sleep } from './utilsFunctions';
+import type { TransferData } from '../src';
 import { getApi } from './common';
+import { getAccount, sleep } from './utilsFunctions';
 
 const api = getApi();
-let alice, bob;
+let alice;
+let bob;
 
 beforeAll(async () => {
   await api.isReadyOrError;

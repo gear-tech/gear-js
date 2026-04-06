@@ -1,5 +1,5 @@
-import { CodeStatus, MetaType } from 'gear-idea-indexer-db';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { CodeStatus, type MetaType } from 'gear-idea-indexer-db';
 import { IsOneOf } from '../../decorators';
 import { ParamGenesis, ParamPagination } from './common';
 

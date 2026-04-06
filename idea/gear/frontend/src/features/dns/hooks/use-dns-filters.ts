@@ -1,7 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useMemo, useState } from 'react';
 
-import { SortDirection } from '../types';
+import type { SortDirection } from '../types';
 
 const DEFAULT_FILTER_VALUES = {
   owner: 'all',
@@ -23,7 +23,6 @@ function useDnsFilters() {
     return owner === 'all' ? {} : { createdBy: decodedAddress };
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), orderByField, orderByDirection }), [values, account]);
 
   return [values, params, setValues] as const;

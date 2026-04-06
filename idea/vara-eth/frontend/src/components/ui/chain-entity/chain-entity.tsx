@@ -1,6 +1,6 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import { formatDate } from '@/shared/utils';

@@ -1,4 +1,4 @@
-import { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
+import type { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 import { LabelContainer } from '../label-container';
 

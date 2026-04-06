@@ -1,6 +1,6 @@
 import { WALLET_STATUS } from './consts';
 import { AccountProvider, useAccount } from './provider';
-import { Account, Wallet } from './types';
+import type { Account, Wallet } from './types';
 
-export { AccountProvider, useAccount, WALLET_STATUS };
 export type { Account, Wallet };
+export { AccountProvider, useAccount, WALLET_STATUS };

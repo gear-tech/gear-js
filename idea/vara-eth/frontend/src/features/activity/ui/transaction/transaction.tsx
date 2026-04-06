@@ -1,7 +1,7 @@
 import { generatePath } from 'react-router-dom';
 
 import { useWrappedVaraBalance } from '@/app/api';
-import { MyActivity, TransactionTypes } from '@/app/store';
+import { type MyActivity, TransactionTypes } from '@/app/store';
 import { Badge, Balance, CopyButton, ExpandableItem, HashLink } from '@/components';
 import { routes } from '@/shared/config';
 import { formatBalance } from '@/shared/utils';

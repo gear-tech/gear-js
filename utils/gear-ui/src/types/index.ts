@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, SVGProps } from 'react';
+import type { FunctionComponent, ReactNode, SVGProps } from 'react';
 
 type Gap = `${number}/${number}`;
 

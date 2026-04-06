@@ -1,5 +1,5 @@
-import { CheckboxProps } from '@gear-js/ui';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
+import type { CheckboxProps } from '@gear-js/ui';
+import { type FieldValues, type Path, type PathValue, useFormContext } from 'react-hook-form';
 
 import { Checkbox as FormCheckbox } from '@/shared/ui';
 

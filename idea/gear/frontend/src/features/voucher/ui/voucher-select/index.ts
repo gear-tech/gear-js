@@ -1,3 +1,3 @@
-import { ProgramVoucherSelect, CodeVoucherSelect } from './voucher-select';
+import { CodeVoucherSelect, ProgramVoucherSelect } from './voucher-select';
 
-export { ProgramVoucherSelect, CodeVoucherSelect };
+export { CodeVoucherSelect, ProgramVoucherSelect };

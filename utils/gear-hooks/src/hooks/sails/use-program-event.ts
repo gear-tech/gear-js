@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { EventReturn, FunctionName, ServiceName, Event, EventCallbackArgs } from './types';
+import type { Event, EventCallbackArgs, EventReturn, FunctionName, ServiceName } from './types';
 
 type UseProgramEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs extends unknown[]> = {
   program: TProgram | undefined;
@@ -30,12 +30,10 @@ function useProgramEvent<
     const unsub = (program[serviceName][functionName] as TEvent)(onData) as EventReturn;
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId, serviceName, functionName]);
 }
 
-export { useProgramEvent };
 export type { UseProgramEventParameters };
+export { useProgramEvent };

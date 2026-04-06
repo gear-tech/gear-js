@@ -1,10 +1,10 @@
-import ky, { Options } from 'ky';
+import ky, { type Options } from 'ky';
 
 import { INDEXER_API_URL, LocalStorage } from '@/shared/config';
 import { generateRandomId } from '@/shared/helpers';
 
 import { RPCError } from './RPCError';
-import { RPCRequest, RPCResponse, RPCSuccessResponse } from './types';
+import type { RPCRequest, RPCResponse, RPCSuccessResponse } from './types';
 
 type Headers = Options['headers'];
 type Params = Record<string, unknown>;
@@ -50,7 +50,7 @@ class RPCService {
     const response = this.sendRequest<T>(requests, headers);
     const data = await response;
 
-    data.forEach((item) => this.checkError(item));
+    data.forEach((item) => void this.checkError(item));
 
     return Promise.resolve(data as RPCSuccessResponse<T>[]);
   }

@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { Sails } from 'sails-js';
-import { Hex } from 'viem';
+import type { Sails } from 'sails-js';
+import type { Hex } from 'viem';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
-import { FormattedPayloadValue } from '@/features/sails/lib';
+import type { FormattedPayloadValue } from '@/features/sails/lib';
 
 type SendMessageParams = {
   serviceName: string;

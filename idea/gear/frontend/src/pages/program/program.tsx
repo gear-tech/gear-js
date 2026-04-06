@@ -1,10 +1,10 @@
 import { Button } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useMemo } from 'react';
 import { generatePath, Outlet, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
-import { useMetadata, isState } from '@/features/metadata';
+import { isState, useMetadata } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, ProgramTabs, useProgram } from '@/features/program';
 import { useSails } from '@/features/sails';
 import { useIsVftProgram, VftTag } from '@/features/vft-whitelist';
@@ -17,7 +17,7 @@ import { getShortName, isAnyKey } from '@/shared/helpers';
 import { UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
-import { TabsContext } from './tabs';
+import type { TabsContext } from './tabs';
 
 type Params = {
   programId: HexString;
@@ -47,7 +47,6 @@ function Program() {
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       if (name) refetchProgram();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
@@ -63,7 +62,6 @@ function Program() {
       codeId: program.codeId,
       isNameEditable: isStorageProgram,
       onClose: closeModal,
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       onSuccess,
     });
   };

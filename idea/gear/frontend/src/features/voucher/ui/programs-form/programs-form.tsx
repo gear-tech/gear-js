@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { clsx } from 'clsx';
@@ -73,7 +73,7 @@ const ProgramsForm = ({ value, voucherValue = [], onChange }: Props) => {
     <FormProvider {...form}>
       <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
         {/*  temporary button alignment fix */}
-        <div className={clsx(styles.input, form.formState.errors['id'] && styles.error)}>
+        <div className={clsx(styles.input, form.formState.errors.id && styles.error)}>
           <Input name="id" label="Program ID:" direction="y" block />
           <Button type="submit" text="Add" color="light" />
         </div>

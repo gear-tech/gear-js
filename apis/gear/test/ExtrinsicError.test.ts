@@ -1,8 +1,8 @@
-import { KeyringPair } from '@polkadot/keyring/types';
+import type { KeyringPair } from '@polkadot/keyring/types';
 
-import { ExtrinsicFailedData } from '../src';
-import { getAccount, sleep } from './utilsFunctions';
+import type { ExtrinsicFailedData } from '../src';
 import { getApi } from './common';
+import { getAccount, sleep } from './utilsFunctions';
 
 const api = getApi();
 let alice: KeyringPair;

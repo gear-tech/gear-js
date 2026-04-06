@@ -1,3 +1,3 @@
-import { MediaQuery, type BreakpointSize } from './media-query';
+import { type BreakpointSize, MediaQuery } from './media-query';
 
-export { MediaQuery, type BreakpointSize };
+export { type BreakpointSize, MediaQuery };

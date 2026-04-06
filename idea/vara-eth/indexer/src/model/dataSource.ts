@@ -1,5 +1,5 @@
-import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
+import { DataSource } from 'typeorm';
 
 import {
   Batch,

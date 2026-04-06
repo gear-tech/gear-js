@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
+import chalk from 'chalk';
 import { program } from 'commander';
 import { logger } from './utils';
 import { runWorkflow } from './workflows';
-import chalk from 'chalk';
 
 program.version('0.0.1').name('gear-js').description('CLI to interaction with Gear protocol');
 
@@ -32,7 +32,7 @@ program
     }
     runWorkflow(pathToYaml, args, options.ws)
       .catch((err) => {
-	console.log(err)
+        console.log(err);
         logger.error(err, { lvl: 0 });
         process.exit(1);
       })

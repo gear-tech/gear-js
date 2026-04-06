@@ -1,5 +1,5 @@
-import { rateLimit } from 'express-rate-limit';
 import { decodeAddress } from '@gear-js/api';
+import { rateLimit } from 'express-rate-limit';
 import xxhash from 'xxhashjs';
 
 import config from '../../config';

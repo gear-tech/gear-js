@@ -1,6 +1,6 @@
-import { Call } from '../../processor';
-import { AUploadCode } from './code';
-import { ASendMessage, ASendReply } from './message';
+import type { Call } from '../../processor';
+import type { AUploadCode } from './code';
+import type { ASendMessage, ASendReply } from './message';
 
 interface AVoucherSendMessage extends ASendMessage {
   __kind: 'SendMessage';

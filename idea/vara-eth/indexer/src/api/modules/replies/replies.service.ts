@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import type { FindOptionsWhere, Repository } from 'typeorm';
 import { ReplyRequest, ReplySent } from '../../../model/index.js';
-import { QueryRepliesDto } from './dto/query-replies.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { toByteaBuffer } from '../../common/utils/hex.util.js';
+import type { QueryRepliesDto } from './dto/query-replies.dto.js';
 
 @Injectable()
 export class RepliesService {
   constructor(
     @InjectRepository(ReplyRequest)
-    private readonly replyRequestRepository: Repository<ReplyRequest>,
+    private readonly _replyRequestRepository: Repository<ReplyRequest>,
     @InjectRepository(ReplySent)
-    private readonly replySentRepository: Repository<ReplySent>,
+    private readonly _replySentRepository: Repository<ReplySent>,
   ) {}
 
   async findAllRequests(query: QueryRepliesDto): Promise<PaginatedResponse<ReplyRequest>> {
@@ -24,7 +24,7 @@ export class RepliesService {
       where.programId = programId.toLowerCase();
     }
 
-    const [data, total] = await this.replyRequestRepository.findAndCount({
+    const [data, total] = await this._replyRequestRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -54,7 +54,7 @@ export class RepliesService {
       where.repliedToId = toByteaBuffer(repliedToId);
     }
 
-    const [data, total] = await this.replySentRepository.findAndCount({
+    const [data, total] = await this._replySentRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -72,7 +72,7 @@ export class RepliesService {
   }
 
   async findOneRequest(id: string): Promise<ReplyRequest> {
-    const reply = await this.replyRequestRepository.findOne({
+    const reply = await this._replyRequestRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['program'],
     });
@@ -85,7 +85,7 @@ export class RepliesService {
   }
 
   async findOneSent(id: string): Promise<ReplySent> {
-    const reply = await this.replySentRepository.findOne({
+    const reply = await this._replySentRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });

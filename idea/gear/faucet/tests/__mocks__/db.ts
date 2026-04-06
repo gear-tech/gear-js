@@ -1,5 +1,5 @@
 import { randomInt } from 'node:crypto';
-import { FaucetRequest, UserLastSeen } from '../../src/database';
+import type { FaucetRequest, UserLastSeen } from '../../src/database';
 
 export function createFakeRepository<T extends { id: any; timestamp: Date; [key: string]: any }>() {
   let data: Record<string | number, T> = {};
@@ -27,23 +27,22 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
           if (whereValue && typeof whereValue === 'object' && '_type' in whereValue && whereValue._type === 'in') {
             return whereValue._value.includes(item[key]);
           }
-          return (item[key] as any) == whereValue;
+          return (item[key] as any) === whereValue;
         }),
       );
     }),
     findOne: jest.fn(async ({ where }) => {
       const keys = Object.keys(where);
-      if (keys.length == 1 && keys[0] == 'id') {
+      if (keys.length === 1 && keys[0] === 'id') {
         return data[where.id];
-      } else {
-        return Object.values(data).find((item) => keys.every((key) => item[key] == where[key]));
       }
+      return Object.values(data).find((item) => keys.every((key) => item[key] === where[key]));
     }),
     findBy: jest.fn(async (criteria) => {
       const keys = Object.keys(criteria);
       return Object.values(data).filter((item) =>
         keys.every((key) =>
-          Array.isArray(criteria[key]) ? criteria[key].includes(item[key]) : criteria[key] == item[key],
+          Array.isArray(criteria[key]) ? criteria[key].includes(item[key]) : criteria[key] === item[key],
         ),
       );
     }),
@@ -53,7 +52,7 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
         keys.every((key) =>
           Array.isArray(criteria[key]._value)
             ? criteria[key]._value.includes(item[key])
-            : criteria[key]._value == item[key],
+            : criteria[key]._value === item[key],
         ),
       );
       for (const r of records) {

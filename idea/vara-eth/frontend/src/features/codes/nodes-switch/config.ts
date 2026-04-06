@@ -22,4 +22,4 @@ const NODE_ADRESS_URL_PARAM = 'node';
 const INITIAL_ENDPOINT =
   getNodeAddressFromUrl() || (localStorage[LocalStorage.Node] as string | null) || VARA_ETH_NODE_ADDRESS;
 
-export { nodeSections, LocalStorage, NODE_ADRESS_URL_PARAM, INITIAL_ENDPOINT };
+export { INITIAL_ENDPOINT, LocalStorage, NODE_ADRESS_URL_PARAM, nodeSections };

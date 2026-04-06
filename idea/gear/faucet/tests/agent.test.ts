@@ -6,13 +6,13 @@ process.env.AGENT_RATE_LIMIT_MS = '1000';
 import './__mocks__/gear-js';
 import './__mocks__/typeorm';
 
+import { Keyring } from '@polkadot/api';
+import { stringToU8a, u8aToHex } from '@polkadot/util';
+import { mnemonicGenerate } from '@polkadot/util-crypto';
 import request from 'supertest';
+import { RequestStatus } from '../src/database';
 import { FaucetApp } from '../src/main';
 import { repos } from './__mocks__/db';
-import { RequestStatus } from '../src/database';
-import { Keyring } from '@polkadot/api';
-import { u8aToHex, stringToU8a } from '@polkadot/util';
-import { mnemonicGenerate } from '@polkadot/util-crypto';
 
 const VARA_GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -77,7 +77,7 @@ describe('Agent requests', () => {
 
     it('should return 401 for invalid nonce', async () => {
       const pair = createKeyPair();
-      const fakeNonce = '0x' + '00'.repeat(32);
+      const fakeNonce = `0x${'00'.repeat(32)}`;
       const signature = u8aToHex(pair.sign(stringToU8a(fakeNonce)));
 
       const res = await claim({

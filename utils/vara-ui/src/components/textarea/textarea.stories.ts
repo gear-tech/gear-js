@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Textarea } from './textarea';
 
@@ -42,4 +42,4 @@ const LabelError: Story = {
 };
 
 export default meta;
-export { Default, Label, DefaultError, LabelError };
+export { Default, DefaultError, Label, LabelError };

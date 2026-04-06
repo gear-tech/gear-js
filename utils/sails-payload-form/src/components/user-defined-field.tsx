@@ -1,4 +1,4 @@
-import { FieldProps } from '../types';
+import type { FieldProps } from '../types';
 import { getLabel } from '../utils';
 
 function UserDefinedField({ def, sails, name, label, render, renderField }: FieldProps) {

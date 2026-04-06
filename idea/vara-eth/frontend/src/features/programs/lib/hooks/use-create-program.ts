@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { useApi } from '@/app/api';
-import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
+import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 import { routes } from '@/shared/config';
 
 export const useCreateProgram = () => {

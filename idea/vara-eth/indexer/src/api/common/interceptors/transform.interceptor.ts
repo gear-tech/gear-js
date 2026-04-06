@@ -1,7 +1,7 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { type CallHandler, type ExecutionContext, Injectable, type NestInterceptor } from '@nestjs/common';
+import type { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { toHexString, bigIntToString } from '../utils/hex.util.js';
+import { bigIntToString, toHexString } from '../utils/hex.util.js';
 
 /**
  * Transforms entity data for client consumption:

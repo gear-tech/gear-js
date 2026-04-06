@@ -1,4 +1,4 @@
-import { ButtonProps, buttonStyles } from '@gear-js/ui';
+import { type ButtonProps, buttonStyles } from '@gear-js/ui';
 
 import { cx } from '@/utils';
 

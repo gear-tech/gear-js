@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Hex } from 'viem';
+import { useEffect, useState } from 'react';
+import type { Hex } from 'viem';
 
 const IDL_STORAGE_PREFIX = 'vara-eth-idl';
 

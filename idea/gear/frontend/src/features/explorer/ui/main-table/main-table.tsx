@@ -1,5 +1,5 @@
-import { Vec } from '@polkadot/types';
-import { Extrinsic, EventRecord } from '@polkadot/types/interfaces';
+import type { Vec } from '@polkadot/types';
+import type { EventRecord, Extrinsic } from '@polkadot/types/interfaces';
 import { clsx } from 'clsx';
 
 import { Placeholder } from '@/entities/placeholder';

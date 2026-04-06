@@ -1,6 +1,6 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { parseAsString } from 'nuqs';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { DateFilter, Filters, parseAsIsoString } from '@/features/filters';
 import { useIsVftProgram } from '@/features/vft-whitelist';
@@ -8,7 +8,7 @@ import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
-import { useEvents, EventType } from '../../api';
+import { type EventType, useEvents } from '../../api';
 import { getParsedSailsFilterValue, getValidSailsFilterValue } from '../../utils';
 import { EventCard } from '../event-card';
 import { SailsFilter } from '../sails-filter';

@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, Between } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
+import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 import { EthereumTx } from '../../../model/index.js';
-import { QueryTransactionsDto } from './dto/query-transactions.dto.js';
-import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
-import { TransactionDetailResponseDto } from './dto/transaction-detail-response.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
+import type { QueryTransactionsDto } from './dto/query-transactions.dto.js';
+import { TransactionDetailResponseDto } from './dto/transaction-detail-response.dto.js';
+import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(EthereumTx)
-    private readonly transactionRepository: Repository<EthereumTx>,
+    private readonly _transactionRepository: Repository<EthereumTx>,
   ) {}
 
   async findAll(query: QueryTransactionsDto): Promise<PaginatedResponse<TransactionListResponseDto>> {
@@ -40,7 +40,7 @@ export class TransactionsService {
     const sortby = query.sortBy || 'createdAt';
     const order = query.order || 'desc';
 
-    const [data, total] = await this.transactionRepository.findAndCount({
+    const [data, total] = await this._transactionRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -62,7 +62,7 @@ export class TransactionsService {
   }
 
   async findOne(hash: string): Promise<TransactionDetailResponseDto> {
-    const transaction = await this.transactionRepository.findOne({
+    const transaction = await this._transactionRepository.findOne({
       where: { id: toBytea(hash) },
     });
 

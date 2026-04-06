@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { Tabs } from '@/components';
-import { useSendInjectedTransaction, useInitProgram, useSendProgramMessage } from '@/features/programs/lib';
+import { useInitProgram, useSendInjectedTransaction, useSendProgramMessage } from '@/features/programs/lib';
 
-import { FormattedPayloadValue, useSails } from '../../lib';
+import { type FormattedPayloadValue, useSails } from '../../lib';
 import { SailsActionGroup } from '../sails-action-group';
 
 import styles from './sails-program-actions.module.scss';

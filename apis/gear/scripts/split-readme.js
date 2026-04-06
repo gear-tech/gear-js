@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,7 +38,7 @@ function splitReadme() {
       // Start new section
       inHeader = false;
       currentSection = getSectionFileName(line);
-      currentContent = line + '\n';
+      currentContent = `${line}\n`;
     } else if (line.match(/^---\s*$/) && !inHeader) {
       // End of section marker, save current section
       if (currentSection && currentContent.trim()) {
@@ -55,13 +55,13 @@ function splitReadme() {
             saveSection('header', currentContent.trim());
           }
           currentSection = 'table-of-contents';
-          currentContent = line + '\n';
+          currentContent = `${line}\n`;
           inHeader = false;
         } else {
-          currentContent += line + '\n';
+          currentContent += `${line}\n`;
         }
       } else {
-        currentContent += line + '\n';
+        currentContent += `${line}\n`;
       }
     }
   }

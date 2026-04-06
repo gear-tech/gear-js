@@ -1,6 +1,6 @@
-import { STATUS_CODES } from 'http';
+import { STATUS_CODES } from 'node:http';
 
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -36,7 +36,6 @@ function useIsCodeVerified(codeId: HexString | null | undefined) {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;
@@ -54,7 +53,6 @@ function useVerificationStatus(id: string) {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;
@@ -72,10 +70,9 @@ function useDockerImageVersions() {
 
   useEffect(() => {
     if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return query;
 }
 
-export { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions };
+export { useDockerImageVersions, useIsCodeVerified, useVerificationStatus, useVerifyCode };

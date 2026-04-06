@@ -1,9 +1,9 @@
 import {
+  type SendMessageWithGasOptions,
+  type UseSendMessageWithGasOptions,
   useSendMessageWithGas,
-  UseSendMessageWithGasOptions,
-  SendMessageWithGasOptions,
 } from './use-send-message-handler';
 import { useCreateHandler } from './useCreateHandler';
 
+export type { SendMessageWithGasOptions, UseSendMessageWithGasOptions };
 export { useCreateHandler, useSendMessageWithGas };
-export type { UseSendMessageWithGasOptions, SendMessageWithGasOptions };

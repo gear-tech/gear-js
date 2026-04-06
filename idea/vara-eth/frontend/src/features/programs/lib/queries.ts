@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { type Code } from '@/features/codes/lib/requests';
+import type { Code } from '@/features/codes/lib/requests';
 import { EXPLORER_URL } from '@/shared/config';
-import { PaginatedResponse } from '@/shared/types';
+import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
 export type Program = {

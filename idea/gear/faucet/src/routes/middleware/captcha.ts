@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { logger } from 'gear-idea-common';
 
 import config from '../../config';

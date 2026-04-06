@@ -1,11 +1,10 @@
-import { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
-import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
+import type { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
-
-import { GearApi } from '../GearApi';
 import { TransactionError } from '../errors';
-import { TransactionStatusCb } from '../types';
+import type { GearApi } from '../GearApi';
+import type { TransactionStatusCb } from '../types';
 
 export class GearTransaction {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -38,9 +37,8 @@ export class GearTransaction {
       const errorCode = +error.message.split(':')[0];
       if (errorCode === 1010) {
         throw new TransactionError('Account balance too low');
-      } else {
-        throw new TransactionError(error.message);
       }
+      throw new TransactionError(error.message);
     }
   }
 

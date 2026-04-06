@@ -1,5 +1,5 @@
-import { JSONRPC_ERRORS } from './jsonrpc-errors';
 import { GearJsonRPCError } from './base';
+import { JSONRPC_ERRORS } from './jsonrpc-errors';
 
 export class MetaNotFoundError extends GearJsonRPCError {
   name = JSONRPC_ERRORS.MetadataNotFound.name;

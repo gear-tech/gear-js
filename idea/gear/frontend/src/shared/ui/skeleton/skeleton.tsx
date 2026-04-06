@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { FunctionComponent, SVGProps } from 'react';
+import type { FunctionComponent, SVGProps } from 'react';
 
 import styles from './skeleton.module.scss';
 

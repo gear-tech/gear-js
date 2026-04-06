@@ -4,7 +4,7 @@ import CrossIcon from '@/assets/icons/cross.svg?react';
 import { Button } from '@/components';
 
 import { nodeSections } from '../../config';
-import { NodeSection } from '../../types';
+import type { NodeSection } from '../../types';
 import { Node as NodeItem } from '../node';
 
 import styles from './nodes-popup.module.scss';

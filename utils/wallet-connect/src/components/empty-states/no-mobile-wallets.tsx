@@ -1,4 +1,4 @@
-import { useRender, mergeProps } from '@base-ui-components/react';
+import { mergeProps, useRender } from '@base-ui-components/react';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { IS_MOBILE_DEVICE } from '@/consts';

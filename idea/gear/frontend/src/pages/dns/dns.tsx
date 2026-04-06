@@ -1,7 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
-import { Dns as DnsType, DnsCard, DnsCardPlaceholder, useDnsFilters, useDns, CreateDns } from '@/features/dns';
+import { CreateDns, DnsCard, DnsCardPlaceholder, type Dns as DnsType, useDns, useDnsFilters } from '@/features/dns';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
 

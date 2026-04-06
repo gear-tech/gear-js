@@ -8,9 +8,8 @@ import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
 import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
-
-import styles from './Menu.module.scss';
 import { Logo } from './logo';
+import styles from './Menu.module.scss';
 import { Navigation } from './navigation';
 
 const Menu = () => {

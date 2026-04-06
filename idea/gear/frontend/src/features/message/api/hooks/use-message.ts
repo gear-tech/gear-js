@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
 
 import { getMessageFromProgram, getMessageToProgram } from '../requests';
@@ -17,4 +17,4 @@ function useMessageFromProgram(id: HexString) {
   });
 }
 
-export { useMessageToProgram, useMessageFromProgram };
+export { useMessageFromProgram, useMessageToProgram };

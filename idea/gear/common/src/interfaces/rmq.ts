@@ -1,4 +1,4 @@
-import { INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '../enums';
+import type { INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '../enums';
 
 export interface RMQMessage {
   correlationId: string;

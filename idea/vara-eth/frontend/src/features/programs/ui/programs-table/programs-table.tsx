@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { HashLink, Pagination, Table } from '@/components';
 import { routes } from '@/shared/config';

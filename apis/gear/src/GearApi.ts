@@ -1,9 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { DispatchError, Event } from '@polkadot/types/interfaces';
-import { u128, u64 } from '@polkadot/types';
+import type { u64, u128 } from '@polkadot/types';
+import type { DispatchError, Event } from '@polkadot/types/interfaces';
 
-import { ExtrinsicFailedData, GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
-import { GearEvents } from './events';
 import {
   GearBalance,
   GearBlock,
@@ -26,6 +24,8 @@ import {
   RUNTIME_METHODS,
   STAKING_REWARDS_METHODS,
 } from './default';
+import { GearEvents } from './events';
+import type { ExtrinsicFailedData, GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
 
 export class GearApi extends ApiPromise {
   public readonly program: GearProgram;
@@ -162,6 +162,7 @@ export class GearApi extends ApiPromise {
     if (gasMultiplier.isValuePerGas) {
       return gasMultiplier.asValuePerGas;
     }
+    throw new Error('gasMultiplier.isValuePerGas is not set');
   }
 
   async inflationInfo(): Promise<InflationInfo> {
@@ -170,6 +171,7 @@ export class GearApi extends ApiPromise {
   }
 
   async wasmBlobVersion(): Promise<string> {
+    // biome-ignore lint/complexity/useLiteralKeys: `rpc` parameter is generated dynamically based on the metadata, so we need to use string index to access it
     const result = await this.rpc['runtime'].wasmBlobVersion();
     return result.toString();
   }

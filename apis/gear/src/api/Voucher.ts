@@ -1,18 +1,18 @@
-import { Option, Vec } from '@polkadot/types';
-import { BalanceOf } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Option, Vec } from '@polkadot/types';
+import type { BalanceOf } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
-import {
+import type {
+  HexString,
   ICallOptions,
   IUpdateVoucherParams,
   IVoucherDetails,
   PalletGearVoucherInternalVoucherInfo,
-  HexString,
 } from '../types';
-import { GearTransaction } from './Transaction';
 import { generateVoucherId } from '../utils';
+import { GearTransaction } from './Transaction';
 
 export class GearVoucher extends GearTransaction {
   /**
@@ -155,7 +155,8 @@ export class GearVoucher extends GearTransaction {
       return this._api.tx.gearVoucher.call.call(this, {
         SendMessage: { destination, payload, gasLimit, value, keepAlive },
       });
-    } else if ('SendReply' in params) {
+    }
+    if ('SendReply' in params) {
       if (params.SendReply.method.method !== 'sendReply') {
         throw new Error(`Invalid method name. Expected 'SendReply' but actual is ${params.SendReply.method.method}`);
       }

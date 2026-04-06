@@ -1,13 +1,13 @@
 import { useAppKit } from '@reown/appkit/react';
-import { MouseEvent, useState } from 'react';
-import { Sails } from 'sails-js';
+import { type MouseEvent, useState } from 'react';
+import type { Sails } from 'sails-js';
 import { useAccount } from 'wagmi';
 
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button, Tooltip } from '@/components';
 import { cx } from '@/shared/utils';
 
-import { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
+import type { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
 import { SailsPayloadForm } from '../sails-payload-form';
 
 import styles from './sails-action.module.scss';
@@ -73,7 +73,7 @@ const SailsAction = ({ id, name, action, sails, args, isEnabled = true, tooltip,
 
   return (
     <div className={styles.container}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+      {/* biome-ignore lint/a11y: keyboard handling is provided by button inside the header */}
       <header className={cx(styles.header, isOpen && styles.open)} onClick={() => setIsOpen((prevValue) => !prevValue)}>
         <ArrowSVG className={styles.arrow} />
         <span className={styles.title}>{name}</span>

@@ -1,19 +1,19 @@
 import type {
   Abi,
-  TransactionReceipt,
-  Hash,
   ContractEventName,
   DecodeEventLogReturnType,
   EstimateGasParameters,
-  TransactionRequest,
-  Log,
+  Hash,
   Hex,
+  Log,
   PublicClient,
+  TransactionReceipt,
+  TransactionRequest,
 } from 'viem';
 import { decodeEventLog } from 'viem';
 
-import { ITxManager } from './interfaces/tx-manager.js';
-import { ITransactionSigner } from '../types/signer.js';
+import type { ITransactionSigner } from '../types/signer.js';
+import type { ITxManager } from './interfaces/tx-manager.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -150,9 +150,7 @@ export class TxManager<
         if (decoded.eventName === eventName) {
           return decoded as DecodeEventLogReturnType<abi, eventName>;
         }
-      } catch {
-        continue;
-      }
+      } catch {}
     }
 
     throw new Error(`${eventName} event not found in transaction receipt`);

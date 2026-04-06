@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button, Checkbox, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useLoading, useBalanceSchema, useSignAndSend } from '@/hooks';
+import { useBalanceSchema, useLoading, useSignAndSend } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 import { asOptionalField } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui';
 
-import { Voucher } from '../../api';
+import type { Voucher } from '../../api';
 import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
 import { useDurationSchema } from '../../hooks';
 import { DurationForm } from '../duration-form';

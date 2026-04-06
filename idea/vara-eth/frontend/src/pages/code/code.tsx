@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { UploadIdlButton, SyntaxHighlighter, ChainEntity, Skeleton, Tabs } from '@/components';
+import { ChainEntity, Skeleton, SyntaxHighlighter, Tabs, UploadIdlButton } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { ProgramsTable } from '@/features/programs';
-import { useSails, SailsServices } from '@/features/sails';
+import { SailsServices, useSails } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';

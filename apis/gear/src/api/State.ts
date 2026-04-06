@@ -1,10 +1,10 @@
-import { Codec } from '@polkadot/types/types';
-import { Bytes } from '@polkadot/types';
+import type { Bytes } from '@polkadot/types';
+import type { Codec } from '@polkadot/types/types';
 
-import { HumanTypesRepr, ReadStateBatchParams, ReadStateParams, ReadStateUsingWasmParams } from '../types';
-import { CreateType, MetadataVersion, ProgramMetadata, StateMetadata } from '../metadata';
-import { GearProgramStorage } from './Storage';
+import { CreateType, MetadataVersion, type ProgramMetadata, type StateMetadata } from '../metadata';
+import type { HumanTypesRepr, ReadStateBatchParams, ReadStateParams, ReadStateUsingWasmParams } from '../types';
 import { encodePayload } from '../utils';
+import { GearProgramStorage } from './Storage';
 
 /**
  * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.

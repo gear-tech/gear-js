@@ -1,4 +1,4 @@
-import { IVaraEthProvider, IJsonRpcMessage } from '../types/index.js';
+import type { IJsonRpcMessage, IVaraEthProvider } from '../types/index.js';
 import { snakeToCamel } from '../util/index.js';
 import { createJsonRpcRequest, getErrorMessage, isErrorMessage, isResultMessage } from './jsonrpc.js';
 
@@ -61,20 +61,20 @@ export class HttpVaraEthProvider implements IVaraEthProvider {
       }
 
       if (!response.ok) {
-        throw new Error('Request failed. ' + response.statusText);
+        throw new Error(`Request failed. ${response.statusText}`);
       }
 
       const json: IJsonRpcMessage<Result> = await response.json();
 
       if (isErrorMessage(json)) {
         throw new Error(getErrorMessage(json));
-      } else if (isResultMessage(json)) {
-        return snakeToCamel(json.result);
-      } else {
-        // This should never happen if type guards are correct
-        console.error('Unexpected JSON-RPC message:', json);
-        throw new Error('Unexpected JSON-RPC message');
       }
+      if (isResultMessage(json)) {
+        return snakeToCamel(json.result);
+      }
+      // This should never happen if type guards are correct
+      console.error('Unexpected JSON-RPC message:', json);
+      throw new Error('Unexpected JSON-RPC message');
     } catch (error) {
       if (timeoutId) {
         clearTimeout(timeoutId);

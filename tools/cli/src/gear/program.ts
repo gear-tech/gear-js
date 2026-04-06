@@ -1,13 +1,13 @@
-import { GearApi, MessageQueued, ProgramMetadata } from '@gear-js/api';
-import { KeyringPair } from '@polkadot/keyring/types';
+import fs from 'node:fs';
+import path from 'node:path';
+import { type GearApi, type MessageQueued, ProgramMetadata } from '@gear-js/api';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { u8aToHex } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
-import fs from 'fs';
-import path from 'path';
+import type { HexString } from '@polkadot/util/types';
 
-import { IProgram, SchemeProgram } from '../types/index';
-import { isProgramInitialized } from './findEvents';
+import type { IProgram, SchemeProgram } from '../types/index';
 import { logger } from '../utils/index';
+import { isProgramInitialized } from './findEvents';
 
 export async function uploadProgram(
   api: GearApi,

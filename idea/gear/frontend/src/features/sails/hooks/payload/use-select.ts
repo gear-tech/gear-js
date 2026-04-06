@@ -1,6 +1,6 @@
-import { useState, ChangeEvent } from 'react';
+import { type ChangeEvent, useState } from 'react';
 
-import { Ctors, Functions, Services } from '../../types';
+import type { Ctors, Functions, Services } from '../../types';
 
 type Props = {
   label?: string;

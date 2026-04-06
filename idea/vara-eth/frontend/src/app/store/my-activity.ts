@@ -1,7 +1,7 @@
 import { atom, useSetAtom } from 'jotai';
-import { Hex, TransactionReceipt } from 'viem';
+import type { Hex, TransactionReceipt } from 'viem';
 import { useConfig } from 'wagmi';
-import { getBlockNumber, getBlock } from 'wagmi/actions';
+import { getBlock, getBlockNumber } from 'wagmi/actions';
 
 const TransactionTypes = {
   codeValidation: 'code-validation',
@@ -147,4 +147,4 @@ const useAddMyActivity = () => {
   };
 };
 
-export { myActivityAtom, useAddMyActivity, TransactionTypes, unpackReceipt, type MyActivity };
+export { type MyActivity, myActivityAtom, TransactionTypes, unpackReceipt, useAddMyActivity };

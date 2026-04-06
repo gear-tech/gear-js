@@ -2,10 +2,10 @@ import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hash, Hex } from 'viem';
 import { bytesToHex, concatBytes, hexToBytes, recoverMessageAddress } from 'viem';
 
-import type { IInjectedTransactionPromise } from '../../types/index.js';
-import type { EthereumClient } from '../../eth/index.js';
-import { bigint128ToBytes } from '../../util/index.js';
 import { ReplyCode } from '../../errors/index.js';
+import type { EthereumClient } from '../../eth/index.js';
+import type { IInjectedTransactionPromise } from '../../types/index.js';
+import { bigint128ToBytes } from '../../util/index.js';
 
 export type InjectedTransactionPromiseRaw = {
   data: {

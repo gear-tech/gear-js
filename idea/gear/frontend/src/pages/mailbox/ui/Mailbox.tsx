@@ -1,5 +1,5 @@
 import { isHex } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
@@ -22,7 +22,6 @@ const Mailbox = () => {
   const isListEmpty = list?.length === 0;
 
   const handleClaimButtonClick = (messageId: HexString, reject: () => void) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     claimMessage({ messageId, resolve: () => removeMessage(messageId), reject });
   };
 

@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, Between } from 'typeorm';
+import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 import { MessageRequest, MessageSent } from '../../../model/index.js';
-import { QueryMessagesDto } from './dto/query-messages.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { toByteaBuffer } from '../../common/utils/hex.util.js';
+import type { QueryMessagesDto } from './dto/query-messages.dto.js';
 
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(MessageRequest)
-    private readonly messageRequestRepository: Repository<MessageRequest>,
+    private readonly _messageRequestRepository: Repository<MessageRequest>,
     @InjectRepository(MessageSent)
-    private readonly messageSentRepository: Repository<MessageSent>,
+    private readonly _messageSentRepository: Repository<MessageSent>,
   ) {}
 
   async findAllRequests(query: QueryMessagesDto): Promise<PaginatedResponse<MessageRequest>> {
@@ -36,7 +36,7 @@ export class MessagesService {
       where.blockNumber = Between(BigInt(0), BigInt(toBlock));
     }
 
-    const [data, total] = await this.messageRequestRepository.findAndCount({
+    const [data, total] = await this._messageRequestRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -62,7 +62,7 @@ export class MessagesService {
       where.sourceProgramId = programId.toLowerCase();
     }
 
-    const [data, total] = await this.messageSentRepository.findAndCount({
+    const [data, total] = await this._messageSentRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -80,7 +80,7 @@ export class MessagesService {
   }
 
   async findOneRequest(id: string): Promise<MessageRequest> {
-    const message = await this.messageRequestRepository.findOne({
+    const message = await this._messageRequestRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['program'],
     });
@@ -93,7 +93,7 @@ export class MessagesService {
   }
 
   async findOneSent(id: string): Promise<MessageSent> {
-    const message = await this.messageSentRepository.findOne({
+    const message = await this._messageSentRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });

@@ -1,9 +1,9 @@
-import { Response, Request, NextFunction } from 'express';
-import { signatureVerify } from '@polkadot/util-crypto';
 import { stringToU8a } from '@polkadot/util';
+import { signatureVerify } from '@polkadot/util-crypto';
+import type { NextFunction, Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
-import { ChallengeService } from '../../services/challenge';
+import type { ChallengeService } from '../../services/challenge';
 
 const logger = createLogger('signature-auth');
 
@@ -16,7 +16,7 @@ export function createSignatureAuthMiddleware(challengeService: ChallengeService
     }
 
     if (!challengeService.consumeChallenge(address, nonce)) {
-      logger.debug('Challenge verification failed', { address: address.slice(0, 10) + '...' });
+      logger.debug('Challenge verification failed', { address: `${address.slice(0, 10)}...` });
       return res.status(401).json({ error: 'Invalid or expired challenge' });
     }
 
@@ -31,7 +31,7 @@ export function createSignatureAuthMiddleware(challengeService: ChallengeService
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
-    logger.debug('Signature verified', { address: address.slice(0, 10) + '...' });
+    logger.debug('Signature verified', { address: `${address.slice(0, 10)}...` });
     next();
   };
 }

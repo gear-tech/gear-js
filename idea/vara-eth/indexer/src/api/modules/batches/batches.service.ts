@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, FindOptionsWhere } from 'typeorm';
+import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 import { Batch } from '../../../model/index.js';
-import { QueryBatchesDto } from './dto/query-batches.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { QueryBatchesDto } from './dto/query-batches.dto.js';
 
 @Injectable()
 export class BatchesService {

@@ -1,9 +1,9 @@
 import { getVaraAddress, useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 
-import { TimestampBlock, IdBlock, BulbStatus, OwnerBlock } from '@/shared/ui';
+import { BulbStatus, IdBlock, OwnerBlock, TimestampBlock } from '@/shared/ui';
 import { BulbBlock } from '@/shared/ui/bulbBlock';
 
-import { Voucher } from '../../api';
+import type { Voucher } from '../../api';
 import { DeclineVoucher } from '../decline-voucher';
 import { RevokeVoucher } from '../revoke-voucher';
 import { UpdateVoucher } from '../update-voucher';

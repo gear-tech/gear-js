@@ -1,8 +1,8 @@
-import type { Hash, TransactionRequest, WalletClient, Hex, Address } from 'viem';
+import type { Address, Hash, Hex, TransactionRequest, WalletClient } from 'viem';
 import { isHex } from 'viem';
 
-import { SigningError, AddressError } from '../errors.js';
 import type { ITransactionSigner } from '../../types/signer.js';
+import { AddressError, SigningError } from '../errors.js';
 
 export class WalletClientAdapter implements ITransactionSigner {
   constructor(private _wc: WalletClient) {}
