@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import type { Hex } from 'viem';
 
-import { EXPLORER_URL } from '@/shared/config';
+import { nodeAtom } from '@/app/store/node';
 import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
@@ -16,13 +17,14 @@ export const CODE_STATUS = {
 type CodesResponse = PaginatedResponse<Code>;
 
 export const useGetAllCodesQuery = (page: number, pageSize: number) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
   const limit = pageSize;
   const offset = (page - 1) * pageSize;
 
   return useQuery({
-    queryKey: ['allCodes', limit, offset],
+    queryKey: ['allCodes', limit, offset, explorerUrl],
     queryFn: async () => {
-      const url = new URL(`${EXPLORER_URL}/codes`);
+      const url = new URL(`${explorerUrl}/codes`);
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));
 
@@ -33,9 +35,11 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
 };
 
 export const useGetCodeByIdQuery = (id: Hex | undefined) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['codeById', id],
-    queryFn: () => getCode(id!),
+    queryKey: ['codeById', id, explorerUrl],
+    queryFn: () => getCode(explorerUrl, id!),
     enabled: Boolean(id),
   });
 };

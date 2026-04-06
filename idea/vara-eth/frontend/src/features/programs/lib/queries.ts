@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import type { Hex } from 'viem';
 
+import { nodeAtom } from '@/app/store/node';
 import type { Code } from '@/features/codes/lib/requests';
-import { EXPLORER_URL } from '@/shared/config';
 import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
@@ -18,13 +19,14 @@ export type Program = {
 export type ProgramsResponse = PaginatedResponse<Program>;
 
 export const useGetAllProgramsQuery = (page: number, pageSize: number, codeId?: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
   const limit = pageSize;
   const offset = (page - 1) * pageSize;
 
   return useQuery({
-    queryKey: ['allPrograms', limit, offset, codeId],
+    queryKey: ['allPrograms', limit, offset, codeId, explorerUrl],
     queryFn: async () => {
-      const url = new URL(`${EXPLORER_URL}/programs`);
+      const url = new URL(`${explorerUrl}/programs`);
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));
 
@@ -37,10 +39,12 @@ export const useGetAllProgramsQuery = (page: number, pageSize: number, codeId?: 
 };
 
 export const useGetProgramByIdQuery = (id: string) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['programById', id],
+    queryKey: ['programById', id, explorerUrl],
     queryFn: async () => {
-      const url = new URL(`${EXPLORER_URL}/programs/${id}`);
+      const url = new URL(`${explorerUrl}/programs/${id}`);
       return fetchWithGuard<Program>({ url });
     },
     enabled: !!id,

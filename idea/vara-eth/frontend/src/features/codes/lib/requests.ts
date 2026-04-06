@@ -1,6 +1,5 @@
 import type { Hex } from 'viem';
 
-import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/utils';
 
 export type Code = {
@@ -9,4 +8,5 @@ export type Code = {
   createdAt: string;
 };
 
-export const getCode = (id: Hex) => fetchWithGuard<Code>({ url: `${EXPLORER_URL}/codes/${id}` });
+export const getCode = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<Code>({ url: `${explorerUrl}/codes/${id}` });

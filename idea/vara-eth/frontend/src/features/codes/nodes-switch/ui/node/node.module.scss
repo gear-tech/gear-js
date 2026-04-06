@@ -10,6 +10,7 @@
     align-items: center;
     gap: 6px;
     overflow: hidden;
+    cursor: pointer;
 
     input {
       flex-shrink: 0;
@@ -49,6 +50,7 @@
       // if possible, white-space would be applied instead of text-overlow
       overflow: hidden;
       text-overflow: ellipsis;
+      cursor: pointer;
     }
   }
 

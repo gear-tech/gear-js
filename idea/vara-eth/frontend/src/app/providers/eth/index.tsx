@@ -2,10 +2,18 @@ import type { AppKitNetwork } from '@reown/appkit/networks';
 import * as allNetworks from '@reown/appkit/networks';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import type { PropsWithChildren } from 'react';
-import { WagmiProvider, webSocket } from 'wagmi';
+import { useAtomValue } from 'jotai';
+import { type PropsWithChildren, useEffect } from 'react';
+import { useChainId, useSwitchChain, WagmiProvider, webSocket } from 'wagmi';
 
-import { ETH_CHAIN_ID, ETH_NODE_ADDRESS, PROJECT_ID } from '@/shared/config';
+import { nodeAtom } from '@/app/store/node';
+import {
+  ETH_CHAIN_ID_MAINNET,
+  ETH_CHAIN_ID_TESTNET,
+  ETH_NODE_ADDRESS_MAINNET,
+  ETH_NODE_ADDRESS_TESTNET,
+  PROJECT_ID,
+} from '@/shared/config';
 
 const metadata = {
   name: 'Web3Modal',
@@ -22,12 +30,18 @@ const getNetwork = (id: number) => {
   return result as allNetworks.AppKitNetwork;
 };
 
-const networks = [getNetwork(ETH_CHAIN_ID)] as [AppKitNetwork, ...AppKitNetwork[]];
+const networks = [getNetwork(ETH_CHAIN_ID_TESTNET), getNetwork(ETH_CHAIN_ID_MAINNET)] as [
+  AppKitNetwork,
+  ...AppKitNetwork[],
+];
 
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId: PROJECT_ID,
-  transports: { [ETH_CHAIN_ID]: webSocket(ETH_NODE_ADDRESS) },
+  transports: {
+    [ETH_CHAIN_ID_TESTNET]: webSocket(ETH_NODE_ADDRESS_TESTNET),
+    [ETH_CHAIN_ID_MAINNET]: webSocket(ETH_NODE_ADDRESS_MAINNET),
+  },
 });
 
 const METAMASK_WALLET_ID = 'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96';
@@ -67,8 +81,27 @@ declare module 'wagmi' {
   }
 }
 
+function NetworkSync() {
+  const { ethChainId } = useAtomValue(nodeAtom);
+  const currentChainId = useChainId();
+  const { switchChain } = useSwitchChain();
+
+  useEffect(() => {
+    if (currentChainId === ethChainId || !switchChain) return;
+
+    switchChain({ chainId: ethChainId });
+  }, [currentChainId, ethChainId, switchChain]);
+
+  return null;
+}
+
 function EthProvider({ children }: PropsWithChildren) {
-  return <WagmiProvider config={wagmiAdapter.wagmiConfig}>{children}</WagmiProvider>;
+  return (
+    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+      <NetworkSync />
+      {children}
+    </WagmiProvider>
+  );
 }
 
 export { EthProvider };
