@@ -2441,7 +2441,7 @@ __metadata:
     "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:16.5.6"
     "@polkadot/api-derive": "npm:16.5.6"
-    "@polkadot/extension-inject": "npm:0.62.6"
+    "@polkadot/extension-inject": "npm:0.63.1"
     "@polkadot/types": "npm:16.5.6"
     "@polkadot/util": "npm:14.0.3"
     "@substrate/connect": "npm:2.1.8"
@@ -5408,7 +5408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:16.5.6, @polkadot/api@npm:^16.5.3":
+"@polkadot/api@npm:16.5.6, @polkadot/api@npm:^16.5.6":
   version: 16.5.6
   resolution: "@polkadot/api@npm:16.5.6"
   dependencies:
@@ -5433,21 +5433,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-inject@npm:0.62.6":
-  version: 0.62.6
-  resolution: "@polkadot/extension-inject@npm:0.62.6"
+"@polkadot/extension-inject@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@polkadot/extension-inject@npm:0.63.1"
   dependencies:
-    "@polkadot/api": "npm:^16.5.3"
-    "@polkadot/rpc-provider": "npm:^16.5.3"
-    "@polkadot/types": "npm:^16.5.3"
-    "@polkadot/util": "npm:^13.5.9"
-    "@polkadot/util-crypto": "npm:^13.5.9"
-    "@polkadot/x-global": "npm:^13.5.9"
+    "@polkadot/api": "npm:^16.5.6"
+    "@polkadot/rpc-provider": "npm:^16.5.6"
+    "@polkadot/types": "npm:^16.5.6"
+    "@polkadot/util": "npm:^14.0.3"
+    "@polkadot/util-crypto": "npm:^14.0.3"
+    "@polkadot/x-global": "npm:^14.0.3"
     tslib: "npm:^2.8.1"
   peerDependencies:
     "@polkadot/api": "*"
     "@polkadot/util": "*"
-  checksum: 10c0/616ff37e7a556c1825c2230d5d36eeea24858cb6f5539c2c871e6e1c79f0eeb62c9bbe032761b3068d8813ed77f7872ea1607ade96a1885a67fee2b6c0176d80
+  checksum: 10c0/de3b251586cde6ba21b623220850569dfbb27ebd4da3306f28caa05a04f23cd83dbc2307c2ecdf1cfe108e7dd41d4d93e4e2f7332a0263aa9bba7c9d884f8b7c
   languageName: node
   linkType: hard
 
@@ -5604,7 +5604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/rpc-provider@npm:16.5.6, @polkadot/rpc-provider@npm:^16.5.3":
+"@polkadot/rpc-provider@npm:16.5.6, @polkadot/rpc-provider@npm:^16.5.6":
   version: 16.5.6
   resolution: "@polkadot/rpc-provider@npm:16.5.6"
   dependencies:
@@ -5791,7 +5791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:16.5.6, @polkadot/types@npm:^16.5.3":
+"@polkadot/types@npm:16.5.6, @polkadot/types@npm:^16.5.6":
   version: 16.5.6
   resolution: "@polkadot/types@npm:16.5.6"
   dependencies:
@@ -5836,7 +5836,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util-crypto@npm:13.5.9, @polkadot/util-crypto@npm:^13.2.3, @polkadot/util-crypto@npm:^13.5.9":
+"@polkadot/util-crypto@npm:13.5.9, @polkadot/util-crypto@npm:^13.2.3":
   version: 13.5.9
   resolution: "@polkadot/util-crypto@npm:13.5.9"
   dependencies:
@@ -5892,7 +5892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:13.5.9, @polkadot/util@npm:^13.2.3, @polkadot/util@npm:^13.5.9":
+"@polkadot/util@npm:13.5.9, @polkadot/util@npm:^13.2.3":
   version: 13.5.9
   resolution: "@polkadot/util@npm:13.5.9"
   dependencies:
@@ -6063,7 +6063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-global@npm:13.5.9, @polkadot/x-global@npm:^13.2.3, @polkadot/x-global@npm:^13.5.9":
+"@polkadot/x-global@npm:13.5.9, @polkadot/x-global@npm:^13.2.3":
   version: 13.5.9
   resolution: "@polkadot/x-global@npm:13.5.9"
   dependencies:
