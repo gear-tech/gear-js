@@ -123,11 +123,16 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
           build-args: |
             VITE_WALLET_CONNECT_PROJECT_ID=${{ secrets.VITE_WALLET_CONNECT_PROJECT_ID }}
-            VITE_VARA_ETH_NODE_ADDRESS=${{ secrets.VITE_VARA_ETH_NODE_ADDRESS }}
-            VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
-            VITE_ROUTER_CONTRACT_ADDRESS=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS }}
-            VITE_ETH_CHAIN_ID=${{ secrets.VITE_ETH_CHAIN_ID }}
-            VITE_EXPLORER_URL=${{ secrets.VITE_EXPLORER_URL }}
+            VITE_VARA_ETH_NODE_ADDRESSES_TESTNET=${{ secrets.VITE_VARA_ETH_NODE_ADDRESSES_TESTNET }}
+            VITE_VARA_ETH_NODE_ADDRESSES_MAINNET=${{ secrets.VITE_VARA_ETH_NODE_ADDRESSES_MAINNET }}
+            VITE_ETH_NODE_ADDRESS_TESTNET=${{ secrets.VITE_ETH_NODE_ADDRESS_TESTNET }}
+            VITE_ETH_NODE_ADDRESS_MAINNET=${{ secrets.VITE_ETH_NODE_ADDRESS_MAINNET }}
+            VITE_ETH_CHAIN_ID_TESTNET=${{ secrets.VITE_ETH_CHAIN_ID_TESTNET }}
+            VITE_ETH_CHAIN_ID_MAINNET=${{ secrets.VITE_ETH_CHAIN_ID_MAINNET }}
+            VITE_EXPLORER_URL_TESTNET=${{ secrets.VITE_EXPLORER_URL_TESTNET }}
+            VITE_EXPLORER_URL_MAINNET=${{ secrets.VITE_EXPLORER_URL_MAINNET }}
+            VITE_ROUTER_CONTRACT_ADDRESS_TESTNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_TESTNET }}
+            VITE_ROUTER_CONTRACT_ADDRESS_MAINNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_MAINNET }}
 
   build-indexer-image:
     runs-on: ubuntu-latest
