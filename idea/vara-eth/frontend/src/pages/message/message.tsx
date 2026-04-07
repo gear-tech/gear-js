@@ -1,18 +1,18 @@
-import { useParams } from 'react-router-dom';
-import type { Hex } from 'viem';
+import { useParams } from "react-router-dom";
+import type { Hex } from "viem";
 
-import { ChainEntity, PageContainer, Skeleton } from '@/components';
+import { ChainEntity, PageContainer, Skeleton } from "@/components";
 import {
   MessageData,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
-} from '@/features/messages';
-import { cx } from '@/shared/utils';
+} from "@/features/messages";
+import { cx } from "@/shared/utils";
 
-import ArrowSVG from './arrow.svg?react';
-import styles from './message.module.scss';
+import ArrowSVG from "./arrow.svg?react";
+import styles from "./message.module.scss";
 
 type Params = {
   messageId: Hex;
@@ -26,7 +26,12 @@ const Message = () => {
   const replyRequest = useGetReplyRequestByIdQuery(messageId);
   const replySent = useGetReplySentByIdQuery(messageId);
 
-  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading) {
+  if (
+    messageRequest.isLoading ||
+    messageSent.isLoading ||
+    replyRequest.isLoading ||
+    replySent.isLoading
+  ) {
     return (
       <PageContainer className={styles.container}>
         <div className={styles.column}>
@@ -50,7 +55,12 @@ const Message = () => {
     );
   }
 
-  if (!messageRequest.data && !messageSent.data && !replyRequest.data && !replySent.data)
+  if (
+    !messageRequest.data &&
+    !messageSent.data &&
+    !replyRequest.data &&
+    !replySent.data
+  )
     return <ChainEntity.NotFound entity="message" id={messageId} />;
 
   return (
@@ -60,14 +70,20 @@ const Message = () => {
           <ChainEntity.BackButton />
 
           <div className={styles.title}>
-            <ArrowSVG className={cx(styles.arrow, messageSent.data && styles.from)} />
+            <ArrowSVG
+              className={cx(styles.arrow, messageSent.data && styles.from)}
+            />
             <ChainEntity.Title id={messageId} />
           </div>
         </ChainEntity.Header>
 
-        {messageRequest.data && <MessageData.Request {...messageRequest.data} />}
+        {messageRequest.data && (
+          <MessageData.Request {...messageRequest.data} />
+        )}
         {messageSent.data && <MessageData.Sent {...messageSent.data} />}
-        {replyRequest.data && <MessageData.ReplyRequest {...replyRequest.data} />}
+        {replyRequest.data && (
+          <MessageData.ReplyRequest {...replyRequest.data} />
+        )}
         {replySent.data && <MessageData.ReplySent {...replySent.data} />}
       </div>
 
@@ -75,10 +91,12 @@ const Message = () => {
         <h2 className={styles.payloadTitle}>Payload</h2>
 
         <div className={styles.payload}>
-          {messageRequest.data?.payload ||
-            messageSent.data?.payload ||
-            replyRequest.data?.payload ||
-            replySent.data?.payload}
+          <div>
+            {messageRequest.data?.payload ||
+              messageSent.data?.payload ||
+              replyRequest.data?.payload ||
+              replySent.data?.payload}
+          </div>
         </div>
       </div>
     </PageContainer>

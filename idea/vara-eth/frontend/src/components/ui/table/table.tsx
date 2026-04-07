@@ -8,10 +8,15 @@ import { Skeleton } from '../skeleton';
 
 import styles from './table.module.scss';
 
+const SKELETON_WIDTHS = { sm: '6rem', md: '16rem' } as const;
+
+type SkeletonWidth = keyof typeof SKELETON_WIDTHS;
+
 type TableColumn<T> = {
   key: keyof T;
   title: string;
   sortable?: boolean;
+  skeletonWidth?: SkeletonWidth;
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 };
 
@@ -21,7 +26,7 @@ type TableProps<T> = {
   isLoading: boolean;
   pageSize?: number;
   lineHeight?: 'md' | 'lg';
-  positionedAt?: 'top' | 'bottom';
+  positionedAt?: 'top' | 'bottom'; 
   headerRight?: React.ReactNode;
 };
 
@@ -72,7 +77,7 @@ const Table = <T extends { id: string | number }>({
       <tr key={row ? row.id : `skeleton-${index}`}>
         {columns.map((column) => (
           <td key={column.key as string}>
-            {row ? (column.render?.(row[column.key], row) ?? String(row[column.key])) : <Skeleton width="16rem" />}
+            {row ? (column.render?.(row[column.key], row) ?? String(row[column.key])) : <Skeleton width={SKELETON_WIDTHS[column.skeletonWidth ?? 'md']} />}
           </td>
         ))}
 

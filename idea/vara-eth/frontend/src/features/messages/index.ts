@@ -1,4 +1,5 @@
 import { MessageData } from './components';
+import { ProgramMessagesTable } from './ui';
 import {
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
@@ -20,4 +21,5 @@ export {
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  ProgramMessagesTable,
 };
