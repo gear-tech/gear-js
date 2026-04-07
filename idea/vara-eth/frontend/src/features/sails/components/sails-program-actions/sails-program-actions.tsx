@@ -57,7 +57,9 @@ const SailsProgramPanel = ({ programId, idl, onSaveIdl, init, hasExecutableBalan
           send.mutateAsync({ serviceName, messageName, isQuery: false, payload }),
       }));
 
-      return <SailsActionGroup key={serviceName} name={serviceName} sails={sails!} items={[...queries, ...functions]} />;
+      return (
+        <SailsActionGroup key={serviceName} name={serviceName} sails={sails!} items={[...queries, ...functions]} />
+      );
     });
 
   const renderCtors = () => {

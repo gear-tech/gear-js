@@ -40,19 +40,31 @@ export const useGetReplySentByIdQuery = (id: Hex) => {
   });
 };
 
-export const useGetAllMessageRequestsQuery = (page: number, pageSize: number, programId?: Hex) => {
+export const useGetAllMessageRequestsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: ['allRequestMessages', page, pageSize, programId],
     queryFn: () => getMessageRequests(page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 
-export const useGetAllMessageSentsQuery = (page: number, pageSize: number, programId?: Hex) => {
+export const useGetAllMessageSentsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: ['allSentMessages', page, pageSize, programId],
     queryFn: () => getMessageSents(page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 

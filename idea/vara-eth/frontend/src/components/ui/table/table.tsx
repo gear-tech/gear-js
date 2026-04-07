@@ -26,7 +26,7 @@ type TableProps<T> = {
   isLoading: boolean;
   pageSize?: number;
   lineHeight?: 'md' | 'lg';
-  positionedAt?: 'top' | 'bottom'; 
+  positionedAt?: 'top' | 'bottom';
   headerRight?: React.ReactNode;
 };
 
@@ -77,7 +77,11 @@ const Table = <T extends { id: string | number }>({
       <tr key={row ? row.id : `skeleton-${index}`}>
         {columns.map((column) => (
           <td key={column.key as string}>
-            {row ? (column.render?.(row[column.key], row) ?? String(row[column.key])) : <Skeleton width={SKELETON_WIDTHS[column.skeletonWidth ?? 'md']} />}
+            {row ? (
+              (column.render?.(row[column.key], row) ?? String(row[column.key]))
+            ) : (
+              <Skeleton width={SKELETON_WIDTHS[column.skeletonWidth ?? 'md']} />
+            )}
           </td>
         ))}
 
