@@ -11,15 +11,15 @@ import { useSigner } from './use-signer';
 function useApi() {
   const publicClient = usePublicClient();
   const signer = useSigner();
-  const { varaEthNodeAddress, routerContractAddress } = useAtomValue(nodeAtom);
+  const { varaEthNodeAddress, routerContractAddress, ethChainId } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress],
+    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId],
 
     queryFn: () =>
       createVaraEthApi(new WsVaraEthProvider(varaEthNodeAddress), publicClient!, routerContractAddress, signer),
 
-    enabled: Boolean(publicClient),
+    enabled: Boolean(publicClient) && publicClient?.chain.id === ethChainId,
   });
 }
 

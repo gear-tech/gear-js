@@ -84,13 +84,13 @@ declare module 'wagmi' {
 function NetworkSync() {
   const { ethChainId } = useAtomValue(nodeAtom);
   const currentChainId = useChainId();
-  const { switchChain } = useSwitchChain();
+  const { switchChain, isPending } = useSwitchChain();
 
   useEffect(() => {
-    if (currentChainId === ethChainId || !switchChain) return;
+    if (currentChainId === ethChainId || !switchChain || isPending) return;
 
     switchChain({ chainId: ethChainId });
-  }, [currentChainId, ethChainId, switchChain]);
+  }, [currentChainId, ethChainId, switchChain, isPending]);
 
   return null;
 }

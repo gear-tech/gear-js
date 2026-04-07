@@ -40,7 +40,7 @@ const getSectionByNodeAddress = (address: string): NodeSection =>
   NODE_SECTIONS.find((section) => section.nodes.some((node) => node.address === address)) ?? DEFAULT_NODE_SECTION;
 
 const getInitialNodeAddress = () =>
-  getNodeAddressFromUrl() || (localStorage[LocalStorage.Node] as string | null) || DEFAULT_TESTNET_NODE_ADDRESS;
+  getNodeAddressFromUrl() || localStorage.getItem(LocalStorage.Node) || DEFAULT_TESTNET_NODE_ADDRESS;
 
 const getInitialNode = (): InitialNode => {
   const varaEthNodeAddress = getInitialNodeAddress();

@@ -34,6 +34,4 @@ const NODE_SECTIONS: NodeSection[] = [
   },
 ];
 
-const getNodes = async (): Promise<NodeSection[]> => Promise.resolve(NODE_SECTIONS);
-
-export { getNodes, NODE_SECTIONS };
+export { NODE_SECTIONS };

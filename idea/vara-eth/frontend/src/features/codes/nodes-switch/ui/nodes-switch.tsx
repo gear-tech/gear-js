@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { myActivityAtom } from '@/app/store';
 import { type NodeState, nodeAtom } from '@/app/store/node';
 
-import { getNodes } from '../api';
+import { NODE_SECTIONS } from '../api';
 import { getSectionByNodeAddress, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
 import type { NodeSection } from '../types';
 
@@ -21,7 +21,6 @@ const NodesSwitch = () => {
 
   const [isNodesOpen, setIsNodesOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState(nodeState.varaEthNodeAddress);
-  const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
 
   const close = () => setIsNodesOpen(false);
 
@@ -55,10 +54,6 @@ const NodesSwitch = () => {
   };
 
   useEffect(() => {
-    getNodes().then(setNodeSections).catch(console.error);
-  }, []);
-
-  useEffect(() => {
     setSelectedNode(nodeState.varaEthNodeAddress);
   }, [nodeState.varaEthNodeAddress]);
 
@@ -68,7 +63,7 @@ const NodesSwitch = () => {
 
       {isNodesOpen && (
         <NodesPopup
-          sections={nodeSections}
+          sections={NODE_SECTIONS}
           nodeAddress={nodeState.varaEthNodeAddress}
           selectedNode={selectedNode}
           selectNode={setSelectedNode}
