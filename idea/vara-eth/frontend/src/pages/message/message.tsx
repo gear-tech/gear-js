@@ -34,18 +34,22 @@ const Message = () => {
   const replySent = useGetReplySentByIdQuery(messageId);
 
   const sourceProgramId =
-    messageRequest.data?.programId || replyRequest.data?.programId || messageSent.data?.sourceProgramId;
-  const { data: sourceProgram } = useGetProgramByIdQuery(sourceProgramId ?? '');
+    messageRequest.data?.programId ||
+    replyRequest.data?.programId ||
+    messageSent.data?.sourceProgramId ||
+    replySent.data?.sourceProgramId;
+  const { data: sourceProgram, isLoading: isSourceProgramLoading } = useGetProgramByIdQuery(sourceProgramId ?? '');
   const { idl } = useIdlStorage(sourceProgram?.code?.id);
-  const { data: sails } = useSails(idl);
+  const { data: sails, isLoading: isSailsLoading } = useSails(idl);
 
   const payload =
     messageRequest.data?.payload || messageSent.data?.payload || replyRequest.data?.payload || replySent.data?.payload;
+  const isDecodedPayloadLoading = Boolean(payload) && (isSourceProgramLoading || isSailsLoading);
 
   const decodedPayload = useMemo(() => (payload ? getDecodedPayload(payload, sails) : null), [payload, sails]);
   const messageRoute = useMemo(() => (payload ? getMessageRoute(payload, sails) : null), [payload, sails]);
 
-  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading) {
+  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading || isDecodedPayloadLoading) {
     return (
       <PageContainer className={styles.container}>
         <div className={styles.column}>

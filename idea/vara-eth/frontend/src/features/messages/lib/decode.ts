@@ -14,9 +14,9 @@ const getSailsMethod = (sails: Sails, payload: Hex) => {
 
   const constructor = sails.ctors[serviceName] || undefined;
   const service = sails.services[serviceName];
-  const hasFunction = Boolean(service?.functions[functionName]);
-  const hasQuery = Boolean(service?.queries[functionName]);
-  const method = (service?.functions[functionName] ?? service?.queries[functionName]) || undefined;
+  const hasFunction = Boolean(service?.functions?.[functionName]);
+  const hasQuery = Boolean(service?.queries?.[functionName]);
+  const method = service?.functions?.[functionName] ?? service?.queries?.[functionName];
   const hasMethod = hasFunction || hasQuery;
   const kind: SailsMessageRoute['kind'] | undefined = hasFunction ? 'function' : hasQuery ? 'query' : undefined;
 
