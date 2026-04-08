@@ -88,7 +88,7 @@ const SailsProgramPanel = ({ programId, idl, onSaveIdl, init, hasExecutableBalan
   };
 
   const renderContent = () => {
-    if (isMessagesTab) return <ProgramMessagesTable programId={programId} />;
+    if (isMessagesTab) return <ProgramMessagesTable programId={programId} sails={sails} />;
 
     if (!idl)
       return (

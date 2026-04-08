@@ -1,62 +1,96 @@
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
-import { generatePath } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
+import type { Sails } from 'sails-js';
 import type { Hex } from 'viem';
 
 import { HashLink, Pagination, Table } from '@/components';
+import type { TableColumn } from '@/components/ui/table/table';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
 
-import { useGetAllMessageRequestsQuery, useGetAllMessageSentsQuery } from '../../lib';
+import { getMessageName, useGetAllMessageRequestsQuery, useGetAllMessageSentsQuery } from '../../lib';
 
 import styles from './program-messages-table.module.scss';
 
 const FILTERS = ['Incoming', 'Outgoing'] as const;
 
-const INCOMING_COLUMNS = [
+type BaseRow = {
+  id: Hex;
+  messageId: Hex;
+  messageLabel: string | undefined;
+  createdAt: string;
+};
+
+type IncomingRow = BaseRow & { source: Hex };
+
+type OutgoingRow = BaseRow & { destination: Hex };
+
+const INCOMING_COLUMNS: readonly TableColumn<IncomingRow>[] = [
   {
-    key: 'messageId' as const,
-    title: 'MESSAGE ID',
+    key: 'messageId',
+    title: 'MESSAGE',
     skeletonWidth: 'sm',
-    render: (messageId: string) => (
-      <HashLink hash={messageId} truncateSize="sm" maxLength={8} href={generatePath(routes.message, { messageId })} />
-    ),
+    render: (messageId: string | undefined, { messageLabel }: IncomingRow) =>
+      messageId && messageLabel ? (
+        <Link
+          to={generatePath(routes.message, { messageId })}
+          className={styles.messageName}
+          title={`${messageLabel} (${messageId})`}>
+          {messageLabel}
+        </Link>
+      ) : messageId ? (
+        <HashLink hash={messageId} truncateSize="sm" maxLength={8} href={generatePath(routes.message, { messageId })} />
+      ) : (
+        '-'
+      ),
   },
   {
-    key: 'source' as const,
+    key: 'source',
     title: 'SOURCE',
     skeletonWidth: 'sm',
-    render: (source: string) => <HashLink hash={source} truncateSize="sm" maxLength={8} explorerLinkPath="address" />,
+    render: (source: string | undefined) =>
+      source ? <HashLink hash={source} truncateSize="sm" maxLength={8} explorerLinkPath="address" /> : '-',
   },
-  { key: 'createdAt' as const, title: 'CREATED AT', sortable: true },
-] as const;
+  { key: 'createdAt', title: 'CREATED AT', sortable: true },
+];
 
-const OUTGOING_COLUMNS = [
+const OUTGOING_COLUMNS: readonly TableColumn<OutgoingRow>[] = [
   {
-    key: 'messageId' as const,
+    key: 'messageId',
     title: 'MESSAGE ID',
-    render: (messageId: string) => (
-      <HashLink hash={messageId} truncateSize="sm" maxLength={8} href={generatePath(routes.message, { messageId })} />
-    ),
+    render: (messageId: string | undefined, { messageLabel }: OutgoingRow) =>
+      messageId && messageLabel ? (
+        <Link
+          to={generatePath(routes.message, { messageId })}
+          className={styles.messageName}
+          title={`${messageLabel} (${messageId})`}>
+          {messageLabel}
+        </Link>
+      ) : messageId ? (
+        <HashLink hash={messageId} truncateSize="sm" maxLength={8} href={generatePath(routes.message, { messageId })} />
+      ) : (
+        '-'
+      ),
     skeletonWidth: 'sm',
   },
   {
-    key: 'destination' as const,
+    key: 'destination',
     title: 'DESTINATION',
-    render: (destination: string) => (
-      <HashLink hash={destination} truncateSize="sm" maxLength={8} explorerLinkPath="address" />
-    ),
+    render: (destination: string | undefined) =>
+      destination ? <HashLink hash={destination} truncateSize="sm" maxLength={8} explorerLinkPath="address" /> : '-',
     skeletonWidth: 'sm',
   },
-  { key: 'createdAt' as const, title: 'CREATED AT', sortable: true },
-] as const;
+  { key: 'createdAt', title: 'CREATED AT', sortable: true },
+];
 
 type Props = {
   programId: Hex;
+  sails?: Sails;
   pageSize?: number;
 };
 
-const ProgramMessagesTable = ({ programId, pageSize = 5 }: Props) => {
+const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
   const [filterIndex, setFilterIndex] = useState(0);
   const [incomingPage, setIncomingPage] = useState(1);
   const [outgoingPage, setOutgoingPage] = useState(1);
@@ -71,10 +105,11 @@ const ProgramMessagesTable = ({ programId, pageSize = 5 }: Props) => {
       incoming.data?.data.map((item) => ({
         id: item.id,
         messageId: item.id,
+        messageLabel: getMessageName(item.payload, sails) ?? undefined,
         source: item.sourceAddress,
         createdAt: formatDate(item.createdAt),
       })),
-    [incoming.data],
+    [incoming.data, sails],
   );
 
   const outgoingData = useMemo(
@@ -82,10 +117,11 @@ const ProgramMessagesTable = ({ programId, pageSize = 5 }: Props) => {
       outgoing.data?.data.map((item) => ({
         id: item.id,
         messageId: item.id,
+        messageLabel: getMessageName(item.payload, sails) ?? undefined,
         destination: item.destination,
         createdAt: formatDate(item.createdAt),
       })),
-    [outgoing.data],
+    [outgoing.data, sails],
   );
 
   const currentPage = isIncoming ? incomingPage : outgoingPage;
