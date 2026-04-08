@@ -51,23 +51,34 @@ export const useGetReplySentByIdQuery = (id: Hex) => {
   });
 };
 
-export const useGetAllMessageRequestsQuery = (page: number, pageSize: number) => {
+export const useGetAllMessageRequestsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
   const { explorerUrl } = useAtomValue(nodeAtom);
-
   return useQuery({
-    queryKey: ['allRequestMessages', page, pageSize, explorerUrl],
-    queryFn: () => getMessageRequests(explorerUrl, page, pageSize),
+    queryKey: ['allRequestMessages', page, pageSize, programId, explorerUrl],
+    queryFn: () => getMessageRequests(explorerUrl, page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 
-export const useGetAllMessageSentsQuery = (page: number, pageSize: number) => {
+export const useGetAllMessageSentsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
   const { explorerUrl } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['allSentMessages', page, pageSize, explorerUrl],
-    queryFn: () => getMessageSents(explorerUrl, page, pageSize),
+    queryKey: ['allSentMessages', page, pageSize, programId, explorerUrl],
+    queryFn: () => getMessageSents(explorerUrl, page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 

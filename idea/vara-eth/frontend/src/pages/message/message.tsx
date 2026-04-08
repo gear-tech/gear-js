@@ -75,10 +75,12 @@ const Message = () => {
         <h2 className={styles.payloadTitle}>Payload</h2>
 
         <div className={styles.payload}>
-          {messageRequest.data?.payload ||
-            messageSent.data?.payload ||
-            replyRequest.data?.payload ||
-            replySent.data?.payload}
+          <div>
+            {messageRequest.data?.payload ||
+              messageSent.data?.payload ||
+              replyRequest.data?.payload ||
+              replySent.data?.payload}
+          </div>
         </div>
       </div>
     </PageContainer>

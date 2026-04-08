@@ -69,7 +69,7 @@ export type ReplySent = {
 };
 
 // TODO: merge with fetchWithGuard
-const getIndexerUrl = (explorerUrl: string, url: string, page?: number, pageSize?: number) => {
+const getIndexerUrl = (explorerUrl: string, url: string, page?: number, pageSize?: number, programId?: Hex) => {
   const indexerUrl = new URL(`${explorerUrl}/${url}`);
 
   if (!isUndefined(page) && !isUndefined(pageSize)) {
@@ -78,6 +78,9 @@ const getIndexerUrl = (explorerUrl: string, url: string, page?: number, pageSize
 
     indexerUrl.searchParams.set('limit', String(limit));
     indexerUrl.searchParams.set('offset', String(offset));
+  }
+  if (!isUndefined(programId)) {
+    indexerUrl.searchParams.set('programId', programId);
   }
 
   return indexerUrl;
@@ -95,15 +98,13 @@ export const getReplyRequest = (explorerUrl: string, id: Hex) =>
 export const getReplySent = (explorerUrl: string, id: Hex) =>
   fetchWithGuard<ReplySent>({ url: getIndexerUrl(explorerUrl, `replies/sent/${id}`) });
 
-export const getMessageRequests = (explorerUrl: string, page: number, pageSize: number) =>
+export const getMessageRequests = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
   fetchWithGuard<PaginatedResponse<MessageRequest>>({
-    url: getIndexerUrl(explorerUrl, 'messages/requests', page, pageSize),
+    url: getIndexerUrl(explorerUrl, 'messages/requests', page, pageSize, programId),
   });
 
-export const getMessageSents = (explorerUrl: string, page: number, pageSize: number) =>
-  fetchWithGuard<PaginatedResponse<MessageSent>>({
-    url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize),
-  });
+export const getMessageSents = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
+  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize, programId) });
 
 export const getReplyRequests = (explorerUrl: string, page: number, pageSize: number) =>
   fetchWithGuard<PaginatedResponse<ReplyRequest>>({

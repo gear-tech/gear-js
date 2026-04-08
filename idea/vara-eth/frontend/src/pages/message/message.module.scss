@@ -1,9 +1,13 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  min-height: 0;
 }
 
 .column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: 24px;
 
   &:not(:last-child) {
@@ -22,7 +26,9 @@
 }
 
 .payload {
+  min-height: 0;
   word-break: break-all;
+  overflow-y: auto;
 
   &Title {
     margin-bottom: 24px;

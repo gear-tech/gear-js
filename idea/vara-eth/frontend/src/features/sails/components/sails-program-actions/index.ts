@@ -1,1 +1,1 @@
-export { SailsProgramActions } from './sails-program-actions';
+export { SailsProgramPanel } from './sails-program-actions';
