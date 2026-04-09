@@ -7,7 +7,6 @@ import { type NodeState, nodeAtom } from '@/app/store/node';
 
 import { NODE_SECTIONS } from '../api';
 import { getSectionByNodeAddress, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
-import type { NodeSection } from '../types';
 
 import { NodesButton } from './nodes-button';
 import { NodesPopup } from './nodes-popup';
@@ -30,7 +29,7 @@ const NodesSwitch = () => {
   const closeNodesPopup = () => setIsNodesOpen(false);
 
   const switchNode = () => {
-    const section: NodeSection = getSectionByNodeAddress(selectedNode);
+    const section = getSectionByNodeAddress(selectedNode);
 
     const nextNodeState: NodeState = {
       varaEthNodeAddress: selectedNode,

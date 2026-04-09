@@ -1,13 +1,5 @@
 import type { Hex } from 'viem';
 
-import {
-  ETH_CHAIN_ID_TESTNET,
-  ETH_NODE_ADDRESS_TESTNET,
-  EXPLORER_URL_TESTNET,
-  ROUTER_CONTRACT_ADDRESS_TESTNET,
-  VARA_ETH_NODE_ADDRESSES_TESTNET,
-} from '@/shared/config';
-
 import { NODE_SECTIONS } from './api';
 import type { NodeSection } from './types';
 import { getNodeAddressFromUrl } from './utils';
@@ -25,29 +17,25 @@ const LocalStorage = {
 } as const;
 
 const NODE_ADRESS_URL_PARAM = 'node';
-const DEFAULT_TESTNET_NODE_ADDRESS = VARA_ETH_NODE_ADDRESSES_TESTNET[0] ?? '';
 
-const DEFAULT_NODE_SECTION: NodeSection = {
-  caption: 'Default',
-  ethChainId: ETH_CHAIN_ID_TESTNET,
-  ethNodeAddress: ETH_NODE_ADDRESS_TESTNET,
-  explorerUrl: EXPLORER_URL_TESTNET,
-  routerContractAddress: ROUTER_CONTRACT_ADDRESS_TESTNET,
-  nodes: DEFAULT_TESTNET_NODE_ADDRESS ? [{ address: DEFAULT_TESTNET_NODE_ADDRESS }] : [],
-};
+const DEFAULT_NODE_SECTION = NODE_SECTIONS[0];
+const DEFAULT_NODE_ADDRESS = DEFAULT_NODE_SECTION?.nodes[0]?.address ?? '';
 
 const getSectionByNodeAddress = (address: string): NodeSection =>
   NODE_SECTIONS.find((section) => section.nodes.some((node) => node.address === address)) ?? DEFAULT_NODE_SECTION;
 
 const getInitialNodeAddress = () =>
-  getNodeAddressFromUrl() || localStorage.getItem(LocalStorage.Node) || DEFAULT_TESTNET_NODE_ADDRESS;
+  getNodeAddressFromUrl() || localStorage.getItem(LocalStorage.Node) || DEFAULT_NODE_ADDRESS;
 
 const getInitialNode = (): InitialNode => {
-  const varaEthNodeAddress = getInitialNodeAddress();
-  const section = getSectionByNodeAddress(varaEthNodeAddress);
+  const address = getInitialNodeAddress();
+  const matched = NODE_SECTIONS.find((s) => s.nodes.some((node) => node.address === address));
+  const section = matched ?? DEFAULT_NODE_SECTION;
+
+  if (!section) throw new Error('No node sections configured. Check environment variables.');
 
   return {
-    varaEthNodeAddress,
+    varaEthNodeAddress: matched ? address : section.nodes[0].address,
     ethChainId: section.ethChainId,
     ethNodeAddress: section.ethNodeAddress,
     explorerUrl: section.explorerUrl,
