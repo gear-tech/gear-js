@@ -49,7 +49,12 @@ const useActivity = () => {
   const [state, setState] = useState<Activity[]>([]);
 
   useEffect(() => {
-    if (!api) return;
+    if (!api) {
+      setState([]);
+      return;
+    }
+
+    setState([]);
 
     const blockHashToEvents: Record<Hex, Activity> = {};
 
@@ -97,6 +102,7 @@ const useActivity = () => {
     });
 
     return () => {
+      setState([]);
       unwatchFunctions.forEach((unwatch) => void unwatch());
     };
   }, [api, config]);

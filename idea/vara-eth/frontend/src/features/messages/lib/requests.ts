@@ -1,7 +1,6 @@
 import type { Hex } from 'viem';
 
 import type { Program } from '@/features/programs/lib/queries';
-import { EXPLORER_URL } from '@/shared/config';
 import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard, isUndefined } from '@/shared/utils';
 
@@ -70,8 +69,8 @@ export type ReplySent = {
 };
 
 // TODO: merge with fetchWithGuard
-const getIndexerUrl = (url: string, page?: number, pageSize?: number, programId?: Hex) => {
-  const indexerUrl = new URL(`${EXPLORER_URL}/${url}`);
+const getIndexerUrl = (explorerUrl: string, url: string, page?: number, pageSize?: number, programId?: Hex) => {
+  const indexerUrl = new URL(`${explorerUrl}/${url}`);
 
   if (!isUndefined(page) && !isUndefined(pageSize)) {
     const limit = pageSize;
@@ -87,26 +86,34 @@ const getIndexerUrl = (url: string, page?: number, pageSize?: number, programId?
   return indexerUrl;
 };
 
-export const getMessageRequest = (id: Hex) =>
-  fetchWithGuard<MessageRequest>({ url: getIndexerUrl(`messages/requests/${id}`) });
+export const getMessageRequest = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<MessageRequest>({ url: getIndexerUrl(explorerUrl, `messages/requests/${id}`) });
 
-export const getMessageSent = (id: Hex) => fetchWithGuard<MessageSent>({ url: getIndexerUrl(`messages/sent/${id}`) });
+export const getMessageSent = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<MessageSent>({ url: getIndexerUrl(explorerUrl, `messages/sent/${id}`) });
 
-export const getReplyRequest = (id: Hex) =>
-  fetchWithGuard<ReplyRequest>({ url: getIndexerUrl(`replies/requests/${id}`) });
+export const getReplyRequest = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<ReplyRequest>({ url: getIndexerUrl(explorerUrl, `replies/requests/${id}`) });
 
-export const getReplySent = (id: Hex) => fetchWithGuard<ReplySent>({ url: getIndexerUrl(`replies/sent/${id}`) });
+export const getReplySent = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<ReplySent>({ url: getIndexerUrl(explorerUrl, `replies/sent/${id}`) });
 
-export const getMessageRequests = (page: number, pageSize: number, programId?: Hex) =>
+export const getMessageRequests = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
   fetchWithGuard<PaginatedResponse<MessageRequest>>({
-    url: getIndexerUrl('messages/requests', page, pageSize, programId),
+    url: getIndexerUrl(explorerUrl, 'messages/requests', page, pageSize, programId),
   });
 
-export const getMessageSents = (page: number, pageSize: number, programId?: Hex) =>
-  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl('messages/sent', page, pageSize, programId) });
+export const getMessageSents = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
+  fetchWithGuard<PaginatedResponse<MessageSent>>({
+    url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize, programId),
+  });
 
-export const getReplyRequests = (page: number, pageSize: number) =>
-  fetchWithGuard<PaginatedResponse<ReplyRequest>>({ url: getIndexerUrl('replies/requests', page, pageSize) });
+export const getReplyRequests = (explorerUrl: string, page: number, pageSize: number) =>
+  fetchWithGuard<PaginatedResponse<ReplyRequest>>({
+    url: getIndexerUrl(explorerUrl, 'replies/requests', page, pageSize),
+  });
 
-export const getReplySents = (page: number, pageSize: number) =>
-  fetchWithGuard<PaginatedResponse<ReplySent>>({ url: getIndexerUrl('replies/sent', page, pageSize) });
+export const getReplySents = (explorerUrl: string, page: number, pageSize: number) =>
+  fetchWithGuard<PaginatedResponse<ReplySent>>({
+    url: getIndexerUrl(explorerUrl, 'replies/sent', page, pageSize),
+  });
