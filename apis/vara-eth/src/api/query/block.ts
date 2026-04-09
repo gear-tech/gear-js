@@ -1,7 +1,7 @@
 import type { BlockHeader, BlockRequestEvent, IVaraEthProvider, StateTransition } from '../../types/index.js';
 import { normalizeBlockEvent, normalizeStateTransition } from '../../util/normalize.js';
 
-export class Block {
+export class BlockQueries {
   constructor(private _provider: IVaraEthProvider) {}
 
   async header(hash?: string): Promise<BlockHeader> {
