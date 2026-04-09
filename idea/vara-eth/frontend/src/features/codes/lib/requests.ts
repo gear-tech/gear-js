@@ -8,5 +8,4 @@ export type Code = {
   createdAt: string;
 };
 
-export const getCode = (explorerUrl: string, id: Hex) =>
-  fetchWithGuard<Code>({ url: `${explorerUrl}/codes/${id}` });
+export const getCode = (explorerUrl: string, id: Hex) => fetchWithGuard<Code>({ url: `${explorerUrl}/codes/${id}` });

@@ -8,8 +8,7 @@ const ETH_CHAIN_ID_MAINNET = Number(import.meta.env.VITE_ETH_CHAIN_ID_MAINNET);
 const ETH_NODE_ADDRESS_TESTNET = import.meta.env.VITE_ETH_NODE_ADDRESS_TESTNET as string;
 const ETH_NODE_ADDRESS_MAINNET = import.meta.env.VITE_ETH_NODE_ADDRESS_MAINNET as string;
 
-const parseSemicolonList = (value: string | undefined): string[] =>
-  value ? value.split(';').filter(Boolean) : [];
+const parseSemicolonList = (value: string | undefined): string[] => (value ? value.split(';').filter(Boolean) : []);
 
 const VARA_ETH_NODE_ADDRESSES_TESTNET = parseSemicolonList(import.meta.env.VITE_VARA_ETH_NODE_ADDRESSES_TESTNET);
 const VARA_ETH_NODE_ADDRESSES_MAINNET = parseSemicolonList(import.meta.env.VITE_VARA_ETH_NODE_ADDRESSES_MAINNET);

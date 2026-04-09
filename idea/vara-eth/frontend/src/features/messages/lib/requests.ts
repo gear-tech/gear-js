@@ -104,7 +104,9 @@ export const getMessageRequests = (explorerUrl: string, page: number, pageSize: 
   });
 
 export const getMessageSents = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
-  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize, programId) });
+  fetchWithGuard<PaginatedResponse<MessageSent>>({
+    url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize, programId),
+  });
 
 export const getReplyRequests = (explorerUrl: string, page: number, pageSize: number) =>
   fetchWithGuard<PaginatedResponse<ReplyRequest>>({
