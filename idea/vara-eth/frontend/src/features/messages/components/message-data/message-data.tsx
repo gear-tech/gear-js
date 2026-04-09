@@ -5,13 +5,36 @@ import { formatEther } from 'viem';
 import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
-import type { MessageRequest, MessageSent, ReplyRequest, ReplySent } from '../../lib';
+import type { MessageRequest, SailsMessageRoute, MessageSent, ReplyRequest, ReplySent } from '../../lib';
 
-const MessageRequestData = (props: MessageRequest) => {
-  const { sourceAddress, programId, value, callReply, txHash, blockNumber, createdAt } = props;
+type RouteProp = {
+  route?: SailsMessageRoute | null;
+};
+
+const SailsRouteData = ({ route }: { route: SailsMessageRoute }) => {
+  const kindLabel = route.kind.toUpperCase();
+
+  return (
+    <>
+      {route.kind !== 'constructor' && route.service && (
+        <>
+          <ChainEntity.Key>SERVICE</ChainEntity.Key>
+          <div>{route.service}</div>
+        </>
+      )}
+
+      <ChainEntity.Key>{kindLabel}</ChainEntity.Key>
+      <div>{route.name}</div>
+    </>
+  );
+};
+
+const MessageRequestData = (props: MessageRequest & RouteProp) => {
+  const { sourceAddress, programId, value, callReply, txHash, blockNumber, createdAt, route } = props;
 
   return (
     <ChainEntity.Data>
+      {route && <SailsRouteData route={route} />}
       <ChainEntity.Key>Source Address</ChainEntity.Key>
       <HashLink hash={sourceAddress} explorerLinkPath="address" />
 
@@ -25,7 +48,7 @@ const MessageRequestData = (props: MessageRequest) => {
       <div>{String(callReply)}</div>
 
       <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
-      <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
+      <HashLink hash={txHash} truncateSize="xxl" maxLength={36} explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
       <ChainEntity.BlockNumber value={blockNumber} date={createdAt} />
@@ -33,9 +56,18 @@ const MessageRequestData = (props: MessageRequest) => {
   );
 };
 
-const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTransition, createdAt }: MessageSent) => {
+const MessageSentData = ({
+  sourceProgramId,
+  destination,
+  value,
+  isCall,
+  stateTransition,
+  createdAt,
+  route,
+}: MessageSent & RouteProp) => {
   return (
     <ChainEntity.Data>
+      {route && <SailsRouteData route={route} />}
       <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
       <HashLink
@@ -56,7 +88,7 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
       {stateTransition && (
         <>
           <ChainEntity.Key>State Transition Hash</ChainEntity.Key>
-          <HashLink hash={stateTransition.hash} truncateSize="xxl" />
+          <HashLink hash={stateTransition.hash} maxLength={36} truncateSize="xxl" />
         </>
       )}
 
@@ -66,9 +98,18 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
   );
 };
 
-const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber, createdAt }: ReplyRequest) => {
+const ReplyRequestData = ({
+  sourceAddress,
+  programId,
+  value,
+  txHash,
+  blockNumber,
+  createdAt,
+  route,
+}: ReplyRequest & RouteProp) => {
   return (
     <ChainEntity.Data>
+      {route && <SailsRouteData route={route} />}
       <ChainEntity.Key>Source Address</ChainEntity.Key>
       <HashLink hash={sourceAddress} explorerLinkPath="address" />
 
@@ -84,7 +125,7 @@ const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber
       <Balance value={formatEther(BigInt(value))} units="ETH" />
 
       <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
-      <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
+      <HashLink hash={txHash} maxLength={36} truncateSize="xxl" explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
       <ChainEntity.BlockNumber value={blockNumber} date={createdAt} />
@@ -92,11 +133,13 @@ const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber
   );
 };
 
-const ReplySentData = (props: ReplySent) => {
-  const { repliedToId, replyCode, sourceProgramId, destination, value, isCall, stateTransition, createdAt } = props;
+const ReplySentData = (props: ReplySent & RouteProp) => {
+  const { repliedToId, replyCode, sourceProgramId, destination, value, isCall, stateTransition, createdAt, route } =
+    props;
 
   return (
     <ChainEntity.Data>
+      {route && <SailsRouteData route={route} />}
       <ChainEntity.Key>Replied To ID</ChainEntity.Key>
       <HashLink hash={repliedToId} truncateSize="xxl" />
 

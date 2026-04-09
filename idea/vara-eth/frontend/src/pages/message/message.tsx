@@ -1,15 +1,21 @@
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Hex } from 'viem';
 
-import { ChainEntity, PageContainer, Skeleton } from '@/components';
+import { ChainEntity, PageContainer, Skeleton, Tabs } from '@/components';
 import {
+  getDecodedPayload,
+  getMessageRoute,
   MessageData,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
 } from '@/features/messages';
-import { cx } from '@/shared/utils';
+import { useGetProgramByIdQuery } from '@/features/programs';
+import { useSails } from '@/features/sails';
+import { useIdlStorage } from '@/shared/hooks';
+import { cx, getPreformattedText } from '@/shared/utils';
 
 import ArrowSVG from './arrow.svg?react';
 import styles from './message.module.scss';
@@ -20,13 +26,30 @@ type Params = {
 
 const Message = () => {
   const { messageId } = useParams() as Params;
+  const [tabIndex, setTabIndex] = useState(0);
 
   const messageRequest = useGetMessageRequestByIdQuery(messageId);
   const messageSent = useGetMessageSentByIdQuery(messageId);
   const replyRequest = useGetReplyRequestByIdQuery(messageId);
   const replySent = useGetReplySentByIdQuery(messageId);
 
-  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading) {
+  const sourceProgramId =
+    messageRequest.data?.programId ||
+    replyRequest.data?.programId ||
+    messageSent.data?.sourceProgramId ||
+    replySent.data?.sourceProgramId;
+  const { data: sourceProgram, isLoading: isSourceProgramLoading } = useGetProgramByIdQuery(sourceProgramId ?? '');
+  const { idl } = useIdlStorage(sourceProgram?.code?.id);
+  const { data: sails, isLoading: isSailsLoading } = useSails(idl);
+
+  const payload =
+    messageRequest.data?.payload || messageSent.data?.payload || replyRequest.data?.payload || replySent.data?.payload;
+  const isDecodedPayloadLoading = Boolean(payload) && (isSourceProgramLoading || isSailsLoading);
+
+  const decodedPayload = useMemo(() => (payload ? getDecodedPayload(payload, sails) : null), [payload, sails]);
+  const messageRoute = useMemo(() => (payload ? getMessageRoute(payload, sails) : null), [payload, sails]);
+
+  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading || isDecodedPayloadLoading) {
     return (
       <PageContainer className={styles.container}>
         <div className={styles.column}>
@@ -43,7 +66,15 @@ const Message = () => {
         </div>
 
         <div className={styles.column}>
-          <h2 className={styles.payloadTitle}>Payload</h2>
+          <div className={styles.payloadHeader}>
+            <h2 className={styles.payloadTitle}>Payload</h2>
+            <Tabs
+              tabs={['Decoded', 'Raw']}
+              tabIndex={tabIndex}
+              onTabIndexChange={setTabIndex}
+              className={styles.payloadTabs}
+            />
+          </div>
           <Skeleton height="4rem" />
         </div>
       </PageContainer>
@@ -65,22 +96,29 @@ const Message = () => {
           </div>
         </ChainEntity.Header>
 
-        {messageRequest.data && <MessageData.Request {...messageRequest.data} />}
-        {messageSent.data && <MessageData.Sent {...messageSent.data} />}
-        {replyRequest.data && <MessageData.ReplyRequest {...replyRequest.data} />}
-        {replySent.data && <MessageData.ReplySent {...replySent.data} />}
+        {messageRequest.data && <MessageData.Request {...messageRequest.data} route={messageRoute} />}
+        {messageSent.data && <MessageData.Sent {...messageSent.data} route={messageRoute} />}
+        {replyRequest.data && <MessageData.ReplyRequest {...replyRequest.data} route={messageRoute} />}
+        {replySent.data && <MessageData.ReplySent {...replySent.data} route={messageRoute} />}
       </div>
 
       <div className={styles.column}>
-        <h2 className={styles.payloadTitle}>Payload</h2>
+        <div className={styles.payloadHeader}>
+          <h2 className={styles.payloadTitle}>Payload</h2>
+          <Tabs
+            tabs={['Decoded', 'Raw']}
+            tabIndex={tabIndex}
+            onTabIndexChange={setTabIndex}
+            className={styles.payloadTabs}
+          />
+        </div>
 
         <div className={styles.payload}>
-          <div>
-            {messageRequest.data?.payload ||
-              messageSent.data?.payload ||
-              replyRequest.data?.payload ||
-              replySent.data?.payload}
-          </div>
+          {tabIndex === 0 ? (
+            <pre>{decodedPayload ? getPreformattedText(decodedPayload) : 'Unable to decode payload'}</pre>
+          ) : (
+            <div>{payload}</div>
+          )}
         </div>
       </div>
     </PageContainer>
