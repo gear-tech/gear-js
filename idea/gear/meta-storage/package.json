@@ -6,7 +6,8 @@
   "devDependencies": {
     "@types/express": "5.0.6",
     "@types/supertest": "^6.0.3",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "vitest": "^4.1.2"
   },
   "dependencies": {
     "@gear-js/api": "0.45.0",
@@ -22,7 +23,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "test": "npx jest --clearCache && npx jest --runInBand --silent",
+    "test": "vitest run",
     "start": "node dist/server.js",
     "watch": "clear && npx ts-node-dev src/server.ts",
     "clean": "echo \"clean gear-idea-meta-storage\" && rm -rf dist"

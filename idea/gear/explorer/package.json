@@ -17,10 +17,7 @@
   "devDependencies": {
     "@testcontainers/postgresql": "^11.13.0",
     "@types/express": "5.0.6",
-    "@types/pg": "^8.20.0",
-    "@types/supertest": "^7.2.0",
-    "supertest": "^7.2.2",
-    "vitest": "^4.1.2"
+    "@types/pg": "^8.20.0"
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",

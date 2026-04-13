@@ -1,22 +1,24 @@
-jest.mock('viem', () => {
-  const actual = jest.requireActual('viem');
+import { vi } from 'vitest';
+
+vi.mock('viem', async () => {
+  const actual = await vi.importActual('viem');
 
   return {
-    ...actual,
-    createPublicClient: jest.fn().mockImplementation(() => ({
-      getChainId: jest.fn().mockResolvedValue(1),
-      readContract: jest.fn().mockResolvedValue(18),
-      simulateContract: jest.fn().mockImplementation(async ({ functionName, args, address }) => {
+    ...(actual as object),
+    createPublicClient: vi.fn().mockImplementation(() => ({
+      getChainId: vi.fn().mockResolvedValue(1),
+      readContract: vi.fn().mockResolvedValue(18),
+      simulateContract: vi.fn().mockImplementation(async ({ functionName, args, address }) => {
         return {
           request: {
             address,
-            abi: actual.parseAbi(['function transfer(address to, uint256 amount)']),
+            abi: (actual as any).parseAbi(['function transfer(address to, uint256 amount)']),
             functionName,
             args,
           },
         };
       }),
-      waitForTransactionReceipt: jest.fn().mockImplementation(async () => {
+      waitForTransactionReceipt: vi.fn().mockImplementation(async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
           status: 'success',
@@ -25,15 +27,15 @@ jest.mock('viem', () => {
         };
       }),
     })),
-    createWalletClient: jest.fn().mockImplementation(() => ({
-      writeContract: jest.fn().mockResolvedValue('0xmockhash'),
+    createWalletClient: vi.fn().mockImplementation(() => ({
+      writeContract: vi.fn().mockResolvedValue('0xmockhash'),
     })),
-    webSocket: jest.fn().mockImplementation(() => ({})),
+    webSocket: vi.fn().mockImplementation(() => ({})),
   };
 });
 
-jest.mock('viem/accounts', () => ({
-  privateKeyToAccount: jest.fn().mockReturnValue({
+vi.mock('viem/accounts', () => ({
+  privateKeyToAccount: vi.fn().mockReturnValue({
     address: '0x0000000000000000000000000000000000000003',
   }),
 }));

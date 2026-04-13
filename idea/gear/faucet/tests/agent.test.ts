@@ -1,18 +1,11 @@
-process.env.AGENT_FAUCET_ENABLED = 'true';
-process.env.AGENT_CHALLENGE_TTL_MS = '5000';
-process.env.AGENT_DAILY_CAP = '100';
-process.env.AGENT_RATE_LIMIT_MS = '1000';
-
-import './__mocks__/gear-js';
-import './__mocks__/typeorm';
-
 import { Keyring } from '@polkadot/api';
 import { stringToU8a, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
 import request from 'supertest';
-import { RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
-import { repos } from './__mocks__/db';
+
+import { RequestStatus } from '../src/database/index.js';
+import { FaucetApp } from '../src/main.js';
+import { repos } from './__mocks__/db.js';
 
 const VARA_GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';
 

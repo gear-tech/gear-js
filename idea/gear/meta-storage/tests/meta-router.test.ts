@@ -1,17 +1,20 @@
 import type { Express } from 'express';
 import { InvalidMetadataError, InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from 'gear-idea-common';
 import request from 'supertest';
-import { main } from '../src/app';
-import { MetaService } from '../src/service';
+import { type Mocked, vi } from 'vitest';
 
-jest.mock('../src/service', () => {
+import { main } from '../src/app.js';
+import { MetaService } from '../src/service.js';
+
+vi.mock('../src/service', () => {
   return {
-    MetaService: jest.fn().mockImplementation((): Partial<MetaService> => {
+    // biome-ignore lint/complexity/useArrowFunction: test related
+    MetaService: vi.fn().mockImplementation(function (): Partial<MetaService> {
       return {
-        get: jest.fn(),
-        addMetaDetails: jest.fn(),
-        addIdl: jest.fn(),
-        getIdl: jest.fn(),
+        get: vi.fn(),
+        addMetaDetails: vi.fn(),
+        addIdl: vi.fn(),
+        getIdl: vi.fn(),
       };
     }),
   };
@@ -19,7 +22,7 @@ jest.mock('../src/service', () => {
 
 describe('Get meta details', () => {
   let app: Express;
-  const metaService = new MetaService() as jest.Mocked<MetaService>;
+  const metaService = new MetaService() as Mocked<MetaService>;
 
   beforeEach(async () => {
     app = await main(metaService);
@@ -78,7 +81,7 @@ describe('Get meta details', () => {
 
 describe('Add meta details', () => {
   let app: Express;
-  const metaService = new MetaService() as jest.Mocked<MetaService>;
+  const metaService = new MetaService() as Mocked<MetaService>;
 
   beforeEach(async () => {
     app = await main(metaService);
@@ -141,7 +144,7 @@ describe('Add meta details', () => {
 
 describe('Get sails', () => {
   let app: Express;
-  const metaService = new MetaService() as jest.Mocked<MetaService>;
+  const metaService = new MetaService() as Mocked<MetaService>;
 
   beforeEach(async () => {
     app = await main(metaService);
@@ -195,7 +198,7 @@ describe('Get sails', () => {
 
 describe('Add sails', () => {
   let app: Express;
-  const metaService = new MetaService() as jest.Mocked<MetaService>;
+  const metaService = new MetaService() as Mocked<MetaService>;
 
   beforeEach(async () => {
     app = await main(metaService);

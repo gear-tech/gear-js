@@ -1,14 +1,12 @@
-import './__mocks__/gear-js';
-import './__mocks__/typeorm';
-
 import { decodeAddress } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
 import request from 'supertest';
-import { RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
-import { hash } from '../src/services/db/last-seen';
-import { repos } from './__mocks__/db';
+
+import { RequestStatus } from '../src/database/index.js';
+import { FaucetApp } from '../src/main.js';
+import { hash } from '../src/services/db/last-seen.js';
+import { repos } from './__mocks__/db.js';
 
 const ALICE = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d';
 const BOB = 'kGim5ByTuPokQf21odiQskRXcVEwaunk5PwC4dmGz8M6zuwkq';

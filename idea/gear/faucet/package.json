@@ -5,7 +5,7 @@
   "version": "1.4.26",
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "test": "npx jest --clearCache && npx jest --runInBand",
+    "test": "vitest run",
     "start": "node dist/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "clean": "echo \"clean gear-idea-faucet\" && rm -rf dist",
@@ -38,7 +38,6 @@
     "@types/supertest": "^6.0.3",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/xxhashjs": "^0.2.4",
-    "@types/yamljs": "^0.2.34",
-    "supertest": "^7.1.4"
+    "@types/yamljs": "^0.2.34"
   }
 }
