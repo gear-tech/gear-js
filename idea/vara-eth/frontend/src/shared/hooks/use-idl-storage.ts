@@ -23,12 +23,15 @@ export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
     retry: false,
   });
 
-  const mutation = useMutation({
-    mutationFn: (idlContent: string) => addIdl(codeId!, idlContent),
-    onSuccess: (_, idlContent) => {
-      if (!codeId) return;
+  type AddIdlMutationVariables = {
+    codeId: Hex;
+    idlContent: string;
+  };
 
-      queryClient.setQueryData(queryKey, { codeId, data: idlContent });
+  const mutation = useMutation({
+    mutationFn: ({ codeId, idlContent }: AddIdlMutationVariables) => addIdl(codeId, idlContent),
+    onSuccess: (_, { codeId, idlContent }) => {
+      queryClient.setQueryData([IDL_QUERY_KEY, codeId], { codeId, data: idlContent });
     },
   });
 
@@ -38,7 +41,7 @@ export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
       return;
     }
 
-    mutation.mutate(idlContent);
+    mutation.mutate({ codeId, idlContent });
   };
 
   return { idl: data?.data ?? null, isLoading, saveIdl };

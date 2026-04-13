@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 
 import { Tabs, UploadIdlButton } from '@/components';
@@ -33,6 +33,11 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
   const [tabIndex, setTabIndex] = useState(0);
   const tabs = isLoading ? TABS_LOADING : idl ? TABS_WITH_IDL : TABS_NO_IDL;
   const activeTab = tabs[tabIndex] ?? MESSAGES_TAB;
+
+  useEffect(() => {
+    const maxTabIndex = tabs.length - 1;
+    setTabIndex((currentTabIndex) => (currentTabIndex > maxTabIndex ? 0 : currentTabIndex));
+  }, [tabs]);
 
   const sendInjectedTx = useSendInjectedTransaction(programId, sails);
   const sendMessage = useSendProgramMessage(programId, sails);
