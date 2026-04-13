@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
-import { rpc, ok, err, assertList } from './helpers.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GENESIS, UNKNOWN_ID } from './fixtures.js';
+import { assertList, err, ok, rpc } from './helpers.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);
@@ -89,10 +89,7 @@ describe('voucher.data', () => {
 
 describe('REST POST /api/vouchers', () => {
   it('returns empty result for no vouchers', async () => {
-    const res = await getAgent()
-      .post('/api/vouchers')
-      .send({ genesis: GENESIS })
-      .set('Accept', 'application/json');
+    const res = await getAgent().post('/api/vouchers').send({ genesis: GENESIS }).set('Accept', 'application/json');
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('result');
@@ -102,10 +99,7 @@ describe('REST POST /api/vouchers', () => {
   });
 
   it('returns 400 without genesis', async () => {
-    const res = await getAgent()
-      .post('/api/vouchers')
-      .send({})
-      .set('Accept', 'application/json');
+    const res = await getAgent().post('/api/vouchers').send({}).set('Accept', 'application/json');
 
     expect(res.status).toBe(400);
   });
@@ -113,7 +107,7 @@ describe('REST POST /api/vouchers', () => {
   it('returns 400 for unknown genesis', async () => {
     const res = await getAgent()
       .post('/api/vouchers')
-      .send({ genesis: '0x' + 'ab'.repeat(32) })
+      .send({ genesis: `0x${'ab'.repeat(32)}` })
       .set('Accept', 'application/json');
 
     expect(res.status).toBe(400);
@@ -127,10 +121,7 @@ describe('REST GET /api/voucher/:id', () => {
     // The route handler reads genesis from req.body (not query string),
     // so we send it as a JSON body even on GET.
     const id = UNKNOWN_ID;
-    const res = await getAgent()
-      .get(`/api/voucher/${id}`)
-      .send({ genesis: GENESIS })
-      .set('Accept', 'application/json');
+    const res = await getAgent().get(`/api/voucher/${id}`).send({ genesis: GENESIS }).set('Accept', 'application/json');
 
     expect(res.status).toBe(200);
     expect(res.body).toBeNull();

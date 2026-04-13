@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
-import { rpc, ok, err, assertList } from './helpers.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { UNKNOWN_ID } from './fixtures.js';
+import { assertList, err, ok, rpc } from './helpers.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);

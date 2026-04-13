@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
-import { rpc, ok, err, assertList, ID_REGEXP } from './helpers.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CODE_1_ID, CODE_UPLOADER, UNKNOWN_ID } from './fixtures.js';
+import { assertList, err, ID_REGEXP, ok, rpc } from './helpers.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);
@@ -116,7 +116,9 @@ describe('code.all pagination', () => {
     const ids1 = ok(first.body).result.map((c: any) => c.id);
     const ids2 = ok(second.body).result.map((c: any) => c.id);
 
-    ids2.forEach((id: string) => expect(ids1).not.toContain(id));
+    ids2.forEach((id: string) => {
+      expect(ids1).not.toContain(id);
+    });
   });
 
   it('results are ordered DESC by timestamp', async () => {
@@ -136,7 +138,9 @@ describe('code.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((c: any) => expect(c.uploadedBy).toBe(CODE_UPLOADER));
+    result.forEach((c: any) => {
+      expect(c.uploadedBy).toBe(CODE_UPLOADER);
+    });
   });
 
   it('status filter returns only matching codes', async () => {
@@ -144,14 +148,18 @@ describe('code.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((c: any) => expect(c.status).toBe('Active'));
+    result.forEach((c: any) => {
+      expect(c.status).toBe('Active');
+    });
   });
 
   it('status filter (array) returns all matching statuses', async () => {
     const res = await rpc(getAgent(), 'code.all', { status: ['Active', 'Inactive'], limit: 100 });
     const { result } = ok(res.body);
 
-    result.forEach((c: any) => expect(['Active', 'Inactive']).toContain(c.status));
+    result.forEach((c: any) => {
+      expect(['Active', 'Inactive']).toContain(c.status);
+    });
   });
 
   it('query matches by ID prefix', async () => {

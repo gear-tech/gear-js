@@ -5,6 +5,6 @@ export const hexToBytea = {
   },
   from: (v: Buffer | null | undefined): string | null => {
     if (!v) return null;
-    return '0x' + v.toString('hex');
+    return `0x${v.toString('hex')}`;
   },
 };

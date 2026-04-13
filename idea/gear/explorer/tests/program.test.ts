@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
-import { rpc, ok, err, assertList, ID_REGEXP } from './helpers.js';
-import { GENESIS, PROGRAM_ACTIVE_ID, PROGRAM_TERMINATED_ID, PROGRAM_OWNER, CODE_1_ID, UNKNOWN_ID } from './fixtures.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { CODE_1_ID, PROGRAM_ACTIVE_ID, PROGRAM_OWNER, PROGRAM_TERMINATED_ID, UNKNOWN_ID } from './fixtures.js';
+import { assertList, err, ID_REGEXP, ok, rpc } from './helpers.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);
@@ -130,7 +130,9 @@ describe('program.all pagination', () => {
     const ids1 = ok(first.body).result.map((p: any) => p.id);
     const ids2 = ok(second.body).result.map((p: any) => p.id);
 
-    ids2.forEach((id: string) => expect(ids1).not.toContain(id));
+    ids2.forEach((id: string) => {
+      expect(ids1).not.toContain(id);
+    });
   });
 
   it('count is stable across pages', async () => {
@@ -157,7 +159,9 @@ describe('program.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((p: any) => expect(p.owner).toBe(PROGRAM_OWNER));
+    result.forEach((p: any) => {
+      expect(p.owner).toBe(PROGRAM_OWNER);
+    });
   });
 
   it('codeId filter returns only programs with that code', async () => {
@@ -165,7 +169,9 @@ describe('program.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((p: any) => expect(p.codeId).toBe(CODE_1_ID));
+    result.forEach((p: any) => {
+      expect(p.codeId).toBe(CODE_1_ID);
+    });
   });
 
   it('status filter (single) returns only matching programs', async () => {
@@ -173,7 +179,9 @@ describe('program.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((p: any) => expect(p.status).toBe('active'));
+    result.forEach((p: any) => {
+      expect(p.status).toBe('active');
+    });
   });
 
   it('status filter (array) returns all matching statuses', async () => {
@@ -184,7 +192,9 @@ describe('program.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((p: any) => expect(['active', 'terminated']).toContain(p.status));
+    result.forEach((p: any) => {
+      expect(['active', 'terminated']).toContain(p.status);
+    });
   });
 
   it('active + terminated combined count >= each individually', async () => {

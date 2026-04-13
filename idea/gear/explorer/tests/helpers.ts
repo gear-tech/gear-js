@@ -1,5 +1,5 @@
-import { expect } from 'vitest';
 import type { SuperTest, Test } from 'supertest';
+import { expect } from 'vitest';
 import { GENESIS } from './fixtures.js';
 
 export type Agent = SuperTest<Test>;

@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-import { MessageEntryPoint } from '../enums/index.js';
+import type { MessageEntryPoint } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
 import { BaseEntity } from './base.entity.js';
 

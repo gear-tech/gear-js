@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GENESIS, UNKNOWN_GENESIS } from './fixtures.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);
@@ -16,9 +16,7 @@ describe('JSON-RPC protocol', () => {
   });
 
   it('missing genesis returns error', async () => {
-    const res = await getAgent()
-      .post('/api')
-      .send({ jsonrpc: '2.0', id: 1, method: 'program.all', params: {} });
+    const res = await getAgent().post('/api').send({ jsonrpc: '2.0', id: 1, method: 'program.all', params: {} });
 
     expect(res.body.error).toBeDefined();
     expect(typeof res.body.error.code).toBe('number');
@@ -55,7 +53,9 @@ describe('JSON-RPC protocol', () => {
     expect(res.body).toHaveLength(2);
     expect(res.body[0].id).toBe(1);
     expect(res.body[1].id).toBe(2);
-    res.body.forEach((r: any) => expect(r.jsonrpc).toBe('2.0'));
+    res.body.forEach((r: any) => {
+      expect(r.jsonrpc).toBe('2.0');
+    });
   });
 
   it('error response never has a result field', async () => {

@@ -33,5 +33,5 @@ export const MSG_FROM_2_ID = '0xf8694308506b7da2c61e6448248c4818fd62276a519b5a85
 
 // ── Non-existent IDs (used for "not found" tests) ─────────────────────────────
 
-export const UNKNOWN_ID = '0x' + 'ff'.repeat(32);
-export const UNKNOWN_GENESIS = '0x' + '00'.repeat(32);
+export const UNKNOWN_ID = `0x${'ff'.repeat(32)}`;
+export const UNKNOWN_GENESIS = `0x${'00'.repeat(32)}`;

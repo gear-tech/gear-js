@@ -1,10 +1,10 @@
-import { PostgreSqlContainer } from '@testcontainers/postgresql';
+import { execSync } from 'node:child_process';
+import { readdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { Client } from 'pg';
-import { readdirSync, writeFileSync, unlinkSync } from 'fs';
-import { execSync } from 'child_process';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -77,7 +77,7 @@ async function setupWithContainer(): Promise<DbConfig> {
 // ── Local DB fallback path ─────────────────────────────────────────────────────
 
 const LOCAL_HOST = process.env.TEST_DB_HOST || '127.0.0.1';
-const LOCAL_PORT = parseInt(process.env.TEST_DB_PORT || '5432');
+const LOCAL_PORT = parseInt(process.env.TEST_DB_PORT || '5432', 10);
 const LOCAL_USER = process.env.TEST_DB_USERNAME || process.env.USER || 'postgres';
 const LOCAL_PASSWORD = process.env.TEST_DB_PASSWORD || '';
 // Unique name so parallel runs don't collide and we know what to drop on teardown

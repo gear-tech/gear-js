@@ -24,11 +24,11 @@
     "baseUrl": "${configDir}",
 
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["src/*"]
     },
 
-    "types": ["vite/client", "vite-plugin-svgr/client"],
+    "types": ["vite/client", "vite-plugin-svgr/client"]
   },
   "include": ["${configDir}/src"],
-  "exclude": ["${configDir}/src/**/*.test.ts", "${configDir}/src/**/*.test.tsx"],
+  "exclude": ["${configDir}/src/**/*.test.ts", "${configDir}/src/**/*.test.tsx"]
 }

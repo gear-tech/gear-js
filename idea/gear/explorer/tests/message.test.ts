@@ -1,16 +1,16 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setup, teardown, getAgent } from './setup.js';
-import { rpc, ok, err, assertList } from './helpers.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-  PROGRAM_ACTIVE_ID,
-  PROGRAM_TERMINATED_ID,
-  PROGRAM_OWNER,
-  MSG_TO_1_ID,
-  MSG_TO_2_ID,
   MSG_FROM_1_ID,
   MSG_FROM_2_ID,
+  MSG_TO_1_ID,
+  MSG_TO_2_ID,
+  PROGRAM_ACTIVE_ID,
+  PROGRAM_OWNER,
+  PROGRAM_TERMINATED_ID,
   UNKNOWN_ID,
 } from './fixtures.js';
+import { assertList, err, ok, rpc } from './helpers.js';
+import { getAgent, setup, teardown } from './setup.js';
 
 beforeAll(setup);
 afterAll(teardown);
@@ -123,7 +123,9 @@ describe('messageToProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.destination).toBe(PROGRAM_ACTIVE_ID));
+    result.forEach((m: any) => {
+      expect(m.destination).toBe(PROGRAM_ACTIVE_ID);
+    });
   });
 
   it('source filter returns only messages from that address', async () => {
@@ -134,7 +136,9 @@ describe('messageToProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.source).toBe(PROGRAM_OWNER));
+    result.forEach((m: any) => {
+      expect(m.source).toBe(PROGRAM_OWNER);
+    });
   });
 
   it('entry=init filter returns only init messages', async () => {
@@ -142,14 +146,18 @@ describe('messageToProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.entry).toBe('init'));
+    result.forEach((m: any) => {
+      expect(m.entry).toBe('init');
+    });
   });
 
   it('entry=handle filter returns only handle messages', async () => {
     const res = await rpc(getAgent(), 'messageToProgram.all', { entry: 'handle', limit: 50 });
     const { result } = ok(res.body);
 
-    result.forEach((m: any) => expect(m.entry).toBe('handle'));
+    result.forEach((m: any) => {
+      expect(m.entry).toBe('handle');
+    });
   });
 
   it('service filter is case-insensitive substring match', async () => {
@@ -157,9 +165,9 @@ describe('messageToProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) =>
-      expect(m.service?.toLowerCase()).toContain('token a'),
-    );
+    result.forEach((m: any) => {
+      expect(m.service?.toLowerCase()).toContain('token a');
+    });
   });
 
   it('fn filter is case-insensitive substring match', async () => {
@@ -167,7 +175,9 @@ describe('messageToProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.fn?.toLowerCase()).toContain('tkna'));
+    result.forEach((m: any) => {
+      expect(m.fn?.toLowerCase()).toContain('tkna');
+    });
   });
 
   it('query (exact message id) returns that message', async () => {
@@ -308,7 +318,9 @@ describe('messageFromProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.source).toBe(PROGRAM_ACTIVE_ID));
+    result.forEach((m: any) => {
+      expect(m.source).toBe(PROGRAM_ACTIVE_ID);
+    });
   });
 
   it('destination filter returns only messages to that address', async () => {
@@ -319,7 +331,9 @@ describe('messageFromProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.destination).toBe(PROGRAM_OWNER));
+    result.forEach((m: any) => {
+      expect(m.destination).toBe(PROGRAM_OWNER);
+    });
   });
 
   it('parentId filter returns only children of that message', async () => {
@@ -327,7 +341,9 @@ describe('messageFromProgram.all filters', () => {
     const { result, count } = ok(res.body);
 
     expect(count).toBeGreaterThan(0);
-    result.forEach((m: any) => expect(m.parentId).toBe(MSG_TO_1_ID));
+    result.forEach((m: any) => {
+      expect(m.parentId).toBe(MSG_TO_1_ID);
+    });
   });
 
   it('query (exact message id) returns that message', async () => {

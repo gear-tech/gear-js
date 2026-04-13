@@ -4,6 +4,6 @@
     "outDir": "./dist",
     "declaration": false,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
+    "strict": false
   }
 }

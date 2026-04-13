@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { createDbConnection } from 'gear-idea-indexer-db';
 import 'reflect-metadata';
 import type { SuperTest, Test } from 'supertest';
@@ -18,7 +18,7 @@ function getDbConfig() {
     // Fallback: use env vars or local defaults (useful when running without testcontainers)
     return {
       host: process.env.TEST_DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.TEST_DB_PORT || '5432'),
+      port: parseInt(process.env.TEST_DB_PORT || '5432', 10),
       username: process.env.TEST_DB_USERNAME || process.env.USER || 'postgres',
       password: process.env.TEST_DB_PASSWORD || 'postgres',
       database: process.env.TEST_DB_DATABASE || 'squid_idea',
