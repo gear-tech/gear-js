@@ -335,7 +335,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
           name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
@@ -394,7 +394,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('vara-eth-api-v{0}', steps.get-version.outputs.version) || 'vara-eth-api-draft' }}
           name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('@vara-eth/api v{0}', steps.get-version.outputs.version) || '@vara-eth/api Draft Release' }}
