@@ -34,7 +34,7 @@ const Program = () => {
   const isInitialized = isActive && programState.program.Active.initialized;
 
   const { decimals, isPending: isDecimalsPending } = useWrappedVaraBalance(programId);
-  const { idl, saveIdl } = useIdlStorage(codeId);
+  const { idl, isLoading: isIdlLoading, saveIdl } = useIdlStorage(codeId);
 
   const watchInit = useWatchProgramStateChange(programId);
   const watchBalance = useWatchProgramStateChange(programId);
@@ -156,6 +156,7 @@ const Program = () => {
         <SailsProgramPanel
           programId={programId}
           idl={idl}
+          isLoading={isIdlLoading}
           onSaveIdl={saveIdl}
           init={{
             isRequired: !isInitialized,

@@ -1,30 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Hex } from 'viem';
 
-const IDL_STORAGE_PREFIX = 'vara-eth-idl';
+import { addIdl, getIdl } from '@/features/sails/lib';
 
-const getIdlStorageKey = (codeId: Hex) => `${IDL_STORAGE_PREFIX}-${codeId}`;
+const IDL_QUERY_KEY = 'idl';
 
 type UseIdlStorageReturn = {
   idl: string | null;
+  isLoading: boolean;
   saveIdl: (idlContent: string) => void;
 };
 
 export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
-  const [idl, setIdl] = useState<string | null>(codeId ? localStorage.getItem(getIdlStorageKey(codeId)) : null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setIdl(codeId ? localStorage.getItem(getIdlStorageKey(codeId)) : null);
-  }, [codeId]);
+  const queryKey = [IDL_QUERY_KEY, codeId];
+
+  const { data, isLoading } = useQuery({
+    queryKey,
+    queryFn: () => getIdl(codeId!),
+    enabled: Boolean(codeId),
+    retry: false,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (idlContent: string) => addIdl(codeId!, idlContent),
+    onSuccess: (_, idlContent) => {
+      if (!codeId) return;
+
+      queryClient.setQueryData(queryKey, { codeId, data: idlContent });
+    },
+  });
 
   const saveIdl = (idlContent: string) => {
     if (!codeId) {
       console.error('Code ID is not found');
       return;
     }
-    localStorage.setItem(getIdlStorageKey(codeId), idlContent);
-    setIdl(idlContent);
+
+    mutation.mutate(idlContent);
   };
 
-  return { idl, saveIdl };
+  return { idl: data?.data ?? null, isLoading, saveIdl };
 };
