@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
-import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
-import { RequestService } from '../services/index.js';
-import { BaseRouter } from './base.js';
 import { FaucetType } from '../database/index.js';
+import type { RequestService } from '../services/index.js';
+import { BaseRouter } from './base.js';
+import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
 
 const logger = createLogger('bridge-router');
 

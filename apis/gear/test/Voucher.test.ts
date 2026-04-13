@@ -1,12 +1,12 @@
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { join } from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { HexString } from '@polkadot/util/types';
 
-import { TARGET, TEST_CODE } from './config';
 import { decodeAddress } from '../src';
-import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
+import { TARGET, TEST_CODE } from './config';
+import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 let alice: KeyringPair;
 let bob: KeyringPair;

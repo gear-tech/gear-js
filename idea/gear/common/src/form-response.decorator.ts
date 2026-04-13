@@ -1,11 +1,11 @@
-import { JSONRPC_ERRORS, isExistError } from './errors/jsonrpc-errors.js';
+import { isExistError, JSONRPC_ERRORS } from './errors/jsonrpc-errors.js';
 import { logger } from './logger.js';
 
 export function FormResponse(_target: unknown, _propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
   const originalMethod = descriptor.value;
-  descriptor.value = async function SafeWrapper() {
+  descriptor.value = async function SafeWrapper(...args: unknown[]) {
     try {
-      return { result: await originalMethod.apply(this, arguments) };
+      return { result: await originalMethod.apply(this, args) };
     } catch (error: any) {
       if (error.name) {
         const { name, ...err } = error;
@@ -17,10 +17,9 @@ export function FormResponse(_target: unknown, _propertyKey: string, descriptor:
         }
 
         return { error: name };
-      } else {
-        logger.error('Unknown error', { error, stack: error.stack });
-        return { error: JSONRPC_ERRORS.InternalError.name };
       }
+      logger.error('Unknown error', { error, stack: error.stack });
+      return { error: JSONRPC_ERRORS.InternalError.name };
     }
   };
   return descriptor;

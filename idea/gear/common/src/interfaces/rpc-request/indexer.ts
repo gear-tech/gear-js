@@ -1,10 +1,10 @@
-import { MessageType, ProgramStatus } from '../../enums/index.js';
-import { ICode } from '../code.js';
-import { IDates, IGenesis, SearchParam } from '../common.js';
-import { IMessage } from '../message.js';
-import { IPaginationParams } from '../pagination.js';
-import { IProgram } from '../program.js';
-import { IState } from '../state.js';
+import type { MessageType, ProgramStatus } from '../../enums/index.js';
+import type { ICode } from '../code.js';
+import type { IDates, IGenesis, SearchParam } from '../common.js';
+import type { IMessage } from '../message.js';
+import type { IPaginationParams } from '../pagination.js';
+import type { IProgram } from '../program.js';
+import type { IState } from '../state.js';
 
 export interface GetMessagesParams extends IGenesis, IPaginationParams, IDates {
   destination?: string;

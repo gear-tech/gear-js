@@ -1,27 +1,27 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { Metadata, TypeRegistry } from '@polkadot/types';
-import { SiLookupTypeId } from '@polkadot/types/interfaces';
+import type { SiLookupTypeId } from '@polkadot/types/interfaces';
 import { hexToU8a } from '@polkadot/util';
 import { xxhashAsHex } from '@polkadot/util-crypto';
-import { Store } from '@subsquid/typeorm-store';
-import { RedisClientType } from 'redis';
+import type { Store } from '@subsquid/typeorm-store';
+import type { RedisClientType } from 'redis';
 import { getFnNamePrefix, getServiceNamePrefix, ZERO_ADDRESS } from 'sails-js';
 import { SailsMessageHeader } from 'sails-js/parser';
 import { In } from 'typeorm';
 
-import { MessageStatus } from './common/index.js';
+import type { MessageStatus } from './common/index.js';
 import {
   Code,
-  CodeStatus,
+  type CodeStatus,
   Event,
   MessageFromProgram,
-  MessageReadReason,
+  type MessageReadReason,
   MessageToProgram,
   Program,
-  ProgramStatus,
+  type ProgramStatus,
   Voucher,
 } from './model/index.js';
-import { Block, ProcessorContext } from './processor.js';
+import type { Block, ProcessorContext } from './processor.js';
 import { findChildMessageId, SPEC_VERSION } from './util.js';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
@@ -133,10 +133,10 @@ export class TempState {
     msg.isSailsIdlV2 = ok;
 
     if (ok && header) {
-      msg.header = '0x' + Buffer.from(header.toBytes()).toString('hex');
+      msg.header = `0x${Buffer.from(header.toBytes()).toString('hex')}`;
       const routeIdxBuf = Buffer.allocUnsafe(4);
       routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
-      msg.routeIdx = '0x' + routeIdxBuf.toString('hex');
+      msg.routeIdx = `0x${routeIdxBuf.toString('hex')}`;
     } else {
       const [service, name] = getServiceAndFn(msg.payload);
       msg.service = service;
@@ -155,10 +155,10 @@ export class TempState {
       msg.isSailsIdlV2 = ok;
 
       if (ok && header) {
-        msg.header = '0x' + Buffer.from(header.toBytes()).toString('hex');
+        msg.header = `0x${Buffer.from(header.toBytes()).toString('hex')}`;
         const routeIdxBuf = Buffer.allocUnsafe(4);
         routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
-        msg.routeIdx = '0x' + routeIdxBuf.toString('hex');
+        msg.routeIdx = `0x${routeIdxBuf.toString('hex')}`;
       } else {
         const [service, name] = getServiceAndFn(msg.payload);
 
@@ -364,10 +364,9 @@ export class TempState {
 
     if (decoded.isActive) {
       if (block._runtime.specVersion >= SPEC_VERSION['1.9.0']) return decoded.asActive.codeId.toHex();
-      else return decoded.asActive.codeHash.toHex();
-    } else {
-      return '0x';
+      return decoded.asActive.codeHash.toHex();
     }
+    return '0x';
   }
 
   async saveVouchers() {
@@ -464,7 +463,7 @@ export class TempState {
     }
   }
 
-  saveParentMsgId(parentId: string, nonce: number = 0) {
+  saveParentMsgId(parentId: string, nonce = 0) {
     this.cachedMessages[parentId] = nonce;
     return parentId;
   }

@@ -1,9 +1,10 @@
-import { DataSource, Repository } from 'typeorm';
 import { Voucher } from 'gear-idea-indexer-db';
+import type { DataSource, Repository } from 'typeorm';
+
 import { Pagination } from '../decorators/index.js';
-import { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types/index.js';
-import { VoucherNotFound } from '../errors/index.js';
 import { RequiredParams } from '../decorators/required.js';
+import { VoucherNotFound } from '../errors/index.js';
+import type { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types/index.js';
 import { hexToBuffer } from '../utils.js';
 
 export class VoucherService {
@@ -65,7 +66,7 @@ export class VoucherService {
         }) || [];
 
       if (includeAllPrograms) {
-        conditions.push(`jsonb_array_length(v.programs) = 0`);
+        conditions.push('jsonb_array_length(v.programs) = 0');
       }
 
       qb.andWhere(`(${conditions.join(' OR ')})`, params);
@@ -81,7 +82,10 @@ export class VoucherService {
     }
 
     if (owner && spender) {
-      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', { owner: hexToBuffer(owner), spender: hexToBuffer(spender) });
+      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', {
+        owner: hexToBuffer(owner),
+        spender: hexToBuffer(spender),
+      });
     } else if (owner) {
       qb.andWhere('v.owner = :owner', { owner: hexToBuffer(owner) });
     } else if (spender) {

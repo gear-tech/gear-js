@@ -1,5 +1,5 @@
-import { IsOptional, IsIn, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
 
 export class QueryTransactionsDto extends PaginationDto {

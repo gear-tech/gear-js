@@ -1,4 +1,4 @@
-import { ISailsTypeDef } from 'sails-js-types';
+import type { ISailsTypeDef } from 'sails-js-types';
 
 import { getType } from './type';
 

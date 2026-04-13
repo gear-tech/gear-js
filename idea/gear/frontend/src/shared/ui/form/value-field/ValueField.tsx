@@ -1,7 +1,7 @@
-import { inputStyles, InputProps, InputWrapper } from '@gear-js/ui';
+import { type InputProps, InputWrapper, inputStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { NumericFormat, NumericFormatProps } from 'react-number-format';
+import { NumericFormat, type NumericFormatProps } from 'react-number-format';
 
 import { BalanceUnit } from '../balance-unit';
 
@@ -12,7 +12,6 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 // TODO: same input as a gas field
 const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
   const { setValue, getFieldState, formState } = useFormContext();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
   const inputValue = useWatch({ name });
 
   const { error } = getFieldState(name, formState);
@@ -34,7 +33,6 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
           name={name}
           className={clsx(inputStyles.input, inputStyles.dark)}
           allowNegative={false}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
           value={inputValue}
           onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
           thousandSeparator

@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
@@ -40,7 +40,6 @@ const Code = () => {
 
   const showUploadMetadataModal = () => {
     const onSuccess = (_name: string, metadataHex?: HexString) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       code.refetch();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
@@ -53,7 +52,6 @@ const Code = () => {
       metadataHash: code.data?.metahash,
       isNameEditable,
       onClose: closeModal,
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       onSuccess,
     });
   };

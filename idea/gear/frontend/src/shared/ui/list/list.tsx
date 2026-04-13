@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import SimpleBar from 'simplebar-react';
 
 import { Placeholder } from '@/entities/placeholder';

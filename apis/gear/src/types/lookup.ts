@@ -1,26 +1,26 @@
 import '@polkadot/types/lookup';
 
+import type { Null } from '@polkadot/types';
 import type { AccountId32, H160, H256, MultiAddress, Percent } from '@polkadot/types/interfaces/runtime';
+import type { PalletTransactionPaymentChargeTransactionPayment, SpWeightsWeightV2Weight } from '@polkadot/types/lookup';
 import type {
-  bool,
   BTreeMap,
   BTreeSet,
   Bytes,
+  bool,
   Compact,
   Enum,
   Option,
   Struct,
-  u128,
-  u16,
+  U8aFixed,
   U256,
+  u16,
   u32,
   u64,
-  U8aFixed,
+  u128,
   Vec,
 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
-import { PalletTransactionPaymentChargeTransactionPayment, SpWeightsWeightV2Weight } from '@polkadot/types/lookup';
-import { Null } from '@polkadot/types';
 
 export interface PalletGearCall extends Enum {
   readonly isUploadCode: boolean;

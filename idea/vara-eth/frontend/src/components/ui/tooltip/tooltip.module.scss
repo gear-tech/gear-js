@@ -1,42 +1,19 @@
-@keyframes fadeIn {
-  from {
+.popup {
+  padding: 10px 16px;
+
+  color: #fff;
+
+  background-color: #000;
+  border: 1px solid rgba(#fff, 0.5);
+
+  transition: opacity 0.25s;
+
+  &[data-starting-style],
+  &[data-ending-style] {
     opacity: 0;
   }
-
-  to {
-    opacity: 1;
-  }
 }
 
-.container,
-.skeleton {
-  flex-shrink: 0;
-}
-
-.container {
-  &:hover {
-    .body {
-      opacity: 0.75;
-    }
-  }
-}
-
-.body {
-  display: flex;
-
-  transition: 0.25s opacity;
-}
-
-.tooltip {
-  position: absolute;
-  z-index: 11;
-  transform: translate(-50%, -100%);
-  background-color: #000;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 10px 16px;
-  text-wrap: nowrap;
-  pointer-events: none;
-  white-space: nowrap;
-  animation: fadeIn 0.25s;
+.positioner {
+  z-index: 11; // to be above modal
 }

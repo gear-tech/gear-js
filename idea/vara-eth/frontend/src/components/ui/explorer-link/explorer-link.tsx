@@ -1,5 +1,5 @@
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { PropsWithClassName } from '@/shared/types';
+import type { PropsWithClassName } from '@/shared/types';
 import { cx } from '@/shared/utils';
 
 import { Tooltip } from '../tooltip';

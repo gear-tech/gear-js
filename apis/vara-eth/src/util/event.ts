@@ -8,10 +8,9 @@ export function convertEventParams<T>(event: any): T {
       // If args is an array, we need the fragment to map to names
       // For now, just return the args as-is
       return event.args as T;
-    } else {
-      // If args is already an object, return it
-      return event.args as T;
     }
+    // If args is already an object, return it
+    return event.args as T;
   }
 
   return result as T;

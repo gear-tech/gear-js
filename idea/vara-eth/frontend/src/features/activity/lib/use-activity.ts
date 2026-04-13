@@ -1,11 +1,11 @@
 import { IROUTER_ABI, IWRAPPEDVARA_ABI } from '@vara-eth/api/abi';
 import { useEffect, useState } from 'react';
-import {
-  ContractEventName,
-  WatchContractEventOnLogsParameter,
-  AbiEventParametersToPrimitiveTypes,
+import type {
   Abi,
+  AbiEventParametersToPrimitiveTypes,
+  ContractEventName,
   Hex,
+  WatchContractEventOnLogsParameter,
 } from 'viem';
 import { useConfig } from 'wagmi';
 import { watchContractEvent } from 'wagmi/actions';
@@ -17,7 +17,6 @@ type WVaraAbi = typeof IWRAPPEDVARA_ABI;
 
 type GetEvent<
   TAbi extends Abi,
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   TEvents extends { type: 'event'; name: string; inputs: readonly any[] } = Extract<TAbi[number], { type: 'event' }>,
 > = TEvents extends any
   ? {
@@ -50,7 +49,12 @@ const useActivity = () => {
   const [state, setState] = useState<Activity[]>([]);
 
   useEffect(() => {
-    if (!api) return;
+    if (!api) {
+      setState([]);
+      return;
+    }
+
+    setState([]);
 
     const blockHashToEvents: Record<Hex, Activity> = {};
 
@@ -98,12 +102,13 @@ const useActivity = () => {
     });
 
     return () => {
-      unwatchFunctions.forEach((unwatch) => unwatch());
+      setState([]);
+      unwatchFunctions.forEach((unwatch) => void unwatch());
     };
   }, [api, config]);
 
   return state;
 };
 
-export { useActivity };
 export type { Event, EventArgs };
+export { useActivity };

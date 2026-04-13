@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import styles from './TooltipWrapper.module.scss';
 
@@ -19,5 +19,5 @@ const TooltipWrapper = ({ text, children, className }: Props) => {
   );
 };
 
-export { TooltipWrapper, styles as TooltipWrapperStyles };
 export type { Props as TooltipWrapperProps };
+export { styles as TooltipWrapperStyles, TooltipWrapper };

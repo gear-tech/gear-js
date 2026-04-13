@@ -1,9 +1,10 @@
 import { Program } from 'gear-idea-indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import type { DataSource, Repository } from 'typeorm';
+
 import { Pagination } from '../decorators/index.js';
-import { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types/index.js';
-import { ProgramNotFound } from '../errors/index.js';
 import { RequiredParams } from '../decorators/required.js';
+import { ProgramNotFound } from '../errors/index.js';
+import type { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types/index.js';
 import { hexToBuffer } from '../utils.js';
 
 export class ProgramService {
@@ -57,7 +58,9 @@ export class ProgramService {
     }
 
     if (query) {
-      qb.andWhere("(encode(program.id, 'hex') ILIKE :query OR program.name ILIKE :query)", { query: `%${query.toLowerCase().replace('0x', '')}%` });
+      qb.andWhere("(encode(program.id, 'hex') ILIKE :query OR program.name ILIKE :query)", {
+        query: `%${query.toLowerCase().replace('0x', '')}%`,
+      });
     }
 
     qb.orderBy('program.timestamp', 'DESC').limit(limit).offset(offset);

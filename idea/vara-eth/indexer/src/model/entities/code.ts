@@ -1,9 +1,9 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum CodeStatus {
-  ValidationRequested,
-  ValidationFailed,
-  Validated,
+  ValidationRequested = 0,
+  ValidationFailed = 1,
+  Validated = 2,
 }
 
 @Entity()

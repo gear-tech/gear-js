@@ -5,7 +5,7 @@ import SimpleBar from 'simplebar-react';
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
-import { RecentBlock } from '../../types';
+import type { RecentBlock } from '../../types';
 import { RecentBlockItem } from '../recentBlockItem';
 
 import styles from './RecentBlocksList.module.scss';

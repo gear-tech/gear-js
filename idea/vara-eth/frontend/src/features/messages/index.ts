@@ -1,23 +1,25 @@
 import { MessageData } from './components';
+import { ProgramMessagesTable } from './ui';
 import {
-  useGetMessageRequestByIdQuery,
-  useGetMessageSentByIdQuery,
-  useGetReplyRequestByIdQuery,
-  useGetReplySentByIdQuery,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
 } from './lib';
 
 export {
   MessageData,
-  useGetMessageRequestByIdQuery,
-  useGetMessageSentByIdQuery,
-  useGetReplyRequestByIdQuery,
-  useGetReplySentByIdQuery,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  ProgramMessagesTable,
 };

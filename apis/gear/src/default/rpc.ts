@@ -1,4 +1,4 @@
-import { DefinitionRpc, DefinitionRpcParam, DefinitionRpcSub } from '@polkadot/types/types';
+import type { DefinitionRpc, DefinitionRpcParam, DefinitionRpcSub } from '@polkadot/types/types';
 
 const SOURCE: DefinitionRpcParam = {
   name: 'source',
@@ -92,7 +92,7 @@ export const GEAR_RPC_METHODS: Record<string, DefinitionRpc | DefinitionRpcSub> 
     description: "Read program's metahash",
     params: [PROGRAM_ID, AT],
     type: 'H256',
-    deprecated: `Deprecated in favor of Sails`,
+    deprecated: 'Deprecated in favor of Sails',
   },
   readState: {
     description: "Call program's `state` function",

@@ -1,4 +1,4 @@
-import { ChainProperties, TypeRegistry, getRegistryBase, getSpecTypes } from '@substrate/txwrapper-core';
+import { type ChainProperties, getRegistryBase, getSpecTypes, TypeRegistry } from '@substrate/txwrapper-core';
 
 interface GetRegistryArgs {
   chainProperties: ChainProperties;

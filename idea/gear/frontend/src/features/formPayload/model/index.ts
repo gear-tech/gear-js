@@ -1,5 +1,5 @@
-import { OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from './consts';
-import { FormPayloadValues, PayloadItemProps, PayloadStructureProps } from './types';
+import { DEFAULT_OPTION_VALUE, OPTION_ITEM_OPTIONS } from './consts';
+import type { FormPayloadValues, PayloadItemProps, PayloadStructureProps } from './types';
 
-export { OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE };
 export type { FormPayloadValues, PayloadItemProps, PayloadStructureProps };
+export { DEFAULT_OPTION_VALUE, OPTION_ITEM_OPTIONS };

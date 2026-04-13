@@ -1,8 +1,8 @@
-import { JSX, PropsWithChildren } from 'react';
-import { Sails } from 'sails-js';
-import { ISailsTypeDef } from 'sails-js-types';
+import type { JSX, PropsWithChildren } from 'react';
+import type { Sails } from 'sails-js';
+import type { ISailsTypeDef } from 'sails-js-types';
 
-import { FieldProps, ISailsFuncArg } from '../types';
+import type { FieldProps, ISailsFuncArg } from '../types';
 import { getNestedName } from '../utils';
 
 import { EnumField } from './enum-field';
@@ -34,10 +34,10 @@ function Fields({ sails, args, render, renderContainer }: Props) {
     if (def.isUserDefined) return UserDefinedField;
     if (def.isPrimitive) return PrimitiveField;
 
-    throw new Error('Unknown field type: ' + JSON.stringify(def));
+    throw new Error(`Unknown field type: ${JSON.stringify(def)}`);
   };
 
-  const renderField = (def: ISailsTypeDef, label: string = '', name: string = '') => {
+  const renderField = (def: ISailsTypeDef, label = '', name = '') => {
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 
     const Field = getFieldComponent(def);

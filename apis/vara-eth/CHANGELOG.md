@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.2]
+
+### Added
+
+- `IVaraEthValidatorPoolProvider.hasValidator()` method to check whether a given address is present in the pool (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setSlotValidator()` method that targets the validator assigned to the current slot via round-robin scheduling (`floor(timestamp / blockDuration) % validators.length`, projected two blocks ahead) (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setDefaultValidator()` method that sets the recipient to the zero address, allowing any validator to process the transaction (https://github.com/gear-tech/gear-js/pull/2416)
+
+### Changed
+
+- `InjectedTx.setNextValidator()` and `InjectedTx.setRecipient()` no longer require a pool provider — both work with any provider; if the provider is a pool and the target address is in the pool, the send is routed directly to that validator's connection, otherwise the transaction is forwarded by the receiving node (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setRecipient()` called without an address now targets the current slot validator (via `setSlotValidator()`) instead of the zero address; use `setDefaultValidator()` explicitly to retain the old zero-address behavior (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setRecipient()` with an explicit address no longer unconditionally calls `setActiveValidator` — it only does so when the provider is a pool and the address is present in the pool (https://github.com/gear-tech/gear-js/pull/2416)
+- Constructor: setting `tx.recipient` now only calls `setActiveValidator` when the provider is a pool and the address is in the pool (same routing logic as above) (https://github.com/gear-tech/gear-js/pull/2416)
+
+### Deprecated
+
+- `InjectedTx.setNextValidator()` — use `InjectedTx.setSlotValidator()` instead; the old method remains as a thin wrapper (https://github.com/gear-tech/gear-js/pull/2416)
+
+## [0.3.1]
+
+### Added
+
+- `RouterClient.requestCodeValidation()` method (previously private and unimplemented) for uploading Wasm program code as an EIP-7594 blob transaction (https://github.com/gear-tech/gear-js/pull/2405)
+- EIP-7594 multi-blob encoding via `simpleSidecarEncode()` — replaces the old single-blob `prepareBlob()` and correctly encodes arbitrary-length data across multiple blobs following the Simple Sidecar Encoding format (https://github.com/gear-tech/gear-js/pull/2405)
+- `computeCellsAndKzgProofs` KZG hook required by EIP-7594 (https://github.com/gear-tech/gear-js/pull/2405)
+
+### Changed
+
+- Peer dependency `viem` switched from `^2.39.0` to `@vara-eth/viem@2.47.7-1` — a temporary fork at https://github.com/StackOverflowExcept1on/viem/tree/feat/eip-7594-support-for-blob-txs that adds EIP-7594 blob transaction support not yet available upstream; will revert to the official package once merged (https://github.com/gear-tech/gear-js/pull/2405)
+- `requestCodeValidation` blob transactions now use `blobVersion: '7594'` (EIP-7594) instead of the standard EIP-4844 format (https://github.com/gear-tech/gear-js/pull/2405)
+- `maxFeePerBlobGas` is now derived dynamically from `getFeeHistory` (3× the latest base fee) instead of the previous hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+- Gas limit for code validation transactions is now estimated via `estimateGas` instead of a hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+
 ## [0.3.0]
 
 ### Added

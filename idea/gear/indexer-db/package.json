@@ -1,8 +1,8 @@
 {
   "name": "gear-idea-indexer-db",
   "private": true,
-  "version": "1.3.26",
   "type": "module",
+  "version": "1.4.26",
   "dependencies": {
     "typeorm": "0.3.28"
   },

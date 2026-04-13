@@ -13,4 +13,4 @@ const INFINITE_QUERY = {
   SELECT: select,
 };
 
-export { OwnerFilter, INFINITE_QUERY };
+export { INFINITE_QUERY, OwnerFilter };

@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
-import { Code, Meta, SailsIdl } from './entities/index.js';
 import config from '../config.js';
+import { Code, Meta, SailsIdl } from './entities/index.js';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

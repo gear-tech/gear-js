@@ -5,7 +5,7 @@ import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Badge } from '@/components';
 import { cx } from '@/shared/utils';
 
-import { SailsAction as SailsActionType } from '../../lib';
+import type { SailsAction as SailsActionType } from '../../lib';
 import { SailsAction } from '../sails-action';
 
 import styles from './sails-action-group.module.scss';

@@ -1,7 +1,9 @@
 import '@polkadot/api-base/types/events';
 
-import type { bool, BTreeMap, BTreeSet, Option, u32 } from '@polkadot/types-codec';
-import {
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
+import type { BTreeMap, BTreeSet, bool, Option, u32 } from '@polkadot/types-codec';
+import type {
   GearCommonEventCodeChangeKind,
   GearCommonEventDispatchStatus,
   GearCommonEventMessageEntry,
@@ -18,8 +20,6 @@ import {
   PalletGearEthBridgePrimitivesEthMessage,
   PalletGearVoucherInternalVoucherId,
 } from '../lookup';
-import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/events' {
   interface AugmentedEvents<ApiType extends ApiTypes> {

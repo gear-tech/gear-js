@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Button } from '../button';
 
@@ -96,13 +96,13 @@ const WithHeaderAddon: Story = {
 
 export default meta;
 export {
+  CustomMaxWidth,
   Default,
-  Scroll,
+  LargeMaxWidth,
+  MediumMaxWidth,
   Mobile,
   MobileScroll,
+  Scroll,
   SmallMaxWidth,
-  MediumMaxWidth,
-  LargeMaxWidth,
-  CustomMaxWidth,
   WithHeaderAddon,
 };

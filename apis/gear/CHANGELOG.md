@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.45.0]
 
 ### Added
 - `api.message.subscribeUserMessageSent()` method for real-time subscription to user message sent events with server-side filtering support (https://github.com/gear-tech/gear-js/pull/2143)

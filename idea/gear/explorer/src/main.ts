@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { createDbConnection, DbConfig } from 'gear-idea-indexer-db';
+import { readFileSync } from 'node:fs';
+import { createDbConnection, type DbConfig } from 'gear-idea-indexer-db';
 
 import { config } from './config.js';
 import { retryMethodsJob } from './middlewares/retry.js';

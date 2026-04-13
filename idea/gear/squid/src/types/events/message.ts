@@ -1,6 +1,6 @@
-import { Events, MessageStatus } from '../../common/index.js';
-import { Event } from '../../processor.js';
-import { IReplyCode } from './reply-code.js';
+import { Events, type MessageStatus } from '../../common/index.js';
+import type { Event } from '../../processor.js';
+import type { IReplyCode } from './reply-code.js';
 
 export interface AMessageQueued {
   id: string;

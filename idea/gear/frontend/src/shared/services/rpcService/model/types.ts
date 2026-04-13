@@ -1,4 +1,4 @@
-import { RPCErrorCode, RPC_VERSION } from './consts';
+import type { RPC_VERSION, RPCErrorCode } from './consts';
 
 type JsonRpcId = number | string;
 
@@ -29,4 +29,4 @@ type RPCRequest = {
 
 type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
 
-export type { RPCRequest, RPCResponse, RPCErrorResponse, RPCSuccessResponse };
+export type { RPCErrorResponse, RPCRequest, RPCResponse, RPCSuccessResponse };

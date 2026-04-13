@@ -1,3 +1,3 @@
-import { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams } from './model/types';
+import type { PayloadSchemaModel, PayloadSchemaParams, PayloadValue, TypeStructure } from './model/types';
 
-export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };
+export type { PayloadSchemaModel, PayloadSchemaParams, PayloadValue, TypeStructure };

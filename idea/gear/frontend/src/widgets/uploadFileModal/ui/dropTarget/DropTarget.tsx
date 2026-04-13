@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { DropTargetMonitor, useDrop } from 'react-dnd';
+import { type DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { CSSTransition } from 'react-transition-group';
 

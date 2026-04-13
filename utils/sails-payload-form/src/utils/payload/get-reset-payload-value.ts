@@ -1,4 +1,4 @@
-import { PayloadValue } from '../../types';
+import type { PayloadValue } from '../../types';
 
 const getValue = (value: PayloadValue): PayloadValue => {
   if (typeof value === 'string') return '';

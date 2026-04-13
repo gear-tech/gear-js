@@ -1,8 +1,9 @@
-import { MetaRouter } from './meta.router.js';
-import { MetaService } from './service.js';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+
+import { MetaRouter } from './meta.router.js';
+import type { MetaService } from './service.js';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 

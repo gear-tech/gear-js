@@ -1,4 +1,4 @@
-import { Checkbox as GearCheckbox, CheckboxProps } from '@gear-js/ui';
+import { type CheckboxProps, Checkbox as GearCheckbox } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 type Props = CheckboxProps & {

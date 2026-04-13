@@ -60,15 +60,6 @@
   gap: 16px;
 }
 
-.emptyState {
-  margin: auto 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+.unavailable {
+  color: rgba(255, 255, 255, 0.4);
 }

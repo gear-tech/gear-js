@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -30,9 +30,6 @@ jobs:
       - name: 'Install dependencies'
         run: yarn install
 
-      - name: 'Build idea/frontend deps'
-        run: yarn build:gear-api && yarn build:utils && yarn build:vara-eth-api
-
       - name: 'Run linter'
         run: yarn lint
 
@@ -40,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -63,7 +60,7 @@ jobs:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -86,6 +83,8 @@ jobs:
 
       - name: "Install: Foundry"
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
 
       - name: 'Install dependencies'
         run: yarn workspaces focus gear-js @gear-js/api
@@ -118,7 +117,7 @@ jobs:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -153,7 +152,7 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: v1.5.0-rc1
+          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
 
       - name: 'Install dependencies'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
@@ -187,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -208,7 +207,7 @@ jobs:
 
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -234,7 +233,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -257,7 +256,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -296,7 +295,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
+        uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
         uses: actions/checkout@v6

@@ -1,14 +1,14 @@
-import type { Address, Hex, TransactionRequest } from 'viem';
-import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
+import type { Address, Hex, TransactionRequest } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, toHex, zeroAddress } from 'viem';
 
-import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
-import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
-import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { generateCodeHash } from '../util/index.js';
+import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
+import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
+import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { TxManager } from './tx-manager.js';
-import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -225,8 +225,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
    * @returns A transaction manager with validation-specific helper functions, including
    *          the code ID and a function to wait for the code to be validated
    */
-  private async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
-    throw new Error('Not implemented');
+  public async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
 
     const data = encodeFunctionData({
@@ -235,21 +234,29 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       args: [codeId],
     });
 
-    const blob = prepareBlob(code);
-
-    if (blob.length != 4096 * 32) {
-      throw new Error('Invalid blob size');
-    }
-
+    const blobs = simpleSidecarEncode(code);
     const kzg = await loadKZG();
+
+    const feeHistory = await this._pc.getFeeHistory({
+      blockCount: 2,
+      rewardPercentiles: [],
+      blockTag: 'latest',
+    });
+
+    const baseFeePerBlobGas = (feeHistory.baseFeePerBlobGas ?? []).at(-1);
+    if (!baseFeePerBlobGas) {
+      throw new Error('Failed to get baseFeePerBlobGas');
+    }
+    const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
     const tx = {
       type: 'eip4844' as const,
+      blobVersion: '7594' as const,
       data,
       to: this.address,
-      gas: 5_000_000n,
-      maxFeePerBlobGas: 400_000_000_000n,
-      blobs: [blob],
+      gas: 100_000n,
+      maxFeePerBlobGas,
+      blobs,
       kzg: {
         blobToKzgCommitment: (blob: Uint8Array) => {
           const result = kzg.blobToKZGCommitment(bytesToHex(blob)) as Hex;
@@ -259,13 +266,17 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
           const result = kzg.computeBlobKZGProof(bytesToHex(blob), bytesToHex(commitment)) as Hex;
           return hexToBytes(result);
         },
+        computeCellsAndKzgProofs: (blob: Uint8Array): [Uint8Array[], Uint8Array[]] => {
+          const [cells, proofs] = kzg.computeCellsAndProofs(bytesToHex(blob)) as [Hex[], Hex[]];
+          return [cells.map((cell) => hexToBytes(cell)), proofs.map((proof) => hexToBytes(proof))];
+        },
       },
       chain: null,
     };
 
-    const request = await this._pc.prepareTransactionRequest(tx);
+    tx.gas = await this._pc.estimateGas(tx);
 
-    console.log(request);
+    await this._pc.prepareTransactionRequest(tx);
 
     const txManager: ITxManager = new TxManager(this._pc, this._signer!, tx, IROUTER_ABI, undefined, {
       codeId,
@@ -278,7 +289,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
             eventName: 'CodeGotValidated',
             onLogs: (logs) => {
               for (const log of logs) {
-                if (log.args.codeId == codeId) {
+                if (log.args.codeId === codeId) {
                   if (log.args.valid) {
                     resolve(true);
                   } else {
@@ -381,25 +392,49 @@ export function getRouterClient(params: ContractClientParams): RouterClient {
   return new RouterClient(params);
 }
 
-function prepareBlob(data: Uint8Array) {
-  // https://docs.rs/alloy/latest/alloy/consensus/struct.SimpleCoder.html#behavior
-  const BLOB_SIZE = 131_072;
-  const paddedData = new Uint8Array(BLOB_SIZE);
+const BYTES_PER_BLOB = 131_072;
+const FIELD_ELEMENTS_PER_BLOB = 4096;
+const FE_BYTES = 32;
+const USABLE_BYTES_PER_FE = 31;
 
-  const dataLength = numberToBytes(data.length, { size: 32 });
-  const length = new Uint8Array(32);
-  length.set(dataLength, 0);
+function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
+  const blobs: Uint8Array[] = [];
+  let feCount = 0;
 
-  paddedData.set(length, 0);
+  const pushEmptyBlob = () => {
+    blobs.push(new Uint8Array(BYTES_PER_BLOB));
+  };
 
-  let offset = 32;
+  const currentBlob = () => {
+    const index = Math.floor(feCount / FIELD_ELEMENTS_PER_BLOB);
+    while (blobs.length <= index) pushEmptyBlob();
+    return blobs[index];
+  };
 
-  while (data.length > 0) {
-    const chunk = data.slice(0, 31);
-    paddedData.set(chunk, offset + 1);
-    offset += 32;
-    data = data.slice(31);
+  const feOffsetInCurrentBlob = () => (feCount % FIELD_ELEMENTS_PER_BLOB) * FE_BYTES;
+
+  const ingestFE = (fe: Uint8Array) => {
+    const blob = currentBlob();
+    const offset = feOffsetInCurrentBlob();
+    blob.set(fe, offset);
+    feCount++;
+  };
+
+  if (data.length === 0) return blobs;
+
+  const lenFE = new Uint8Array(FE_BYTES);
+  const lenBytes = new DataView(lenFE.buffer);
+  lenBytes.setBigUint64(1, BigInt(data.length));
+  ingestFE(lenFE);
+
+  let offset = 0;
+  while (offset < data.length) {
+    const fe = new Uint8Array(FE_BYTES);
+    const chunkSize = Math.min(USABLE_BYTES_PER_FE, data.length - offset);
+    fe.set(data.subarray(offset, offset + chunkSize), 1);
+    offset += chunkSize;
+    ingestFE(fe);
   }
 
-  return paddedData;
+  return blobs;
 }

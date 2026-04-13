@@ -1,8 +1,8 @@
 import { Keyring } from '@polkadot/api';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { construct, decode, deriveAddress } from '@substrate/txwrapper-core';
-import { rpcToLocalNode, signWith } from './util';
 import { getRegistry, methods } from '../src';
+import { rpcToLocalNode, signWith } from './util';
 
 const main = async () => {
   await cryptoWaitReady();

@@ -3,7 +3,7 @@ import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
 export { clsx as cx } from 'clsx';
 
 export { fetchWithGuard } from './fetch-with-guard';
-export { isUndefined, isString } from './is';
+export { isString, isUndefined } from './is';
 
 const noop = () => {};
 
@@ -42,7 +42,7 @@ const copyToClipboard = ({
   }
 };
 
-function formatNumber(num: number, displayedDecimals: number = 0): string {
+function formatNumber(num: number, displayedDecimals = 0): string {
   const [integerPart, decimalPart] = num.toFixed(displayedDecimals).split('.');
   const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return displayedDecimals > 0 ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
@@ -64,12 +64,12 @@ const getTruncatedText = (value: string, prefixLength = 8): string => {
 const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length > 0;
 
 export {
-  noop,
   copyToClipboard,
   formatBalance,
-  formatNumber,
   formatDate,
+  formatNumber,
   getPreformattedText,
   getTruncatedText,
   isAnyKey,
+  noop,
 };

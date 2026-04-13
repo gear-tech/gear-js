@@ -1,13 +1,13 @@
+import { hostname } from 'node:os';
 import {
-  BlockHeader,
-  DataHandlerContext,
+  type Call as _Call,
+  type Event as _Event,
+  type Extrinsic as _Extrinsic,
+  type BlockHeader,
+  type DataHandlerContext,
   SubstrateBatchProcessor,
-  SubstrateBatchProcessorFields,
-  Call as _Call,
-  Event as _Event,
-  Extrinsic as _Extrinsic,
+  type SubstrateBatchProcessorFields,
 } from '@subsquid/substrate-processor';
-import { hostname } from 'os';
 
 import { Events } from './common/index.js';
 import { config } from './config.js';

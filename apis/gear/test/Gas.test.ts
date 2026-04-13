@@ -1,14 +1,14 @@
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { u64 } from '@polkadot/types-codec';
+import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { u64 } from '@polkadot/types-codec';
 import { compactAddLength, stringToU8a, u8aConcat } from '@polkadot/util';
-import { readFileSync } from 'fs';
+import type { HexString } from '@polkadot/util/types';
 
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GasInfo } from '../src/types';
+import type { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
 import { getApi } from './common';
 import { TEST_CODE } from './config';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 const api = getApi();
 let alice: KeyringPair;

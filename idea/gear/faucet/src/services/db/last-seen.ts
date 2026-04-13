@@ -1,6 +1,6 @@
-import { logger } from 'gear-idea-common';
 import * as crypto from 'node:crypto';
-import { Repository } from 'typeorm';
+import { logger } from 'gear-idea-common';
+import type { Repository } from 'typeorm';
 
 import { AppDataSource, UserLastSeen } from '../../database/index.js';
 

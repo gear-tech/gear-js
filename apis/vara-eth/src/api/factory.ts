@@ -1,8 +1,8 @@
 import type { Address, PublicClient } from 'viem';
 
 import { EthereumClient } from '../eth/index.js';
-import type { ITransactionSigner } from '../types/signer.js';
 import type { IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../types/index.js';
+import type { ITransactionSigner } from '../types/signer.js';
 import { VaraEthApi } from './api.js';
 
 /**

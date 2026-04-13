@@ -1,9 +1,9 @@
-import { IMessage } from './message.js';
-import { IPaginationResult } from './pagination.js';
-import { IProgram } from './program.js';
-import { ICode } from './code.js';
-import { RpcErrorCode } from '../enums/index.js';
-import { IState } from './state.js';
+import type { RpcErrorCode } from '../enums/index.js';
+import type { ICode } from './code.js';
+import type { IMessage } from './message.js';
+import type { IPaginationResult } from './pagination.js';
+import type { IProgram } from './program.js';
+import type { IState } from './state.js';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -65,16 +65,16 @@ interface IRpcError {
   message: string;
 }
 
-export {
-  AllMessagesResult,
-  GetAllProgramsResult,
-  GetAllCodeResult,
+export type {
   AddMetaResult,
-  AddStateResult,
-  GetAllStateResult,
-  ProgramDataResult,
-  IRpcResponse,
-  IRpcError,
-  GetStatesResult,
   AddSailsResult,
+  AddStateResult,
+  AllMessagesResult,
+  GetAllCodeResult,
+  GetAllProgramsResult,
+  GetAllStateResult,
+  GetStatesResult,
+  IRpcError,
+  IRpcResponse,
+  ProgramDataResult,
 };

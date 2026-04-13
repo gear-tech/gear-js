@@ -1,4 +1,5 @@
-import { IsString, Contains } from 'class-validator';
+import { Contains, IsString } from 'class-validator';
+
 import { ParamPagination } from './common.js';
 
 export class ParamGetVoucher extends ParamPagination {

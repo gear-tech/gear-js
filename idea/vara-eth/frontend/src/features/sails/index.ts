@@ -1,2 +1,2 @@
-export { SailsProgramActions, SailsServices } from './components';
+export { SailsProgramPanel, SailsServices } from './components';
 export { useSails } from './lib';

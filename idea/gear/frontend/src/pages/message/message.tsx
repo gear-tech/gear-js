@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
-import { Input, Textarea, InputWrapper, Button } from '@gear-js/ui';
+import { Button, Input, InputWrapper, Textarea } from '@gear-js/ui';
 import cx from 'clsx';
 import { useMemo } from 'react';
-import { Link, generatePath, useParams } from 'react-router-dom';
+import { generatePath, Link, useParams } from 'react-router-dom';
 
 import {
   getDecodedMessagePayload,
@@ -47,10 +47,8 @@ const Message = () => {
   const decodedPayload = useMemo(
     () =>
       message && !isPayloadLoading && api
-        ? // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
-          getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error, api.specVersion)
+        ? getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error, api.specVersion)
         : undefined,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading, api],
   );
 

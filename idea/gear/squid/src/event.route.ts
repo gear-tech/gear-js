@@ -1,5 +1,5 @@
-import { Block } from '@subsquid/substrate-processor';
-import { Store } from '@subsquid/typeorm-store';
+import type { Block } from '@subsquid/substrate-processor';
+import type { Store } from '@subsquid/typeorm-store';
 
 import {
   handleCreateProgram,
@@ -11,7 +11,7 @@ import {
 import {
   Code,
   CodeStatus,
-  MessageEntryPoint,
+  type MessageEntryPoint,
   MessageFromProgram,
   MessageReadReason,
   MessageToProgram,
@@ -20,8 +20,9 @@ import {
   ProgramStatus,
   Voucher,
 } from './model/index.js';
-import { Event, Fields, ProcessorContext } from './processor.js';
-import { TempState } from './temp-state.js';
+
+import type { Event, Fields, ProcessorContext } from './processor.js';
+import type { TempState } from './temp-state.js';
 import {
   isCreateProgram,
   isSendMessageCall,
@@ -30,20 +31,21 @@ import {
   isUploadProgram,
   isVoucherCall,
 } from './types/calls/index.js';
-import {
+import type {
   EBalanceTransfer,
   EVoucherDeclined,
   EVoucherIssued,
   EVoucherRevoked,
   EVoucherUpdated,
 } from './types/events/voucher.js';
+
 import {
-  ECodeChanged,
-  EMessageQueuedEvent,
-  EMessagesDispatched,
-  EProgramChanged,
-  EUserMessageRead,
-  EUserMessageSent,
+  type ECodeChanged,
+  type EMessageQueuedEvent,
+  type EMessagesDispatched,
+  type EProgramChanged,
+  type EUserMessageRead,
+  type EUserMessageSent,
   ReplyCode,
 } from './types/index.js';
 import { getMetahash } from './util.js';
@@ -271,7 +273,7 @@ export async function handleVoucherUpdated({
   }
 
   if (call.args.appendPrograms.__kind === 'Some') {
-    voucher.programs!.push(...call.args.appendPrograms.value);
+    voucher.programs?.push(...call.args.appendPrograms.value);
   }
 
   if (call.args.codeUploading) {

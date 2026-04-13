@@ -1,40 +1,69 @@
-import { useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { INITIAL_ENDPOINT, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
+import { myActivityAtom } from '@/app/store';
+import { type NodeState, nodeAtom } from '@/app/store/node';
+
+import { NODE_SECTIONS } from '../api';
+import { getSectionByNodeAddress, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
 
 import { NodesButton } from './nodes-button';
 import { NodesPopup } from './nodes-popup';
+import styles from './nodes-switch.module.scss';
 
 const NodesSwitch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const nodeState = useAtomValue(nodeAtom);
+  const setNodeState = useSetAtom(nodeAtom);
+  const setMyActivity = useSetAtom(myActivityAtom);
 
   const [isNodesOpen, setIsNodesOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState(INITIAL_ENDPOINT);
+  const [selectedNode, setSelectedNode] = useState(nodeState.varaEthNodeAddress);
 
   const close = () => setIsNodesOpen(false);
 
-  const chain = 'Vara.eth';
+  const chain = getSectionByNodeAddress(nodeState.varaEthNodeAddress).caption;
 
   const toggleNodesPopup = () => setIsNodesOpen((prevState) => !prevState);
   const closeNodesPopup = () => setIsNodesOpen(false);
 
   const switchNode = () => {
-    searchParams.set(NODE_ADRESS_URL_PARAM, selectedNode);
-    setSearchParams(searchParams);
+    const section = getSectionByNodeAddress(selectedNode);
+
+    const nextNodeState: NodeState = {
+      varaEthNodeAddress: selectedNode,
+      ethChainId: section.ethChainId,
+      ethNodeAddress: section.ethNodeAddress,
+      explorerUrl: section.explorerUrl,
+      routerContractAddress: section.routerContractAddress,
+    };
+
+    // Prevent mixing activity entries from different networks.
+    setMyActivity([]);
+    setNodeState(nextNodeState);
+
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set(NODE_ADRESS_URL_PARAM, selectedNode);
+    setSearchParams(nextSearchParams);
 
     localStorage.setItem(LocalStorage.Node, selectedNode);
 
     closeNodesPopup();
   };
 
+  useEffect(() => {
+    setSelectedNode(nodeState.varaEthNodeAddress);
+  }, [nodeState.varaEthNodeAddress]);
+
   return (
-    <div>
+    <div className={styles.wrapper}>
       <NodesButton name={chain} isOpen={isNodesOpen} onClick={toggleNodesPopup} />
 
       {isNodesOpen && (
         <NodesPopup
-          nodeAddress={chain}
+          sections={NODE_SECTIONS}
+          nodeAddress={nodeState.varaEthNodeAddress}
           selectedNode={selectedNode}
           selectNode={setSelectedNode}
           onSwitchButtonClick={switchNode}

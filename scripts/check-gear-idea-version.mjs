@@ -1,7 +1,7 @@
-import assert from 'assert';
+import assert from 'node:assert';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { ROOT_DIR } from './common.mjs';
-import * as fs from 'fs';
-import * as path from 'path';
 
 const pkgPaths = fs
   .readdirSync(path.join(ROOT_DIR, 'idea/gear'), { withFileTypes: true })

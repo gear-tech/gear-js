@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { type ChangeEvent, useRef, useState } from 'react';
 
 import { Button } from '../button';
 

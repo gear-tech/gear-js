@@ -1,24 +1,28 @@
 import { useState } from 'react';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { Tabs } from '@/components';
-import { useSendInjectedTransaction, useInitProgram, useSendProgramMessage } from '@/features/programs/lib';
+import { Tabs, UploadIdlButton } from '@/components';
+import { ProgramMessagesTable } from '@/features/messages';
+import { useInitProgram, useSendInjectedTransaction, useSendProgramMessage } from '@/features/programs/lib';
 
-import { FormattedPayloadValue, useSails } from '../../lib';
+import { type FormattedPayloadValue, useSails } from '../../lib';
 import { SailsActionGroup } from '../sails-action-group';
 
 import styles from './sails-program-actions.module.scss';
 
-const tabs = ['Call offchain', 'Call onchain'];
+const TABS_NO_IDL = ['IDL', 'Messages'];
+const TABS_WITH_IDL = ['Call offchain', 'Call onchain', 'Messages'];
 
 type Props = {
   programId: Hex;
-  idl: string;
-  init: { isRequired: boolean; isEnabled: boolean; onSuccess: () => void };
+  idl: string | null | undefined;
+  onSaveIdl: (idl: string) => void;
+  init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
+  hasExecutableBalance: boolean;
 };
 
-const SailsProgramActions = ({ programId, idl, init }: Props) => {
-  const { data: sails } = useSails(idl);
+const SailsProgramPanel = ({ programId, idl, onSaveIdl, init, hasExecutableBalance }: Props) => {
+  const { data: sails } = useSails(idl ?? '');
   const [tabIndex, setTabIndex] = useState(0);
 
   const sendInjectedTx = useSendInjectedTransaction(programId, sails);
@@ -27,10 +31,12 @@ const SailsProgramActions = ({ programId, idl, init }: Props) => {
 
   const initProgram = useInitProgram(programId, sails);
 
-  if (!sails) return;
+  const tabs = idl ? TABS_WITH_IDL : TABS_NO_IDL;
+  const messagesTabIndex = tabs.length - 1;
+  const isMessagesTab = tabIndex === messagesTabIndex;
 
-  const renderMessages = () =>
-    Object.entries(sails.services).map(([serviceName, service]) => {
+  const renderServiceActions = () =>
+    Object.entries(sails!.services).map(([serviceName, service]) => {
       const queries = Object.entries(service.queries).map(([messageName, meta]) => ({
         id: `query:${serviceName}:${messageName}`,
         name: messageName,
@@ -51,38 +57,59 @@ const SailsProgramActions = ({ programId, idl, init }: Props) => {
           send.mutateAsync({ serviceName, messageName, isQuery: false, payload }),
       }));
 
-      return <SailsActionGroup key={serviceName} name={serviceName} sails={sails} items={[...queries, ...functions]} />;
+      return (
+        <SailsActionGroup key={serviceName} name={serviceName} sails={sails!} items={[...queries, ...functions]} />
+      );
     });
 
   const renderCtors = () => {
-    const items = Object.entries(sails.ctors).map(([ctorName, meta]) => ({
+    const items = Object.entries(sails!.ctors).map(([ctorName, meta]) => ({
       id: `ctor:${ctorName}`,
       name: ctorName,
       action: 'Initialize',
-      isEnabled: init.isEnabled,
+      isEnabled: init.isEnabled && hasExecutableBalance,
+      tooltip: init.tooltip,
       args: meta.args,
       encode: meta.encodePayload,
       onSubmit: (payload: FormattedPayloadValue) =>
         initProgram.mutateAsync({ ctorName, payload }).then(() => init.onSuccess()),
     }));
 
-    return <SailsActionGroup name="Constructors" sails={sails} items={items} />;
+    return (
+      <div className={styles.constructors}>
+        <SailsActionGroup name="Constructors" sails={sails!} items={items} />
+        {!hasExecutableBalance && (
+          <p className={styles.constructorsNotice}>
+            Please top up Executable Balance first before initializing the program.
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    if (isMessagesTab) return <ProgramMessagesTable programId={programId} />;
+
+    if (!idl)
+      return (
+        <div className={styles.emptyState}>
+          <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
+          <UploadIdlButton onSaveIdl={onSaveIdl} />
+        </div>
+      );
+
+    if (!sails) return null;
+    if (init.isRequired) return renderCtors();
+    return renderServiceActions();
   };
 
   return (
     <>
-      {!init.isRequired && (
-        <Tabs
-          tabs={tabs}
-          tabIndex={tabIndex}
-          onTabIndexChange={(index) => setTabIndex(index)}
-          className={styles.tabs}
-        />
-      )}
+      <Tabs tabs={tabs} tabIndex={tabIndex} onTabIndexChange={setTabIndex} className={styles.tabs} />
 
-      <div className={styles.list}>{init.isRequired ? renderCtors() : renderMessages()}</div>
+      <div className={styles.list}>{renderContent()}</div>
     </>
   );
 };
 
-export { SailsProgramActions };
+export { SailsProgramPanel };

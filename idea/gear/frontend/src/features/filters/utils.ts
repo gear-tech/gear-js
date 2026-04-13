@@ -3,7 +3,7 @@ import { createParser } from 'nuqs';
 const isISOString = (value: string) => {
   const date = new Date(value);
 
-  return !isNaN(date.getTime()) && date.toISOString() === value;
+  return !Number.isNaN(date.getTime()) && date.toISOString() === value;
 };
 
 const parseAsIsoString = createParser({

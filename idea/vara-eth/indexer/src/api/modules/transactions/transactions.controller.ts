@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { TransactionsService } from './transactions.service.js';
-import { QueryTransactionsDto } from './dto/query-transactions.dto.js';
-import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
+import type { QueryTransactionsDto } from './dto/query-transactions.dto.js';
 import { TransactionDetailResponseDto } from './dto/transaction-detail-response.dto.js';
+import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
+import type { TransactionsService } from './transactions.service.js';
 
 @ApiTags('transactions')
 @Controller('transactions')

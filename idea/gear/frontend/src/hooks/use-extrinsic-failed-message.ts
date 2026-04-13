@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Event } from '@polkadot/types/interfaces';
+import type { Event } from '@polkadot/types/interfaces';
 
 function useExtrinsicFailedMessage() {
   const { api, isApiReady } = useApi();

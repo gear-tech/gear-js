@@ -1,19 +1,20 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
-import { PropsWithClassName } from '@/shared/types';
+import type { PropsWithClassName } from '@/shared/types';
 import { cx } from '@/shared/utils';
 
 import styles from './label-container.module.scss';
 
 type Props = PropsWithChildren &
   PropsWithClassName & {
+    id?: string;
     label?: string;
     error?: string;
   };
 
-const LabelContainer = ({ className, label, children, error }: Props) => {
+const LabelContainer = ({ id, className, label, children, error }: Props) => {
   return (
-    <label className={cx(styles.container, className)}>
+    <label className={cx(styles.container, className)} htmlFor={id}>
       {label && <span className={styles.label}>{label}:</span>}
 
       <div className={styles.content}>

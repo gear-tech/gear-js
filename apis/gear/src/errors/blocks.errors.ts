@@ -9,7 +9,7 @@ export class GetBlockError extends Error {
     if (isU8a(hash)) {
       hash = u8aToString(hash);
     }
-    const errorCode = splittedMessage.length > 0 ? parseInt(splittedMessage[0]) : NaN;
+    const errorCode = splittedMessage.length > 0 ? Number.parseInt(splittedMessage[0], 10) : Number.NaN;
     switch (errorCode) {
       case -32603:
         this.message = `State already discarded for block ${hash}`;

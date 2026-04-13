@@ -1,13 +1,13 @@
-import { KeyringPair } from '@polkadot/keyring/types';
-import { HexString } from '@polkadot/util/types';
+import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types';
-import { readFileSync } from 'fs';
+import type { HexString } from '@polkadot/util/types';
 
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { decodeAddress } from '../src/utils';
-import { MESSAGE_TEST_CODE } from './config';
 import { PayloadFilter } from '../src';
+import { decodeAddress } from '../src/utils';
 import { getApi } from './common';
+import { MESSAGE_TEST_CODE } from './config';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 const api = getApi();
 let alice: KeyringPair;

@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { useId, ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, useId } from 'react';
 
 import { useClearButton } from '../../hooks';
-import { InputProps } from '../../types';
+import type { InputProps } from '../../types';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
 
@@ -86,7 +86,5 @@ const Textarea = (props: Props) => {
   );
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { Textarea, styles as textareaStyles };
 export type { Props as TextareaProps };
+export { styles as textareaStyles, Textarea };

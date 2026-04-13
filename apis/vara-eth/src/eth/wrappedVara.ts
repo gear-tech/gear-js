@@ -1,12 +1,12 @@
 import type { Address, Hex } from 'viem';
 import { encodeFunctionData } from 'viem';
 
-import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
-import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
-import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
 import { convertEventParams } from '../util/index.js';
+import { IWRAPPEDVARA_ABI, type IWrappedVaraContract } from './abi/IWrappedVara.js';
+import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
+import type { ApprovalLog, TransferLog, WrappedVaraTxHelpers, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
 import { TxManager } from './tx-manager.js';
-import { BaseContractClient, ContractClientParams } from './base-contract.js';
 
 /**
  * A contract wrapper for interacting with the WrappedVara token.

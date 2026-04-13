@@ -1,5 +1,5 @@
-import { Compact, GenericEvent } from '@polkadot/types';
-import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+import { type Compact, GenericEvent } from '@polkadot/types';
+import type { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 
 import { generateRandomId } from '@/shared/helpers';
 
@@ -10,12 +10,9 @@ class IdeaEvent extends GenericEvent {
 
     super(event.registry, event.toU8a());
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- TODO(#1800): resolve eslint comments
     this._id = `${hash}-${generateRandomId()}`;
     this._heading = `${section}.${method}`;
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- TODO(#1800): resolve eslint comments
     this._description = String(docs.toHuman());
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- TODO(#1800): resolve eslint comments
     this._blockNumber = blockNumber ? String(blockNumber.toHuman()) : undefined;
   }
 

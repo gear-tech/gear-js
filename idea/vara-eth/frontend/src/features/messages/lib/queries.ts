@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
+import { useAtomValue } from 'jotai';
+import type { Hex } from 'viem';
+
+import { nodeAtom } from '@/app/store/node';
 
 import {
   getMessageRequest,
@@ -13,61 +16,88 @@ import {
 } from './requests';
 
 export const useGetMessageRequestByIdQuery = (id: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['messageRequest', id],
-    queryFn: () => getMessageRequest(id),
+    queryKey: ['messageRequest', id, explorerUrl],
+    queryFn: () => getMessageRequest(explorerUrl, id),
   });
 };
 
 export const useGetMessageSentByIdQuery = (id: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['messageSent', id],
-    queryFn: () => getMessageSent(id),
+    queryKey: ['messageSent', id, explorerUrl],
+    queryFn: () => getMessageSent(explorerUrl, id),
   });
 };
 
 export const useGetReplyRequestByIdQuery = (id: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['replyRequest', id],
-    queryFn: () => getReplyRequest(id),
+    queryKey: ['replyRequest', id, explorerUrl],
+    queryFn: () => getReplyRequest(explorerUrl, id),
   });
 };
 
 export const useGetReplySentByIdQuery = (id: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['replySent', id],
-    queryFn: () => getReplySent(id),
+    queryKey: ['replySent', id, explorerUrl],
+    queryFn: () => getReplySent(explorerUrl, id),
   });
 };
 
-export const useGetAllMessageRequestsQuery = (page: number, pageSize: number) => {
+export const useGetAllMessageRequestsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
   return useQuery({
-    queryKey: ['allRequestMessages', page, pageSize],
-    queryFn: () => getMessageRequests(page, pageSize),
+    queryKey: ['allRequestMessages', page, pageSize, programId, explorerUrl],
+    queryFn: () => getMessageRequests(explorerUrl, page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 
-export const useGetAllMessageSentsQuery = (page: number, pageSize: number) => {
+export const useGetAllMessageSentsQuery = (
+  page: number,
+  pageSize: number,
+  programId?: Hex,
+  options?: { enabled?: boolean },
+) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['allSentMessages', page, pageSize],
-    queryFn: () => getMessageSents(page, pageSize),
+    queryKey: ['allSentMessages', page, pageSize, programId, explorerUrl],
+    queryFn: () => getMessageSents(explorerUrl, page, pageSize, programId),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 
 export const useGetAllReplyRequestsQuery = (page: number, pageSize: number) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['allRequestReplies', page, pageSize],
-    queryFn: () => getReplyRequests(page, pageSize),
+    queryKey: ['allRequestReplies', page, pageSize, explorerUrl],
+    queryFn: () => getReplyRequests(explorerUrl, page, pageSize),
     placeholderData: (previousData) => previousData,
   });
 };
 
 export const useGetAllReplySentsQuery = (page: number, pageSize: number) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
   return useQuery({
-    queryKey: ['allSentReplies', page, pageSize],
-    queryFn: () => getReplySents(page, pageSize),
+    queryKey: ['allSentReplies', page, pageSize, explorerUrl],
+    queryFn: () => getReplySents(explorerUrl, page, pageSize),
     placeholderData: (previousData) => previousData,
   });
 };

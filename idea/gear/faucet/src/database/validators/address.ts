@@ -1,9 +1,15 @@
 import { decodeAddress } from '@polkadot/util-crypto';
-import { isEthereumAddress, registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
+import {
+  isEthereumAddress,
+  registerDecorator,
+  type ValidationArguments,
+  type ValidationOptions,
+} from 'class-validator';
+
 import { FaucetType } from '../model/enums.js';
 
 export function isValidAddress(validationOptions?: ValidationOptions) {
-  return function (object: object, propertyName: string) {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       name: 'isValidAddress',
       target: object.constructor,
@@ -17,9 +23,8 @@ export function isValidAddress(validationOptions?: ValidationOptions) {
             try {
               if (decodeAddress(value).length === 32) {
                 return true;
-              } else {
-                return false;
               }
+              return false;
             } catch (_) {
               return false;
             }

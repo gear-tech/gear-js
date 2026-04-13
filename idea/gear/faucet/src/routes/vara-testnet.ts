@@ -1,11 +1,10 @@
+import type { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
-import { Request, Response } from 'express';
 
-import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
-import { RequestService } from '../services/index.js';
-import { FaucetType } from '../database/index.js';
+import type { RequestService } from '../services/index.js';
 import { BaseRouter } from './base.js';
-import { Hex } from 'viem';
+import { handleVaraTestnetRequest } from './handlers.js';
+import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
 
 const logger = createLogger('vara-router');
 
@@ -17,31 +16,10 @@ export class VaraTestnetRouter extends BaseRouter {
   }
 
   private _newRequest({ body: { address, genesis } }: Request, res: Response) {
-    return this._handler(address, genesis, res);
+    return handleVaraTestnetRequest(address, genesis, this._requestService, logger, res);
   }
 
   private _oldRequest({ body: { payload } }: Request, res: Response) {
-    return this._handler(payload?.address, payload?.genesis, res);
-  }
-
-  private async _handler(address: Hex, genesis: Hex, res: Response) {
-    if (!address || !genesis) {
-      res.status(400).json({ error: 'Address and genesis are required' });
-      return;
-    }
-
-    try {
-      await this._requestService.newRequest(address, genesis, FaucetType.VaraTestnet);
-    } catch (error: any) {
-      if (error.code) {
-        logger.error(error.message, { address, target: genesis });
-        return res.status(error.code).json({ error: error.message });
-      }
-
-      logger.error(error.message, { stack: error.stack, address, genesis });
-
-      return res.status(500).json({ error: error.message });
-    }
-    res.sendStatus(200);
+    return handleVaraTestnetRequest(payload?.address, payload?.genesis, this._requestService, logger, res);
   }
 }

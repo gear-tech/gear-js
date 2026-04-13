@@ -1,21 +1,21 @@
-import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
-import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
+import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 
 import {
-  InjectedTxPromise,
-  VaraEthApi,
-  getMirrorClient,
-  WsVaraEthProvider,
-  InjectedTx,
-  IInjectedTransaction,
   createVaraEthApi,
+  getMirrorClient,
+  type IInjectedTransaction,
+  InjectedTx,
+  InjectedTxPromise,
+  type VaraEthApi,
+  WsVaraEthProvider,
 } from '../src';
+import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
-import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
@@ -271,8 +271,16 @@ describe('Injected Transactions', () => {
       expect(testTx.recipient).toBe('0x70997970c51812dc3a010c7d01b50e0d17dc79c8');
     });
 
-    test('should set zero address as default in setRecipient', async () => {
+    test('should set slot validator using setRecipient without args', async () => {
       const recipient = await testTx.setRecipient();
+
+      expect(recipient).not.toBe(zeroAddress);
+      expect(recipient).toMatch(/^0x[0-9a-fA-F]{40}$/);
+      expect(testTx.recipient).toBe(recipient);
+    });
+
+    test('should set zero address using setDefaultValidator', () => {
+      const recipient = testTx.setDefaultValidator();
 
       expect(recipient).toBe(zeroAddress);
       expect(testTx.recipient).toBe(zeroAddress);
@@ -301,7 +309,7 @@ describe('Injected Transactions', () => {
 
       const result = await tx.send();
 
-      expect(tx.recipient).toBe(zeroAddress);
+      expect(tx.recipient).not.toBeNull();
 
       messageId = tx.messageId;
 
@@ -345,7 +353,7 @@ describe('Injected Transactions', () => {
 
       const tx = await api.createInjectedTransaction(injected);
 
-      expect(tx.recipient).not.toBe(zeroAddress);
+      expect(tx.recipient).toBeNull();
 
       const result = await tx.sendAndWaitForPromise();
 

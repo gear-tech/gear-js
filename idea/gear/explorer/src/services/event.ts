@@ -1,9 +1,10 @@
 import { Event } from 'gear-idea-indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import type { DataSource, Repository } from 'typeorm';
+
 import { Pagination } from '../decorators/index.js';
-import { ParamGetEvent, ParamGetEvents, ResManyResult } from '../types/index.js';
-import { EventNotFound } from '../errors/index.js';
 import { RequiredParams } from '../decorators/required.js';
+import { EventNotFound } from '../errors/index.js';
+import type { ParamGetEvent, ParamGetEvents, ResManyResult } from '../types/index.js';
 import { hexToBuffer } from '../utils.js';
 
 export class EventService {

@@ -1,8 +1,8 @@
 import type { Address, Hash, Hex } from 'viem';
 
 import type { ReplyCode } from '../../errors/index.js';
-import type { Dispatch, MessageId } from './message.js';
 import type { Expiring } from './common.js';
+import type { Dispatch, MessageId } from './message.js';
 
 export interface ReplyInfo {
   readonly payload: Hex;

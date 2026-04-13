@@ -1,7 +1,7 @@
-import * as fs from 'fs';
+import { spawn } from 'node:child_process';
+import * as fs from 'node:fs';
 import { config } from 'dotenv';
 import { generateCodeHash } from '../../src/util/hash';
-import { execSync, spawn } from 'child_process';
 
 if (typeof WebSocket === 'undefined') {
   import('ws').then((module) => {
@@ -13,11 +13,7 @@ config({ quiet: true });
 
 const BLOCK_TIME = 1;
 const COUNTER_CODE = 'target/wasm32-gear/release/counter.opt.wasm';
-const ANVIL_RPC = 'ws://127.0.0.1:8545';
 let routerAddress: string;
-// Anvil default account #2 address, derived from the default mnemonic:
-// "test test test test test test test test test test test junk"
-const SENDER_ADDRESS = '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc';
 let keyStore: string;
 
 const pathToEthexeBin = process.env.PATH_TO_ETHEXE!;
@@ -43,6 +39,10 @@ async function setupVaraEth() {
     {
       stdio: 'pipe',
       detached: true,
+      env: {
+        ...process.env,
+        RUST_LOG: 'debug',
+      },
     },
   );
 
@@ -100,17 +100,8 @@ async function setupVaraEth() {
   process.env.ROUTER_ADDRESS = routerAddress;
 }
 
-function uploadCode() {
-  execSync(
-    `${pathToEthexeBin} tx --ethereum-rpc ${ANVIL_RPC} --ethereum-router ${routerAddress} --sender ${SENDER_ADDRESS} --key-store "${keyStore}" upload ${COUNTER_CODE} -w`,
-    { stdio: 'inherit' },
-  );
-}
-
 export default async () => {
   setupCodeId();
 
   await setupVaraEth();
-
-  uploadCode();
 };

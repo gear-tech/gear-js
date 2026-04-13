@@ -1,4 +1,4 @@
-import { FieldProps } from '../types';
+import type { FieldProps } from '../types';
 import { getLabel } from '../utils';
 
 function VecField({ def, name, label, render }: FieldProps) {

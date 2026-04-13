@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getBytecode } from '@wagmi/core';
+import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { isAddress, isHash, Hex } from 'viem';
+import { type Hex, isAddress, isHash } from 'viem';
 import { useConfig } from 'wagmi';
 import { z } from 'zod';
 
+import { nodeAtom } from '@/app/store/node';
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
 import { routes } from '@/shared/config';
@@ -29,6 +31,7 @@ const SCHEMA = z.object({
 const Search = () => {
   const navigate = useNavigate();
   const config = useConfig();
+  const { explorerUrl } = useAtomValue(nodeAtom);
 
   const { formState, register, ...form } = useForm({
     defaultValues: DEFAULT_VALUES,
@@ -57,7 +60,7 @@ const Search = () => {
     if (await isWalletAddress(value)) return navigate(generatePath(routes.user, { userId: value }));
 
     // TODO: implement indexer error type and noop only 404 to handle other errors
-    const { type } = (await getIndexerEntity(value).catch(noop)) || {};
+    const { type } = (await getIndexerEntity(explorerUrl, value).catch(noop)) || {};
 
     switch (type) {
       case INDEXER_ENTITY.PROGRAM:

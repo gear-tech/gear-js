@@ -1,4 +1,4 @@
-import { HexString, generateCodeHash } from '@gear-js/api';
+import { generateCodeHash, type HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useState } from 'react';
 

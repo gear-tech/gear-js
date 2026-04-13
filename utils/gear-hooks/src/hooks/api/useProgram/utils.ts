@@ -1,5 +1,5 @@
-import { GearApi } from '@gear-js/api';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import type { GearApi } from '@gear-js/api';
+import type { UnsubscribePromise } from '@polkadot/api/types';
 
 import { ProgramStatus } from './types';
 

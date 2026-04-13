@@ -1,11 +1,11 @@
-import express, { Express } from 'express';
+import express, { type Express } from 'express';
 
 import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method.js';
 import { Cache } from './middlewares/caching.js';
 import { redisConnect } from './middlewares/redis.js';
 import { Retry } from './middlewares/retry.js';
-import { AllInOneService } from './services/all-in-one.js';
-import {
+import type { AllInOneService } from './services/all-in-one.js';
+import type {
   ParamGetCode,
   ParamGetCodes,
   ParamGetEvent,

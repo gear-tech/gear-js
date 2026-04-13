@@ -1,6 +1,6 @@
-import { GearApi, MessageQueued, ProgramChanged, UserMessageSent } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import type { GearApi, MessageQueued, ProgramChanged, UserMessageSent } from '@gear-js/api';
+import type { UnsubscribePromise } from '@polkadot/api/types';
+import type { HexString } from '@polkadot/util/types';
 
 export function waitForInit(api: GearApi, programId: string): Promise<UnsubscribePromise> {
   let messageId: HexString;

@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 type Options = {
   type: 'info' | 'error' | 'loading' | 'success';

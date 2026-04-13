@@ -1,7 +1,7 @@
 import { InvalidParams } from '../errors/index.js';
 
 export function RequiredParams(params: string[]) {
-  return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+  return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
     descriptor.value = function (...args: any[]) {

@@ -1,12 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { parseUnits, Hex } from 'viem';
+import { type Hex, parseUnits } from 'viem';
 
-import { useMirrorContract, useApi, useWrappedVaraBalance } from '@/app/api';
-import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
-import { Button } from '@/components';
+import { useApi, useMirrorContract, useWrappedVaraBalance } from '@/app/api';
+import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
+import { ActionButton, Button, Modal } from '@/components';
 import { Input } from '@/components/form/input';
-import { Modal } from '@/components/ui/modal';
 
 import styles from './top-up-exec-balance.module.scss';
 
@@ -14,19 +13,13 @@ type Props = {
   programId: Hex;
   isEnabled: boolean;
   onSuccess: (value: bigint) => void;
+  hasExecutableBalance: boolean;
 };
 
-const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
+function useApprove(programId: Hex) {
   const { data: api } = useApi();
-  const mirrorContract = useMirrorContract(programId);
-  const { decimals } = useWrappedVaraBalance();
 
-  const addMyActivity = useAddMyActivity();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [amount, setAmount] = useState('10');
-
-  const approveFn = async (value: bigint) => {
+  const approve = async (value: bigint) => {
     if (!api) throw new Error('API is not initialized');
 
     const tx = await api.eth.wvara.approve(programId, value);
@@ -34,8 +27,13 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return tx.sendAndWaitForReceipt();
   };
 
-  const topUpFn = async (value: bigint) => {
-    if (!api) throw new Error('API is not initialized');
+  return { ...useMutation({ mutationFn: approve }), isLoading: !api };
+}
+
+function useTopUp(programId: Hex) {
+  const mirrorContract = useMirrorContract(programId);
+
+  const topUp = async (value: bigint) => {
     if (!mirrorContract) throw new Error('Mirror contract is not found');
 
     const tx = await mirrorContract.executableBalanceTopUp(value);
@@ -43,8 +41,19 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return tx.sendAndWaitForReceipt();
   };
 
-  const approve = useMutation({ mutationFn: approveFn });
-  const topUp = useMutation({ mutationFn: topUpFn });
+  return { ...useMutation({ mutationFn: topUp }), isLoading: !mirrorContract };
+}
+
+const TopUpExecBalance = ({ programId, isEnabled, onSuccess, hasExecutableBalance }: Props) => {
+  const approve = useApprove(programId);
+  const topUp = useTopUp(programId);
+  const { decimals } = useWrappedVaraBalance();
+  const addMyActivity = useAddMyActivity();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [amount, setAmount] = useState('10');
+
+  const isLoading = approve.isLoading || topUp.isLoading || approve.isPending || topUp.isPending;
 
   const handleOpenModal = () => {
     if (!isEnabled) return;
@@ -89,8 +98,6 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
       .catch((error) => console.error(error));
   };
 
-  const isLoading = !api || !mirrorContract || approve.isPending || topUp.isPending;
-
   const getButtonText = () => {
     if (approve.isPending) return 'Approving';
     if (topUp.isPending) return 'Topping Up';
@@ -98,19 +105,19 @@ const TopUpExecBalance = ({ programId, isEnabled, onSuccess }: Props) => {
     return 'Top Up';
   };
 
-  const isConfirmDisabled = isLoading || !amount.trim() || isNaN(Number(amount)) || Number(amount) <= 0;
+  const isConfirmDisabled = isLoading || !amount.trim() || Number.isNaN(Number(amount)) || Number(amount) <= 0;
 
   return (
     <>
-      <Button
+      <ActionButton
         size="xs"
         onClick={handleOpenModal}
         loadingPosition="start"
         isLoading={isLoading}
-        variant="secondary"
+        variant={hasExecutableBalance ? 'secondary' : 'default'}
         disabled={!isEnabled}>
         {getButtonText()}
-      </Button>
+      </ActionButton>
 
       {isModalOpen && (
         <Modal

@@ -7,8 +7,9 @@ type Props = {
 
 const SocialItem = ({ name, href }: Props) => (
   <li className={styles.link}>
-    {}
-    <a href={href} target="_blank" rel="noreferrer" className={styles[name]} aria-label={name} />
+    <a href={href} target="_blank" rel="noreferrer" className={styles[name]} aria-label={name}>
+      <span className={styles.visuallyHidden}>{name}</span>
+    </a>
   </li>
 );
 

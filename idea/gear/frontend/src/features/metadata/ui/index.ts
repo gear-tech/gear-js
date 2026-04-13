@@ -1,4 +1,4 @@
 import { MetadataPreview } from './metadata-preview';
 import { MetadataTable } from './metadata-table';
 
-export { MetadataTable, MetadataPreview };
+export { MetadataPreview, MetadataTable };

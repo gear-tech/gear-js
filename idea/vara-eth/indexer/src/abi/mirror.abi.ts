@@ -1,22 +1,21 @@
-import { encodeEventTopics, decodeEventLog } from 'viem/utils';
-import type { ContractEventName, Hex, DecodeEventLogReturnType } from 'viem';
 import { IMIRROR_ABI } from '@vara-eth/api/abi';
+import type { ContractEventName, DecodeEventLogReturnType, Hex } from 'viem';
+import { decodeEventLog, encodeEventTopics } from 'viem/utils';
 
-import { Log } from '../processor.js';
+import type { Log } from '../processor.js';
 
 export function getMirrorEventTopic(name: ContractEventName<typeof IMIRROR_ABI>) {
   return encodeEventTopics({ abi: IMIRROR_ABI, eventName: name })[0];
 }
 
 function getEventDecoder<TEventName extends ContractEventName<typeof IMIRROR_ABI>>(eventName: TEventName) {
-  return function (log: Log): DecodeEventLogReturnType<typeof IMIRROR_ABI, TEventName> {
-    return decodeEventLog({
+  return (log: Log): DecodeEventLogReturnType<typeof IMIRROR_ABI, TEventName> =>
+    decodeEventLog({
       abi: IMIRROR_ABI,
       data: log.data as Hex,
       eventName,
       topics: log.topics as [Hex, ...Hex[]],
     });
-  };
 }
 
 export const MirrorAbi = {

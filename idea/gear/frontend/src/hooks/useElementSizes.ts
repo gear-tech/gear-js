@@ -1,4 +1,4 @@
-import { useRef, CSSProperties } from 'react';
+import { type CSSProperties, useRef } from 'react';
 
 const useElementSizes = <T extends HTMLElement>() => {
   const elementRef = useRef<T>(null);

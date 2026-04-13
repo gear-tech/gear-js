@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
+import { useAtomValue } from 'jotai';
+import type { Hex } from 'viem';
 
-import { EXPLORER_URL } from '@/shared/config';
-import { PaginatedResponse } from '@/shared/types';
+import { nodeAtom } from '@/app/store/node';
+import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
 type Transaction = {
@@ -16,14 +17,15 @@ type Transaction = {
 };
 
 export const useGetAllTransactionsQuery = (page: number, pageSize: number) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
   const limit = pageSize;
   const offset = (page - 1) * pageSize;
 
   return useQuery({
-    queryKey: ['allTransactions', limit, offset],
+    queryKey: ['allTransactions', limit, offset, explorerUrl],
 
     queryFn: () => {
-      const url = new URL(`${EXPLORER_URL}/transactions`);
+      const url = new URL(`${explorerUrl}/transactions`);
 
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));

@@ -1,11 +1,11 @@
-import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
-import { KeyringPair } from '@polkadot/keyring/types';
+import { GearApi, GearKeyring, type TransferData } from '@gear-js/api';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { createLogger } from 'gear-idea-common';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import config from '../../config.js';
-import { FaucetRequest, FaucetType } from '../../database/index.js';
+import { type FaucetRequest, FaucetType } from '../../database/index.js';
 import { FaucetProcessor } from './abstract.js';
 
 const MAX_RECONNECTIONS = 10;
@@ -161,7 +161,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
                   resolve(null);
                   break;
                 case TransferEvent.EXTRINSIC_FAILED:
-                  reject({ blockHash, error: this.api!.getExtrinsicFailedError(event).docs });
+                  reject({ blockHash, error: this.api?.getExtrinsicFailedError(event).docs });
                   break;
               }
             }
@@ -170,9 +170,9 @@ export class VaraTestnetProcessor extends FaucetProcessor {
             reject({ error: error.message });
           }),
       );
-      logger.info(`Batch success`, { blockHash, transferred });
+      logger.info('Batch success', { blockHash, transferred });
     } catch (error: any) {
-      logger.error(`Batch error`, { ...error });
+      logger.error('Batch error', { ...error });
     }
 
     return [transferred, blockHash];

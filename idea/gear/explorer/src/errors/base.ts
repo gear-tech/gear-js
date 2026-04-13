@@ -1,4 +1,4 @@
-import { JsonRpcError } from '../types/index.js';
+import type { JsonRpcError } from '../types/index.js';
 
 export class GenesisNotFound implements JsonRpcError {
   code = -32601;
@@ -11,6 +11,6 @@ export class NetworkNotSupported implements JsonRpcError {
   data = undefined;
 
   constructor(public genesis: string) {
-    this.data = 'genesis: ' + genesis;
+    this.data = `genesis: ${genesis}`;
   }
 }

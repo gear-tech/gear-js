@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { createContext, type Dispatch, type SetStateAction, useContext } from 'react';
 
 type WalletContextValue = {
   dialog: {
@@ -20,4 +20,4 @@ function useWalletContext() {
   return context;
 }
 
-export { WalletProvider, useWalletContext };
+export { useWalletContext, WalletProvider };

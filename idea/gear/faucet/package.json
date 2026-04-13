@@ -1,8 +1,8 @@
 {
   "name": "gear-idea-faucet",
   "private": true,
-  "version": "1.3.26",
   "type": "module",
+  "version": "1.4.26",
   "scripts": {
     "build": "rm -rf dist && npx tsc",
     "test": "npx jest --clearCache && npx jest --runInBand",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "0.44.2",
+    "@gear-js/api": "0.45.0",
     "@polkadot/api": "16.5.6",
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
@@ -23,12 +23,12 @@
     "dotenv": "17.3.1",
     "express": "5.2.1",
     "express-rate-limit": "8.3.1",
-    "gear-idea-common": "1.3.26",
+    "gear-idea-common": "1.4.26",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",
     "typeorm": "0.3.28",
-    "viem": "^2.40.2",
+    "viem": "npm:@vara-eth/viem@2.47.7-1",
     "winston": "3.19.0",
     "xxhashjs": "0.2.2",
     "yamljs": "0.3.0"

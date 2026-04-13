@@ -1,21 +1,21 @@
 import { Router } from 'express';
 import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors/index.js';
-import { JsonRpcRequest, JsonRpcResponse } from '../types/index.js';
+import type { JsonRpcRequest, JsonRpcResponse } from '../types/index.js';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 type AllowedMethods = 'get' | 'post';
 
 const rpcMethods: Record<string, (...args: any[]) => Promise<void>> = {};
-const restHandlers = new Array<{ method: AllowedMethods; path: string; handler: (...args: any[]) => Promise<any> }>();
+const restHandlers: { method: AllowedMethods; path: string; handler: (...args: any[]) => Promise<any> }[] = [];
 
 export function JsonRpcMethod(name: string) {
-  return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+  return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
     rpcMethods[name] = descriptor.value;
   };
 }
 
 export function RestHandler(method: AllowedMethods, path: string) {
-  return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+  return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
     restHandlers.push({ method, path, handler: descriptor.value });
   };
 }
@@ -60,9 +60,8 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
     async handleRequest(req: JsonRpcRequest | JsonRpcRequest[]): Promise<JsonRpcResponse | JsonRpcResponse[]> {
       if (Array.isArray(req)) {
         return Promise.all(req.map((r) => this.executeMethod(r)));
-      } else {
-        return this.executeMethod(req);
       }
+      return this.executeMethod(req);
     }
 
     async executeMethod({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse> {

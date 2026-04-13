@@ -1,9 +1,9 @@
-import { Modal, Input, Button } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
+import { Button, Input, Modal } from '@gear-js/ui';
+import type { HexString } from '@polkadot/util/types';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { ModalProps } from '@/entities/modal';
+import type { ModalProps } from '@/entities/modal';
 import { absoluteRoutes } from '@/shared/config';
 import { isHexValid } from '@/shared/helpers';
 

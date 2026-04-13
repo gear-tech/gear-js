@@ -1,17 +1,17 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { generatePath, useParams } from 'react-router-dom';
-import { formatEther, formatUnits, Hex } from 'viem';
+import { formatEther, formatUnits, type Hex } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
-import { Badge, Balance, ChainEntity, HashLink, Skeleton, UploadIdlButton } from '@/components';
+import { Badge, Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import {
   TopUpExecBalance,
-  useReadContractState,
   useGetProgramByIdQuery,
+  useReadContractState,
   useWatchProgramStateChange,
 } from '@/features/programs';
-import { SailsProgramActions } from '@/features/sails';
+import { SailsProgramPanel } from '@/features/sails';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
 import { isUndefined } from '@/shared/utils';
@@ -95,8 +95,10 @@ const Program = () => {
     );
   }
 
-  if (!program || !programState || !codeId || isUndefined(decimals))
-    return <ChainEntity.NotFound entity="program" id={programId} />;
+  if (!program || !codeId || isUndefined(decimals)) return <ChainEntity.NotFound entity="program" id={programId} />;
+
+  const hasExecutableBalance = Boolean(programState && programState.executableBalance > 0);
+  const programStateFallback = <span className={styles.unavailable}>Unable to read program state</span>;
 
   return (
     <div className={styles.container}>
@@ -121,21 +123,29 @@ const Program = () => {
           <HashLink hash={program.txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
           <ChainEntity.Key>Program Balance</ChainEntity.Key>
-          <Balance value={formatEther(BigInt(programState.balance))} units="ETH" />
+          {programState ? (
+            <Balance value={formatEther(BigInt(programState.balance))} units="ETH" />
+          ) : (
+            programStateFallback
+          )}
 
           <ChainEntity.Key>Executable Balance</ChainEntity.Key>
+          {programState ? (
+            <div className={styles.balance}>
+              {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
 
-          <div className={styles.balance}>
-            {watchBalance.isPending && <LoadingSVG className={styles.balanceSpinner} />}
+              <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
 
-            <Balance value={formatUnits(BigInt(programState.executableBalance), decimals)} units="WVARA" />
-
-            <TopUpExecBalance
-              programId={programId}
-              isEnabled={!watchBalance.isPending}
-              onSuccess={handleSuccessfulTopUp}
-            />
-          </div>
+              <TopUpExecBalance
+                programId={programId}
+                isEnabled={!watchBalance.isPending}
+                hasExecutableBalance={hasExecutableBalance}
+                onSuccess={handleSuccessfulTopUp}
+              />
+            </div>
+          ) : (
+            programStateFallback
+          )}
 
           <ChainEntity.Key>Block Number</ChainEntity.Key>
           <ChainEntity.BlockNumber value={program.blockNumber} date={program.createdAt} />
@@ -143,18 +153,18 @@ const Program = () => {
       </div>
 
       <div className={styles.card}>
-        {idl ? (
-          <SailsProgramActions
-            programId={programId}
-            idl={idl}
-            init={{ isRequired: !isInitialized, isEnabled: !watchInit.isPending, onSuccess: handleSuccessfulInit }}
-          />
-        ) : (
-          <div className={styles.emptyState}>
-            <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
-            <UploadIdlButton onSaveIdl={saveIdl} />
-          </div>
-        )}
+        <SailsProgramPanel
+          programId={programId}
+          idl={idl}
+          onSaveIdl={saveIdl}
+          init={{
+            isRequired: !isInitialized,
+            isEnabled: hasExecutableBalance && !watchInit.isPending,
+            tooltip: hasExecutableBalance ? '' : 'Executable balance top up is required',
+            onSuccess: handleSuccessfulInit,
+          }}
+          hasExecutableBalance={hasExecutableBalance}
+        />
       </div>
     </div>
   );

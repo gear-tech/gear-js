@@ -2,8 +2,18 @@
   width: 100%;
   border-collapse: collapse;
   background-color: #000;
-  border-radius: 4px;
   transition: opacity 0.2s ease-in-out;
+
+  border-style: solid;
+  border-color: rgba(41, 41, 41, 1);
+
+  &.top {
+    border-width: 0 1px 1px 1px;
+  }
+
+  &.bottom {
+    border-width: 1px 0 0 0;
+  }
 
   &.lineHeight-md {
     td {
@@ -29,21 +39,20 @@
     cursor: pointer;
     user-select: none;
     position: relative;
+
+    border-bottom: 1px solid rgba(41, 41, 41, 1);
+
     svg {
       vertical-align: top;
     }
   }
 
-  tr {
+  tr:not(.emptyRow) {
     &:hover {
       background: rgba(168, 245, 147, 0.1);
       box-shadow:
         -1px -1px inset rgba(168, 245, 147, 0.25),
         1px 1px inset rgba(168, 245, 147, 0.25);
-    }
-
-    &:first-child {
-      border-bottom: 1px solid rgba(41, 41, 41, 1);
     }
 
     &:not(:last-child) {
@@ -55,6 +64,10 @@
     }
   }
 
+  .emptyRow td {
+    padding: 0;
+  }
+
   .headerRightCell {
     padding: 0;
     background: rgba(15, 15, 15, 1);
@@ -64,5 +77,35 @@
     display: flex;
     justify-content: flex-end;
     padding: 5px 24px;
+  }
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 40px 24px;
+
+  text-align: center;
+
+  background-image: linear-gradient(180deg, rgba(168, 245, 147, 0.05) 0%, rgba(#000, 0.02) 100%);
+  border-radius: 4px;
+
+  .comment {
+    color: rgba(#fff, 0.25);
+  }
+
+  .title {
+    color: rgba(168, 245, 147, 0.92);
+    font-size: 14px;
+  }
+
+  .text {
+    max-width: 320px;
+
+    color: rgba(#fff, 0.56);
   }
 }

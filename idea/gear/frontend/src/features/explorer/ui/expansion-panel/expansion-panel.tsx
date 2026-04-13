@@ -1,7 +1,5 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { clsx } from 'clsx';
-import { ReactNode, useState } from 'react';
+import { type KeyboardEvent, type ReactNode, useState } from 'react';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
@@ -17,11 +15,19 @@ const ExpansionPanel = ({ children, heading, subheading }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen((prevValue) => !prevValue);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggle();
+    }
+  };
+
   const arrowClassName = clsx(styles.arrow, isOpen && styles.open);
 
   return (
     <div className={styles.panel}>
-      <header className={styles.header} onClick={toggle}>
+      {/* biome-ignore lint/a11y/useSemanticElements: div acts as a clickable toggle */}
+      <header className={styles.header} onClick={toggle} role="button" tabIndex={0} onKeyDown={handleKeyDown}>
         <header className={styles.innerHeader}>
           <h3 className={styles.heading}>{heading}</h3>
           <ArrowSVG className={arrowClassName} />

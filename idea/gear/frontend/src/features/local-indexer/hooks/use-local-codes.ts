@@ -1,7 +1,7 @@
 import { useApi } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 
-import { GetCodesParameters } from '@/features/code';
+import type { GetCodesParameters } from '@/features/code';
 import { useChain, useErrorAlert } from '@/hooks';
 
 function useLocalCodes(parameters: GetCodesParameters) {

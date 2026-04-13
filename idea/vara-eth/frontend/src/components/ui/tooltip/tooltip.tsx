@@ -1,103 +1,31 @@
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { Tooltip as BaseTooltip } from '@base-ui/react';
+import type { ReactElement, ReactNode } from 'react';
 
 import styles from './tooltip.module.scss';
 
 type Props = {
-  value?: ReactNode;
-  position?: 'top' | 'right' | 'bottom-end';
-  children?: ReactNode;
+  value: ReactNode;
+  children: ReactElement;
+  showOnDisabledTrigger?: boolean;
 };
 
-function TooltipComponent({ value, style }: { value: ReactNode; style: CSSProperties }) {
-  const [root, setRoot] = useState<HTMLElement>();
-
-  useEffect(() => {
-    const ID = 'tooltip-root';
-    const existingRoot = document.getElementById(ID);
-
-    if (existingRoot) return setRoot(existingRoot);
-
-    const newRoot = document.createElement('div');
-    newRoot.id = ID;
-    document.body.appendChild(newRoot);
-
-    setRoot(newRoot);
-
-    return () => {
-      if (!newRoot) return;
-
-      document.body.removeChild(newRoot);
-    };
-  }, []);
-
-  if (!root) return null;
-
-  return createPortal(
-    <div className={styles.tooltip} style={style}>
-      {typeof value === 'string' ? <p className={styles.heading}>{value}</p> : value}
-    </div>,
-    root,
-  );
-}
-
-function Tooltip({ value, position = 'top', children }: Props) {
-  const [style, setStyle] = useState<CSSProperties>();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseEnter = () => {
-    const container = containerRef.current;
-
-    if (!container) return;
-
-    const containerRect = container.getBoundingClientRect();
-
-    const GAP = 8;
-    let top = 0;
-    let left = 0;
-    let transform = '';
-
-    switch (position) {
-      case 'top': {
-        top = containerRect.top + window.scrollY - GAP;
-        left = containerRect.left + window.scrollX + containerRect.width / 2;
-        transform = 'translate(-50%, -100%)';
-
-        break;
-      }
-
-      case 'right': {
-        top = containerRect.top + window.scrollY + containerRect.height / 2;
-        left = containerRect.right + window.scrollX + GAP;
-        transform = 'translateY(-50%)';
-
-        break;
-      }
-      case 'bottom-end': {
-        top = containerRect.bottom + window.scrollY + GAP;
-        left = containerRect.right - window.scrollX;
-        transform = 'translate(-100%, 0)';
-
-        break;
-      }
-
-      default:
-        break;
-    }
-
-    setStyle({ top, left, transform });
-  };
+function Tooltip({ value, children, showOnDisabledTrigger }: Props) {
+  if (!value) return children;
 
   return (
-    <div
-      className={styles.container}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setStyle(undefined)}
-      ref={containerRef}>
-      <div className={styles.body}>{children}</div>
+    <BaseTooltip.Provider delay={0}>
+      <BaseTooltip.Root>
+        <BaseTooltip.Trigger
+          render={showOnDisabledTrigger ? <span>{children}</span> : (children as ReactElement<Record<string, unknown>>)}
+        />
 
-      {style && <TooltipComponent value={value} style={style} />}
-    </div>
+        <BaseTooltip.Portal>
+          <BaseTooltip.Positioner sideOffset={8} className={styles.positioner}>
+            <BaseTooltip.Popup className={styles.popup}>{value}</BaseTooltip.Popup>
+          </BaseTooltip.Positioner>
+        </BaseTooltip.Portal>
+      </BaseTooltip.Root>
+    </BaseTooltip.Provider>
   );
 }
 

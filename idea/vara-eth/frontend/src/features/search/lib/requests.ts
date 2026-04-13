@@ -1,6 +1,5 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/utils';
 
 export const INDEXER_ENTITY = {
@@ -18,5 +17,5 @@ export const INDEXER_ENTITY = {
 
 type IndexerEntityResponse = { type: (typeof INDEXER_ENTITY)[keyof typeof INDEXER_ENTITY]; data: unknown };
 
-export const getIndexerEntity = (hash: Hex) =>
-  fetchWithGuard<IndexerEntityResponse>({ url: `${EXPLORER_URL}/lookup/${hash}` });
+export const getIndexerEntity = (explorerUrl: string, hash: Hex) =>
+  fetchWithGuard<IndexerEntityResponse>({ url: `${explorerUrl}/lookup/${hash}` });

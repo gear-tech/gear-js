@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",
@@ -39,12 +39,12 @@
   },
   "peerDependencies": {
     "kzg-wasm": "1.0.0",
-    "viem": "^2.39.0"
+    "viem": "*"
   },
   "devDependencies": {
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "2.47.4",
+    "viem": "npm:@vara-eth/viem@2.47.7-1",
     "ws": "8.18.3"
   },
   "files": [

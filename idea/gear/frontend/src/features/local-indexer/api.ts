@@ -1,11 +1,11 @@
-import { HexString, ProgramMetadata } from '@gear-js/api';
-import localForage from 'localforage';
+import { type HexString, ProgramMetadata } from '@gear-js/api';
+import type localForage from 'localforage';
 
-import { IMeta } from '@/entities/metadata';
+import type { IMeta } from '@/entities/metadata';
 import { isState } from '@/features/metadata';
 
 import { METADATA_LOCAL_FORAGE, PROGRAMS_LOCAL_FORAGE } from './consts';
-import { DBProgram } from './types';
+import type { DBProgram } from './types';
 
 const getLocalEntity =
   <T>(db: typeof localForage, type: string) =>
@@ -50,4 +50,4 @@ const changeProgramStateStatus = async (metahash: HexString, metaHex: HexString)
 const addLocalMetadata = async (hash: HexString, hex: HexString) =>
   Promise.all([METADATA_LOCAL_FORAGE.setItem(hash, { hex }), changeProgramStateStatus(hash, hex)]);
 
-export { getLocalProgram, getLocalMetadata, addLocalProgram, addLocalProgramName, addLocalMetadata };
+export { addLocalMetadata, addLocalProgram, addLocalProgramName, getLocalMetadata, getLocalProgram };

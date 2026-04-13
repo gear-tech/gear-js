@@ -1,4 +1,4 @@
-import { ProviderProps, ApiProvider as GearApiProvider } from '@gear-js/react-hooks';
+import { ApiProvider as GearApiProvider, type ProviderProps } from '@gear-js/react-hooks';
 
 import { INITIAL_ENDPOINT } from '@/features/api';
 

@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 const getRandomPercent = () => Math.ceil((Math.random() || 0.01) * 100);
 

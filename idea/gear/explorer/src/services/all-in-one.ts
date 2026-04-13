@@ -1,4 +1,4 @@
-import { DataSource } from 'gear-idea-indexer-db';
+import type { DataSource } from 'gear-idea-indexer-db';
 import { CodeService } from './code.js';
 import { EventService } from './event.js';
 import { MessageService } from './message.js';

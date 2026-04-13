@@ -10,6 +10,9 @@ export class Code {
   @PrimaryColumn()
   public id: string;
 
-  @ManyToOne(() => SailsIdl, (sails) => sails.id)
+  @ManyToOne(
+    () => SailsIdl,
+    (sails) => sails.id,
+  )
   public sails: SailsIdl;
 }

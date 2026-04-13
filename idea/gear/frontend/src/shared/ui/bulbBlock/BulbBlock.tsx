@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
 import styles from './BulbBlock.module.scss';
-import { BulbStatus } from './const';
+import type { BulbStatus } from './const';
 
 type Props = {
   text?: string;

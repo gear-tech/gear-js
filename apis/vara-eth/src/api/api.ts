@@ -1,8 +1,8 @@
 import type { EthereumClient } from '../eth/index.js';
 import type { IInjectedTransaction, IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../types/index.js';
-import { call, type Call } from './call/index.js';
+import { type Call, call } from './call/index.js';
 import { InjectedTx } from './injected/index.js';
-import { query, type Query } from './query/index.js';
+import { type Query, query } from './query/index.js';
 
 export class VaraEthApi {
   private _provider: IVaraEthProvider | IVaraEthValidatorPoolProvider;
@@ -20,7 +20,7 @@ export class VaraEthApi {
       this._setProps('call', call);
     }
 
-    delete this._setProps;
+    this._setProps = undefined;
   }
 
   private _setProps?(thisProperty: string, modules: Record<string, any>) {

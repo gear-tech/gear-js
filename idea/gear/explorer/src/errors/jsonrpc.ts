@@ -1,4 +1,4 @@
-import { JsonRpcError } from '../types/index.js';
+import type { JsonRpcError } from '../types/index.js';
 
 export class MethodNotFound implements JsonRpcError {
   code = -32601;

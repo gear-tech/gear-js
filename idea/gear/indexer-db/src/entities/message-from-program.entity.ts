@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-import { MessageReadReason } from '../enums/index.js';
+import type { MessageReadReason } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
 import { BaseEntity } from './base.entity.js';
 

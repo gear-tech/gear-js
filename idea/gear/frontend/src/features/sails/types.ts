@@ -1,4 +1,4 @@
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 type Ctors = InstanceType<typeof Sails>['ctors'];
 type Services = InstanceType<typeof Sails>['services'];
@@ -12,11 +12,11 @@ type SailsServiceEvent = SailsService['events'][string];
 
 export type {
   Ctors,
-  Services,
-  SailsService,
   Functions,
   ISailsCtorFuncParams,
+  SailsService,
+  SailsServiceEvent,
   SailsServiceFunc,
   SailsServiceQuery,
-  SailsServiceEvent,
+  Services,
 };

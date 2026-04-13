@@ -3,7 +3,7 @@ import { Wallet } from '@/components';
 import { cx } from '@/utils';
 
 import { UI_CONFIG } from '../consts';
-import { ThemeProps } from '../types';
+import type { ThemeProps } from '../types';
 
 import styles from './modal-footer.module.scss';
 

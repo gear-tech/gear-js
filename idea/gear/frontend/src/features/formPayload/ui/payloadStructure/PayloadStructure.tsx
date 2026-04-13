@@ -1,6 +1,6 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 
-import { PayloadItemProps, PayloadStructureProps } from '../../model';
+import type { PayloadItemProps, PayloadStructureProps } from '../../model';
 import { EnumItem } from '../enumItem';
 import { OptionItem } from '../optionItem';
 import { PrimitiveItem } from '../primitiveItem';

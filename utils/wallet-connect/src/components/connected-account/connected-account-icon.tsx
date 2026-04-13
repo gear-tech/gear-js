@@ -1,10 +1,10 @@
 import { mergeProps, useRender } from '@base-ui-components/react';
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Identicon } from '@polkadot/react-identicon';
 
 type IdenticonType = typeof Identicon;
-type Props = useRender.ComponentProps<IdenticonType, { address: HexString }>;
+type Props = useRender.ComponentProps<IdenticonType, { address?: HexString }>;
 type ElementProps = useRender.ElementProps<IdenticonType>;
 
 function ConnectedAccountIcon({ render, ...props }: Props) {
@@ -18,7 +18,7 @@ function ConnectedAccountIcon({ render, ...props }: Props) {
   return useRender({
     render: render ?? <Identicon />,
     enabled: isAccountReady && Boolean(account),
-    state: { address: account!.decodedAddress },
+    state: { address: account?.decodedAddress },
     props: mergeProps<IdenticonType>(defaultProps, props),
   });
 }
