@@ -27,7 +27,7 @@
     "pg": "8.20.0",
     "redis": "5.11.0",
     "reflect-metadata": "0.2.2",
-    "sails-js": "https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta/sails-js.tgz",
+    "sails-js": "https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz",
     "typeorm": "0.3.28"
   },
   "devDependencies": {
