@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@types/eslint-plugin-jsx-a11y": "6.10.1",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "prettier": "^3.8.1"
   }
 }
