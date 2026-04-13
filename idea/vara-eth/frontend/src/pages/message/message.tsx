@@ -49,7 +49,13 @@ const Message = () => {
   const decodedPayload = useMemo(() => (payload ? getDecodedPayload(payload, sails) : null), [payload, sails]);
   const messageRoute = useMemo(() => (payload ? getMessageRoute(payload, sails) : null), [payload, sails]);
 
-  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading || isDecodedPayloadLoading) {
+  if (
+    messageRequest.isLoading ||
+    messageSent.isLoading ||
+    replyRequest.isLoading ||
+    replySent.isLoading ||
+    isDecodedPayloadLoading
+  ) {
     return (
       <PageContainer className={styles.container}>
         <div className={styles.column}>

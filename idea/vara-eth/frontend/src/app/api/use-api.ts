@@ -1,23 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { createVaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { usePublicClient } from 'wagmi';
 
-import { ROUTER_CONTRACT_ADDRESS, VARA_ETH_NODE_ADDRESS } from '@/shared/config';
+import { nodeAtom } from '@/app/store/node';
 
 import { useSigner } from './use-signer';
 
 function useApi() {
   const publicClient = usePublicClient();
   const signer = useSigner();
+  const { varaEthNodeAddress, routerContractAddress, ethChainId } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['varaEthApi', publicClient?.uid],
+    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId],
 
     queryFn: () =>
-      createVaraEthApi(new WsVaraEthProvider(VARA_ETH_NODE_ADDRESS), publicClient!, ROUTER_CONTRACT_ADDRESS, signer),
+      createVaraEthApi(new WsVaraEthProvider(varaEthNodeAddress), publicClient!, routerContractAddress, signer),
 
-    enabled: Boolean(publicClient),
+    enabled: Boolean(publicClient) && publicClient?.chain.id === ethChainId,
   });
 }
 

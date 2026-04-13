@@ -5,7 +5,7 @@ import { formatEther } from 'viem';
 import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
-import type { MessageRequest, SailsMessageRoute, MessageSent, ReplyRequest, ReplySent } from '../../lib';
+import type { MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute } from '../../lib';
 
 type RouteProp = {
   route?: SailsMessageRoute | null;

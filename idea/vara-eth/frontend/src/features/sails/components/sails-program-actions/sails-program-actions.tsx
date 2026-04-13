@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 
 import { Tabs, UploadIdlButton } from '@/components';
@@ -10,30 +10,42 @@ import { SailsActionGroup } from '../sails-action-group';
 
 import styles from './sails-program-actions.module.scss';
 
-const TABS_NO_IDL = ['IDL', 'Messages'];
-const TABS_WITH_IDL = ['Call offchain', 'Call onchain', 'Messages'];
+const MESSAGES_TAB = 'Messages';
+const IDL_TAB = 'IDL';
+const OFFCHAIN_TAB = 'Call offchain';
+const ONCHAIN_TAB = 'Call onchain';
+
+const TABS_LOADING = [MESSAGES_TAB];
+const TABS_NO_IDL = [MESSAGES_TAB, IDL_TAB];
+const TABS_WITH_IDL = [MESSAGES_TAB, OFFCHAIN_TAB, ONCHAIN_TAB];
 
 type Props = {
   programId: Hex;
   idl: string | null | undefined;
+  isLoading: boolean;
   onSaveIdl: (idl: string) => void;
   init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
   hasExecutableBalance: boolean;
 };
 
-const SailsProgramPanel = ({ programId, idl, onSaveIdl, init, hasExecutableBalance }: Props) => {
+const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExecutableBalance }: Props) => {
   const { data: sails } = useSails(idl ?? '');
   const [tabIndex, setTabIndex] = useState(0);
+  const tabs = isLoading ? TABS_LOADING : idl ? TABS_WITH_IDL : TABS_NO_IDL;
+  const activeTab = tabs[tabIndex] ?? MESSAGES_TAB;
+
+  useEffect(() => {
+    const maxTabIndex = tabs.length - 1;
+    setTabIndex((currentTabIndex) => (currentTabIndex > maxTabIndex ? 0 : currentTabIndex));
+  }, [tabs]);
 
   const sendInjectedTx = useSendInjectedTransaction(programId, sails);
   const sendMessage = useSendProgramMessage(programId, sails);
-  const send = tabIndex === 0 ? sendInjectedTx : sendMessage;
+  const send = activeTab === OFFCHAIN_TAB ? sendInjectedTx : sendMessage;
 
   const initProgram = useInitProgram(programId, sails);
 
-  const tabs = idl ? TABS_WITH_IDL : TABS_NO_IDL;
-  const messagesTabIndex = tabs.length - 1;
-  const isMessagesTab = tabIndex === messagesTabIndex;
+  const isMessagesTab = activeTab === MESSAGES_TAB;
 
   const renderServiceActions = () =>
     Object.entries(sails!.services).map(([serviceName, service]) => {
@@ -89,6 +101,8 @@ const SailsProgramPanel = ({ programId, idl, onSaveIdl, init, hasExecutableBalan
 
   const renderContent = () => {
     if (isMessagesTab) return <ProgramMessagesTable programId={programId} sails={sails} />;
+
+    if (isLoading) return null;
 
     if (!idl)
       return (

@@ -3,13 +3,13 @@ import { clsx } from 'clsx';
 import CrossIcon from '@/assets/icons/cross.svg?react';
 import { Button } from '@/components';
 
-import { nodeSections } from '../../config';
 import type { NodeSection } from '../../types';
 import { Node as NodeItem } from '../node';
 
 import styles from './nodes-popup.module.scss';
 
 type Props = {
+  sections: NodeSection[];
   nodeAddress: string | undefined;
   selectedNode: string;
   selectNode: (address: string) => void;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const NodesPopup = (props: Props) => {
-  const { nodeAddress, selectedNode, selectNode, onSwitchButtonClick, onCloseButtonClick } = props;
+  const { sections, nodeAddress, selectedNode, selectNode, onSwitchButtonClick, onCloseButtonClick } = props;
 
   const isCurrentNode = selectedNode === nodeAddress;
 
@@ -33,7 +33,7 @@ const NodesPopup = (props: Props) => {
     ));
 
   const getSections = () =>
-    nodeSections.map((section, index) => (
+    sections.map((section, index) => (
       <li key={`${section.caption}-${index}`}>
         <h3 className={styles.caption}>{section.caption}</h3>
         <ul className={styles.sectionList}>{getNodes(section)}</ul>
@@ -46,7 +46,7 @@ const NodesPopup = (props: Props) => {
         <ul className={styles.list}>{getSections()}</ul>
 
         <Button className={styles.action} size="sm" disabled={isCurrentNode} onClick={onSwitchButtonClick}>
-          Switch to Vara
+          Switch
         </Button>
       </div>
 

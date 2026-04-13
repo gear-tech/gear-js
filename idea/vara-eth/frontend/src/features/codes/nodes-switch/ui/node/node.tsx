@@ -11,13 +11,15 @@ type Props = NodeType & {
 
 const Node = (props: Props) => {
   const { address, selectedNode, selectNode } = props;
+  const inputId = `node-${encodeURIComponent(address)}`;
 
   const handleChange = () => selectNode(address);
 
   return (
-    <li id={address} className={styles.node}>
-      <label className={styles.radio}>
+    <li className={styles.node}>
+      <label className={styles.radio} htmlFor={inputId}>
         <input
+          id={inputId}
           type="radio"
           name="node"
           checked={selectedNode === address}

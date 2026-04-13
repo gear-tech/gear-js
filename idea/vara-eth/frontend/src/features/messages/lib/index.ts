@@ -1,3 +1,4 @@
+import type { SailsMessageRoute } from './decode';
 import { getDecodedPayload, getMessageName, getMessageRoute } from './decode';
 import {
   useGetAllMessageRequestsQuery,
@@ -9,7 +10,6 @@ import {
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
 } from './queries';
-import type { SailsMessageRoute } from './decode';
 import type { MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
 
 export type { MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute };
