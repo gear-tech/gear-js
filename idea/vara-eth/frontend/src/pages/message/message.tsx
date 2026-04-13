@@ -39,12 +39,14 @@ const Message = () => {
     messageSent.data?.sourceProgramId ||
     replySent.data?.sourceProgramId;
   const { data: sourceProgram, isLoading: isSourceProgramLoading } = useGetProgramByIdQuery(sourceProgramId ?? '');
-  const { idl } = useIdlStorage(sourceProgram?.code?.id);
+  const { idl, isLoading: isIdlLoading } = useIdlStorage(sourceProgram?.code?.id);
   const { data: sails, isLoading: isSailsLoading } = useSails(idl);
 
   const payload =
     messageRequest.data?.payload || messageSent.data?.payload || replyRequest.data?.payload || replySent.data?.payload;
-  const isDecodedPayloadLoading = Boolean(payload) && (isSourceProgramLoading || isSailsLoading);
+
+  const isDecodedPayloadLoading =
+    Boolean(payload && sourceProgramId) && (isSourceProgramLoading || isIdlLoading || isSailsLoading);
 
   const decodedPayload = useMemo(() => (payload ? getDecodedPayload(payload, sails) : null), [payload, sails]);
   const messageRoute = useMemo(() => (payload ? getMessageRoute(payload, sails) : null), [payload, sails]);

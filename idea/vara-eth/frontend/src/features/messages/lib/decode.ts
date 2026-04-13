@@ -10,30 +10,34 @@ type SailsMessageRoute = {
 
 const getSailsMethod = (sails: Sails, payload: Hex) => {
   const serviceName = getServiceNamePrefix(payload);
-  const functionName = getFnNamePrefix(payload);
+  const constructor = sails.ctors[serviceName];
+  if (constructor) {
+    return { constructor, hasMethod: false, constructorName: serviceName };
+  }
 
-  const constructor = sails.ctors[serviceName] || undefined;
+  const functionName = getFnNamePrefix(payload);
   const service = sails.services[serviceName];
   const hasFunction = Boolean(service?.functions?.[functionName]);
   const hasQuery = Boolean(service?.queries?.[functionName]);
   const method = service?.functions?.[functionName] ?? service?.queries?.[functionName];
   const hasMethod = hasFunction || hasQuery;
   const kind: SailsMessageRoute['kind'] | undefined = hasFunction ? 'function' : hasQuery ? 'query' : undefined;
-
-  return { serviceName, functionName, constructor, method, hasMethod, kind };
+  return { serviceName, functionName, method, hasMethod, kind };
 };
 
 const getDecodedPayload = (payload: Hex, sails: Sails | undefined) => {
   if (!sails) return null;
 
   try {
-    const { constructor, method, hasMethod } = getSailsMethod(sails, payload);
+    const sailsMethod = getSailsMethod(sails, payload);
+    const { constructor, method, hasMethod } = sailsMethod;
 
     if (constructor && !hasMethod) return constructor.decodePayload(payload);
     if (hasMethod && method) return method.decodePayload(payload);
 
-    return null;
-  } catch {
+    throw new Error(`Unable to decode payload ${payload} with sails method ${JSON.stringify(sailsMethod)}`);
+  } catch (error) {
+    console.error(error);
     return null;
   }
 };
@@ -42,9 +46,9 @@ const getMessageName = (payload: Hex, sails: Sails | undefined) => {
   if (!sails) return null;
 
   try {
-    const { serviceName, functionName, constructor, hasMethod } = getSailsMethod(sails, payload);
+    const { serviceName, functionName, constructor, hasMethod, constructorName } = getSailsMethod(sails, payload);
 
-    if (constructor && !hasMethod) return serviceName;
+    if (constructor && !hasMethod) return constructorName;
     if (hasMethod) return `${serviceName}.${functionName}`;
 
     return null;
@@ -57,9 +61,9 @@ const getMessageRoute = (payload: Hex, sails: Sails | undefined): SailsMessageRo
   if (!sails) return null;
 
   try {
-    const { serviceName, functionName, constructor, hasMethod, kind } = getSailsMethod(sails, payload);
+    const { serviceName, functionName, constructor, hasMethod, kind, constructorName } = getSailsMethod(sails, payload);
 
-    if (constructor && !hasMethod) return { kind: 'constructor', name: serviceName };
+    if (constructor) return { kind: 'constructor', name: constructorName };
     if (hasMethod && kind) return { service: serviceName, kind, name: functionName };
 
     return null;
