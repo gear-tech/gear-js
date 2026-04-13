@@ -2,8 +2,24 @@ import type { Hex } from 'viem';
 
 const PROJECT_ID = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID as string;
 
-const ETH_CHAIN_ID_TESTNET = Number(import.meta.env.VITE_ETH_CHAIN_ID_TESTNET);
-const ETH_CHAIN_ID_MAINNET = Number(import.meta.env.VITE_ETH_CHAIN_ID_MAINNET);
+const parseOptionalChainId = (value: string | undefined, fallbackValue: number): number => {
+  const normalizedValue = value?.trim();
+
+  if (!normalizedValue) {
+    return fallbackValue;
+  }
+
+  const chainId = Number(normalizedValue);
+
+  if (!Number.isInteger(chainId) || chainId <= 0) {
+    throw new Error(`ETH chain ID must be a positive integer. Received: "${value}"`);
+  }
+
+  return chainId;
+};
+
+const ETH_CHAIN_ID_TESTNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_TESTNET, 560048);
+const ETH_CHAIN_ID_MAINNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_MAINNET, 1);
 
 const ETH_NODE_ADDRESS_TESTNET = import.meta.env.VITE_ETH_NODE_ADDRESS_TESTNET as string;
 const ETH_NODE_ADDRESS_MAINNET = import.meta.env.VITE_ETH_NODE_ADDRESS_MAINNET as string;
