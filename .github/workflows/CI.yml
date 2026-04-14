@@ -227,15 +227,15 @@ jobs:
 
       - name: 'Test: meta-storage'
         timeout-minutes: 3
-        run: test:gear-idea-meta-storage
+        run: yarn test:gear-idea-meta-storage
 
       - name: 'Test: faucet'
         timeout-minutes: 3
-        run: test:gear-idea-faucet
+        run: yarn test:gear-idea-faucet
 
       - name: 'Test: explorer'
         timeout-minutes: 3
-        run: test:gear-idea-explorer
+        run: yarn test:gear-idea-explorer
 
   test-ui:
     runs-on: ubuntu-latest
