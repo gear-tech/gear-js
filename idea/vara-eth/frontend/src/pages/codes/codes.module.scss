@@ -1,3 +1,9 @@
+.container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .codeIdWrapper {
   display: flex;
   align-items: center;
