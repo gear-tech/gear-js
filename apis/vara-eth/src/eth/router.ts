@@ -1,7 +1,7 @@
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
 import type { Address, Hex, TransactionRequest } from 'viem';
-import { bytesToHex, encodeFunctionData, hexToBytes, toHex, zeroAddress } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex, zeroAddress } from 'viem';
 
 import { generateCodeHash } from '../util/index.js';
 import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
@@ -249,6 +249,10 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     }
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
+    const commitment = kzg.blobToKZGCommitment(bytesToHex(blobs[0])) as Hex;
+    const blobHash = sha256(commitment, 'bytes');
+    const versionedBlobHash = bytesToHex(new Uint8Array([0x01, ...blobHash.subarray(1)]));
+
     const tx = {
       type: 'eip4844' as const,
       blobVersion: '7594' as const,
@@ -278,29 +282,38 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     await this._pc.prepareTransactionRequest(tx);
 
-    const txManager: ITxManager = new TxManager(this._pc, this._signer!, tx, IROUTER_ABI, undefined, {
-      codeId,
-      waitForCodeGotValidated: () =>
-        new Promise<boolean>((resolve, reject) =>
-          // TODO: consider listening from block where transaction was included
-          this._pc.watchContractEvent({
-            address: this.address,
-            abi: IROUTER_ABI,
-            eventName: 'CodeGotValidated',
-            onLogs: (logs) => {
-              for (const log of logs) {
-                if (log.args.codeId === codeId) {
-                  if (log.args.valid) {
-                    resolve(true);
-                  } else {
-                    reject(new Error('Code validation failed'));
+    const txManager: ITxManager = new TxManager(
+      this._pc,
+      this._signer!,
+      tx,
+      IROUTER_ABI,
+      {
+        waitForCodeGotValidated: (manager) => () =>
+          new Promise<boolean>((resolve, reject) =>
+            this._pc.watchContractEvent({
+              address: this.address,
+              abi: IROUTER_ABI,
+              eventName: 'CodeGotValidated',
+              fromBlock: manager.blockNumber || undefined,
+              onLogs: (logs) => {
+                for (const log of logs) {
+                  if (log.args.codeId === codeId) {
+                    if (log.args.valid) {
+                      resolve(true);
+                    } else {
+                      reject(new Error('Code validation failed'));
+                    }
                   }
                 }
-              }
-            },
-          }),
-        ),
-    });
+              },
+            }),
+          ),
+      },
+      {
+        codeId,
+        blobHash: versionedBlobHash,
+      },
+    );
 
     return txManager as TxManagerWithHelpers<CodeValidationHelpers>;
   }

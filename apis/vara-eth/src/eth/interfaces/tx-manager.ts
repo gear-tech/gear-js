@@ -56,4 +56,9 @@ export interface ITxManager {
    * @returns The transaction parameters
    */
   getTx(): any;
+
+  /**
+   * The block number in which the transaction was included or null if the transaction has not been mined yet.
+   */
+  blockNumber: bigint | null;
 }

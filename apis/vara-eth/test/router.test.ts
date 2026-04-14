@@ -42,15 +42,23 @@ afterAll(async () => {
 
 describe('router', () => {
   describe('upload code', () => {
-    test('should request code validation', async () => {
-      const tx = await router.requestCodeValidation(code);
-      codeId = tx.codeId;
-      const receipt = await tx.sendAndWaitForReceipt();
-      expect(receipt.blockHash).toBeDefined();
-      codeValidatedPromise = tx.waitForCodeGotValidated();
-    }, 60_000);
+    test(
+      'should request code validation',
+      async () => {
+        const tx = await router.requestCodeValidation(code);
+        codeId = tx.codeId;
+        const receipt = await tx.sendAndWaitForReceipt();
+        const transaction = await publicClient.getTransaction({ hash: receipt.transactionHash });
 
-    test.skip(
+        expect(transaction.blobVersionedHashes?.[0]).toBe(tx.blobHash);
+
+        expect(receipt.blockHash).toBeDefined();
+        codeValidatedPromise = tx.waitForCodeGotValidated();
+      },
+      config.longRunningTestTimeout,
+    );
+
+    test(
       'should wait when code got validated',
       async () => {
         expect(await codeValidatedPromise).toBeTruthy();

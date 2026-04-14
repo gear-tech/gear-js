@@ -31,6 +31,7 @@ export class TxManager<
 {
   private _receipt: TransactionReceipt | null = null;
   private _hash: Hash | null = null;
+  private _blockNumber: bigint | null = null;
 
   /**
    * Creates a new transaction manager.
@@ -103,6 +104,7 @@ export class TxManager<
     if (!this._receipt) {
       throw new Error('Transaction receipt not found');
     }
+    this._blockNumber = this._receipt.blockNumber;
     return this._receipt;
   }
 
@@ -163,5 +165,14 @@ export class TxManager<
    */
   getTx(): TransactionRequest {
     return this._tx;
+  }
+
+  /**
+   * Gets the block number of the transaction.
+   *
+   * @returns The block number or null if not available
+   */
+  get blockNumber(): bigint | null {
+    return this._blockNumber;
   }
 }

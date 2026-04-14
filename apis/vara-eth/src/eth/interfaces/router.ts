@@ -1,4 +1,4 @@
-import type { Hex } from 'viem';
+import type { Hash, Hex } from 'viem';
 
 /**
  * Helper functions for code validation.
@@ -8,6 +8,11 @@ export interface CodeValidationHelpers {
    * The ID of the code being validated.
    */
   codeId: Hex;
+
+  /**
+   * The versioned hash of the code blob.
+   */
+  blobHash: Hash;
 
   /**
    * Waits for the code to be validated.
