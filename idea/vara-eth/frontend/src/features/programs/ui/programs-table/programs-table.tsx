@@ -45,7 +45,6 @@ const ProgramsTable = ({ pageSize = 10, positionedAt = 'top', codeId }: Props) =
       columns={COLUMNS}
       data={data}
       isLoading={isFetching}
-      lineHeight="md"
       pageSize={pageSize}
       headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
       positionedAt={positionedAt}
