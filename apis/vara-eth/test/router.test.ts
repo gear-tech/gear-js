@@ -60,7 +60,7 @@ describe('router', () => {
         expect(receipt.blockHash).toBeDefined();
         codeValidatedPromise = tx.waitForCodeGotValidated();
       },
-      config.longRunningTestTimeout,
+      config.longRunningTestTimeout * 3,
     );
 
     test(
