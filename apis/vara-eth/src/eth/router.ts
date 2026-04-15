@@ -1,9 +1,9 @@
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
-import { ZERO_ADDRESS } from 'util/constants.js';
 import type { Address, Hex, TransactionRequest } from 'viem';
 import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex } from 'viem/utils';
 
+import { ZERO_ADDRESS } from '../util/constants.js';
 import { generateCodeHash } from '../util/hash.js';
 import { IROUTER_ABI, type IRouterContract } from './abi/IRouter.js';
 import { BaseContractClient, type ContractClientParams } from './base-contract.js';
@@ -250,9 +250,12 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     }
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
-    const commitment = kzg.blobToKZGCommitment(bytesToHex(blobs[0])) as Hex;
-    const blobHash = sha256(commitment, 'bytes');
-    const versionedBlobHash = bytesToHex(new Uint8Array([0x01, ...blobHash.subarray(1)]));
+    const commitments = blobs.map((blob) => kzg.blobToKZGCommitment(bytesToHex(blob))) as Hex[];
+    const blobVersionedHashes = commitments.map((c) => {
+      const hash = sha256(c, 'bytes');
+      hash.set([0x01], 0);
+      return bytesToHex(hash);
+    });
 
     const tx = {
       type: 'eip4844' as const,
@@ -290,8 +293,9 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       IROUTER_ABI,
       {
         waitForCodeGotValidated: (manager) => () =>
-          new Promise<boolean>((resolve, reject) =>
-            this._pc.watchContractEvent({
+          new Promise<boolean>((resolve, reject) => {
+            let unwatch: (() => void) | undefined;
+            unwatch = this._pc.watchContractEvent({
               address: this.address,
               abi: IROUTER_ABI,
               eventName: 'CodeGotValidated',
@@ -299,6 +303,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
               onLogs: (logs) => {
                 for (const log of logs) {
                   if (log.args.codeId === codeId) {
+                    unwatch?.();
                     if (log.args.valid) {
                       resolve(true);
                     } else {
@@ -307,12 +312,12 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
                   }
                 }
               },
-            }),
-          ),
+            });
+          }),
       },
       {
         codeId,
-        blobHash: versionedBlobHash,
+        blobVersionedHashes,
       },
     );
 

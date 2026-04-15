@@ -50,7 +50,12 @@ describe('router', () => {
         const receipt = await tx.sendAndWaitForReceipt();
         const transaction = await publicClient.getTransaction({ hash: receipt.transactionHash });
 
-        expect(transaction.blobVersionedHashes?.[0]).toBe(tx.blobHash);
+        expect(transaction.blobVersionedHashes).toBeDefined();
+        expect(transaction.blobVersionedHashes!.length).toBeGreaterThan(0);
+
+        for (let i = 0; i < transaction.blobVersionedHashes!.length; i++) {
+          expect(transaction.blobVersionedHashes![i]).toBe(tx.blobVersionedHashes[i]);
+        }
 
         expect(receipt.blockHash).toBeDefined();
         codeValidatedPromise = tx.waitForCodeGotValidated();

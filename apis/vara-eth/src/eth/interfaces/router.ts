@@ -10,9 +10,9 @@ export interface CodeValidationHelpers {
   codeId: Hex;
 
   /**
-   * The versioned hash of the code blob.
+   * The hashes of the blobs that make up the code, in the order they were provided during validation request.
    */
-  blobHash: Hash;
+  blobVersionedHashes: Hash[];
 
   /**
    * Waits for the code to be validated.

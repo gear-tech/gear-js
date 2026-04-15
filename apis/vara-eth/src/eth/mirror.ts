@@ -256,7 +256,9 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
       _reject = reject;
     });
 
-    const unwatch = this._pc.watchContractEvent({
+    let unwatch: (() => void) | undefined;
+
+    unwatch = this._pc.watchContractEvent({
       address: this.address,
       abi: IMIRROR_ABI,
       eventName: 'Reply',
@@ -265,6 +267,7 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
 
         for (const log of logs) {
           if (log.args.replyTo?.toLowerCase() === id) {
+            unwatch?.();
             settled = true;
             const { payload, value, replyCode } = log.args;
             if (payload === undefined || value === undefined || replyCode === undefined) {
@@ -284,11 +287,7 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
       fromBlock: fromBlockNumber,
     });
 
-    try {
-      return await promise;
-    } finally {
-      unwatch();
-    }
+    return promise;
   }
 }
 
