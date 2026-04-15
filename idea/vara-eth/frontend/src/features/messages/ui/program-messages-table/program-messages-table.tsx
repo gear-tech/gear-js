@@ -117,7 +117,6 @@ const ProgramMessagesTable = ({ programId, pageSize = 5 }: Props) => {
           columns={INCOMING_COLUMNS}
           data={incomingData}
           isLoading={incoming.isFetching}
-          lineHeight="md"
           pageSize={pageSize}
           positionedAt="bottom"
         />
@@ -126,7 +125,6 @@ const ProgramMessagesTable = ({ programId, pageSize = 5 }: Props) => {
           columns={OUTGOING_COLUMNS}
           data={outgoingData}
           isLoading={outgoing.isFetching}
-          lineHeight="md"
           pageSize={pageSize}
           positionedAt="bottom"
         />
