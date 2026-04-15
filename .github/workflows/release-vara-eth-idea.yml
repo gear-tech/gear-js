@@ -78,7 +78,7 @@ jobs:
         with:
           filters: |
             changed:
-              - idea/vara-eth/frontend/**
+              - 'idea/vara-eth/frontend/**'
 
       - name: Check indexer changes
         id: indexer
@@ -86,7 +86,7 @@ jobs:
         with:
           filters: |
             changed:
-              - idea/vara-eth/indexer/**
+              - 'idea/vara-eth/indexer/**'
 
       - name: Determine what should be built
         id: should-build
