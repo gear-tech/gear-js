@@ -12,6 +12,7 @@ export { Modal } from './modal';
 export { PageContainer } from './page-container';
 export { Pagination } from './pagination';
 export { Skeleton } from './skeleton';
+export { SplitButton } from './split-button';
 export { SyntaxHighlighter } from './syntax-highlighter';
 export { Table } from './table';
 export { Tabs } from './tabs';

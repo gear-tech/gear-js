@@ -2,6 +2,7 @@ export {
   useCreateProgram,
   useInitProgram,
   useReadContractState,
+  useReadProgramMessage,
   useSendInjectedTransaction,
   useSendProgramMessage,
   useWatchProgramStateChange,
