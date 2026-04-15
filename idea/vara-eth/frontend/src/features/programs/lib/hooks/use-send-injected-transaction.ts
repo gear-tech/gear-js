@@ -9,7 +9,6 @@ import type { FormattedPayloadValue } from '@/features/sails/lib';
 type SendMessageParams = {
   serviceName: string;
   messageName: string;
-  isQuery: boolean;
   payload: FormattedPayloadValue;
 };
 
@@ -17,11 +16,10 @@ const useSendInjectedTransaction = (programId: Hex, sails: Sails | undefined) =>
   const { data: api } = useApi();
   const addMyActivity = useAddMyActivity();
 
-  const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {
+  const sendInjectedTransaction = async ({ serviceName, messageName, payload }: SendMessageParams) => {
     if (!sails || !api) return;
 
-    const messageKey = isQuery ? 'queries' : 'functions';
-    const sailsMessage = sails?.services[serviceName][messageKey][messageName];
+    const sailsMessage = sails?.services[serviceName].functions[messageName];
 
     const params = payload.formatted;
 
