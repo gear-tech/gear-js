@@ -17,9 +17,12 @@ const getSailsMethod = (sails: Sails, payload: Hex) => {
 
   const functionName = getFnNamePrefix(payload);
   const service = sails.services[serviceName];
-  const hasFunction = Boolean(service?.functions?.[functionName]);
-  const hasQuery = Boolean(service?.queries?.[functionName]);
-  const method = service?.functions?.[functionName] ?? service?.queries?.[functionName];
+  if (!service) {
+    throw new Error(`Unable to identify service ${serviceName}`);
+  }
+  const hasFunction = Boolean(service.functions?.[functionName]);
+  const hasQuery = Boolean(service.queries?.[functionName]);
+  const method = service.functions?.[functionName] ?? service.queries?.[functionName];
   const hasMethod = hasFunction || hasQuery;
   const kind: SailsMessageRoute['kind'] | undefined = hasFunction ? 'function' : hasQuery ? 'query' : undefined;
   return { serviceName, functionName, method, hasMethod, kind };
