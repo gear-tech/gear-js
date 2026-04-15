@@ -10,6 +10,7 @@ const TransactionTypes = {
   approve: 'approve',
   programMessage: 'program-message',
   programReply: 'program-reply',
+  readProgramReply: 'read-program-reply',
   initProgram: 'init-program',
   injectedTx: 'injected-tx',
   injectedTxResponse: 'injected-tx-response',
@@ -40,6 +41,16 @@ type ReplyActivity = {
   replyCode: string;
   blockNumber: bigint;
   hash: Hex;
+  from: Hex;
+  value: string;
+  params?: Record<string, unknown>;
+};
+
+type ReadReplyActivity = {
+  type: typeof TransactionTypes.readProgramReply;
+  serviceName: string;
+  messageName: string;
+  replyCode: string;
   from: Hex;
   value: string;
   params?: Record<string, unknown>;
@@ -102,6 +113,7 @@ type MyActivity =
   | ApproveActivity
   | SendMessageActivity
   | ReplyActivity
+  | ReadReplyActivity
   | InitProgramActivity
   | InjectedTxActivity
   | InjectedTxResponseActivity;

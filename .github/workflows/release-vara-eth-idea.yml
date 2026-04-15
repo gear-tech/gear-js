@@ -15,6 +15,14 @@ on:
           - indexer
           - all
         required: true
+      environment:
+        type: choice
+        description: Environment to deploy
+        options:
+          - vara-eth-idea-staging
+          - vara-eth-idea-production
+        required: true
+        default: vara-eth-idea-staging
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -46,7 +54,7 @@ jobs:
         id: get_env
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           else
             # For push events, determine environment based on branch
             if [[ "${{ github.ref }}" == "refs/heads/prod/vara-eth-idea" ]]; then
@@ -206,4 +214,4 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMEPSACE }}
+          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}

@@ -14,7 +14,7 @@ const COLUMNS = [
     title: 'PROGRAM ID',
     sortable: true,
     render: (programId: string) => (
-      <HashLink hash={programId} truncateSize="xxl" href={generatePath(routes.program, { programId })} />
+      <HashLink hash={programId} truncateSize="md" href={generatePath(routes.program, { programId })} />
     ),
   },
 
@@ -27,7 +27,7 @@ type Props = {
   positionedAt?: 'top' | 'bottom';
 };
 
-const ProgramsTable = ({ pageSize = 7, positionedAt = 'top', codeId }: Props) => {
+const ProgramsTable = ({ pageSize = 10, positionedAt = 'top', codeId }: Props) => {
   const [page, setPage] = useState(1);
   const { data: programsResponse, isFetching } = useGetAllProgramsQuery(page, pageSize, codeId);
 
@@ -45,7 +45,6 @@ const ProgramsTable = ({ pageSize = 7, positionedAt = 'top', codeId }: Props) =>
       columns={COLUMNS}
       data={data}
       isLoading={isFetching}
-      lineHeight="lg"
       pageSize={pageSize}
       headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
       positionedAt={positionedAt}

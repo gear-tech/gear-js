@@ -17,7 +17,7 @@ const columns = [
     sortable: true,
     render: (codeId: string) => (
       <div className={styles.codeIdWrapper}>
-        <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
+        <HashLink hash={codeId} truncateSize="lg" href={generatePath(routes.code, { codeId })} />
         {/* <Tooltip value="Verified">
           <VerifySvg />
         </Tooltip> */}
@@ -41,13 +41,15 @@ const Codes = () => {
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      isLoading={isFetching}
-      pageSize={PAGE_SIZE}
-      headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
-    />
+    <div className={styles.container}>
+      <Table
+        columns={columns}
+        data={data}
+        isLoading={isFetching}
+        pageSize={PAGE_SIZE}
+        headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+      />
+    </div>
   );
 };
 

@@ -109,7 +109,11 @@ const Transaction = ({ item }: Props) => {
     );
   }
 
-  if (item.type === TransactionTypes.programReply || item.type === TransactionTypes.injectedTxResponse) {
+  if (
+    item.type === TransactionTypes.programReply ||
+    item.type === TransactionTypes.injectedTxResponse ||
+    item.type === TransactionTypes.readProgramReply
+  ) {
     const params = item.params || item.value ? { ...item.params, value: `${item.value}` } : null;
 
     return (
