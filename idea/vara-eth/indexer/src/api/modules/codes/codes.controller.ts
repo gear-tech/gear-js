@@ -5,7 +5,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { CodesService } from './codes.service.js';
 import { CodeResponseDto } from './dto/code-response.dto.js';
-import type { QueryCodesDto } from './dto/query-codes.dto.js';
+import { QueryCodesDto } from './dto/query-codes.dto.js';
 
 @ApiTags('codes')
 @Controller('codes')

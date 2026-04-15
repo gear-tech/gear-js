@@ -4,7 +4,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { BatchesService } from './batches.service.js';
-import type { QueryBatchesDto } from './dto/query-batches.dto.js';
+import { QueryBatchesDto } from './dto/query-batches.dto.js';
 
 @ApiTags('batches')
 @Controller('batches')

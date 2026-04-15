@@ -4,7 +4,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ProgramResponseDto } from './dto/program-response.dto.js';
-import type { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
 import { ProgramsService } from './programs.service.js';
 
 @ApiTags('programs')

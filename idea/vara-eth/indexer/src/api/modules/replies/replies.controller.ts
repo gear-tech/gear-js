@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
-import type { QueryRepliesDto } from './dto/query-replies.dto.js';
+import { QueryRepliesDto } from './dto/query-replies.dto.js';
 import { RepliesService } from './replies.service.js';
 
 @ApiTags('replies')

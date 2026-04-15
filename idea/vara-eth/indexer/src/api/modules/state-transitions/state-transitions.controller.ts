@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
-import type { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
+import { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
 import { StateTransitionsService } from './state-transitions.service.js';
 
 @ApiTags('state-transitions')

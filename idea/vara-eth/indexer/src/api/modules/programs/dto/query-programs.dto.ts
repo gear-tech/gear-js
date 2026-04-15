@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
 
@@ -28,6 +29,9 @@ export class QueryProgramsWithBlockRangeDto extends QueryProgramsDto {
     type: Number,
   })
   @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
   fromBlock?: number;
 
   @ApiPropertyOptional({
@@ -35,5 +39,8 @@ export class QueryProgramsWithBlockRangeDto extends QueryProgramsDto {
     type: Number,
   })
   @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
   toBlock?: number;
 }
