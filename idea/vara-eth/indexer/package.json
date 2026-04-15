@@ -9,8 +9,7 @@
     "build": "rm -rf lib && npx tsc",
     "start": "node lib/main.js",
     "migration:generate": "yarn build && npx typeorm migration:generate -d lib/model/dataSource.js -o db/migrations/$NAME",
-    "migration:run": "npx typeorm migration:run -d lib/model/dataSource.js",
-    "serve": "node lib/api.js"
+    "migration:run": "npx typeorm migration:run -d lib/model/dataSource.js"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
