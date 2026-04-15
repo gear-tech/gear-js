@@ -22,19 +22,24 @@
   },
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "import": "./lib/index.js",
-      "require": "./lib/cjs/index.js",
-      "types": "./lib/index.d.ts"
+      "require": "./lib/cjs/index.js"
     },
     "./abi": {
+      "types": "./lib/eth/abi/index.d.ts",
       "import": "./lib/eth/abi/index.js",
-      "require": "./lib/eth/abi/index.cjs",
-      "types": "./lib/eth/abi/index.d.ts"
+      "require": "./lib/eth/abi/index.cjs"
     },
     "./signer": {
+      "types": "./lib/signer/index.d.ts",
       "import": "./lib/signer/index.js",
-      "require": "./lib/signer/index.cjs",
-      "types": "./lib/signer/index.d.ts"
+      "require": "./lib/signer/index.cjs"
+    },
+    "./eth/router": {
+      "types": "./lib/eth/router.d.ts",
+      "import": "./lib/eth/router.js",
+      "require": "./lib/eth/router.cjs"
     }
   },
   "peerDependencies": {

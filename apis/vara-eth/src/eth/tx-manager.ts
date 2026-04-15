@@ -10,7 +10,7 @@ import type {
   TransactionReceipt,
   TransactionRequest,
 } from 'viem';
-import { decodeEventLog } from 'viem';
+import { decodeEventLog } from 'viem/utils';
 
 import type { ITransactionSigner } from '../types/signer.js';
 import type { ITxManager } from './interfaces/tx-manager.js';

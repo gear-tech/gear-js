@@ -1,10 +1,11 @@
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
+import { ZERO_ADDRESS } from 'util/constants.js';
 import type { Address, Hex, TransactionRequest } from 'viem';
-import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex, zeroAddress } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex } from 'viem/utils';
 
-import { generateCodeHash } from '../util/index.js';
-import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
+import { generateCodeHash } from '../util/hash.js';
+import { IROUTER_ABI, type IRouterContract } from './abi/IRouter.js';
 import { BaseContractClient, type ContractClientParams } from './base-contract.js';
 import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
 import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
@@ -336,7 +337,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     const encodedData = encodeFunctionData({
       functionName: 'createProgram',
-      args: [codeId, _salt, overrideInitializer || zeroAddress],
+      args: [codeId, _salt, overrideInitializer || ZERO_ADDRESS],
       abi: IROUTER_ABI,
     });
 
@@ -376,7 +377,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
       functionName: 'createProgramWithAbiInterface',
-      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress],
+      args: [codeId, _salt, overrideInitializer || ZERO_ADDRESS, abiInterfaceAddress],
     });
 
     const tx: TransactionRequest = {
