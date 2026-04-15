@@ -287,7 +287,11 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
       fromBlock: fromBlockNumber,
     });
 
-    return promise;
+    try {
+      return await promise;
+    } finally {
+      unwatch?.();
+    }
   }
 }
 

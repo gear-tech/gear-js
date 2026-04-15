@@ -250,8 +250,13 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     }
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
-    const commitments = blobs.map((blob) => kzg.blobToKZGCommitment(bytesToHex(blob))) as Hex[];
-    const blobVersionedHashes = commitments.map((c) => {
+    const blobCommitments = new Map(
+      blobs.map((blob) => {
+        const blobHex = bytesToHex(blob);
+        return [blobHex, kzg.blobToKZGCommitment(blobHex) as Hex];
+      }),
+    );
+    const blobVersionedHashes = [...blobCommitments.values()].map((c) => {
       const hash = sha256(c, 'bytes');
       hash.set([0x01], 0);
       return bytesToHex(hash);
@@ -267,8 +272,11 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       blobs,
       kzg: {
         blobToKzgCommitment: (blob: Uint8Array) => {
-          const result = kzg.blobToKZGCommitment(bytesToHex(blob)) as Hex;
-          return hexToBytes(result);
+          const commitment = blobCommitments.get(bytesToHex(blob));
+          if (!commitment) {
+            throw new Error('Blob not found in commitments map');
+          }
+          return hexToBytes(commitment);
         },
         computeBlobKzgProof: (blob: Uint8Array, commitment: Uint8Array) => {
           const result = kzg.computeBlobKZGProof(bytesToHex(blob), bytesToHex(commitment)) as Hex;
@@ -292,28 +300,33 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       tx,
       IROUTER_ABI,
       {
-        waitForCodeGotValidated: (manager) => () =>
-          new Promise<boolean>((resolve, reject) => {
-            let unwatch: (() => void) | undefined;
-            unwatch = this._pc.watchContractEvent({
-              address: this.address,
-              abi: IROUTER_ABI,
-              eventName: 'CodeGotValidated',
-              fromBlock: manager.blockNumber || undefined,
-              onLogs: (logs) => {
-                for (const log of logs) {
-                  if (log.args.codeId === codeId) {
-                    unwatch?.();
-                    if (log.args.valid) {
-                      resolve(true);
-                    } else {
-                      reject(new Error('Code validation failed'));
+        waitForCodeGotValidated: (manager) => async () => {
+          const { blockNumber } = await manager.getReceipt();
+          let unwatch: (() => void) | undefined;
+          try {
+            return await new Promise<boolean>((resolve, reject) => {
+              unwatch = this._pc.watchContractEvent({
+                address: this.address,
+                abi: IROUTER_ABI,
+                eventName: 'CodeGotValidated',
+                fromBlock: blockNumber,
+                onLogs: (logs_1) => {
+                  for (const log of logs_1) {
+                    if (log.args.codeId === codeId) {
+                      if (log.args.valid) {
+                        resolve(true);
+                      } else {
+                        reject(new Error('Code validation failed'));
+                      }
                     }
                   }
-                }
-              },
+                },
+              });
             });
-          }),
+          } finally {
+            unwatch?.();
+          }
+        },
       },
       {
         codeId,
