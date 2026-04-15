@@ -4,7 +4,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ProgramResponseDto } from './dto/program-response.dto.js';
-import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+import { QueryProgramsDto } from './dto/query-programs.dto.js';
 import { ProgramsService } from './programs.service.js';
 
 @ApiTags('programs')
@@ -21,7 +21,7 @@ export class ProgramsController {
     type: ProgramResponseDto,
     isArray: true,
   })
-  async findAll(@Query() query: QueryProgramsWithBlockRangeDto) {
+  async findAll(@Query() query: QueryProgramsDto) {
     return this.programsService.findAll(query);
   }
 
