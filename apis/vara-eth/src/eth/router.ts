@@ -250,17 +250,16 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     }
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
-    const blobCommitments = new Map(
-      blobs.map((blob) => {
-        const blobHex = bytesToHex(blob);
-        return [blobHex, kzg.blobToKZGCommitment(blobHex) as Hex];
-      }),
-    );
-    const blobVersionedHashes = [...blobCommitments.values()].map((c) => {
+    const blobHexes = blobs.map((b) => bytesToHex(b));
+    const commitmentHexes = blobHexes.map((hex) => kzg.blobToKZGCommitment(hex) as Hex);
+
+    const blobVersionedHashes = commitmentHexes.map((c) => {
       const hash = sha256(c, 'bytes');
       hash.set([0x01], 0);
       return bytesToHex(hash);
     });
+
+    const blobCommitments = new Map(blobHexes.map((hex, i) => [hex, commitmentHexes[i]]));
 
     const tx = {
       type: 'eip4844' as const,
