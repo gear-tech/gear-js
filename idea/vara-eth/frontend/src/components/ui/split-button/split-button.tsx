@@ -22,12 +22,18 @@ type Props<TValue extends string> = {
   menuClassName?: string;
   primaryButtonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'disabled'>;
   children: ReactNode;
+  triggerAriaLabel?: string;
   onOptionClick: (value: TValue) => void;
 };
+
+const MENU_MIN_WIDTH = 254;
+const VIEWPORT_OFFSET = 8;
+const MENU_GAP = 6;
 
 const SplitButton = <TValue extends string>({
   options,
   selectedValue,
+  triggerAriaLabel = 'Select option',
   disabled,
   isLoading,
   className,
@@ -69,12 +75,14 @@ const SplitButton = <TValue extends string>({
       const spaceBelow = viewportHeight - rect.bottom;
       const spaceAbove = rect.top;
       const shouldOpenTop = spaceBelow < menuHeight + 8 && spaceAbove > spaceBelow;
-      const top = shouldOpenTop ? Math.max(8, rect.top - menuHeight - 6) : rect.bottom + 6;
+      const top = shouldOpenTop ? Math.max(VIEWPORT_OFFSET, rect.top - menuHeight - MENU_GAP) : rect.bottom + MENU_GAP;
+      const width = Math.max(MENU_MIN_WIDTH, rect.width);
+      const left = Math.max(VIEWPORT_OFFSET, rect.right - width);
 
       setMenuPosition({
         top,
-        left: rect.right - Math.max(254, rect.width),
-        width: Math.max(254, rect.width),
+        left,
+        width,
       });
     };
 
@@ -88,17 +96,6 @@ const SplitButton = <TValue extends string>({
       window.removeEventListener('scroll', updateMenuPosition, true);
     };
   }, [isOpen]);
-
-  const setInitialMenuPosition = () => {
-    const rect = rootRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    setMenuPosition({
-      top: rect.bottom + 6,
-      left: rect.right - Math.max(320, rect.width),
-      width: Math.max(320, rect.width),
-    });
-  };
 
   const handleOptionClick = (value: TValue) => {
     setIsOpen(false);
@@ -122,15 +119,9 @@ const SplitButton = <TValue extends string>({
           type="button"
           className={styles.triggerButton}
           disabled={isDisabled}
-          aria-label="Select write mode"
+          aria-label={triggerAriaLabel}
           aria-expanded={isOpen}
-          onClick={() =>
-            setIsOpen((prevValue) => {
-              const nextValue = !prevValue;
-              if (nextValue) setInitialMenuPosition();
-              return nextValue;
-            })
-          }>
+          onClick={() => setIsOpen((prevValue) => !prevValue)}>
           <ArrowDownSVG className={styles.arrow} />
         </button>
       </div>
@@ -142,7 +133,7 @@ const SplitButton = <TValue extends string>({
             className={cx(styles.menu, menuClassName)}
             style={{
               top: `${menuPosition.top}px`,
-              left: `${Math.max(8, menuPosition.left)}px`,
+              left: `${menuPosition.left}px`,
               width: `${menuPosition.width}px`,
             }}>
             {options.map((option) => (

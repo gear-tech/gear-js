@@ -90,6 +90,7 @@ const SailsAction = ({
           form: id,
           onClick: handleClick,
         }}
+        triggerAriaLabel="Select write mode"
         onOptionClick={handleSplitOptionClick}>
         {action}
       </SplitButton>
