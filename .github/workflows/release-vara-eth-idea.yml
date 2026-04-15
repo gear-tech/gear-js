@@ -76,6 +76,7 @@ jobs:
         id: frontend
         uses: dorny/paths-filter@v4
         with:
+          base: ${{ github.event.before }}
           filters: |
             changed:
               - 'idea/vara-eth/frontend/**'
@@ -84,6 +85,7 @@ jobs:
         id: indexer
         uses: dorny/paths-filter@v4
         with:
+          base: ${{ github.event.before }}
           filters: |
             changed:
               - 'idea/vara-eth/indexer/**'
