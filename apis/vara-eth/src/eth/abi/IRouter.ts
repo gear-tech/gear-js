@@ -409,6 +409,20 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'paused',
+    inputs: [],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'programCodeId',
     inputs: [{ name: 'programId', type: 'address', internalType: 'address' }],
     outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
@@ -483,6 +497,13 @@ export const IROUTER_ABI = [
       },
     ],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'unpause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -642,7 +663,14 @@ export const IROUTER_ABI = [
   {
     type: 'event',
     name: 'StorageSlotChanged',
-    inputs: [],
+    inputs: [
+      {
+        name: 'slot',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
     anonymous: false,
   },
   {
@@ -658,6 +686,64 @@ export const IROUTER_ABI = [
     ],
     anonymous: false,
   },
+  { type: 'error', name: 'ApproveERC20Failed', inputs: [] },
+  { type: 'error', name: 'BatchTimestampNotInPast', inputs: [] },
+  { type: 'error', name: 'BatchTimestampTooEarly', inputs: [] },
+  { type: 'error', name: 'BlobNotFound', inputs: [] },
+  {
+    type: 'error',
+    name: 'CodeAlreadyOnValidationOrValidated',
+    inputs: [],
+  },
+  { type: 'error', name: 'CodeNotValidated', inputs: [] },
+  { type: 'error', name: 'CodeValidationNotRequested', inputs: [] },
+  { type: 'error', name: 'CommitmentEraNotNext', inputs: [] },
+  { type: 'error', name: 'ElectionNotStarted', inputs: [] },
+  { type: 'error', name: 'EmptyValidatorsList', inputs: [] },
+  { type: 'error', name: 'EraDurationTooShort', inputs: [] },
+  { type: 'error', name: 'GenesisHashAlreadySet', inputs: [] },
+  { type: 'error', name: 'GenesisHashNotFound', inputs: [] },
+  { type: 'error', name: 'InvalidElectionDuration', inputs: [] },
+  {
+    type: 'error',
+    name: 'InvalidFROSTAggregatedPublicKey',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'InvalidPreviousCommittedBatchHash',
+    inputs: [],
+  },
+  { type: 'error', name: 'InvalidTimestamp', inputs: [] },
+  { type: 'error', name: 'PredecessorBlockNotFound', inputs: [] },
+  {
+    type: 'error',
+    name: 'RewardsCommitmentEraNotPrevious',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'RewardsCommitmentPredatesGenesis',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'RewardsCommitmentTimestampNotInPast',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'RouterGenesisHashNotInitialized',
+    inputs: [],
+  },
+  { type: 'error', name: 'SignatureVerificationFailed', inputs: [] },
+  { type: 'error', name: 'TooManyChainCommitments', inputs: [] },
+  { type: 'error', name: 'TooManyRewardsCommitments', inputs: [] },
+  { type: 'error', name: 'TooManyValidatorsCommitments', inputs: [] },
+  { type: 'error', name: 'UnknownProgram', inputs: [] },
+  { type: 'error', name: 'ValidationDelayTooBig', inputs: [] },
+  { type: 'error', name: 'ValidatorsAlreadyScheduled', inputs: [] },
+  { type: 'error', name: 'ZeroValueTransfer', inputs: [] },
 ] as const;
 
 /**
