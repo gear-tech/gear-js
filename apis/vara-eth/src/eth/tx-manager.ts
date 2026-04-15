@@ -10,7 +10,7 @@ import type {
   TransactionReceipt,
   TransactionRequest,
 } from 'viem';
-import { decodeEventLog } from 'viem';
+import { decodeEventLog } from 'viem/utils';
 
 import type { ITransactionSigner } from '../types/signer.js';
 import type { ITxManager } from './interfaces/tx-manager.js';
@@ -163,5 +163,18 @@ export class TxManager<
    */
   getTx(): TransactionRequest {
     return this._tx;
+  }
+
+  /**
+   * Gets the block number of the transaction.
+   *
+   * @returns The block number or null if not available
+   */
+  get blockNumber(): bigint | null {
+    if (this._receipt) {
+      return this._receipt.blockNumber;
+    }
+
+    return null;
   }
 }

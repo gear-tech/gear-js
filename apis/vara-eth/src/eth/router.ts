@@ -1,10 +1,11 @@
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
 import type { Address, Hex, TransactionRequest } from 'viem';
-import { bytesToHex, encodeFunctionData, hexToBytes, toHex, zeroAddress } from 'viem';
+import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex } from 'viem/utils';
 
-import { generateCodeHash } from '../util/index.js';
-import { IROUTER_ABI, type IRouterContract } from './abi/index.js';
+import { ZERO_ADDRESS } from '../util/constants.js';
+import { generateCodeHash } from '../util/hash.js';
+import { IROUTER_ABI, type IRouterContract } from './abi/IRouter.js';
 import { BaseContractClient, type ContractClientParams } from './base-contract.js';
 import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
 import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
@@ -249,6 +250,17 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     }
     const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
 
+    const blobHexes = blobs.map((b) => bytesToHex(b));
+    const commitmentHexes = blobHexes.map((hex) => kzg.blobToKZGCommitment(hex) as Hex);
+
+    const blobVersionedHashes = commitmentHexes.map((c) => {
+      const hash = sha256(c, 'bytes');
+      hash.set([0x01], 0);
+      return bytesToHex(hash);
+    });
+
+    const blobCommitments = new Map(blobHexes.map((hex, i) => [hex, commitmentHexes[i]]));
+
     const tx = {
       type: 'eip4844' as const,
       blobVersion: '7594' as const,
@@ -259,8 +271,11 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       blobs,
       kzg: {
         blobToKzgCommitment: (blob: Uint8Array) => {
-          const result = kzg.blobToKZGCommitment(bytesToHex(blob)) as Hex;
-          return hexToBytes(result);
+          const commitment = blobCommitments.get(bytesToHex(blob));
+          if (!commitment) {
+            throw new Error('Blob not found in commitments map');
+          }
+          return hexToBytes(commitment);
         },
         computeBlobKzgProof: (blob: Uint8Array, commitment: Uint8Array) => {
           const result = kzg.computeBlobKZGProof(bytesToHex(blob), bytesToHex(commitment)) as Hex;
@@ -278,29 +293,45 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     await this._pc.prepareTransactionRequest(tx);
 
-    const txManager: ITxManager = new TxManager(this._pc, this._signer!, tx, IROUTER_ABI, undefined, {
-      codeId,
-      waitForCodeGotValidated: () =>
-        new Promise<boolean>((resolve, reject) =>
-          // TODO: consider listening from block where transaction was included
-          this._pc.watchContractEvent({
-            address: this.address,
-            abi: IROUTER_ABI,
-            eventName: 'CodeGotValidated',
-            onLogs: (logs) => {
-              for (const log of logs) {
-                if (log.args.codeId === codeId) {
-                  if (log.args.valid) {
-                    resolve(true);
-                  } else {
-                    reject(new Error('Code validation failed'));
+    const txManager: ITxManager = new TxManager(
+      this._pc,
+      this._signer!,
+      tx,
+      IROUTER_ABI,
+      {
+        waitForCodeGotValidated: (manager) => async () => {
+          const { blockNumber } = await manager.getReceipt();
+          let unwatch: (() => void) | undefined;
+          try {
+            return await new Promise<boolean>((resolve, reject) => {
+              unwatch = this._pc.watchContractEvent({
+                address: this.address,
+                abi: IROUTER_ABI,
+                eventName: 'CodeGotValidated',
+                fromBlock: blockNumber,
+                onLogs: (logs_1) => {
+                  for (const log of logs_1) {
+                    if (log.args.codeId === codeId) {
+                      if (log.args.valid) {
+                        resolve(true);
+                      } else {
+                        reject(new Error('Code validation failed'));
+                      }
+                    }
                   }
-                }
-              }
-            },
-          }),
-        ),
-    });
+                },
+              });
+            });
+          } finally {
+            unwatch?.();
+          }
+        },
+      },
+      {
+        codeId,
+        blobVersionedHashes,
+      },
+    );
 
     return txManager as TxManagerWithHelpers<CodeValidationHelpers>;
   }
@@ -323,7 +354,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
 
     const encodedData = encodeFunctionData({
       functionName: 'createProgram',
-      args: [codeId, _salt, overrideInitializer || zeroAddress],
+      args: [codeId, _salt, overrideInitializer || ZERO_ADDRESS],
       abi: IROUTER_ABI,
     });
 
@@ -363,7 +394,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
       functionName: 'createProgramWithAbiInterface',
-      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress],
+      args: [codeId, _salt, overrideInitializer || ZERO_ADDRESS, abiInterfaceAddress],
     });
 
     const tx: TransactionRequest = {
