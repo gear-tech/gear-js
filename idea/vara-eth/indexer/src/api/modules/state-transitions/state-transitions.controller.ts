@@ -1,8 +1,10 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import type { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
-import type { StateTransitionsService } from './state-transitions.service.js';
+
+import { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
+import { StateTransitionsService } from './state-transitions.service.js';
 
 @ApiTags('state-transitions')
 @Controller('state-transitions')
