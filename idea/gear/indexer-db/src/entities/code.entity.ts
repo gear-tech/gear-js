@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-import type { CodeStatus, MetaType } from '../enums';
-import { BaseEntity } from './base.entity';
+import type { CodeStatus, MetaType } from '../enums/index.js';
+import { hexToBytea } from '../transformers.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Code extends BaseEntity {
@@ -10,10 +11,10 @@ export class Code extends BaseEntity {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
   public id: string;
 
-  @Column({ name: 'uploaded_by', nullable: true })
+  @Column({ type: 'bytea', name: 'uploaded_by', nullable: true, transformer: hexToBytea })
   public uploadedBy: string;
 
   @Column({ nullable: true })

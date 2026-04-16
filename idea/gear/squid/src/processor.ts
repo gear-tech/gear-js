@@ -8,8 +8,9 @@ import {
   SubstrateBatchProcessor,
   type SubstrateBatchProcessorFields,
 } from '@subsquid/substrate-processor';
-import { Events } from './common';
-import { config } from './config';
+
+import { Events } from './common/index.js';
+import { config } from './config.js';
 
 export const processor = new SubstrateBatchProcessor()
   .setGateway(config.squid.gateway)

@@ -1,5 +1,5 @@
 import { logger } from 'gear-idea-common';
-import { client, hash, isRedisConnected } from './redis';
+import { client, hash, isRedisConnected } from './redis.js';
 
 export function Cache(ttl: number) {
   return (_target: any, propKey: string, descriptor: PropertyDescriptor) => {

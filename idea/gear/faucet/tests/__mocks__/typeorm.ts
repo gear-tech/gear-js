@@ -1,12 +1,14 @@
-import { FaucetRequest, UserLastSeen } from '../../src/database';
-import { repos } from './db';
+import { vi } from 'vitest';
 
-jest.mock('typeorm', () => {
-  const actual = jest.requireActual('typeorm');
+import { FaucetRequest, UserLastSeen } from '../../src/database/index.js';
+import { repos } from './db.js';
+
+vi.mock('typeorm', async () => {
+  const actual = await vi.importActual('typeorm');
 
   class FakeDataSource {
-    initialize = jest.fn(async () => this);
-    getRepository = jest.fn((entity: any) => {
+    initialize = vi.fn(async () => this);
+    getRepository = vi.fn((entity: any) => {
       if (entity === FaucetRequest) {
         return repos.FaucetRequest;
       }
@@ -18,7 +20,7 @@ jest.mock('typeorm', () => {
   }
 
   return {
-    ...actual,
+    ...(actual as object),
     DataSource: FakeDataSource,
   };
 });

@@ -4,9 +4,9 @@ import { logger } from 'gear-idea-common';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
-import config from './config';
-import { AgentRouter, VaraBridgeRouter, VaraTestnetRouter, WvaraRouter } from './routes';
-import { ChallengeService, type RequestService } from './services';
+import config from './config.js';
+import { AgentRouter, VaraBridgeRouter, VaraTestnetRouter, WvaraRouter } from './routes/index.js';
+import { ChallengeService, type RequestService } from './services/index.js';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 

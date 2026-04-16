@@ -225,9 +225,17 @@ jobs:
           yarn build:gear-api
           yarn build:gear-idea-backend
 
-      - name: 'Run tests'
+      - name: 'Test: meta-storage'
         timeout-minutes: 3
-        run: yarn test:gear-idea-backend
+        run: yarn test:gear-idea-meta-storage
+
+      - name: 'Test: faucet'
+        timeout-minutes: 3
+        run: yarn test:gear-idea-faucet
+
+      - name: 'Test: explorer'
+        timeout-minutes: 3
+        run: yarn test:gear-idea-explorer
 
   test-ui:
     runs-on: ubuntu-latest

@@ -1,3 +1,5 @@
-export * from './enums';
-export * from './faucet-request';
-export * from './user-last-seen';
+import 'reflect-metadata';
+
+export * from './enums.js';
+export * from './faucet-request.js';
+export * from './user-last-seen.js';

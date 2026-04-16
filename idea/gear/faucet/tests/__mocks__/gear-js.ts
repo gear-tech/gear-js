@@ -1,20 +1,23 @@
-jest.mock('@gear-js/api', () => {
-  const actual = jest.requireActual('@gear-js/api');
+import type { BN } from '@polkadot/util';
+import { vi } from 'vitest';
 
-  const mockToHex = jest.fn(() => '0xGENESIS');
+vi.mock('@gear-js/api', async () => {
+  const actual = await vi.importActual('@gear-js/api');
+
+  const mockToHex = vi.fn(() => '0xGENESIS');
 
   let _address: string;
 
   const mockTx = {
     balances: {
-      transferKeepAlive: jest.fn((addr: string, _amount: BN) => {
+      transferKeepAlive: vi.fn((addr: string, _amount: BN) => {
         _address = addr;
         return `tx-${addr}`;
       }),
     },
     utility: {
-      forceBatch: jest.fn(() => ({
-        signAndSend: jest.fn().mockImplementation((_account, callback) => {
+      forceBatch: vi.fn(() => ({
+        signAndSend: vi.fn().mockImplementation((_account, callback) => {
           const mockEvents = [
             { event: { method: 'Transfer', data: { to: { toHex: () => _address } } } },
             { event: { method: 'ExtrinsicSuccess' } },
@@ -35,21 +38,22 @@ jest.mock('@gear-js/api', () => {
     },
   };
 
-  const GearApi = jest.fn().mockImplementation(() => ({
-    tx: mockTx,
-    isReady: Promise.resolve(),
-    isReadyOrError: Promise.resolve(),
-    disconnect: jest.fn(),
-    on: jest.fn(),
-    genesisHash: { toHex: mockToHex },
-    chain: jest.fn().mockResolvedValue('Vara Local'),
-    getExtrinsicFailedError: jest.fn(() => ({ docs: ['Mocked error docs'] })),
-  }));
+  // biome-ignore lint/complexity/useArrowFunction: needed for test correctness
+  const GearApi = vi.fn().mockImplementation(function () {
+    return {
+      tx: mockTx,
+      isReady: Promise.resolve(),
+      isReadyOrError: Promise.resolve(),
+      disconnect: vi.fn(),
+      on: vi.fn(),
+      genesisHash: { toHex: mockToHex },
+      chain: vi.fn().mockResolvedValue('Vara Local'),
+      getExtrinsicFailedError: vi.fn(() => ({ docs: ['Mocked error docs'] })),
+    };
+  });
 
   return {
-    ...actual,
+    ...(actual as object),
     GearApi,
   };
 });
-
-import type { BN } from '@polkadot/util';

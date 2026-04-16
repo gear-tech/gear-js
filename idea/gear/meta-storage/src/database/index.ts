@@ -1,2 +1,2 @@
-export * from './data-source';
-export * from './entities';
+export * from './data-source.js';
+export * from './entities/index.js';

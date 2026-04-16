@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 
-import { requestLoggerMiddleware } from './middleware';
+import { requestLoggerMiddleware } from './middleware/index.js';
 
 export class BaseRouter {
   private _router: Router;
