@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type Address, type Hex, isAddress } from 'viem';
 
 import { SplitButton } from '@/components';
@@ -30,12 +30,6 @@ const CreateProgramButton = ({ codeId }: Props) => {
   const isAbiMode = selectedOption === CreateProgramMode.WITH_ABI;
   const isWithAbiDisabled = !isValidAbiAddress;
   const abiAddressError = hasAbiAddress && !isValidAbiAddress ? 'Invalid address format' : undefined;
-
-  useEffect(() => {
-    if (isWithAbiDisabled && isAbiMode) {
-      setSelectedOption(CreateProgramMode.DEFAULT);
-    }
-  }, [isAbiMode, isWithAbiDisabled]);
 
   const options = useMemo(
     () =>
