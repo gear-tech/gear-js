@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, Min } from 'class-validator';
 
-import { PaginationDto } from './pagination.dto';
+import { PaginationDto } from './pagination.dto.js';
 
 export class PaginatedBlockRangeDTO extends PaginationDto {
   @ApiPropertyOptional({
