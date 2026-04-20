@@ -1,0 +1,19 @@
+{
+  "name": "upload-code-service",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3",
+    "@aws-sdk/client-sqs": "^3",
+    "@aws-sdk/lib-dynamodb": "^3",
+    "@vara-eth/api": "workspace:*",
+    "kzg-wasm": "^1.0.0",
+    "viem": "npm:@vara-eth/viem@2.47.7-1"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8",
+    "esbuild": "^0.25"
+  }
+}

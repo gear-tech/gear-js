@@ -13,6 +13,7 @@ on:
         options:
           - frontend
           - indexer
+          - upload-code-service
           - all
         required: true
       environment:
@@ -69,6 +70,7 @@ jobs:
     outputs:
       frontend: ${{ steps.should-build.outputs.frontend }}
       indexer: ${{ steps.should-build.outputs.indexer }}
+      upload-code-service: ${{ steps.should-build.outputs.upload-code-service }}
     steps:
       - uses: actions/checkout@v6
 
@@ -90,6 +92,15 @@ jobs:
             changed:
               - 'idea/vara-eth/indexer/**'
 
+      - name: Check upload-code-service changes
+        id: upload-code-service
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/vara-eth/upload-code-service/**'
+
       - name: Determine what should be built
         id: should-build
         run: |
@@ -106,11 +117,47 @@ jobs:
             else
               echo "indexer=false" >> "$GITHUB_OUTPUT"
             fi
+
+            if [[ "${{ github.event.inputs.service }}" == "upload-code-service" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "upload-code-service=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "upload-code-service=false" >> "$GITHUB_OUTPUT"
+            fi
           else
             # For push events, use the file change detection
             echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
             echo "indexer=${{ steps.indexer.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "upload-code-service=${{ steps.upload-code-service.outputs.changed }}" >> "$GITHUB_OUTPUT"
           fi
+
+  build-indexer-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "vara-eth-idea-indexer" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/indexer/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-frontend-image:
     runs-on: ubuntu-latest
@@ -154,35 +201,6 @@ jobs:
             VITE_ROUTER_CONTRACT_ADDRESS_MAINNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_MAINNET }}
             VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
 
-  build-indexer-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "vara-eth-idea-indexer" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/vara-eth/indexer/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
   deploy-indexer:
     needs: [build-indexer-image, set-env-tag]
     runs-on: ubuntu-latest
@@ -218,3 +236,37 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-upload-code-service:
+    needs: [check-changes, set-env-tag]
+    if: ${{ needs.check-changes.outputs.upload-code-service == 'true' }}
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Node.js 22.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @vara-eth/api upload-code-service
+
+      - name: Build
+        run: yarn workspace upload-code-service run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy handler Lambda
+        run: aws lambda update-function-code --function-name ${{ vars.UPLOAD_CODE_HANDLER_FUNCTION_NAME }} --zip-file fileb://idea/vara-eth/upload-code-service/dist/handler.zip
+
+      - name: Deploy worker Lambda
+        run: aws lambda update-function-code --function-name ${{ vars.UPLOAD_CODE_WORKER_FUNCTION_NAME }} --zip-file fileb://idea/vara-eth/upload-code-service/dist/worker.zip

@@ -29,6 +29,7 @@
     "idea/gear/squid",
     "idea/vara-eth/frontend",
     "idea/vara-eth/indexer",
+    "idea/vara-eth/upload-code-service",
     "tools/cli",
     "tools/txwrapper",
     "utils/frontend-configs",

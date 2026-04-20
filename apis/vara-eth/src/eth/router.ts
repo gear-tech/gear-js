@@ -3,6 +3,7 @@ import { loadKZG } from 'kzg-wasm';
 import type { Address, Hex, TransactionRequest } from 'viem';
 import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex } from 'viem/utils';
 
+import { simpleSidecarEncode } from '../util/blob.js';
 import { ZERO_ADDRESS } from '../util/constants.js';
 import { generateCodeHash } from '../util/hash.js';
 import { IROUTER_ABI, type IRouterContract } from './abi/IRouter.js';
@@ -10,6 +11,8 @@ import { BaseContractClient, type ContractClientParams } from './base-contract.j
 import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
 import type { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { TxManager } from './tx-manager.js';
+
+const kzgLoadPromise = loadKZG();
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -236,7 +239,8 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
     });
 
     const blobs = simpleSidecarEncode(code);
-    const kzg = await loadKZG();
+
+    const kzg = await kzgLoadPromise;
 
     const feeHistory = await this._pc.getFeeHistory({
       blockCount: 2,
@@ -421,51 +425,4 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
  */
 export function getRouterClient(params: ContractClientParams): RouterClient {
   return new RouterClient(params);
-}
-
-const BYTES_PER_BLOB = 131_072;
-const FIELD_ELEMENTS_PER_BLOB = 4096;
-const FE_BYTES = 32;
-const USABLE_BYTES_PER_FE = 31;
-
-function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
-  const blobs: Uint8Array[] = [];
-  let feCount = 0;
-
-  const pushEmptyBlob = () => {
-    blobs.push(new Uint8Array(BYTES_PER_BLOB));
-  };
-
-  const currentBlob = () => {
-    const index = Math.floor(feCount / FIELD_ELEMENTS_PER_BLOB);
-    while (blobs.length <= index) pushEmptyBlob();
-    return blobs[index];
-  };
-
-  const feOffsetInCurrentBlob = () => (feCount % FIELD_ELEMENTS_PER_BLOB) * FE_BYTES;
-
-  const ingestFE = (fe: Uint8Array) => {
-    const blob = currentBlob();
-    const offset = feOffsetInCurrentBlob();
-    blob.set(fe, offset);
-    feCount++;
-  };
-
-  if (data.length === 0) return blobs;
-
-  const lenFE = new Uint8Array(FE_BYTES);
-  const lenBytes = new DataView(lenFE.buffer);
-  lenBytes.setBigUint64(1, BigInt(data.length));
-  ingestFE(lenFE);
-
-  let offset = 0;
-  while (offset < data.length) {
-    const fe = new Uint8Array(FE_BYTES);
-    const chunkSize = Math.min(USABLE_BYTES_PER_FE, data.length - offset);
-    fe.set(data.subarray(offset, offset + chunkSize), 1);
-    offset += chunkSize;
-    ingestFE(fe);
-  }
-
-  return blobs;
 }
