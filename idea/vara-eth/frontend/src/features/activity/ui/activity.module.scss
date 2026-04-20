@@ -40,3 +40,61 @@
     margin-bottom: 12px;
   }
 }
+
+.myActivityContent {
+  padding: 18px 12px 12px 12px;
+  gap: 0;
+}
+
+.activityItem {
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+.myActivityHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.actionText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionTime {
+  flex-shrink: 0;
+  color: rgba(174, 174, 174, 1);
+  font-size: 12px;
+}
+
+.activityItemHighlightSuccess {
+  animation: myActivityHighlightSuccess 1800ms ease-out;
+}
+
+.activityItemHighlightError {
+  animation: myActivityHighlightError 1800ms ease-out;
+}
+
+@keyframes myActivityHighlightSuccess {
+  from {
+    background-color: var(--my-activity-highlight-success, rgba(168, 245, 147, 0.24));
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes myActivityHighlightError {
+  from {
+    background-color: var(--my-activity-highlight-error, rgba(248, 113, 113, 0.28));
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
