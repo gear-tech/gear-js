@@ -18,12 +18,6 @@ export const handler: SQSHandler = async (event): Promise<SQSBatchResponse> => {
       await setStatus(jobId, 'processing');
 
       const job = await getRequest(jobId);
-      if (!job) {
-        console.error(`Job not found: ${jobId}`);
-        batchItemFailures.push({ itemIdentifier: record.messageId });
-        continue;
-      }
-
       console.log({ jobId, codeId: job.codeId }, 'Fetched job, submitting transaction');
 
       const result = await requestCodeValidation(hexToBytes(job.code), job.codeId);

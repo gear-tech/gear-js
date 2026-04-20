@@ -36,13 +36,30 @@ aws iam create-role \
   --query 'Role.Arn' --output text
 
 ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${ROLE_NAME}"
+TABLE_ARN="arn:aws:dynamodb:${AWS_REGION}:${AWS_ACCOUNT_ID}:table/${TABLE_NAME}"
+QUEUE_ARN="arn:aws:sqs:${AWS_REGION}:${AWS_ACCOUNT_ID}:${QUEUE_NAME}"
 
 aws iam attach-role-policy --role-name "${ROLE_NAME}" \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-aws iam attach-role-policy --role-name "${ROLE_NAME}" \
-  --policy-arn arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
-aws iam attach-role-policy --role-name "${ROLE_NAME}" \
-  --policy-arn arn:aws:iam::aws:policy/AmazonSQSFullAccess
+
+aws iam put-role-policy \
+  --role-name "${ROLE_NAME}" \
+  --policy-name "upload-code-${ENVIRONMENT}-policy" \
+  --policy-document "{
+    \"Version\": \"2012-10-17\",
+    \"Statement\": [
+      {
+        \"Effect\": \"Allow\",
+        \"Action\": [\"dynamodb:GetItem\", \"dynamodb:PutItem\", \"dynamodb:UpdateItem\"],
+        \"Resource\": \"${TABLE_ARN}\"
+      },
+      {
+        \"Effect\": \"Allow\",
+        \"Action\": [\"sqs:SendMessage\", \"sqs:ReceiveMessage\", \"sqs:DeleteMessage\", \"sqs:GetQueueAttributes\"],
+        \"Resource\": \"${QUEUE_ARN}\"
+      }
+    ]
+  }"
 
 echo "Waiting for role to propagate..."
 sleep 10

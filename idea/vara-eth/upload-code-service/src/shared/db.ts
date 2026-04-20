@@ -28,19 +28,15 @@ export async function createRequest(data: RequestCodeValidationParams): Promise<
   return jobId;
 }
 
-export async function requestExists(jobId: string): Promise<boolean> {
-  const { Item } = await db.send(new GetCommand({ TableName: TABLE, Key: { jobId }, ProjectionExpression: 'jobId' }));
-  return Item !== undefined;
-}
 
 export async function getStatus(
   jobId: string,
-): Promise<{ jobId: string; status: JobStatus; transactionId?: string } | null> {
+): Promise<{ jobId: string; status: JobStatus; transactionHash?: string } | null> {
   const { Item } = await db.send(
     new GetCommand({
       TableName: TABLE,
       Key: { jobId },
-      ProjectionExpression: 'jobId, #s, transactionId',
+      ProjectionExpression: 'jobId, #s, transactionHash',
       ExpressionAttributeNames: { '#s': 'status' },
     }),
   );
@@ -54,8 +50,6 @@ export async function getStatus(
   };
 }
 
-const TERMINAL_STATUSES: JobStatus[] = ['success', 'failed'];
-
 export async function setStatus(jobId: string, status: JobStatus, transactionHash?: Hash): Promise<void> {
   let updateExpression = 'SET #s = :status';
   const expressionAttributeNames: Record<string, string> = { '#s': 'status' };
@@ -65,7 +59,7 @@ export async function setStatus(jobId: string, status: JobStatus, transactionHas
     expressionAttributeNames['#t'] = 'transactionHash';
     expressionAttributeValues[':transactionHash'] = transactionHash;
   }
-  if (TERMINAL_STATUSES.includes(status)) {
+  if (status === 'success') {
     updateExpression += ' REMOVE #c';
     expressionAttributeNames['#c'] = 'code';
   }

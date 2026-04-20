@@ -10,7 +10,7 @@ import {
   validateSender,
   validateSignature,
 } from './field-validator.js';
-import { createRequest, getStatus, requestExists } from './shared/db.js';
+import { createRequest, getStatus as getJobStatus } from './shared/db.js';
 import type { RequestCodeValidationParams } from './shared/types.js';
 import { generateJobId } from './util.js';
 
@@ -44,7 +44,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       return await statusHandler(event);
     }
   } catch (error) {
-    return json(500, { error: (error as Error).message });
+    console.error(error);
+    return json(500, { error: 'Internal server error' });
   }
 
   return json(404, { error: 'Not found' });
@@ -54,7 +55,9 @@ const requestCodeValidationHandler = async (event: APIGatewayProxyEvent): Promis
   let body: RequestCodeValidationParams;
 
   try {
-    body = JSON.parse(event.body ?? '');
+    const parsed = JSON.parse(event.body ?? '');
+    if (!parsed || typeof parsed !== 'object') throw new Error();
+    body = parsed as RequestCodeValidationParams;
   } catch {
     return json(400, { error: 'Invalid JSON body' });
   }
@@ -80,9 +83,9 @@ const requestCodeValidationHandler = async (event: APIGatewayProxyEvent): Promis
     return json(401, { error: 'Invalid signature' });
   }
 
-  // Check if request already exists (idempotent)
   const jobId = generateJobId(body.codeId, body.blobHash);
-  if (await requestExists(jobId)) {
+  const existing = await getJobStatus(jobId);
+  if (existing && existing.status !== 'failed') {
     return json(200, { jobId, routerAddress: config.routerAddress });
   }
 
@@ -106,7 +109,7 @@ const statusHandler = async (event: APIGatewayProxyEvent): Promise<ReturnType<ty
     return json(400, { error: 'Missing jobId' });
   }
 
-  const status = await getStatus(jobId);
+  const status = await getJobStatus(jobId);
   if (!status) {
     return json(404, { error: 'Not found' });
   }
