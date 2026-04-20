@@ -12,9 +12,10 @@ import styles from './transaction.module.scss';
 
 type Props = {
   item: MyActivity;
+  isMyActivity?: boolean;
 };
 
-const Transaction = ({ item }: Props) => {
+const Transaction = ({ item, isMyActivity = false }: Props) => {
   const { decimals } = useWrappedVaraBalance();
 
   if (item.type === TransactionTypes.codeValidation) {
@@ -57,7 +58,7 @@ const Transaction = ({ item }: Props) => {
 
     return (
       <div className={styles.transaction}>
-        Approve <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
+        {isMyActivity ? '' : 'Approve'} <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
         <HashLink hash={item.spender} href={generatePath(routes.program, { programId: item.spender })} />
       </div>
     );
@@ -68,7 +69,7 @@ const Transaction = ({ item }: Props) => {
 
     return (
       <div className={styles.transaction}>
-        Top up executable balance <Balance value={value} units="WVARA" /> to{' '}
+        {isMyActivity ? '' : 'Top up executable balance'} <Balance value={value} units="WVARA" /> to{' '}
         <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />
       </div>
     );
@@ -77,6 +78,7 @@ const Transaction = ({ item }: Props) => {
   if (item.type === TransactionTypes.initProgram) {
     return (
       <ExpandableItem
+        defaultOpen
         header={
           <div className={styles.transaction}>
             Init Message {item.hash && <HashLink hash={item.hash} />} to{' '}
@@ -98,6 +100,7 @@ const Transaction = ({ item }: Props) => {
   if (item.type === TransactionTypes.programMessage || item.type === TransactionTypes.injectedTx) {
     return (
       <ExpandableItem
+        defaultOpen
         header={
           <div className={styles.transaction}>
             Message {item.hash && <HashLink hash={item.hash} />} to{' '}
@@ -109,15 +112,12 @@ const Transaction = ({ item }: Props) => {
     );
   }
 
-  if (
-    item.type === TransactionTypes.programReply ||
-    item.type === TransactionTypes.injectedTxResponse ||
-    item.type === TransactionTypes.readProgramReply
-  ) {
+  if (item.type === TransactionTypes.programReply || item.type === TransactionTypes.injectedTxResponse) {
     const params = item.params || item.value ? { ...item.params, value: `${item.value}` } : null;
 
     return (
       <ExpandableItem
+        defaultOpen
         header={
           <div className={styles.transaction}>
             Reply {'hash' in item && <HashLink hash={item.hash} />} from{' '}
@@ -128,6 +128,20 @@ const Transaction = ({ item }: Props) => {
       </ExpandableItem>
     );
   }
+
+  if (item.type === TransactionTypes.readProgramReply) {
+    const params = item.params || item.value ? { ...item.params, value: `${item.value}` } : null;
+    return (
+      <div>
+        <div className={styles.programReply}>
+          Reply from <HashLink hash={item.from} href={generatePath(routes.program, { programId: item.from })} />
+        </div>
+        <div className={styles.params}>{params && <Params params={params} />}</div>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export { Transaction };
