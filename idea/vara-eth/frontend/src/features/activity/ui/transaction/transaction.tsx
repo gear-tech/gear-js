@@ -58,7 +58,8 @@ const Transaction = ({ item, isMyActivity = false }: Props) => {
 
     return (
       <div className={styles.transaction}>
-        {isMyActivity ? '' : 'Approve'} <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
+        {isMyActivity ? null : 'Approve '}
+        <Balance value={value} units="WVARA" /> <HashLink hash={item.owner} /> to{' '}
         <HashLink hash={item.spender} href={generatePath(routes.program, { programId: item.spender })} />
       </div>
     );
@@ -69,7 +70,8 @@ const Transaction = ({ item, isMyActivity = false }: Props) => {
 
     return (
       <div className={styles.transaction}>
-        {isMyActivity ? '' : 'Top up executable balance'} <Balance value={value} units="WVARA" /> to{' '}
+        {isMyActivity ? null : 'Top up executable balance '}
+        <Balance value={value} units="WVARA" /> to{' '}
         <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />
       </div>
     );

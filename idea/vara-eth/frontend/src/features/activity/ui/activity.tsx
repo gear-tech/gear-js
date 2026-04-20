@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { TransactionTypes, type MyActivity, myActivityAtom } from '@/app/store';
+import { type MyActivity, myActivityAtom, TransactionTypes } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, ExpandableItem, Tabs } from '@/components';
 import { formatDate } from '@/shared/utils';
@@ -40,13 +40,14 @@ const Activity = () => {
 
   useEffect(() => {
     let hasNewActivityItem = false;
+    const newHighlights: Record<string, HighlightType> = {};
 
     for (const { key, hasError } of myActivityItems) {
       if (seenItemsRef.current.has(key)) continue;
 
       seenItemsRef.current.add(key);
       hasNewActivityItem = true;
-      setHighlightedItems((prev) => ({ ...prev, [key]: hasError ? 'error' : 'success' }));
+      newHighlights[key] = hasError ? 'error' : 'success';
 
       const timerId = window.setTimeout(() => {
         setHighlightedItems((prev) => {
@@ -58,6 +59,10 @@ const Activity = () => {
       }, NEW_ITEM_HIGHLIGHT_DURATION);
 
       timersRef.current.add(timerId);
+    }
+
+    if (Object.keys(newHighlights).length > 0) {
+      setHighlightedItems((prev) => ({ ...prev, ...newHighlights }));
     }
 
     if (!hasInitializedActivityRef.current) {

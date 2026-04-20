@@ -9,20 +9,12 @@ import styles from './expandable-item.module.scss';
 type Props = PropsWithChildren & {
   header: ReactNode;
   headerSlot?: ReactNode;
-  isOpen?: boolean;
   defaultOpen?: boolean;
   className?: string;
 };
 
-const ExpandableItem = ({
-  children,
-  header,
-  headerSlot,
-  isOpen,
-  defaultOpen,
-  className,
-}: Props) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(defaultOpen ?? isOpen ?? false);
+const ExpandableItem = ({ children, header, headerSlot, defaultOpen, className }: Props) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(defaultOpen ?? false);
 
   const isEmptyChildren =
     children === undefined ||
