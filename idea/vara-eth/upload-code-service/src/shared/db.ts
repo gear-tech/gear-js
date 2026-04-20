@@ -1,11 +1,10 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import type { Hash } from 'viem';
-import { config } from '../config.js';
 import { generateJobId } from '../util.js';
 import type { DbRequest, JobStatus, RequestCodeValidationParams } from './types.js';
 
-const TABLE = config.dynamoDbTable;
+const TABLE = process.env.DYNAMODB_TABLE!;
 
 const client = new DynamoDBClient();
 const db = DynamoDBDocumentClient.from(client);

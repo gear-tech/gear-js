@@ -2,7 +2,7 @@ import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import type { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 import { verifyMessage } from 'viem/utils';
 
-import { config } from './config.js';
+import { getConfig } from './config.js';
 import {
   validateBlobHash,
   validateCode,
@@ -84,7 +84,7 @@ const requestCodeValidationHandler = async (event: APIGatewayProxyEvent): Promis
   }
 
   const jobId = generateJobId(body.codeId, body.blobHash);
-  const existing = await getJobStatus(jobId);
+  const [existing, config] = await Promise.all([getJobStatus(jobId), getConfig()]);
   if (existing && existing.status !== 'failed') {
     return json(200, { jobId, routerAddress: config.routerAddress });
   }
