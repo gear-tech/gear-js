@@ -413,7 +413,8 @@ describe('Subscriptions', () => {
 
     while (!isFinalized) {
       await sleep(2000);
-      const finBlockNumber = await api.blocks.getFinalizedHead().then((hash) => api.blocks.getBlockNumber(hash));
+      const finBlockHash = await api.blocks.getFinalizedHead();
+      const finBlockNumber = await api.blocks.getBlockNumber(finBlockHash);
       if (finBlockNumber.toNumber() > blockNumber) {
         isFinalized = true;
       }
