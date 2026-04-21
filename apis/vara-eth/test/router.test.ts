@@ -4,7 +4,15 @@ import type { Abi, Account, Chain, Hex, PublicClient, WalletClient, WebSocketTra
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { CodeState, getMirrorClient, getRouterClient, type ITransactionSigner, type RouterClient } from '../src';
+import {
+  CodeState,
+  getMirrorClient,
+  getRouterClient,
+  getWrappedVaraClient,
+  type ITransactionSigner,
+  type RouterClient,
+  type WrappedVaraClient,
+} from '../src';
 import { walletClientToSigner } from '../src/signer';
 import { waitNBlocks } from './common';
 import { config } from './config';
@@ -15,6 +23,7 @@ let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ITransactionSigner;
 let router: RouterClient;
+let wvara: WrappedVaraClient;
 
 let codeValidatedPromise: Promise<boolean>;
 
@@ -32,6 +41,7 @@ beforeAll(async () => {
   });
   signer = walletClientToSigner(walletClient);
   router = getRouterClient({ publicClient, signer, address: config.routerId });
+  wvara = getWrappedVaraClient({ publicClient, signer, address: await router.wrappedVara() });
 
   codeId = config.codeId;
 });
@@ -45,7 +55,13 @@ describe('router', () => {
     test(
       'should request code validation',
       async () => {
-        const tx = await router.requestCodeValidation(code);
+        const deadline = BigInt(Date.now() + 10000);
+        const { signature } = await wvara.prepareAndSignPermitData(
+          router.address,
+          await router.requestCodeValidationBaseFee(),
+          deadline,
+        );
+        const tx = await router.requestCodeValidation(code, deadline, signature.v, signature.r, signature.s);
         codeId = tx.codeId;
         const receipt = await tx.sendAndWaitForReceipt();
         const transaction = await publicClient.getTransaction({ hash: receipt.transactionHash });
@@ -223,10 +239,10 @@ describe('router', () => {
       expect(varaAddr.startsWith('0x')).toBe(true);
     });
 
-    test('should get latestCommittedBlockHash', async () => {
-      const blockhash = await router.latestCommittedBlockHash();
-      expect(blockhash).toBeDefined();
-      expect(typeof blockhash).toBe('string');
+    test('should get latestCommittedBatchHash', async () => {
+      const batchHash = await router.latestCommittedBatchHash();
+      expect(batchHash).toBeDefined();
+      expect(typeof batchHash).toBe('string');
     });
 
     test('should get code state for validated code', async () => {

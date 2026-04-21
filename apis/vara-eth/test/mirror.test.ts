@@ -49,7 +49,7 @@ describe('setup', () => {
   let programWithAbiInterfaceId: Hex;
 
   test('should create program', async () => {
-    const tx = await api.eth.router.createProgram(config.codeId);
+    const tx = api.eth.router.createProgram(config.codeId);
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();

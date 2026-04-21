@@ -35,10 +35,15 @@
       "import": "./lib/signer/index.js",
       "require": "./lib/signer/index.cjs"
     },
+    "./eth/contracts": {
+      "types": "./lib/eth/contracts/index.d.ts",
+      "import": "./lib/eth/contracts/index.js",
+      "require": "./lib/eth/contracts/index.cjs"
+    },
     "./eth/router": {
-      "types": "./lib/eth/router.d.ts",
-      "import": "./lib/eth/router.js",
-      "require": "./lib/eth/router.cjs"
+      "types": "./lib/eth/contracts/router.contract.d.ts",
+      "import": "./lib/eth/contracts/router.contract.js",
+      "require": "./lib/eth/contracts/router.contract.cjs"
     }
   },
   "peerDependencies": {
