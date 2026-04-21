@@ -55,7 +55,7 @@ jobs:
 
   test-gear-api:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'S1-skip-gear-api-tests') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
@@ -112,7 +112,7 @@ jobs:
 
   test-varaeth-api:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-varaeth-tests') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
