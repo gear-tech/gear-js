@@ -1,7 +1,5 @@
 import { createHash } from 'node:crypto';
 
-export const generateJobId = (codeId: string, blobHash: string) => {
-  const hash = createHash('sha256');
-  hash.update(codeId + blobHash);
-  return hash.digest('base64url');
+export const generateJobId = (codeId: string) => {
+  return createHash('sha256').update(codeId).digest('base64url');
 };

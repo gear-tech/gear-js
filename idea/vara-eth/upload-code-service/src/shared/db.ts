@@ -10,16 +10,22 @@ const client = new DynamoDBClient();
 const db = DynamoDBDocumentClient.from(client);
 
 export async function createRequest(data: RequestCodeValidationParams): Promise<string> {
-  const jobId = generateJobId(data.codeId, data.blobHash);
+  const jobId = generateJobId(data.codeId);
 
   const item: DbRequest & { jobId: string } = {
     jobId,
     status: 'pending',
     codeId: data.codeId,
-    blobHash: data.blobHash,
+    blobHashes: data.blobHashes,
+    deadline: data.deadline,
     code: data.code,
     sender: data.sender,
-    signature: data.signature,
+    v1: data.v1,
+    r1: data.r1,
+    s1: data.s1,
+    v2: data.v2,
+    r2: data.r2,
+    s2: data.s2,
   };
 
   await db.send(new PutCommand({ TableName: TABLE, Item: item }));

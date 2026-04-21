@@ -19,6 +19,20 @@ export const validateCodeId = (data: unknown) => {
   return isHash(data);
 };
 
-export const validateBlobHash = validateCodeId;
+export const validateBlobHashes = (data: unknown) => {
+  if (!Array.isArray(data) || data.length === 0) return false;
+  return data.every((item) => isString(item) && isHash(item));
+};
 
-export const validateSignature = validateCode;
+export const validateDeadline = (data: unknown) => {
+  const n = Number(data);
+  return Number.isInteger(n) && n > 0;
+};
+
+export const validateV = (data: unknown) => {
+  const n = Number(data);
+  return Number.isInteger(n) && n >= 0 && n <= 255;
+};
+
+export const validateR = validateCodeId;
+export const validateS = validateCodeId;

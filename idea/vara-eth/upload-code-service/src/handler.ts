@@ -1,14 +1,16 @@
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import type { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
-import { verifyMessage } from 'viem/utils';
 
 import { getConfig } from './config.js';
 import {
-  validateBlobHash,
+  validateBlobHashes,
   validateCode,
   validateCodeId,
+  validateDeadline,
+  validateR,
+  validateS,
   validateSender,
-  validateSignature,
+  validateV,
 } from './field-validator.js';
 import { createRequest, getStatus as getJobStatus } from './shared/db.js';
 import type { RequestCodeValidationParams } from './shared/types.js';
@@ -20,8 +22,14 @@ const FIELD_VALIDATORS: Record<keyof RequestCodeValidationParams, (data: unknown
   code: validateCode,
   codeId: validateCodeId,
   sender: validateSender,
-  blobHash: validateBlobHash,
-  signature: validateSignature,
+  blobHashes: validateBlobHashes,
+  deadline: validateDeadline,
+  v1: validateV,
+  r1: validateR,
+  s1: validateS,
+  v2: validateV,
+  r2: validateR,
+  s2: validateS,
 };
 
 const REQUIRED_FIELDS = Object.keys(FIELD_VALIDATORS) as (keyof RequestCodeValidationParams)[];
@@ -62,7 +70,7 @@ const requestCodeValidationHandler = async (event: APIGatewayProxyEvent): Promis
     return json(400, { error: 'Invalid JSON body' });
   }
 
-  const missing = REQUIRED_FIELDS.filter((field) => !body[field]);
+  const missing = REQUIRED_FIELDS.filter((field) => body[field] === undefined || body[field] === null);
   if (missing.length > 0) {
     return json(400, { error: `Missing required fields: ${missing.join(', ')}` });
   }
@@ -73,26 +81,14 @@ const requestCodeValidationHandler = async (event: APIGatewayProxyEvent): Promis
     }
   }
 
-  // Validate signature — sender must have signed blobHash + codeId
-  const isValid = await verifyMessage({
-    address: body.sender,
-    message: body.blobHash + body.codeId,
-    signature: body.signature as `0x${string}`,
-  });
-  if (!isValid) {
-    return json(401, { error: 'Invalid signature' });
-  }
-
-  const jobId = generateJobId(body.codeId, body.blobHash);
+  const jobId = generateJobId(body.codeId);
   const [existing, config] = await Promise.all([getJobStatus(jobId), getConfig()]);
   if (existing && existing.status !== 'failed') {
     return json(200, { jobId, routerAddress: config.routerAddress });
   }
 
-  // Write to DynamoDB with status: pending
   await createRequest(body);
 
-  // Enqueue SQS message
   await sqs.send(
     new SendMessageCommand({
       QueueUrl: config.sqsQueueUrl,
