@@ -1,8 +1,16 @@
-import type { Address, Hash, Hex, TransactionRequest, WalletClient } from 'viem';
-import { isHex } from 'viem';
+import type {
+  Address,
+  Hash,
+  Hex,
+  SignTypedDataParameters,
+  SignTypedDataReturnType,
+  TransactionRequest,
+  WalletClient
+} from 'viem';
+import {isHex} from 'viem';
 
-import type { ITransactionSigner } from '../../types/signer.js';
-import { AddressError, SigningError } from '../errors.js';
+import type {ITransactionSigner} from '../../types/signer.js';
+import {AddressError, SigningError} from '../errors.js';
 
 export class WalletClientAdapter implements ITransactionSigner {
   constructor(private _wc: WalletClient) {}
@@ -16,6 +24,13 @@ export class WalletClientAdapter implements ITransactionSigner {
       message: { raw: messageData },
       account: this._wc.account,
     });
+  }
+
+  async signTypedData(args: SignTypedDataParameters): Promise<SignTypedDataReturnType> {
+    if (!this._wc.account) {
+      throw new SigningError('Wallet client has no account');
+    }
+    return this._wc.signTypedData(args);
   }
 
   async getAddress(): Promise<Address> {

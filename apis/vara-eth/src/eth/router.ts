@@ -1,11 +1,12 @@
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
 import type { Address, Hex, TransactionRequest } from 'viem';
-import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex } from 'viem/utils';
+import { bytesToHex, encodeFunctionData, hexToBytes, sha256, toHex, slice, hexToNumber } from 'viem/utils';
 
 import { simpleSidecarEncode } from '../util/blob.js';
 import { ZERO_ADDRESS } from '../util/constants.js';
 import { generateCodeHash } from '../util/hash.js';
+import { IWRAPPEDVARA_ABI } from './abi/IWrappedVara.js'
 import { IROUTER_ABI, type IRouterContract } from './abi/IRouter.js';
 import { BaseContractClient, type ContractClientParams } from './base-contract.js';
 import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from './interfaces/router.js';
@@ -232,10 +233,65 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
   public async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
 
+    const chainId = await this._pc.getChainId();
+    const block = await this._pc.getBlock();
+    const timestamp = block.timestamp;
+
+    const wrappedVara = await this.wrappedVara();
+
+    const owner = await this._signer!.getAddress();
+    const spender = this.address;
+    const value = await this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'requestCodeValidationBaseFee',
+      args: [],
+    });
+    const nonce = await this._pc.readContract({
+      address: wrappedVara,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'nonces',
+      args: [owner],
+    });
+    const deadline = timestamp + 120n;
+
+    const typedData = {
+      account: owner,
+      domain: {
+        name: 'Wrapped Vara',
+        version: '1',
+        chainId,
+        verifyingContract: wrappedVara,
+      },
+      types: {
+        Permit: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' },
+          { name: 'value', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint256' },
+        ],
+      },
+      primaryType: 'Permit',
+      message: {
+        owner,
+        spender,
+        value,
+        nonce,
+        deadline,
+      },
+    };
+    console.log(typedData);
+    const signature =  await this._signer!.signTypedData(typedData);
+
+    const r = slice(signature, 0, 32);
+    const s = slice(signature, 32, 64);
+    const v = hexToNumber(slice(signature, 64, 65));
+
     const data = encodeFunctionData({
       abi: IROUTER_ABI,
       functionName: 'requestCodeValidation',
-      args: [codeId],
+      args: [codeId, deadline, v, r, s],
     });
 
     const blobs = simpleSidecarEncode(code);
@@ -270,7 +326,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       blobVersion: '7594' as const,
       data,
       to: this.address,
-      gas: 100_000n,
+      gas: 150_000n,
       maxFeePerBlobGas,
       blobs,
       kzg: {
@@ -293,7 +349,7 @@ export class RouterClient extends BaseContractClient implements IRouterContract 
       chain: null,
     };
 
-    tx.gas = await this._pc.estimateGas(tx);
+    // tx.gas = await this._pc.estimateGas(tx);
 
     await this._pc.prepareTransactionRequest(tx);
 
