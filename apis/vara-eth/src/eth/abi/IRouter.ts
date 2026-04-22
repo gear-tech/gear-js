@@ -449,11 +449,63 @@ export const IROUTER_ABI = [
     stateMutability: 'view',
   },
   {
-    type: 'function',
-    name: 'requestCodeValidation',
-    inputs: [{ name: 'codeId', type: 'bytes32', internalType: 'bytes32' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
+    "type": "function",
+    "name": "requestCodeValidationBaseFee",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "requestCodeValidationExtraFee",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "requestCodeValidation",
+    "inputs": [
+      {
+        "name": "_codeId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "_deadline",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_v",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "_r",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "_s",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     type: 'function',
