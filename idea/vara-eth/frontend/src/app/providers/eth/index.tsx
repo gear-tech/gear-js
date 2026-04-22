@@ -63,6 +63,7 @@ createAppKit({
     history: false,
     receive: false,
   },
+  enableNetworkSwitch: false,
   enableWalletGuide: false,
   allWallets: 'HIDE',
   excludeWalletIds: [TRUST_WALLET_ID],
