@@ -20,8 +20,8 @@ const parseOptionalChainId = (value: string | undefined, fallbackValue: number):
 
 const ETH_CHAIN_ID_TESTNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_TESTNET, 560048);
 const ETH_CHAIN_ID_MAINNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_MAINNET, 1);
-const ETHERSCAN_URL_MAINNET = 'https://etherscan.io';
-const ETHERSCAN_URL_TESTNET = 'https://hoodi.etherscan.io';
+const ETHERSCAN_URL_MAINNET = (import.meta.env.VITE_ETHERSCAN_URL_MAINNET as string) || 'https://etherscan.io';
+const ETHERSCAN_URL_TESTNET = (import.meta.env.VITE_ETHERSCAN_URL_TESTNET as string) || 'https://hoodi.etherscan.io';
 
 const ETH_NODE_ADDRESS_TESTNET = import.meta.env.VITE_ETH_NODE_ADDRESS_TESTNET as string;
 const ETH_NODE_ADDRESS_MAINNET = import.meta.env.VITE_ETH_NODE_ADDRESS_MAINNET as string;

@@ -6,7 +6,7 @@ import { useAtomValue } from 'jotai';
 import { type PropsWithChildren, useEffect } from 'react';
 import { useChainId, useSwitchChain, WagmiProvider, webSocket } from 'wagmi';
 
-import { nodeAtom } from '@/app/store/node';
+import { nodeAtom } from '@/app/store';
 import {
   ETH_CHAIN_ID_MAINNET,
   ETH_CHAIN_ID_TESTNET,

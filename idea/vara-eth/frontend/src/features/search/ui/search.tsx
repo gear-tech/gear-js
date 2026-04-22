@@ -7,7 +7,7 @@ import { type Hex, isAddress, isHash } from 'viem';
 import { useConfig } from 'wagmi';
 import { z } from 'zod';
 
-import { nodeAtom } from '@/app/store/node';
+import { nodeAtom } from '@/app/store';
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
 import { routes } from '@/shared/config';
