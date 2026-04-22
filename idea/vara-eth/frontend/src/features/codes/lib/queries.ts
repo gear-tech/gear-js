@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import type { Hex } from 'viem';
 
-import { nodeAtom } from '@/app/store/node';
+import { nodeAtom } from '@/app/store';
 import type { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 

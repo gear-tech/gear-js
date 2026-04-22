@@ -11,13 +11,14 @@ const WalletButton = () => {
 
   const ethAccount = useAccount();
   const name = useEnsName({ address: ethAccount.address });
+  const chainName = ethAccount.chain?.name;
 
   return (
     <Button onClick={() => open()} className={styles.button}>
       {ethAccount.address ? (
         <>
           {name.data || getTruncatedText(ethAccount.address)}
-          <span className={styles.chain}>Hoodi</span>
+          <span className={styles.chain}>{chainName || 'Unknown network'}</span>
         </>
       ) : (
         'Connect Wallet'
