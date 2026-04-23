@@ -4,9 +4,9 @@ import { BN } from '@polkadot/util';
 import { createLogger } from 'gear-idea-common';
 import type { Hex } from 'viem';
 
-import config from '../../config';
-import { type FaucetRequest, FaucetType } from '../../database';
-import { FaucetProcessor } from './abstract';
+import config from '../../config.js';
+import { type FaucetRequest, FaucetType } from '../../database/index.js';
+import { FaucetProcessor } from './abstract.js';
 
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;

@@ -1,4 +1,4 @@
-module.exports = class Data1725704609634 {
+export default class Data1725704609634 {
   name = 'Data1725704609634';
 
   async up(db) {
@@ -10,4 +10,4 @@ module.exports = class Data1725704609634 {
     await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "parent_id"`);
     await db.query(`ALTER TABLE "event" DROP COLUMN "parent_id"`);
   }
-};
+}

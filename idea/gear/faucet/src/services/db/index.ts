@@ -1,2 +1,2 @@
-export { LastSeenService } from './last-seen';
-export { RequestService } from './request';
+export { LastSeenService } from './last-seen.js';
+export { RequestService } from './request.js';

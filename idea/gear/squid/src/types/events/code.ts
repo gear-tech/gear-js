@@ -1,5 +1,5 @@
-import { Events } from '../../common';
-import type { Event } from '../../processor';
+import { Events } from '../../common/index.js';
+import type { Event } from '../../processor.js';
 
 export interface ACodeChanged {
   id: string;

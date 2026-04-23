@@ -1,4 +1,4 @@
-module.exports = class Data1726917899479 {
+export default class Data1726917899479 {
   name = 'Data1726917899479';
 
   async up(db) {
@@ -10,4 +10,4 @@ module.exports = class Data1726917899479 {
   async down(db) {
     await db.query(`DROP TABLE "voucher"`);
   }
-};
+}

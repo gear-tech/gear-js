@@ -1,12 +1,9 @@
-import './__mocks__/viem';
-import './__mocks__/typeorm';
-import './__mocks__/gear-js';
-
 import request from 'supertest';
-import { FaucetType, RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
-import { hash } from '../src/services/db/last-seen';
-import { repos } from './__mocks__/db';
+
+import { FaucetType, RequestStatus } from '../src/database/index.js';
+import { FaucetApp } from '../src/main.js';
+import { hash } from '../src/services/db/last-seen.js';
+import { repos } from './__mocks__/db.js';
 
 const ETH_USER_ADDRESS = '0x0000000000000000000000000000000000000001';
 const WVARA_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000005';

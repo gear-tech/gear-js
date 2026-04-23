@@ -1,9 +1,9 @@
 import type { DataSource } from 'gear-idea-indexer-db';
-import { CodeService } from './code';
-import { EventService } from './event';
-import { MessageService } from './message';
-import { ProgramService } from './program';
-import { VoucherService } from './voucher';
+import { CodeService } from './code.js';
+import { EventService } from './event.js';
+import { MessageService } from './message.js';
+import { ProgramService } from './program.js';
+import { VoucherService } from './voucher.js';
 
 export class AllInOneService {
   public code: CodeService;

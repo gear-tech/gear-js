@@ -1,4 +1,4 @@
-import type { CodeStatus } from '../enums';
+import type { CodeStatus } from '../enums/index.js';
 
 export interface ICode {
   id: string;

@@ -1,18 +1,20 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import { hexToBytea } from '../transformers.js';
+
 @Entity()
 export class Voucher {
   constructor(props?: Voucher) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
   id!: string;
 
-  @Column()
+  @Column({ type: 'bytea', transformer: hexToBytea })
   owner!: string;
 
-  @Column()
+  @Column({ type: 'bytea', transformer: hexToBytea })
   spender!: string;
 
   @Column('bigint')

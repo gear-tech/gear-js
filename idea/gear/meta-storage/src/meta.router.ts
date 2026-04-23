@@ -7,7 +7,7 @@ import {
   SailsIdlNotFoundError,
 } from 'gear-idea-common';
 
-import type { MetaService } from './service';
+import type { MetaService } from './service.js';
 
 const errorChecker = (err: Error) => {
   if (err instanceof InvalidParamsError || err instanceof InvalidMetadataError) {

@@ -12,9 +12,9 @@ import {
 } from 'gear-idea-common';
 import type { Repository } from 'typeorm';
 
-import { AppDataSource, Meta, SailsIdl } from './database';
-import { Code } from './database/entities/code.entity';
-import { validateMetaHex } from './util/validate';
+import { Code } from './database/entities/code.entity.js';
+import { AppDataSource, Meta, SailsIdl } from './database/index.js';
+import { validateMetaHex } from './util/validate.js';
 
 const getHash = (data: string) => crypto.createHash('sha256').update(data).digest('hex');
 

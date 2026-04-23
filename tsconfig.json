@@ -2,10 +2,10 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "outDir": "./dist",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "removeComments": true,
-    "module": "commonjs",
+    "module": "ESNext",
     "target": "esnext",
     "strict": true,
     "allowJs": true

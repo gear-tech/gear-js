@@ -10,9 +10,9 @@ import { type Account, privateKeyToAccount } from 'viem/accounts';
 import { hoodi } from 'viem/chains';
 import { parseAbi, parseUnits } from 'viem/utils';
 
-import config from '../../config';
-import { type FaucetRequest, FaucetType } from '../../database';
-import { FaucetProcessor } from './abstract';
+import config from '../../config.js';
+import { type FaucetRequest, FaucetType } from '../../database/index.js';
+import { FaucetProcessor } from './abstract.js';
 
 const ERC20_ABI = parseAbi([
   'function transfer(address to, uint256 amount)',

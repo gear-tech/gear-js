@@ -1,6 +1,7 @@
 {
   "name": "gear-idea-common",
   "private": true,
+  "type": "module",
   "version": "1.4.26",
   "main": "dist/index.js",
   "types": "src/index.ts",

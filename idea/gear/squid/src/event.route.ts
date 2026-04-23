@@ -1,13 +1,13 @@
 import type { Block } from '@subsquid/substrate-processor';
 import type { Store } from '@subsquid/typeorm-store';
-import { ZERO_ADDRESS } from 'sails-js';
+
 import {
   handleCreateProgram,
   handleSendMessageCall,
   handleSendReplyCall,
   handleUploadProgram,
   handleVoucherCall,
-} from './call.route';
+} from './call.route.js';
 import {
   Code,
   CodeStatus,
@@ -19,9 +19,26 @@ import {
   Program,
   ProgramStatus,
   Voucher,
-} from './model';
-import type { Event, Fields, ProcessorContext } from './processor';
-import type { TempState } from './temp-state';
+} from './model/index.js';
+
+import type { Event, Fields, ProcessorContext } from './processor.js';
+import type { TempState } from './temp-state.js';
+import {
+  isCreateProgram,
+  isSendMessageCall,
+  isSendReplyCall,
+  isUploadCode,
+  isUploadProgram,
+  isVoucherCall,
+} from './types/calls/index.js';
+import type {
+  EBalanceTransfer,
+  EVoucherDeclined,
+  EVoucherIssued,
+  EVoucherRevoked,
+  EVoucherUpdated,
+} from './types/events/voucher.js';
+
 import {
   type ECodeChanged,
   type EMessageQueuedEvent,
@@ -30,23 +47,8 @@ import {
   type EUserMessageRead,
   type EUserMessageSent,
   ReplyCode,
-} from './types';
-import {
-  isCreateProgram,
-  isSendMessageCall,
-  isSendReplyCall,
-  isUploadCode,
-  isUploadProgram,
-  isVoucherCall,
-} from './types/calls';
-import type {
-  EBalanceTransfer,
-  EVoucherDeclined,
-  EVoucherIssued,
-  EVoucherRevoked,
-  EVoucherUpdated,
-} from './types/events/voucher';
-import { getMetahash } from './util';
+} from './types/index.js';
+import { getMetahash } from './util.js';
 
 export interface IHandleEventProps<E = Event> {
   ctx: ProcessorContext<Store>;
@@ -116,11 +118,7 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
 
   msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);
 
-  if (event.args.message.destination === ZERO_ADDRESS) {
-    tempState.addEvent(msg);
-  } else {
-    tempState.addMsgFromProgram(msg);
-  }
+  tempState.addMsgFromProgram(msg);
 }
 
 const statuses = {

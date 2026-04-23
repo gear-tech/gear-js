@@ -2,7 +2,7 @@ import { strict as assert } from 'node:assert';
 import { config } from 'dotenv';
 import type { Hex } from 'viem';
 
-config();
+config({ quiet: true });
 
 const getEnv = (envName: string, defaultValue?: string): string => {
   const env = process.env[envName];

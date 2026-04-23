@@ -1,7 +1,8 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import { ProgramStatus } from '../enums';
 
-import { BaseEntity } from './base.entity';
+import { ProgramStatus } from '../enums/index.js';
+import { hexToBytea } from '../transformers.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Program extends BaseEntity {
@@ -10,10 +11,10 @@ export class Program extends BaseEntity {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
   public id: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
   public owner?: string | null;
 
   @Column({ nullable: true })
@@ -26,7 +27,7 @@ export class Program extends BaseEntity {
   @Column({ type: 'text', default: ProgramStatus.Unknown })
   public status: ProgramStatus;
 
-  @Column({ name: 'code_id' })
+  @Column({ type: 'bytea', name: 'code_id', transformer: hexToBytea })
   public codeId: string;
 
   @Column({ name: 'meta_type', nullable: true })

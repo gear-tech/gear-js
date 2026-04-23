@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
-import type { RequestService } from '../services';
-import { BaseRouter } from './base';
-import { handleVaraTestnetRequest } from './handlers';
-import { captchaMiddleware, rateLimitMiddleware } from './middleware';
+import type { RequestService } from '../services/index.js';
+import { BaseRouter } from './base.js';
+import { handleVaraTestnetRequest } from './handlers.js';
+import { captchaMiddleware, rateLimitMiddleware } from './middleware/index.js';
 
 const logger = createLogger('vara-router');
 

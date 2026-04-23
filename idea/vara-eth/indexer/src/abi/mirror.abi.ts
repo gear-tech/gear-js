@@ -2,7 +2,7 @@ import { IMIRROR_ABI } from '@vara-eth/api/abi';
 import type { ContractEventName, DecodeEventLogReturnType, Hex } from 'viem';
 import { decodeEventLog, encodeEventTopics } from 'viem/utils';
 
-import type { Log } from '../processor';
+import type { Log } from '../processor.js';
 
 export function getMirrorEventTopic(name: ContractEventName<typeof IMIRROR_ABI>) {
   return encodeEventTopics({ abi: IMIRROR_ABI, eventName: name })[0];
