@@ -49,6 +49,8 @@ const ProgramsTable = ({
 
   const { pagination, setPage, prefetchPage, getPlaceholder } = useTablePagination({
     effectivePageSize,
+    smallPageSize: openPageSize,
+    largePageSize: collapsedPageSize,
     getQueryOptions: ({ page, pageSize }) => getAllProgramsQueryOptions({ explorerUrl, page, pageSize, codeId }),
   });
   const { page, pageSize } = pagination;

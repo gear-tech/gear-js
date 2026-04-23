@@ -51,7 +51,7 @@ const getCachedPlaceholder = <TEntry extends { data: unknown[] }>({
     if (!sourceEntries.length) return undefined;
 
     const [base] = sourceEntries;
-    return { ...base, data: sourceEntries.flatMap((entry) => entry.data) } as TEntry;
+    return { ...base, data: sourceEntries.flatMap((entry) => entry.data).slice(0, largePageSize) } as TEntry;
   }
 
   if (pageSize === smallPageSize) {

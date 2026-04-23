@@ -12,6 +12,8 @@ type PaginationState = {
 type UseTablePaginationParams = {
   effectivePageSize: number;
   initialPage?: number;
+  smallPageSize?: number;
+  largePageSize?: number;
   getQueryOptions?: (params: PaginationState) => PaginatedQueryOptions;
 };
 
@@ -19,7 +21,13 @@ type PaginatedQueryOptions = {
   queryKey: QueryKey;
 };
 
-const useTablePagination = ({ effectivePageSize, initialPage = 1, getQueryOptions }: UseTablePaginationParams) => {
+const useTablePagination = ({
+  effectivePageSize,
+  initialPage = 1,
+  smallPageSize = OPEN_PAGE_SIZE,
+  largePageSize = COLLAPSED_PAGE_SIZE,
+  getQueryOptions,
+}: UseTablePaginationParams) => {
   const queryClient = useQueryClient();
   const [offset, setOffset] = useState(() => Math.max(0, (initialPage - 1) * effectivePageSize));
   const pagination = useMemo<PaginationState>(
@@ -58,14 +66,14 @@ const useTablePagination = ({ effectivePageSize, initialPage = 1, getQueryOption
     return getCachedPlaceholder<TEntry>({
       page: pagination.page,
       pageSize: pagination.pageSize,
-      smallPageSize: OPEN_PAGE_SIZE,
-      largePageSize: COLLAPSED_PAGE_SIZE,
+      smallPageSize,
+      largePageSize,
       getCache: (page, pageSize) => {
         const options = getQueryOptions({ page, pageSize });
         return queryClient.getQueryData<TEntry>(options.queryKey);
       },
     });
-  }, [getQueryOptions, pagination.page, pagination.pageSize, queryClient]);
+  }, [getQueryOptions, pagination.page, pagination.pageSize, queryClient, smallPageSize, largePageSize]);
 
   return { pagination, setPage, prefetchPage, getPlaceholder };
 };

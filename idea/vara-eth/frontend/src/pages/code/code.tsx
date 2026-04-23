@@ -53,7 +53,7 @@ const Code = () => {
           <ProgramsTable
             codeId={codeId}
             openPageSize={5}
-            collapsedPageSize={18}
+            collapsedPageSize={15}
             positionedAt="bottom"
             truncateSize="xl"
           />

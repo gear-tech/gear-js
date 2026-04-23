@@ -96,7 +96,8 @@ const Table = <T extends { id: string | number }>({
             const isLast = index === lastColumnIndex;
             const title = (
               <span className={styles.headerTitle}>
-                {column.title} <SortSVG />
+                {column.title}
+                {column.sortable ? <SortSVG /> : null}
               </span>
             );
 
