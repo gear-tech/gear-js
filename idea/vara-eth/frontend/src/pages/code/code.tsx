@@ -49,7 +49,15 @@ const Code = () => {
       <div className={styles.extraData}>
         <Tabs tabs={TABS} tabIndex={tabIndex} onTabIndexChange={setTabIndex} className={styles.tabs} />
 
-        {tabIndex === 0 && <ProgramsTable codeId={codeId} pageSize={5} positionedAt="bottom" />}
+        {tabIndex === 0 && (
+          <ProgramsTable
+            codeId={codeId}
+            openPageSize={5}
+            collapsedPageSize={15}
+            positionedAt="bottom"
+            truncateSize="xl"
+          />
+        )}
 
         {tabIndex === 1 && !sails.isLoading && (
           <div className={styles.idlContainer}>

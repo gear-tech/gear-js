@@ -66,8 +66,8 @@ const Table = <T extends { id: string | number }>({
     });
   }, [data, sortKey, sortOrder]);
 
-  const hasExtraColumn = Boolean(headerRight);
   const isEmpty = !isLoading && !data?.length;
+  const lastColumnIndex = columns.length - 1;
 
   const render = () => {
     const placeholderData = Array.from<undefined>({ length: pageSize });
@@ -84,8 +84,6 @@ const Table = <T extends { id: string | number }>({
             )}
           </td>
         ))}
-
-        {hasExtraColumn && <td />}
       </tr>
     ));
   };
@@ -94,27 +92,42 @@ const Table = <T extends { id: string | number }>({
     <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], styles[positionedAt])}>
       <thead>
         <tr>
-          {columns.map((column: TableColumn<T>) => (
-            <th
-              key={column.key as string}
-              onClick={() => column.sortable && handleSort(column.key)}
-              className={column.sortable ? styles.sortable : ''}>
-              {column.title} <SortSVG />
-            </th>
-          ))}
+          {columns.map((column: TableColumn<T>, index) => {
+            const isLast = index === lastColumnIndex;
+            const title = (
+              <span className={styles.headerTitle}>
+                {column.title}
+                {column.sortable ? <SortSVG /> : null}
+              </span>
+            );
 
-          {hasExtraColumn && (
-            <th className={styles.headerRightCell}>
-              <div className={styles.headerRight}>{headerRight}</div>
-            </th>
-          )}
+            const onHeaderClick = (event: React.MouseEvent<HTMLTableCellElement>) => {
+              if (!column.sortable) return;
+              if ((event.target as HTMLElement).closest(`.${styles.headerRight}`)) return;
+
+              handleSort(column.key);
+            };
+
+            return (
+              <th key={column.key as string} onClick={onHeaderClick} className={column.sortable ? styles.sortable : ''}>
+                {isLast && headerRight ? (
+                  <div className={styles.headerWithAction}>
+                    {title}
+                    <div className={styles.headerRight}>{headerRight}</div>
+                  </div>
+                ) : (
+                  title
+                )}
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
       <tbody>
         {isEmpty ? (
           <tr className={styles.emptyRow}>
-            <td colSpan={columns.length + Number(hasExtraColumn)}>
+            <td colSpan={columns.length}>
               <div className={styles.emptyContainer}>
                 <span className={styles.title}>
                   <span className={styles.comment}>{'//_'}</span>No Items Yet

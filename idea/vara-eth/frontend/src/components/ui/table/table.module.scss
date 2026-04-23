@@ -33,18 +33,35 @@
   }
 
   th {
-    padding: 5px 24px;
+    padding: 0 24px;
     background: rgba(15, 15, 15, 1);
 
-    cursor: pointer;
     user-select: none;
     position: relative;
 
     border-bottom: 1px solid rgba(41, 41, 41, 1);
 
+    &.sortable {
+      cursor: pointer;
+    }
+  }
+
+  .headerTitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 0;
+
     svg {
       vertical-align: top;
     }
+  }
+
+  .headerWithAction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
   }
 
   tr:not(.emptyRow) {
@@ -68,16 +85,11 @@
     padding: 0;
   }
 
-  .headerRightCell {
-    padding: 0;
-    background: rgba(15, 15, 15, 1);
-  }
-
   .headerRight {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    padding: 4px 24px;
+    padding: 4px 0;
+    cursor: default;
   }
 }
 

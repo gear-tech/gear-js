@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import type { Hex } from 'viem';
 
@@ -18,23 +18,56 @@ export type Program = {
 
 export type ProgramsResponse = PaginatedResponse<Program>;
 
-export const useGetAllProgramsQuery = (page: number, pageSize: number, codeId?: Hex) => {
+type AllProgramsParams = {
+  explorerUrl: string;
+  page: number;
+  pageSize: number;
+  codeId?: Hex;
+};
+
+const ALL_PROGRAMS_STALE_TIME = 60 * 1000;
+
+const getProgramsLimitOffset = ({ page, pageSize }: Pick<AllProgramsParams, 'page' | 'pageSize'>) => ({
+  limit: pageSize,
+  offset: Math.max(0, (page - 1) * pageSize),
+});
+
+const getAllProgramsQueryKey = ({ explorerUrl, page, pageSize, codeId }: AllProgramsParams) => {
+  const { limit, offset } = getProgramsLimitOffset({ page, pageSize });
+  return ['allPrograms', limit, offset, codeId, explorerUrl] as const;
+};
+
+const getAllPrograms = async ({ explorerUrl, page, pageSize, codeId }: AllProgramsParams) => {
+  const { limit, offset } = getProgramsLimitOffset({ page, pageSize });
+  const url = new URL(`${explorerUrl}/programs`);
+
+  url.searchParams.set('limit', String(limit));
+  url.searchParams.set('offset', String(offset));
+
+  if (codeId) url.searchParams.set('codeId', codeId);
+
+  return fetchWithGuard<ProgramsResponse>({ url });
+};
+
+export const getAllProgramsQueryOptions = ({ explorerUrl, page, pageSize, codeId }: AllProgramsParams) =>
+  queryOptions({
+    queryKey: getAllProgramsQueryKey({ explorerUrl, page, pageSize, codeId }),
+    queryFn: () => getAllPrograms({ explorerUrl, page, pageSize, codeId }),
+    staleTime: ALL_PROGRAMS_STALE_TIME,
+    placeholderData: (previousData: ProgramsResponse | undefined) => previousData,
+  });
+
+export const useGetAllProgramsQuery = (
+  page: number,
+  pageSize: number,
+  codeId?: Hex,
+  getPlaceholder?: () => ProgramsResponse | undefined,
+) => {
   const { explorerUrl } = useAtomValue(nodeAtom);
-  const limit = pageSize;
-  const offset = (page - 1) * pageSize;
 
   return useQuery({
-    queryKey: ['allPrograms', limit, offset, codeId, explorerUrl],
-    queryFn: async () => {
-      const url = new URL(`${explorerUrl}/programs`);
-      url.searchParams.set('limit', String(limit));
-      url.searchParams.set('offset', String(offset));
-
-      if (codeId) url.searchParams.set('codeId', codeId);
-
-      return fetchWithGuard<ProgramsResponse>({ url });
-    },
-    placeholderData: (previousData) => previousData,
+    ...getAllProgramsQueryOptions({ explorerUrl, page, pageSize, codeId }),
+    placeholderData: (prev: ProgramsResponse | undefined) => getPlaceholder?.() ?? prev,
   });
 };
 

@@ -1,3 +1,5 @@
+import { clsx } from 'clsx';
+
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import { Button } from '@/components';
 
@@ -7,9 +9,10 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: (prevPage: number) => number) => void;
+  isFetching?: boolean;
 };
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, isFetching = false }: PaginationProps) => {
   if (totalPages <= 1) return null;
 
   const handlePrev = () => {
@@ -26,7 +29,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
         <ArrowLeftSVG />
       </Button>
 
-      <span className={styles.info}>
+      <span className={clsx(styles.info, isFetching && styles.infoLoading)}>
         {currentPage} of {totalPages}
       </span>
 

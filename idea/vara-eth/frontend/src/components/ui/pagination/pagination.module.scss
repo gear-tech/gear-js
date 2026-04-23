@@ -15,4 +15,9 @@
   text-align: center;
   font-size: 12px;
   white-space: nowrap;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.infoLoading {
+  opacity: 0.55;
 }
