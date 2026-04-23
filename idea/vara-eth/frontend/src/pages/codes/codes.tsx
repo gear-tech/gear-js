@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import { generatePath } from 'react-router-dom';
 
+import { nodeAtom } from '@/app/store';
+import { activityPanelOpenAtom } from '@/app/store/activity-panel';
 import { HashLink, Pagination, Table } from '@/components';
-import { useGetAllCodesQuery } from '@/features/codes';
-import { routes } from '@/shared/config';
+import { getAllCodesQueryOptions, useGetAllCodesQuery } from '@/features/codes/lib';
+import { COLLAPSED_PAGE_SIZE, OPEN_PAGE_SIZE, routes } from '@/shared/config';
+import { usePaginationEffects, useTablePagination } from '@/shared/hooks';
 import { formatDate } from '@/shared/utils';
+import { getTotalPages } from '@/shared/utils/pagination';
 
 import styles from './codes.module.scss';
-
-const PAGE_SIZE = 10;
 
 const columns = [
   {
@@ -18,9 +21,6 @@ const columns = [
     render: (codeId: string) => (
       <div className={styles.codeIdWrapper}>
         <HashLink hash={codeId} truncateSize="lg" href={generatePath(routes.code, { codeId })} />
-        {/* <Tooltip value="Verified">
-          <VerifySvg />
-        </Tooltip> */}
       </div>
     ),
   },
@@ -28,8 +28,20 @@ const columns = [
 ];
 
 const Codes = () => {
-  const [page, setPage] = useState(1);
-  const { data: allCodes, isFetching } = useGetAllCodesQuery(page, PAGE_SIZE);
+  const isActivityPanelOpen = useAtomValue(activityPanelOpenAtom);
+  const { explorerUrl } = useAtomValue(nodeAtom);
+  const effectivePageSize = isActivityPanelOpen ? OPEN_PAGE_SIZE : COLLAPSED_PAGE_SIZE;
+
+  const { pagination, setPage, prefetchPage, getPlaceholder } = useTablePagination({
+    effectivePageSize,
+    getQueryOptions: ({ page, pageSize }) => getAllCodesQueryOptions({ explorerUrl, page, pageSize }),
+  });
+  const { page, pageSize } = pagination;
+
+  const { data: allCodes, isPending, isFetching } = useGetAllCodesQuery(page, pageSize, getPlaceholder);
+
+  const totalPages = getTotalPages({ totalItems: allCodes?.total ?? 0, pageSize });
+  usePaginationEffects({ page, pageSize, totalPages, setPage, prefetchPage });
 
   const data = allCodes?.data.map((code) => ({
     id: code.id,
@@ -37,18 +49,14 @@ const Codes = () => {
     createdAt: formatDate(code.createdAt),
   }));
 
-  const totalItems = allCodes?.total ?? 0;
-  const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
+  const headerRight = useMemo(
+    () => <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} isFetching={isFetching} />,
+    [isFetching, page, setPage, totalPages],
+  );
 
   return (
     <div className={styles.container}>
-      <Table
-        columns={columns}
-        data={data}
-        isLoading={isFetching}
-        pageSize={PAGE_SIZE}
-        headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
-      />
+      <Table columns={columns} data={data} isLoading={isPending} pageSize={pageSize} headerRight={headerRight} />
     </div>
   );
 };
