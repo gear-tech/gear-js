@@ -11,15 +11,18 @@ type SplitButtonOption<TValue extends string> = {
   value: TValue;
   label: string;
   description?: string;
+  disabled?: boolean;
 };
 
 type Props<TValue extends string> = {
   options: readonly SplitButtonOption<TValue>[];
   selectedValue: TValue;
   disabled?: boolean;
+  primaryDisabled?: boolean;
   isLoading?: boolean;
   className?: string;
   menuClassName?: string;
+  menuContent?: ReactNode;
   primaryButtonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'disabled'>;
   children: ReactNode;
   triggerAriaLabel?: string;
@@ -35,9 +38,11 @@ const SplitButton = <TValue extends string>({
   selectedValue,
   triggerAriaLabel = 'Select option',
   disabled,
+  primaryDisabled,
   isLoading,
   className,
   menuClassName,
+  menuContent,
   primaryButtonProps,
   children,
   onOptionClick,
@@ -48,6 +53,7 @@ const SplitButton = <TValue extends string>({
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
 
   const isDisabled = disabled || isLoading;
+  const isPrimaryDisabled = isDisabled || primaryDisabled;
 
   useEffect(() => {
     const onDocumentClick = (event: MouseEvent) => {
@@ -109,8 +115,8 @@ const SplitButton = <TValue extends string>({
           {...primaryButtonProps}
           type={primaryButtonProps?.type ?? 'button'}
           className={styles.primaryButton}
-          disabled={isDisabled}
-          aria-disabled={isDisabled}>
+          disabled={isPrimaryDisabled}
+          aria-disabled={isPrimaryDisabled}>
           {isLoading && <LoadingIcon className={styles.spinner} />}
           <span className={styles.content}>{children}</span>
         </button>
@@ -141,11 +147,13 @@ const SplitButton = <TValue extends string>({
                 key={option.value}
                 type="button"
                 className={cx(styles.option, selectedValue === option.value && styles.selected)}
+                disabled={option.disabled}
                 onClick={() => handleOptionClick(option.value)}>
                 <span className={styles.optionLabel}>{option.label}</span>
                 {option.description && <span className={styles.optionDescription}>{option.description}</span>}
               </button>
             ))}
+            {menuContent}
           </div>,
           document.body,
         )}

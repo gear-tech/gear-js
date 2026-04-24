@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
-import type { Hex } from 'viem';
+import type { Address, Hex } from 'viem';
 
 import { useApi } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
@@ -11,10 +11,12 @@ export const useCreateProgram = () => {
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 
-  const createProgram = async (codeId: Hex) => {
+  const createProgram = async ({ codeId, abiAddress }: { codeId: Hex; abiAddress?: Address }) => {
     if (!api) return;
 
-    const tx = await api.eth.router.createProgram(codeId);
+    const tx = abiAddress
+      ? await api.eth.router.createProgramWithAbiInterface(codeId, abiAddress)
+      : await api.eth.router.createProgram(codeId);
     await tx.send();
     const id = await tx.getProgramId();
     const receipt = await tx.getReceipt();
