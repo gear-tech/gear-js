@@ -9,6 +9,7 @@ on:
       - idea/gear/frontend/package.json
       - idea/gear/squid/package.json
       - idea/gear/explorer/package.json
+      - idea/gear/frontend/src/shared/config/bundled-metadata.ts
   workflow_dispatch:
     inputs:
       service:
@@ -69,11 +70,24 @@ jobs:
           echo "Previous version: $version"
           echo "version=$version" >> $GITHUB_OUTPUT
 
+      - name: Detect bundled-metadata change
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        id: meta_change
+        run: |
+          if git diff --quiet HEAD~1 HEAD -- idea/gear/frontend/src/shared/config/bundled-metadata.ts; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Compare versions and set SKIP env
         if: ${{ github.event_name != 'workflow_dispatch' }}
         id: set_skip
         run: |
+          # Fire on either a common-package version bump or a bundled-metadata refresh.
           if [[ "${{ steps.cur_version.outputs.version }}" != "${{ steps.prev_version.outputs.version }}" ]]; then
+            echo "skip=false" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.meta_change.outputs.changed }}" == "true" ]]; then
             echo "skip=false" >> $GITHUB_OUTPUT
           else
             echo "skip=true" >> $GITHUB_OUTPUT
