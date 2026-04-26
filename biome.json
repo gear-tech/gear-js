@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/dist-temp", "!**/.yarn", "!**/node_modules"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/dist-temp",
+      "!**/.yarn",
+      "!**/node_modules",
+      "!idea/gear/frontend/src/shared/config/bundled-metadata.ts"
+    ]
   },
   "formatter": {
     "enabled": true,

@@ -1,0 +1,48 @@
+name: Refresh bundled metadata
+
+on:
+  schedule:
+    # Mon 06:00 UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Fetch metadata from configured RPCs
+        run: node scripts/fetch-bundled-metadata.mjs
+
+      - name: Run smoke tests
+        run: node --test scripts/test-bundled-metadata.mjs
+
+      - name: Open PR if metadata changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/refresh-bundled-metadata
+          title: 'chore: refresh bundled chain metadata'
+          commit-message: 'chore: refresh bundled chain metadata'
+          body: |
+            Automated weekly refresh of bundled Vara metadata.
+
+            When `(genesisHash, specVersion)` matches a key in this bundle,
+            `@polkadot/api` skips `state_getMetadata` on cold start —
+            saves ~500 ms – 1.5 s on a public RPC.
+          labels: chore, automated
+          add-paths: idea/gear/frontend/src/shared/config/bundled-metadata.ts
