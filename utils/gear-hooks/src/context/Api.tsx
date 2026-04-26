@@ -104,11 +104,6 @@ function ApiProvider({ initialArgs, children }: Props) {
         if (hasPerf) {
           performance.mark(markReady);
           performance.measure(measureName, markConnected, markReady);
-          // Bound buffer growth across reconnects/network-switches.
-          performance.clearMarks(markConnectStart);
-          performance.clearMarks(markConnected);
-          performance.clearMarks(markReady);
-          performance.clearMeasures(measureName);
         }
         setApi(created);
       } catch (error) {
