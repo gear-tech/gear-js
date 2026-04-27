@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { usePublicClient } from 'wagmi';
 
-import { nodeAtom } from '@/app/store/node';
+import { nodeAtom } from '@/app/store';
 
 import { useSigner } from './use-signer';
 

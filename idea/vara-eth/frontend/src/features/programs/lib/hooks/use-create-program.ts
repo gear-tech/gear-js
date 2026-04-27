@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
 import type { Hex } from 'viem';
 
@@ -10,6 +10,7 @@ export const useCreateProgram = () => {
   const { data: api } = useApi();
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
+  const queryClient = useQueryClient();
 
   const createProgram = async (codeId: Hex) => {
     if (!api) return;
@@ -28,7 +29,10 @@ export const useCreateProgram = () => {
     void navigate(generatePath(routes.program, { programId: id }));
   };
 
-  const mutation = useMutation({ mutationFn: createProgram });
+  const mutation = useMutation({
+    mutationFn: createProgram,
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['allPrograms'] }),
+  });
 
   return mutation;
 };
