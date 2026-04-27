@@ -2,8 +2,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { myActivityAtom } from '@/app/store';
-import { type NodeState, nodeAtom } from '@/app/store/node';
+import { myActivityAtom, type NodeState, nodeAtom } from '@/app/store';
 
 import { NODE_SECTIONS } from '../api';
 import { getSectionByNodeAddress, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';

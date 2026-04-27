@@ -91,6 +91,7 @@ The library uses two signer interfaces to express the exact capabilities require
 // For message signing only (injected transactions, Metamask Snap adapters)
 interface IMessageSigner {
   signMessage(message: Uint8Array | string): Promise<Hash>;
+  signTypedData(params: SignTypedDataParams): Promise<Signature>; // required for EIP-712 permit flows
   getAddress(): Promise<Address>;
 }
 
@@ -206,6 +207,15 @@ const router = api.eth.router;
 
 await router.createProgram(codeId); // Create program from validated code
 await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
+
+// Permit-based code validation (no prior approve needed)
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature: permitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+const tx = await router.requestCodeValidation(code, deadline, permitSig);
+
+// On-behalf validation (requester and fee payer can be different signers)
+const { codeId, blobHashes, signature: reqSig } = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline);
+const tx2 = await router.requestCodeValidationOnBehalf(requester, code, blobHashes, deadline, reqSig, permitSig);
 ```
 
 ### MirrorClient
@@ -235,6 +245,11 @@ const wvara = api.eth.wvara;
 await wvara.approve(spender, amount); // Approve spending
 await wvara.balanceOf(address); // Check balance
 await wvara.allowance(owner, spender); // Check allowance
+
+// EIP-2612 permit — approve without a separate transaction
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature } = await wvara.prepareAndSignPermitData(spender, amount, deadline);
+await wvara.permit(owner, spender, amount, deadline, signature);
 ```
 
 ## Uploading Program Code
@@ -277,6 +292,34 @@ The CLI will submit code via EIP-4844 blob transactions, request validation, and
 ```typescript
 const codeId = '0x...'; // From CLI output
 const tx = await api.eth.router.createProgram(codeId);
+```
+
+### Uploading Programmatically
+
+You can also upload and validate code directly via the `RouterClient` API, without the CLI. The fee is charged in WVARA using an EIP-2612 permit — no prior `approve` call is needed.
+
+```typescript
+import { readFileSync } from 'node:fs';
+
+const code = readFileSync('path/to/program.opt.wasm');
+const router = api.eth.router;
+const wvara = api.eth.wvara;
+
+const fee = (await router.requestCodeValidationBaseFee()) + (await router.requestCodeValidationExtraFee());
+const deadline = BigInt(Date.now() + 60_000);
+
+// Sign a WVARA permit to cover the fee
+const { signature: wvaraPermitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+
+// Submit the code as an EIP-7594 blob transaction
+const tx = await router.requestCodeValidation(code, deadline, wvaraPermitSig);
+const { codeId } = tx;
+
+// Wait for validators to confirm the code
+await tx.waitForCodeGotValidated();
+
+// Now create a program from the validated code
+const createTx = await router.createProgram(codeId);
 ```
 
 ## Ethereum Side Operations

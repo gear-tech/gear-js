@@ -49,7 +49,7 @@ describe('setup', () => {
   let programWithAbiInterfaceId: Hex;
 
   test('should create program', async () => {
-    const tx = await api.eth.router.createProgram(config.codeId);
+    const tx = api.eth.router.createProgram(config.codeId);
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
@@ -123,7 +123,7 @@ describe('setup', () => {
   });
 
   test('should create program with abi interface', async () => {
-    const tx = await api.eth.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
+    const tx = api.eth.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
 
     const receipt = await tx.sendAndWaitForReceipt();
 
@@ -233,6 +233,46 @@ describe('balance', () => {
     const state = await api.query.program.readState(hash);
 
     expect(state).toHaveProperty(['executableBalance'], BigInt(10 * 1e12));
+  });
+
+  test(
+    'should top up executable balance with permit',
+    async () => {
+      const value = BigInt(5 * 1e12);
+      const deadline = BigInt(Date.now() + 100_000);
+
+      const { signature } = await api.eth.wvara.prepareAndSignPermitData(mirror.address, value, deadline);
+
+      const tx = await mirror.executableBalanceTopUpWithPermit(value, deadline, signature);
+
+      let newStateHash: Hex | undefined;
+      const currentStateHash = await mirror.stateHash();
+
+      const unwatch = mirror.watchStateChangedEvent((stateHash) => {
+        newStateHash = stateHash;
+      });
+
+      const { status } = await tx.sendAndWaitForReceipt();
+      expect(status).toBe('success');
+
+      while (!newStateHash) {
+        await waitNBlocks(1);
+      }
+
+      expect(newStateHash).toBeDefined();
+      expect(newStateHash).not.toEqual(currentStateHash);
+
+      unwatch();
+    },
+    config.longRunningTestTimeout,
+  );
+
+  test('should check executable balance after permit top up', async () => {
+    const hash = await mirror.stateHash();
+
+    const state = await api.query.program.readState(hash);
+
+    expect(state).toHaveProperty(['executableBalance'], BigInt(15 * 1e12));
   });
 });
 

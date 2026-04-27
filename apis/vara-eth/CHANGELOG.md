@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - Precalculated blob versioned hash to the `requestCodeValidation` method in the Router client (https://github.com/gear-tech/gear-js/pull/2435)
+- EIP-2612 permit support for `requestCodeValidation` — charges the WVARA fee via a signed permit, so no prior `approve` call is needed (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.requestCodeValidationOnBehalf()` — submits code validation on behalf of another address using two EIP-712 signatures: one from the requester authorising the validation request, one authorising the WVARA fee transfer (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.prepareAndSignRequestCodeValidationPermitData()` — signs EIP-712 `RequestCodeValidationOnBehalf` typed data and returns the resulting signature, `codeId`, blob hashes, requester address, and deadline, ready to pass directly into `requestCodeValidationOnBehalf` (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.nonces()` — returns the EIP-2612 nonce for a given address on the Router contract (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.prepareAndSignPermitData()` — signs EIP-712 `Permit` typed data and returns owner, spender, value, deadline, and signature, ready to pass into `WrappedVaraClient.permit()` or `RouterClient.requestCodeValidation()` (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.permit()` — submits an EIP-2612 permit transaction to set a WVARA allowance without a prior `approve` (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.nonces()` — returns the EIP-2612 nonce for a given address on the WrappedVara contract (https://github.com/gear-tech/gear-js/pull/2446)
+- `eip712Domain()` method on `RouterClient` and `WrappedVaraClient` — returns the EIP-712 domain separator used for typed data signing (https://github.com/gear-tech/gear-js/pull/2446)
+- `watchEIP712DomainChangedEvent()` method on `RouterClient` and `WrappedVaraClient` — subscribes to `EIP712DomainChanged` contract events (https://github.com/gear-tech/gear-js/pull/2446)
+- `signTypedData()` method added to `IMessageSigner`, `DynamicSigner`, and `WalletClientAdapter` — required for EIP-712 permit flows (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterContractClientParams` exported type — extends the base contract params with optional `maxFeePerBlobGasMultiplier?: bigint` (defaults to `3n`) for tuning blob gas bids on congested networks (https://github.com/gear-tech/gear-js/pull/2446)
+
+### Changed
+- `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
+- `EthereumClient` constructor accepts an optional 4th `options` parameter (`{ maxFeePerBlobGasMultiplier?: bigint }`) passed through to the underlying `RouterClient` (https://github.com/gear-tech/gear-js/pull/2446)
+
+### Fixed
+- `WalletClientAdapter.signMessage` now correctly handles non-hex string inputs by forwarding them as UTF-8 personal-sign messages instead of unsafely casting to `Uint8Array` (https://github.com/gear-tech/gear-js/pull/2446)
 
 ## [0.3.2]
 

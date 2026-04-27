@@ -20,6 +20,8 @@ const parseOptionalChainId = (value: string | undefined, fallbackValue: number):
 
 const ETH_CHAIN_ID_TESTNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_TESTNET, 560048);
 const ETH_CHAIN_ID_MAINNET = parseOptionalChainId(import.meta.env.VITE_ETH_CHAIN_ID_MAINNET, 1);
+const ETHERSCAN_URL_MAINNET = (import.meta.env.VITE_ETHERSCAN_URL_MAINNET as string) || 'https://etherscan.io';
+const ETHERSCAN_URL_TESTNET = (import.meta.env.VITE_ETHERSCAN_URL_TESTNET as string) || 'https://hoodi.etherscan.io';
 
 const ETH_NODE_ADDRESS_TESTNET = import.meta.env.VITE_ETH_NODE_ADDRESS_TESTNET as string;
 const ETH_NODE_ADDRESS_MAINNET = import.meta.env.VITE_ETH_NODE_ADDRESS_MAINNET as string;
@@ -36,6 +38,9 @@ const METADATA_STORAGE_API_URL = import.meta.env.VITE_METADATA_STORAGE_API_URL a
 const ROUTER_CONTRACT_ADDRESS_TESTNET = import.meta.env.VITE_ROUTER_CONTRACT_ADDRESS_TESTNET as Hex;
 const ROUTER_CONTRACT_ADDRESS_MAINNET = import.meta.env.VITE_ROUTER_CONTRACT_ADDRESS_MAINNET as Hex;
 
+const OPEN_PAGE_SIZE = 10;
+const COLLAPSED_PAGE_SIZE = 20;
+
 console.log('envs', {
   PROJECT_ID,
   VARA_ETH_NODE_ADDRESSES_TESTNET,
@@ -51,14 +56,20 @@ console.log('envs', {
   METADATA_STORAGE_API_URL,
 });
 
+const getEtherscanBaseUrl = (ethChainId: number) =>
+  ethChainId === ETH_CHAIN_ID_MAINNET ? ETHERSCAN_URL_MAINNET : ETHERSCAN_URL_TESTNET;
+
 export {
+  COLLAPSED_PAGE_SIZE,
   ETH_CHAIN_ID_MAINNET,
   ETH_CHAIN_ID_TESTNET,
   ETH_NODE_ADDRESS_MAINNET,
   ETH_NODE_ADDRESS_TESTNET,
   EXPLORER_URL_MAINNET,
   EXPLORER_URL_TESTNET,
+  getEtherscanBaseUrl,
   METADATA_STORAGE_API_URL,
+  OPEN_PAGE_SIZE,
   PROJECT_ID,
   ROUTER_CONTRACT_ADDRESS_MAINNET,
   ROUTER_CONTRACT_ADDRESS_TESTNET,
