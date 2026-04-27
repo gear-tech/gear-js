@@ -1,7 +1,8 @@
-import type { Address, Hex, TransactionRequest, TransactionRequestBase } from 'viem';
+import type { Address, Hex, Signature, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import { convertEventParams } from '../../util/index.js';
+import { getRVSComponents } from '../../util/signature.js';
 import { IMIRROR_ABI, type IMirrorContract } from '../abi/IMirror.js';
 import type {
   ITxManager,
@@ -243,13 +244,34 @@ export class MirrorClient extends BaseContractClient<typeof IMIRROR_ABI> impleme
    * Tops up the executable balance with permit
    * @param value - The amount to top up
    * @param deadline - Signature deadline
-   * @param v - Signature v parameter
-   * @param r - Signature r parameter
-   * @param s - Signature s parameter
+   * @param permitSignature - Signature of the permit
    */
-  executableBalanceTopUpWithPermit(_value: bigint, _deadline: bigint, _v: number, _r: Hex, _s: Hex): Promise<void> {
-    // TODO: implement
-    throw new Error('Method not implemented.');
+  async executableBalanceTopUpWithPermit(
+    value: bigint,
+    deadline: bigint,
+    permitSignature: Signature,
+  ): Promise<ITxManager> {
+    const signer = this._ensureSigner();
+    const { v, r, s } = getRVSComponents(permitSignature);
+
+    await this._pc.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'executableBalanceTopUpWithPermit',
+      args: [value, deadline, v, r, s],
+      account: await signer.getAddress(),
+    });
+
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'executableBalanceTopUpWithPermit',
+        args: [value, deadline, v, r, s],
+      }),
+    };
+
+    return new TxManager(this._pc, signer, tx, IMIRROR_ABI);
   }
 
   /**
