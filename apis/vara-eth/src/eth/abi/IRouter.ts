@@ -870,7 +870,7 @@ export interface IRouterContract {
   /**
    * Gets the timelines for eras and elections
    */
-  timelines(): Promise<any>;
+  timelines(): Promise<{ era: bigint; election: bigint; validationDelay: bigint }>;
   /**
    * Gets the count of validated codes
    * @returns Promise resolving to the number of validated codes
@@ -885,7 +885,7 @@ export interface IRouterContract {
    * Gets the aggregated public key of current validators
    * @returns Promise resolving to the aggregated public key structure
    */
-  validatorsAggregatedPublicKey(): Promise<any>;
+  validatorsAggregatedPublicKey(): Promise<{ x: bigint; y: bigint }>;
   /**
    * Gets the total number of validators
    * @returns Promise resolving to the validators count

@@ -152,7 +152,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   }
 
   /** Returns the protocol timeline parameters (era duration, election duration, etc.). */
-  timelines(): Promise<any> {
+  timelines(): Promise<{ era: bigint; election: bigint; validationDelay: bigint }> {
     return this.read('timelines');
   }
 
@@ -198,7 +198,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   }
 
   /** Returns the aggregated FROST public key of the current validator set. */
-  async validatorsAggregatedPublicKey(): Promise<any> {
+  async validatorsAggregatedPublicKey(): Promise<{ x: bigint; y: bigint }> {
     return this.read('validatorsAggregatedPublicKey');
   }
 

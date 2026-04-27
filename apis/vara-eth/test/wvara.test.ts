@@ -4,7 +4,6 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import { getWrappedVaraClient, RouterClient, type WrappedVaraClient } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { getRVSComponents } from '../src/util/signature.js';
 import { config } from './config';
 
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
@@ -162,8 +161,7 @@ describe('permit function', () => {
     const allowanceBefore = await wvara.allowance(owner, spender);
     expect(allowanceBefore).toBe(0n);
 
-    const { v, r, s } = getRVSComponents(signature);
-    const tx = wvara.permit(owner, spender, value, deadline, v, r, s);
+    const tx = wvara.permit(owner, spender, value, deadline, signature);
     await tx.estimateGas();
     await tx.sendAndWaitForReceipt();
 

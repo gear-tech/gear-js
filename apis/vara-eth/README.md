@@ -249,8 +249,7 @@ await wvara.allowance(owner, spender); // Check allowance
 // EIP-2612 permit — approve without a separate transaction
 const deadline = BigInt(Date.now() + 60_000);
 const { owner, signature } = await wvara.prepareAndSignPermitData(spender, amount, deadline);
-const { v, r, s } = getRVSComponents(signature);
-await wvara.permit(owner, spender, amount, deadline, v, r, s);
+await wvara.permit(owner, spender, amount, deadline, signature);
 ```
 
 ## Uploading Program Code
@@ -301,7 +300,6 @@ You can also upload and validate code directly via the `RouterClient` API, witho
 
 ```typescript
 import { readFileSync } from 'node:fs';
-import { getRVSComponents } from '@vara-eth/api/signer';
 
 const code = readFileSync('path/to/program.opt.wasm');
 const router = api.eth.router;
