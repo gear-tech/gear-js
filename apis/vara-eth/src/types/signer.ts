@@ -1,4 +1,4 @@
-import type { Address, Hash, Hex, TransactionRequest, TypedDataDomain } from 'viem';
+import type { Address, Hash, Hex, Signature, TransactionRequest, TypedDataDomain } from 'viem';
 
 /** The parameters for signing a typed data message */
 export type SignTypedDataParams = {
@@ -10,18 +10,6 @@ export type SignTypedDataParams = {
   message: Record<string, unknown>;
   /** Optional domain for the message */
   domain?: TypedDataDomain;
-};
-
-/** The result of signing a typed data message */
-export type SignTypedDataResult = {
-  /** The signature as a hex string (with 0x prefix) */
-  signature: Hex;
-  /** The r component of the signature */
-  r: Hash;
-  /** The s component of the signature */
-  s: Hash;
-  /** The v component of the signature */
-  v: number;
 };
 
 /**
@@ -46,7 +34,7 @@ export interface IMessageSigner {
    *
    * @returns Signature as hex string (with 0x prefix) and r/s/v components
    */
-  signTypedData(params: SignTypedDataParams): Promise<SignTypedDataResult>;
+  signTypedData(params: SignTypedDataParams): Promise<Signature>;
 
   /**
    * Get the signer's Ethereum address

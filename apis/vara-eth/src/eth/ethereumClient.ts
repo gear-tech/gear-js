@@ -1,8 +1,8 @@
 import type { Address, PublicClient } from 'viem';
 
 import type { ITransactionSigner } from '../types/signer.js';
-import { getRouterClient, type RouterClient } from './contracts/router.contract.js';
-import { getWrappedVaraClient, type WrappedVaraClient } from './contracts/wrappedVara.contract.js';
+import { getRouterClient, type RouterClient, type RouterContractClientParams } from './contracts/router.contract.js';
+import { getWrappedVaraClient, type WrappedVaraClient } from './contracts/wvara.contract.js';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,
@@ -21,12 +21,14 @@ export class EthereumClient {
     public readonly publicClient: PublicClient,
     routerAddress: Address,
     private _signer?: ITransactionSigner,
+    options?: Pick<RouterContractClientParams, 'maxFeePerBlobGasMultiplier'>,
   ) {
     this._isInitialized = false;
     this._routerClient = getRouterClient({
       address: routerAddress,
       signer: this._signer,
       publicClient: this.publicClient,
+      ...options,
     });
 
     this._initPromise = this._init();

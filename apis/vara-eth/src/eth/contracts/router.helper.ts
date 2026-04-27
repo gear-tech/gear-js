@@ -7,7 +7,7 @@ import type { TxManager } from '../tx-manager.js';
 
 type RouterTxManager = TxManager<object, object, typeof IROUTER_ABI>;
 
-export const getProgramId = async (manager: RouterTxManager) => {
+export const getProgramId = (manager: RouterTxManager) => async () => {
   const event = await manager.findEvent('ProgramCreated');
   return event.args.actorId.toLowerCase();
 };

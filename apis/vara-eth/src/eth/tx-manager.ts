@@ -72,7 +72,7 @@ export class TxManager<
   async estimateGas(): Promise<bigint> {
     try {
       const gasParams: EstimateGasParameters = this._tx as EstimateGasParameters;
-
+      gasParams.account = await this.signer.getAddress();
       this._tx.gas = await this.pc.estimateGas(gasParams);
 
       return this._tx.gas;

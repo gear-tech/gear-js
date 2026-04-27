@@ -10,7 +10,7 @@ export class EIP712ContractClient<const abi extends Abi> extends BaseContractCli
 
   /**
    * Returns the EIP-712 domain for this contract, fetching and caching it on first call.
-   * @returns The typed-data domain (name, version, chainId, verifyingContract, salt)
+   * @returns The typed-data domain with only the fields active per the EIP-5267 `fields` bitmask
    */
   async eip712Domain(): Promise<TypedDataDomain> {
     if (this._cachedDomain) {
@@ -18,18 +18,17 @@ export class EIP712ContractClient<const abi extends Abi> extends BaseContractCli
       return this._cachedDomain;
     }
 
-    const domain = await this._pc.readContract({
+    const [_, name, version, chainId, verifyingContract] = await this._pc.readContract({
       address: this.address,
       abi: EIP712_ABI,
       functionName: 'eip712Domain',
     });
 
     const typedDataDomain = {
-      name: domain[1],
-      version: domain[2],
-      chainId: domain[3],
-      verifyingContract: domain[4],
-      salt: domain[5],
+      name,
+      version,
+      chainId,
+      verifyingContract,
     };
 
     this._cachedDomain = typedDataDomain;

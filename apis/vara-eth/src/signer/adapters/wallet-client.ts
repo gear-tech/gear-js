@@ -1,9 +1,13 @@
-import type { Address, Hash, Hex, TransactionRequest, WalletClient } from 'viem';
-import { isHex, parseSignature, slice } from 'viem';
+import type { Address, Hash, Hex, Signature, TransactionRequest, WalletClient } from 'viem';
+import { isHex, parseSignature } from 'viem';
 
-import type { ITransactionSigner, SignTypedDataParams, SignTypedDataResult } from '../../types/signer.js';
+import type { ITransactionSigner, SignTypedDataParams } from '../../types/signer.js';
 import { SigningError } from '../errors.js';
 
+/**
+ * Adapts a viem `WalletClient` to the {@link ITransactionSigner} interface.
+ * Use {@link walletClientToSigner} as the preferred factory.
+ */
 export class WalletClientAdapter implements ITransactionSigner {
   constructor(private _wc: WalletClient) {}
 
@@ -15,13 +19,15 @@ export class WalletClientAdapter implements ITransactionSigner {
     return this._wc.account;
   }
 
-  async signMessage(data: Uint8Array | Hash): Promise<Hash> {
-    const messageData = typeof data === 'string' && isHex(data) ? (data as Hex) : (data as Uint8Array);
+  async signMessage(data: Uint8Array | string): Promise<Hash> {
+    const message =
+      typeof data === 'string'
+        ? isHex(data)
+          ? { raw: data as Hex }
+          : data
+        : { raw: data };
 
-    return this._wc.signMessage({
-      message: { raw: messageData },
-      account: this._account,
-    });
+    return this._wc.signMessage({ message, account: this._account });
   }
 
   async getAddress(): Promise<Address> {
@@ -36,14 +42,19 @@ export class WalletClientAdapter implements ITransactionSigner {
     });
   }
 
-  async signTypedData({ message, types, primaryType, domain }: SignTypedDataParams): Promise<SignTypedDataResult> {
+  async signTypedData({ message, types, primaryType, domain }: SignTypedDataParams): Promise<Signature> {
     const signature = await this._wc.signTypedData({ message, types, primaryType, domain, account: this._account });
 
-    const { r, v, s, yParity } = parseSignature(signature);
-    return { signature, r, s, v: v ? Number(v) : yParity === 0 ? 27 : 28 };
+    return parseSignature(signature);
   }
 }
 
+/**
+ * Creates a {@link WalletClientAdapter} from a viem `WalletClient`.
+ *
+ * @param walletClient - The viem wallet client to adapt
+ * @returns A signer adapter wrapping the provided wallet client
+ */
 export function walletClientToSigner(walletClient: WalletClient): WalletClientAdapter {
   return new WalletClientAdapter(walletClient);
 }

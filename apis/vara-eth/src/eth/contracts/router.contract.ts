@@ -1,4 +1,4 @@
-import type { Address, Hash, Hex } from 'viem';
+import type { Address, Hash, Hex, Signature } from 'viem';
 import { encodeFunctionData } from 'viem/utils';
 
 import {
@@ -9,14 +9,31 @@ import {
   simpleSidecarEncode,
   waitForKzg,
 } from '../../util/blob.js';
+import { decodeContractError } from '../../util/error.js';
 import { generateCodeHash } from '../../util/hash.js';
+import { getRVSComponents } from '../../util/signature.js';
 import { IROUTER_ABI, type IRouterContract } from '../abi/IRouter.js';
+import { IWRAPPEDVARA_ABI } from '../abi/IWrappedVara.js';
 import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from '../interfaces/router.js';
 import type { ITxManager, TxManagerWithHelpers } from '../interfaces/tx-manager.js';
 import { TxManager } from '../tx-manager.js';
 import type { ContractClientParams } from './base.contract.js';
 import { EIP712ContractClient } from './eip-712.contract.js';
 import { getOverrideInitializer, getProgramId, getSalt, waitForCodeGotValidated } from './router.helper.js';
+
+const DEFAULT_MAX_FEE_PER_BLOB_GAS_MULTIPLIER = 3n;
+
+/**
+ * Constructor parameters for {@link RouterClient}.
+ * Extends the base contract params with router-specific options.
+ */
+export type RouterContractClientParams = Omit<ContractClientParams, 'abi'> & {
+  /**
+   * Multiplier applied to the latest `baseFeePerBlobGas` to derive `maxFeePerBlobGas`
+   * for EIP-4844 blob transactions. Defaults to `3n`.
+   */
+  maxFeePerBlobGasMultiplier?: bigint;
+};
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -47,9 +64,11 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   private _cachedGenesisBlockHash: Hash | undefined;
   private _cachedGenesisTimestamp: number | undefined;
   private _cachedWrappedVara: Address | undefined;
+  private readonly _maxFeePerBlobGasMultiplier: bigint;
 
-  constructor(params: Omit<ContractClientParams, 'abi'>) {
+  constructor(params: RouterContractClientParams) {
     super({ ...params, abi: IROUTER_ABI });
+    this._maxFeePerBlobGasMultiplier = params.maxFeePerBlobGasMultiplier ?? DEFAULT_MAX_FEE_PER_BLOB_GAS_MULTIPLIER;
   }
 
   /** Returns `true` if all provided addresses are current validators. */
@@ -256,10 +275,12 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     if (!baseFeePerBlobGas) {
       throw new Error('Failed to get baseFeePerBlobGas');
     }
-    const maxFeePerBlobGas = baseFeePerBlobGas * 3n;
+    const maxFeePerBlobGas = baseFeePerBlobGas * this._maxFeePerBlobGasMultiplier;
 
     await waitForKzg();
     const { blobVersionedHashes, blobCommitmentsMap } = await calculateBlobVersionedHashesAndCommitments(blobs);
+
+    const signerAddress = await signer.getAddress();
 
     const tx = {
       type: 'eip4844' as const,
@@ -275,9 +296,14 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
         computeCellsAndKzgProofs,
       },
       chain: null,
+      account: signerAddress,
     };
 
-    tx.gas = await this._pc.estimateGas(tx);
+    try {
+      tx.gas = await this._pc.estimateGas(tx);
+    } catch (error) {
+      throw decodeContractError(error, [this._abi, IWRAPPEDVARA_ABI]);
+    }
 
     await this._pc.prepareTransactionRequest(tx);
 
@@ -295,19 +321,22 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
 
   /**
    * Requests code validation by submitting the code as a blob in the transaction.
+   * Charges `requestCodeValidationBaseFee + requestCodeValidationExtraFee` in WVARA via an
+   * EIP-2612 permit, so no prior `approve` call is needed.
    *
-   * @param code - The code to be validated
+   * @param code - The WASM bytecode to be validated
+   * @param deadline - Expiry timestamp for the WVARA permit signature
+   * @param wvaraPermitSignature - EIP-712 permit signature authorising the fee transfer
    * @returns A transaction manager with validation-specific helper functions, including
    *          the code ID and a function to wait for the code to be validated
    */
   public async requestCodeValidation(
     code: Uint8Array,
     deadline: bigint,
-    v: number,
-    r: Hex,
-    s: Hex,
+    wvaraPermitSignature: Signature,
   ): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
+    const { v, r, s } = getRVSComponents(wvaraPermitSignature);
 
     const data = encodeFunctionData({
       abi: IROUTER_ABI,
@@ -321,32 +350,30 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   /**
    * Requests code validation on behalf of another address.
    * Charges `requestCodeValidationBaseFee + requestCodeValidationExtraFee` in WVARA.
-   * Requires two ECDSA signatures: one from the requester (for the validation request) and
-   * one for the WVARA permit to cover the fee.
+   * Requires two EIP-712 signatures obtained from the requester via
+   * {@link prepareAndSignRequestCodeValidationPermitData} and from the fee payer via
+   * {@link WrappedVaraClient.prepareAndSignPermitData}.
    * @param requester - Address on whose behalf the request is made
-   * @param codeId - Expected code ID (`gprimitives::CodeId::generate(wasm_code)`)
+   * @param code - The WASM bytecode to be validated
    * @param blobHashes - Blob hashes of the EIP-4844/EIP-7594 transaction sidecars
-   * @param deadline - Signature expiry timestamp
-   * @param v1 - ECDSA `v` for the code validation signature
-   * @param r1 - ECDSA `r` for the code validation signature
-   * @param s1 - ECDSA `s` for the code validation signature
-   * @param v2 - ECDSA `v` for the WVARA permit signature
-   * @param r2 - ECDSA `r` for the WVARA permit signature
-   * @param s2 - ECDSA `s` for the WVARA permit signature
+   * @param deadline - Shared expiry timestamp for both signatures
+   * @param requestCodeValidationSignature - EIP-712 signature from the requester authorising the validation request
+   * @param wvaraPermitSignature - EIP-712 permit signature authorising the WVARA fee transfer
+   * @returns A transaction manager with validation-specific helper functions, including
+   *          the code ID and a function to wait for the code to be validated
    */
   requestCodeValidationOnBehalf(
     requester: Address,
     code: Uint8Array,
     blobHashes: Hex[],
     deadline: bigint,
-    v1: number,
-    r1: Hex,
-    s1: Hex,
-    v2: number,
-    r2: Hex,
-    s2: Hex,
+    requestCodeValidationSignature: Signature,
+    wvaraPermitSignature: Signature,
   ): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
+
+    const { v: v1, r: r1, s: s1 } = getRVSComponents(requestCodeValidationSignature);
+    const { v: v2, r: r2, s: s2 } = getRVSComponents(wvaraPermitSignature);
 
     const data = encodeFunctionData({
       abi: IROUTER_ABI,
@@ -357,9 +384,13 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     return this._createRequestCodeValidationTxManager(data, code, codeId);
   }
 
-  async prepareAndSignRequestCodeValidationPermitData(codeId: Hex, blobHashes: Hex[], deadline: bigint) {
+  async prepareAndSignRequestCodeValidationPermitData(code: Uint8Array, deadline: bigint) {
     const signer = this._ensureSigner();
     const requester = await signer.getAddress();
+
+    const blobs = simpleSidecarEncode(code);
+    const { blobVersionedHashes: blobHashes } = await calculateBlobVersionedHashesAndCommitments(blobs);
+    const codeId = generateCodeHash(code);
 
     const [nonce, domain] = await Promise.all([this.nonces(requester), this.eip712Domain()]);
 
@@ -373,14 +404,14 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
       ],
     };
 
-    const { r, v, s } = await signer.signTypedData({
+    const signature = await signer.signTypedData({
       message: { requester, codeId, blobHashes, nonce, deadline },
       types,
       primaryType: 'RequestCodeValidationOnBehalf',
       domain,
     });
 
-    return { codeId, requester, blobHashes, deadline, signature: { r, v, s } };
+    return { codeId, requester, blobHashes, deadline, signature };
   }
 
   private _createProgramTxManager(data: Hex): TxManagerWithHelpers<CreateProgramHelpers> {
@@ -515,9 +546,9 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
 /**
  * Creates a new RouterContract instance.
  *
- * @param params - {@link ContractClientParams} parameters for creating the Router contract client
+ * @param params - {@link RouterContractClientParams} parameters for creating the Router contract client
  * @returns A new {@link RouterClient} instance that implements the {@link IRouterContract} interface
  */
-export function getRouterClient(params: Omit<ContractClientParams, 'abi'>): RouterClient {
+export function getRouterClient(params: RouterContractClientParams): RouterClient {
   return new RouterClient(params);
 }
