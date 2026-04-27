@@ -127,6 +127,7 @@ const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
   const currentPage = isIncoming ? incomingPage : outgoingPage;
   const totalItems = isIncoming ? (incoming.data?.total ?? 0) : (outgoing.data?.total ?? 0);
   const totalPages = totalItems ? Math.ceil(totalItems / pageSize) : 1;
+  const isFetching = isIncoming ? incoming.isFetching : outgoing.isFetching;
 
   const setPage = isIncoming ? setIncomingPage : setOutgoingPage;
 
@@ -145,7 +146,7 @@ const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
           ))}
         </div>
 
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} isFetching={isFetching} />
       </div>
 
       {isIncoming ? (

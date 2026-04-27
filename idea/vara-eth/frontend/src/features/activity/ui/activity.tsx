@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { type MyActivity, myActivityAtom, TransactionTypes } from '@/app/store';
+import { activityPanelOpenAtom, type MyActivity, myActivityAtom, TransactionTypes } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, ExpandableItem, Tabs } from '@/components';
 import { formatDate } from '@/shared/utils';
@@ -19,7 +19,7 @@ const NEW_ITEM_HIGHLIGHT_DURATION = 1800;
 type HighlightType = 'success' | 'error';
 
 const Activity = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useAtom(activityPanelOpenAtom);
   const [tabIndex, setTabIndex] = useState(0);
   const [highlightedItems, setHighlightedItems] = useState<Record<string, HighlightType>>({});
   const seenItemsRef = useRef(new Set<string>());
