@@ -365,7 +365,7 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
-    name: 'createProgramWithAbiInterfaceAndValue',
+    name: 'createProgramWithAbiInterfaceAndExecutableBalance',
     inputs: [
       { name: '_codeId', type: 'bytes32', internalType: 'bytes32' },
       { name: '_salt', type: 'bytes32', internalType: 'bytes32' },
@@ -379,7 +379,11 @@ export const IROUTER_ABI = [
         type: 'address',
         internalType: 'address',
       },
-      { name: '_value', type: 'uint128', internalType: 'uint128' },
+      {
+        name: '_initialExecutableBalance',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
       { name: '_deadline', type: 'uint256', internalType: 'uint256' },
       { name: '_v', type: 'uint8', internalType: 'uint8' },
       { name: '_r', type: 'bytes32', internalType: 'bytes32' },
@@ -390,7 +394,7 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
-    name: 'createProgramWithValue',
+    name: 'createProgramWithExecutableBalance',
     inputs: [
       { name: '_codeId', type: 'bytes32', internalType: 'bytes32' },
       { name: '_salt', type: 'bytes32', internalType: 'bytes32' },
@@ -399,7 +403,11 @@ export const IROUTER_ABI = [
         type: 'address',
         internalType: 'address',
       },
-      { name: '_value', type: 'uint128', internalType: 'uint128' },
+      {
+        name: '_initialExecutableBalance',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
       { name: '_deadline', type: 'uint256', internalType: 'uint256' },
       { name: '_v', type: 'uint8', internalType: 'uint8' },
       { name: '_r', type: 'bytes32', internalType: 'bytes32' },
