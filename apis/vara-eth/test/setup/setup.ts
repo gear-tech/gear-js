@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import * as fs from 'node:fs';
+import * as net from 'node:net';
 import { config } from 'dotenv';
 import { generateCodeHash } from '../../src/util/hash';
 
@@ -100,6 +101,34 @@ async function setupVaraEth() {
   });
 
   process.env.ROUTER_ADDRESS = routerAddress;
+
+  await waitForPort(9944);
+}
+
+function waitForPort(port: number, retries = 30, delayMs = 1000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    const tryConnect = () => {
+      const socket = new net.Socket();
+      socket.setTimeout(500);
+      socket
+        .once('connect', () => {
+          socket.destroy();
+          resolve();
+        })
+        .once('error', retry)
+        .once('timeout', retry)
+        .connect(port, '127.0.0.1');
+    };
+    const retry = () => {
+      if (++attempts >= retries) {
+        reject(new Error(`Port ${port} not ready after ${retries} attempts`));
+      } else {
+        setTimeout(tryConnect, delayMs);
+      }
+    };
+    tryConnect();
+  });
 }
 
 export default async () => {
