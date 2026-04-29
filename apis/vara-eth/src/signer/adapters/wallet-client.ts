@@ -1,4 +1,4 @@
-import type { Address, Hash, Hex, TransactionRequest, WalletClient } from 'viem';
+import type { Address, Hash, Hex, SignableMessage, TransactionRequest, WalletClient } from 'viem';
 import { isHex } from 'viem';
 
 import type { ITransactionSigner, SignTypedDataParams } from '../../types/signer.js';
@@ -20,7 +20,13 @@ export class WalletClientAdapter implements ITransactionSigner {
   }
 
   async signMessage(data: Uint8Array | string): Promise<Hash> {
-    const message = typeof data === 'string' ? (isHex(data) ? { raw: data as Hex } : data) : { raw: data };
+    let message: SignableMessage;
+
+    if (typeof data === 'string') {
+      message = isHex(data) ? { raw: data as Hex } : data;
+    } else {
+      message = { raw: data };
+    }
 
     return this._wc.signMessage({ message, account: this._account });
   }
