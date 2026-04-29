@@ -53,6 +53,20 @@ describe('getRVSComponents', () => {
     const result = getRVSComponents({ r, s, v: 27n, yParity: 1 });
     expect(result.v).toBe(27);
   });
+
+  test('accepts a compact hex string and parses r, s, v=27', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}1b` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.r).toBe(`0x${'aa'.repeat(32)}`);
+    expect(result.s).toBe(`0x${'bb'.repeat(32)}`);
+    expect(result.v).toBe(27);
+  });
+
+  test('accepts a compact hex string and parses r, s, v=28', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}1c` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.v).toBe(28);
+  });
 });
 
 // ---------------------------------------------------------------------------

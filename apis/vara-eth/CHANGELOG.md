@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `RouterContractClientParams` exported type — extends the base contract params with optional `maxFeePerBlobGasMultiplier?: bigint` (defaults to `3n`) for tuning blob gas bids on congested networks (https://github.com/gear-tech/gear-js/pull/2446)
 
 ### Changed
-- `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature | Hex` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
 - `EthereumClient` constructor accepts an optional 4th `options` parameter (`{ maxFeePerBlobGasMultiplier?: bigint }`) passed through to the underlying `RouterClient` (https://github.com/gear-tech/gear-js/pull/2446)
 
 ### Fixed

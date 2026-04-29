@@ -1,5 +1,5 @@
-import type { Address, Hash, Hex, Signature, TransactionRequest, WalletClient } from 'viem';
-import { isHex, parseSignature } from 'viem';
+import type { Address, Hash, Hex, TransactionRequest, WalletClient } from 'viem';
+import { isHex } from 'viem';
 
 import type { ITransactionSigner, SignTypedDataParams } from '../../types/signer.js';
 import { SigningError } from '../errors.js';
@@ -20,12 +20,7 @@ export class WalletClientAdapter implements ITransactionSigner {
   }
 
   async signMessage(data: Uint8Array | string): Promise<Hash> {
-    const message =
-      typeof data === 'string'
-        ? isHex(data)
-          ? { raw: data as Hex }
-          : data
-        : { raw: data };
+    const message = typeof data === 'string' ? (isHex(data) ? { raw: data as Hex } : data) : { raw: data };
 
     return this._wc.signMessage({ message, account: this._account });
   }
@@ -42,10 +37,8 @@ export class WalletClientAdapter implements ITransactionSigner {
     });
   }
 
-  async signTypedData({ message, types, primaryType, domain }: SignTypedDataParams): Promise<Signature> {
-    const signature = await this._wc.signTypedData({ message, types, primaryType, domain, account: this._account });
-
-    return parseSignature(signature);
+  async signTypedData({ message, types, primaryType, domain }: SignTypedDataParams): Promise<Hex> {
+    return this._wc.signTypedData({ message, types, primaryType, domain, account: this._account });
   }
 }
 
