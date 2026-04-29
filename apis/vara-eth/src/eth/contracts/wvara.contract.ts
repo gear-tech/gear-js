@@ -143,7 +143,7 @@ export class WrappedVaraClient extends EIP712ContractClient<typeof IWRAPPEDVARA_
     spender: Address,
     value: bigint,
     deadline: bigint,
-    permitSignature: Hex | Signature,
+    permitSignature: Signature | Hex,
   ): ITxManager {
     const signer = this._ensureSigner();
     const { v, r, s } = getRVSComponents(permitSignature);
