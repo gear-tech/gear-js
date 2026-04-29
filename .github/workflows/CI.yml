@@ -152,7 +152,7 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
+          version: v1.7.0
 
       - name: 'Install dependencies'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
