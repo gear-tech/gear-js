@@ -81,11 +81,6 @@ jobs:
           wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
           sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
 
-      - name: "Install: Foundry"
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
-
       - name: 'Install dependencies'
         run: yarn workspaces focus gear-js @gear-js/api
 
@@ -152,7 +147,7 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
+          version: v1.7.0
 
       - name: 'Install dependencies'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'

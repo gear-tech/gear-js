@@ -472,33 +472,30 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
    * @param salt - Salt for deterministic address derivation
    * @param overrideInitializer - Initializer address; uses `msg.sender` when `address(0)`
    * @param abiInterface - ABI interface address for Etherscan display
-   * @param value - Initial WVARA executable balance to transfer to the Mirror
+   * @param initialExecutableBalance - Initial WVARA executable balance to transfer to the Mirror
    * @param deadline - Permit signature expiry timestamp
-   * @param v - ECDSA `v` for the WVARA permit
-   * @param r - ECDSA `r` for the WVARA permit
-   * @param s - ECDSA `s` for the WVARA permit
-   * @returns Address of the created Mirror (program)
+   * @param wvaraPermitSignature - EIP-712 permit signature authorising the WVARA fee transfer
+   * @returns A transaction manager with program creation helper functions
    */
-  createProgramWithAbiInterfaceAndValue(
+  createProgramWithAbiInterfaceAndExecutableBalance(
     codeId: Hex,
-    salt: Hex,
-    overrideInitializer: Address,
     abiInterface: Address,
-    value: bigint,
+    initialExecutableBalance: bigint,
     deadline: bigint,
-    v: number,
-    r: Hex,
-    s: Hex,
+    wvaraPermitSignature: Signature,
+    salt?: Hex,
+    overrideInitializer?: Address,
   ): TxManagerWithHelpers<CreateProgramHelpers> {
+    const { v, r, s } = getRVSComponents(wvaraPermitSignature);
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
-      functionName: 'createProgramWithAbiInterfaceAndValue',
+      functionName: 'createProgramWithAbiInterfaceAndExecutableBalance',
       args: [
         codeId,
         getSalt(salt),
         getOverrideInitializer(overrideInitializer),
         abiInterface,
-        value,
+        initialExecutableBalance,
         deadline,
         v,
         r,
@@ -516,27 +513,33 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
    * @param codeId - Validated code ID
    * @param salt - Salt for deterministic address derivation
    * @param overrideInitializer - Initializer address; uses `msg.sender` when `address(0)`
-   * @param value - Initial WVARA executable balance to transfer to the Mirror
+   * @param initialExecutableBalance - Initial WVARA executable balance to transfer to the Mirror
    * @param deadline - Permit signature expiry timestamp
-   * @param v - ECDSA `v` for the WVARA permit
-   * @param r - ECDSA `r` for the WVARA permit
-   * @param s - ECDSA `s` for the WVARA permit
-   * @returns Address of the created Mirror (program)
+   * @param wvaraPermitSignature - EIP-712 permit signature authorising the WVARA fee transfer
+   * @returns A transaction manager with program creation helper functions
    */
-  createProgramWithValue(
+  createProgramWithExecutableBalance(
     codeId: Hex,
-    salt: Hex,
-    overrideInitializer: Address,
-    value: bigint,
+    initialExecutableBalance: bigint,
     deadline: bigint,
-    v: number,
-    r: Hex,
-    s: Hex,
+    wvaraPermitSignature: Signature,
+    salt?: Hex,
+    overrideInitializer?: Address,
   ): TxManagerWithHelpers<CreateProgramHelpers> {
+    const { v, r, s } = getRVSComponents(wvaraPermitSignature);
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
-      functionName: 'createProgramWithValue',
-      args: [codeId, getSalt(salt), getOverrideInitializer(overrideInitializer), value, deadline, v, r, s],
+      functionName: 'createProgramWithExecutableBalance',
+      args: [
+        codeId,
+        getSalt(salt),
+        getOverrideInitializer(overrideInitializer),
+        initialExecutableBalance,
+        deadline,
+        v,
+        r,
+        s,
+      ],
     });
 
     return this._createProgramTxManager(encodedData);
