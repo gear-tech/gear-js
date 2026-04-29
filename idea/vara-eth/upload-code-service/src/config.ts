@@ -1,38 +1,31 @@
-import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import dotenv from 'dotenv';
 import type { Address, Hash } from 'viem';
 
-const assertEnv = <T>(envName: string) => {
-  const value = process.env[envName];
+dotenv.config({ quiet: true });
+
+const assertEnv = <T>(envName: string, defaultValue?: string, transformer?: (value: string) => T) => {
+  const value = process.env[envName] || defaultValue;
   if (!value) {
     throw new Error(`Missing environment variable: ${envName}`);
   }
+  if (transformer) {
+    return transformer(value) as T;
+  }
+
   return value as T;
 };
 
-const secretsManager = new SecretsManagerClient();
-
-async function fetchPrivateKey(): Promise<Hash> {
-  const secretArn = assertEnv<string>('PRIVATE_KEY_SECRET_ARN');
-  const { SecretString } = await secretsManager.send(new GetSecretValueCommand({ SecretId: secretArn }));
-  if (!SecretString) throw new Error('PRIVATE_KEY secret is empty');
-  return SecretString as Hash;
-}
-
-let _config: Awaited<ReturnType<typeof buildConfig>> | null = null;
-
-async function buildConfig() {
-  return {
-    routerAddress: assertEnv<Address>('ROUTER_ADDRESS'),
-    ethereumRpcUrl: assertEnv<string>('ETHEREUM_RPC_URL'),
-    privateKey: await fetchPrivateKey(),
-    dynamoDbTable: assertEnv<string>('DYNAMODB_TABLE'),
-    sqsQueueUrl: assertEnv<string>('SQS_QUEUE_URL'),
-  };
-}
-
-export async function getConfig() {
-  if (!_config) {
-    _config = await buildConfig();
-  }
-  return _config;
-}
+export const config = {
+  routerAddress: assertEnv<Address>('ROUTER_ADDRESS'),
+  ethereumRpcUrl: assertEnv<string>('ETHEREUM_RPC_URL'),
+  privateKey: assertEnv<Hash>('PRIVATE_KEY'),
+  db: {
+    host: assertEnv<string>('DB_HOST'),
+    port: assertEnv<number>('DB_PORT', '5432', Number),
+    name: assertEnv<string>('DB_NAME'),
+    username: assertEnv<string>('DB_USERNAME'),
+    password: assertEnv<string>('DB_PASSWORD'),
+  },
+  port: assertEnv<number>('PORT', '3000', Number),
+  workerConcurrency: assertEnv<number>('WORKER_CONCURRENCY', '3', Number),
+};

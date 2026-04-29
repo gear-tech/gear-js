@@ -1,94 +1,103 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import type { Hash } from 'viem';
+import type { ColumnType, Selectable } from 'kysely';
+import { type Insertable, Kysely, PostgresDialect } from 'kysely';
+import { Pool } from 'pg';
+import type { Address, Hash, Hex } from 'viem';
+import { config } from '../config.js';
 import { generateJobId } from '../util.js';
-import type { DbRequest, JobStatus, RequestCodeValidationParams } from './types.js';
+import type { JobStatus, RequestCodeValidationParams } from './types.js';
 
-const TABLE = process.env.DYNAMODB_TABLE!;
+export interface JobsTable {
+  job_id: string;
+  status: JobStatus;
+  code_id: Hash;
+  code: Hex | null;
+  blob_hashes: Hash[];
+  deadline: number;
+  sender: Address;
+  wvara_permit_signature: Hex;
+  request_code_validation_signature: Hex;
+  transaction_hash: Hash | null;
+  created_at: ColumnType<Date, never, never>;
+  updated_at: ColumnType<Date, never, Date>;
+}
 
-const client = new DynamoDBClient();
-const db = DynamoDBDocumentClient.from(client);
+interface Database {
+  jobs: JobsTable;
+}
+
+const dialect = new PostgresDialect({
+  pool: new Pool({
+    database: config.db.name,
+    user: config.db.username,
+    password: config.db.password,
+    host: config.db.host,
+    port: config.db.port,
+  }),
+});
+
+type Job = Selectable<JobsTable>;
+type NewJob = Insertable<JobsTable>;
+
+const db = new Kysely<Database>({ dialect });
 
 export async function createRequest(data: RequestCodeValidationParams): Promise<string> {
-  const jobId = generateJobId(data.codeId);
+  const job_id = generateJobId(data.codeId);
 
-  const item: DbRequest & { jobId: string } = {
-    jobId,
+  const item: NewJob = {
+    job_id,
     status: 'pending',
-    codeId: data.codeId,
-    blobHashes: data.blobHashes,
+    code_id: data.codeId,
+    blob_hashes: data.blobHashes,
     deadline: data.deadline,
     code: data.code,
     sender: data.sender,
-    v1: data.v1,
-    r1: data.r1,
-    s1: data.s1,
-    v2: data.v2,
-    r2: data.r2,
-    s2: data.s2,
+    wvara_permit_signature: data.wvaraPermitSignature,
+    request_code_validation_signature: data.requestCodeValidationSignature,
   };
 
-  await db.send(new PutCommand({ TableName: TABLE, Item: item }));
+  await db.insertInto('jobs').values(item).execute();
 
-  return jobId;
+  return job_id;
 }
-
 
 export async function getStatus(
   jobId: string,
 ): Promise<{ jobId: string; status: JobStatus; transactionHash?: string } | null> {
-  const { Item } = await db.send(
-    new GetCommand({
-      TableName: TABLE,
-      Key: { jobId },
-      ProjectionExpression: 'jobId, #s, transactionHash',
-      ExpressionAttributeNames: { '#s': 'status' },
-    }),
-  );
+  const job = await db
+    .selectFrom('jobs')
+    .select(['job_id', 'status', 'transaction_hash'])
+    .where('job_id', '=', jobId)
+    .executeTakeFirst();
 
-  if (!Item) return null;
+  if (!job) return null;
 
   return {
-    jobId: Item.jobId,
-    status: Item.status,
-    ...(Item.transactionHash ? { transactionHash: Item.transactionHash } : {}),
+    jobId: job.job_id,
+    status: job.status,
+    ...(job.transaction_hash ? { transactionHash: job.transaction_hash } : {}),
   };
 }
 
 export async function setStatus(jobId: string, status: JobStatus, transactionHash?: Hash): Promise<void> {
-  let updateExpression = 'SET #s = :status';
-  const expressionAttributeNames: Record<string, string> = { '#s': 'status' };
-  const expressionAttributeValues: Record<string, string | Hash> = { ':status': status };
-  if (transactionHash) {
-    updateExpression += ', #t = :transactionHash';
-    expressionAttributeNames['#t'] = 'transactionHash';
-    expressionAttributeValues[':transactionHash'] = transactionHash;
-  }
-  if (status === 'success') {
-    updateExpression += ' REMOVE #c';
-    expressionAttributeNames['#c'] = 'code';
-  }
-  await db.send(
-    new UpdateCommand({
-      TableName: TABLE,
-      Key: { jobId },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
-    }),
-  );
+  await db
+    .updateTable('jobs')
+    .where('job_id', '=', jobId)
+    .set({
+      status,
+      ...(transactionHash ? { transaction_hash: transactionHash } : {}),
+      ...(status === 'success' ? { code: null } : {}),
+    })
+    .execute();
 }
 
-export async function getRequest(jobId: string) {
-  const { Item } = await db.send(
-    new GetCommand({
-      TableName: TABLE,
-      Key: { jobId },
-    }),
-  );
+export async function recoverPendingJobs(): Promise<string[]> {
+  await db.updateTable('jobs').set('status', 'pending').where('status', '=', 'processing').execute();
 
-  if (!Item) {
-    throw new Error(`Request not found: ${jobId}`);
-  }
-  return Item as DbRequest;
+  const rows = await db.selectFrom('jobs').select('job_id').where('status', '=', 'pending').execute();
+
+  return rows.map((r) => r.job_id);
+}
+
+export async function getRequest(jobId: string): Promise<Job> {
+  return db.selectFrom('jobs').selectAll().where('job_id', '=', jobId).executeTakeFirstOrThrow();
 }

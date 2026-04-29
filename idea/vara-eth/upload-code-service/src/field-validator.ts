@@ -29,10 +29,7 @@ export const validateDeadline = (data: unknown) => {
   return Number.isInteger(n) && n > 0;
 };
 
-export const validateV = (data: unknown) => {
-  const n = Number(data);
-  return Number.isInteger(n) && n >= 0 && n <= 255;
+export const validateSignature = (data: unknown) => {
+  if (typeof data !== 'string') return false;
+  return isHex(data) && data.length === 132;
 };
-
-export const validateR = validateCodeId;
-export const validateS = validateCodeId;

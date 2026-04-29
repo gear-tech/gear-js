@@ -1,12 +1,13 @@
 {
   "name": "upload-code-service",
+  "type": "module",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3",
-    "@aws-sdk/client-secrets-manager": "^3",
-    "@aws-sdk/client-sqs": "^3",
-    "@aws-sdk/lib-dynamodb": "^3",
     "@vara-eth/api": "workspace:*",
+    "dotenv": "^16",
+    "fastify": "^5.8.5",
+    "kysely": "^0.28.16",
     "kzg-wasm": "^1.0.0",
+    "pg": "^8.20.0",
     "viem": "npm:@vara-eth/viem@2.47.7-1"
   },
   "scripts": {
@@ -14,7 +15,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8",
+    "@types/pg": "^8",
     "esbuild": "^0.25"
   }
 }

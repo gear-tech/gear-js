@@ -7,11 +7,12 @@ import {
   type Hash,
   type Hex,
   type PublicClient,
+  parseSignature,
   webSocket,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { getConfig } from './config.js';
+import { config } from './config.js';
 
 let _routerClient: RouterClient | null = null;
 let _publicClient: PublicClient | null = null;
@@ -19,7 +20,6 @@ let _publicClient: PublicClient | null = null;
 async function getClients() {
   if (_routerClient && _publicClient) return { routerClient: _routerClient, publicClient: _publicClient };
 
-  const config = await getConfig();
   const transport = webSocket(config.ethereumRpcUrl);
   const account = privateKeyToAccount(config.privateKey);
 
@@ -36,27 +36,19 @@ export async function requestCodeValidationOnBehalf(
   codeId: Hash,
   sender: Address,
   blobHashes: Hash[],
-  deadline: number,
-  v1: number,
-  r1: Hash,
-  s1: Hash,
-  v2: number,
-  r2: Hash,
-  s2: Hash,
+  deadline: bigint,
+  wvaraPermitSignature: Hex,
+  requestCodeValidationSignature: Hex,
 ) {
   const { routerClient, publicClient } = await getClients();
 
   const tx = await routerClient.requestCodeValidationOnBehalf(
-    code,
     sender,
-    blobHashes as Hex[],
+    code,
+    blobHashes,
     deadline,
-    v1,
-    r1 as Hex,
-    s1 as Hex,
-    v2,
-    r2 as Hex,
-    s2 as Hex,
+    parseSignature(requestCodeValidationSignature),
+    parseSignature(wvaraPermitSignature),
   );
   console.log({ tx }, 'Transaction created');
 
