@@ -13,6 +13,7 @@ config({ quiet: true });
 
 const BLOCK_TIME = 1;
 const COUNTER_CODE = 'target/wasm32-gear/release/counter.opt.wasm';
+const LOG_FILE = 'vara-eth.log';
 let routerAddress: string;
 let keyStore: string;
 
@@ -31,7 +32,7 @@ function setupCodeId() {
 }
 
 async function setupVaraEth() {
-  const logFile = fs.createWriteStream('vara-eth.log', { flags: 'w' });
+  const logFile = fs.createWriteStream(LOG_FILE, { flags: 'w' });
 
   const varaEth = spawn(
     pathToEthexeBin,
@@ -90,6 +91,7 @@ async function setupVaraEth() {
 
     varaEth.on('exit', (code, signal) => {
       if (code !== null && code !== 0) {
+        console.log(fs.readFileSync(LOG_FILE, 'utf-8'));
         reject(new Error(`vara-eth process exited with code ${code}`));
       } else if (signal !== null) {
         reject(new Error(`vara-eth process was killed with signal ${signal}`));
