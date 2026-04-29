@@ -1,20 +1,32 @@
 import * as fs from 'node:fs';
 import path from 'node:path';
-import type { Abi, Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Abi, Account, Chain, Hash, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { CodeState, getMirrorClient, getRouterClient, type ITransactionSigner, type RouterClient } from '../src';
+import {
+  CodeState,
+  getMirrorClient,
+  getRouterClient,
+  getWrappedVaraClient,
+  type ITransactionSigner,
+  type RouterClient,
+  type WrappedVaraClient,
+} from '../src';
 import { walletClientToSigner } from '../src/signer';
 import { waitNBlocks } from './common';
 import { config } from './config';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
+const pingCode = fs.readFileSync(path.join(config.targetDir, 'ping.opt.wasm'));
+
 let codeId: Hex;
+let codeValidated = false;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ITransactionSigner;
 let router: RouterClient;
+let wvara: WrappedVaraClient;
 
 let codeValidatedPromise: Promise<boolean>;
 
@@ -32,8 +44,7 @@ beforeAll(async () => {
   });
   signer = walletClientToSigner(walletClient);
   router = getRouterClient({ publicClient, signer, address: config.routerId });
-
-  codeId = config.codeId;
+  wvara = getWrappedVaraClient({ publicClient, signer, address: await router.wrappedVara() });
 });
 
 afterAll(async () => {
@@ -42,13 +53,38 @@ afterAll(async () => {
 
 describe('router', () => {
   describe('upload code', () => {
+    let baseFee: bigint;
+    let extraFee: bigint;
+    const deadline = BigInt(Date.now() + 10000);
+    let pingCodeId: Hash;
+
+    test('should check the account balance', async () => {
+      const balance = await wvara.balanceOf(walletClient.account.address);
+
+      expect(balance).toBeGreaterThan(1000n);
+    });
+
+    test('should get requestCodeValidation base fee', async () => {
+      baseFee = await router.requestCodeValidationBaseFee();
+
+      expect(baseFee).toBeGreaterThan(0n);
+    });
+
+    test('should get requestCodeValidation extra fee', async () => {
+      extraFee = await router.requestCodeValidationExtraFee();
+
+      expect(extraFee).toBeGreaterThan(0n);
+    });
+
     test(
       'should request code validation',
       async () => {
-        const tx = await router.requestCodeValidation(code);
-        codeId = tx.codeId;
+        const { signature } = await wvara.prepareAndSignPermitData(router.address, baseFee, deadline);
+        const tx = await router.requestCodeValidation(code, deadline, signature);
         const receipt = await tx.sendAndWaitForReceipt();
         const transaction = await publicClient.getTransaction({ hash: receipt.transactionHash });
+
+        codeId = tx.codeId;
 
         expect(transaction.blobVersionedHashes).toBeDefined();
         expect(transaction.blobVersionedHashes!.length).toBeGreaterThan(0);
@@ -76,12 +112,69 @@ describe('router', () => {
 
     test('should check that code state is Validated', async () => {
       expect(await router.codeState(codeId)).toBe(CodeState.Validated);
+      codeValidated = true;
+    });
+
+    test('should request code validation on behalf', async () => {
+      const { signature: wvaraPermitSig } = await wvara.prepareAndSignPermitData(
+        router.address,
+        baseFee + extraFee,
+        deadline,
+      );
+
+      const {
+        signature: requestCodeValidationSig,
+        blobHashes,
+        codeId: _pingCodeId,
+      } = await router.prepareAndSignRequestCodeValidationPermitData(pingCode, deadline);
+
+      const tx = await router.requestCodeValidationOnBehalf(
+        walletClient.account.address,
+        pingCode,
+        blobHashes,
+        deadline,
+        requestCodeValidationSig,
+        wvaraPermitSig,
+      );
+
+      pingCodeId = _pingCodeId;
+
+      const receipt = await tx.sendAndWaitForReceipt();
+      const transaction = await publicClient.getTransaction({ hash: receipt.transactionHash });
+
+      expect(transaction.blobVersionedHashes).toBeDefined();
+      expect(transaction.blobVersionedHashes!.length).toBeGreaterThan(0);
+
+      for (let i = 0; i < transaction.blobVersionedHashes!.length; i++) {
+        expect(transaction.blobVersionedHashes![i]).toBe(tx.blobVersionedHashes[i]);
+      }
+
+      expect(receipt.blockHash).toBeDefined();
+      codeValidatedPromise = tx.waitForCodeGotValidated();
+    });
+
+    test(
+      'should wait when code got validated',
+      async () => {
+        expect(await codeValidatedPromise).toBeTruthy();
+        await waitNBlocks(5);
+      },
+      config.longRunningTestTimeout,
+    );
+
+    test('should check that code state is Validated', async () => {
+      expect(await router.codeState(pingCodeId)).toBe(CodeState.Validated);
     });
   });
 
   describe('create program', () => {
+    beforeAll(() => {
+      expect(codeId).toBeDefined();
+      expect(codeValidated).toBeTruthy();
+    });
+
     test('should create program', async () => {
-      const tx = await router.createProgram(codeId);
+      const tx = router.createProgram(codeId);
 
       await tx.send();
 
@@ -118,15 +211,80 @@ describe('router', () => {
 
       expect(contractAddr).toBeDefined();
 
-      const tx = await router.createProgramWithAbiInterface(codeId, contractAddr);
+      const tx = router.createProgramWithAbiInterface(codeId, contractAddr);
 
       const createProgramReceipt = await tx.sendAndWaitForReceipt();
 
       expect(createProgramReceipt.blockHash).toBeDefined();
     });
+
+    test('should create program with executable balance', async () => {
+      const initialExecutableBalance = 100n;
+      const deadline = BigInt(Date.now() + 10000);
+
+      const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
+
+      const tx = router.createProgramWithExecutableBalance(codeId, initialExecutableBalance, deadline, signature);
+
+      const receipt = await tx.sendAndWaitForReceipt();
+
+      expect(receipt.blockHash).toBeDefined();
+
+      const programId = await tx.getProgramId();
+      const mirror = getMirrorClient({ address: programId, signer, publicClient });
+      const mirrorRouter = (await mirror.router()).toLowerCase();
+
+      expect(mirrorRouter).toBe(config.routerId);
+    });
+
+    test('should create program with abi interface and executable balance', async () => {
+      const {
+        abi,
+        bytecode: { object: bytecode },
+      } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8')) as {
+        abi: Abi;
+        bytecode: { object: Hex };
+      };
+
+      const deployHash = await walletClient.deployContract({ abi, bytecode });
+      const deployReceipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
+      const contractAddr = deployReceipt.contractAddress?.toLowerCase() as Hex | undefined;
+
+      if (!contractAddr) {
+        throw new Error('Counter ABI deployment failed');
+      }
+
+      const initialExecutableBalance = 100n;
+      const deadline = BigInt(Date.now() + 10000);
+
+      const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
+
+      const tx = router.createProgramWithAbiInterfaceAndExecutableBalance(
+        codeId,
+        contractAddr,
+        initialExecutableBalance,
+        deadline,
+        signature,
+      );
+
+      const receipt = await tx.sendAndWaitForReceipt();
+
+      expect(receipt.blockHash).toBeDefined();
+
+      const programId = await tx.getProgramId();
+      const mirror = getMirrorClient({ address: programId, signer, publicClient });
+      const mirrorRouter = (await mirror.router()).toLowerCase();
+
+      expect(mirrorRouter).toBe(config.routerId);
+    });
   });
 
   describe('view functions', () => {
+    beforeAll(() => {
+      expect(codeId).toBeDefined();
+      expect(codeValidated).toBeTruthy();
+    });
+
     test('should get genesisBlockHash', async () => {
       const blockhash = await router.genesisBlockHash();
       expect(blockhash).toBeDefined();
@@ -223,10 +381,10 @@ describe('router', () => {
       expect(varaAddr.startsWith('0x')).toBe(true);
     });
 
-    test('should get latestCommittedBlockHash', async () => {
-      const blockhash = await router.latestCommittedBlockHash();
-      expect(blockhash).toBeDefined();
-      expect(typeof blockhash).toBe('string');
+    test('should get latestCommittedBatchHash', async () => {
+      const batchHash = await router.latestCommittedBatchHash();
+      expect(batchHash).toBeDefined();
+      expect(typeof batchHash).toBe('string');
     });
 
     test('should get code state for validated code', async () => {
@@ -270,7 +428,7 @@ describe('router', () => {
     });
 
     test('should get code id for created program', async () => {
-      const tx = await router.createProgram(codeId);
+      const tx = router.createProgram(codeId);
       await tx.send();
       const programId = await tx.getProgramId();
 
@@ -280,7 +438,7 @@ describe('router', () => {
     });
 
     test('should get code ids for multiple programs', async () => {
-      const tx = await router.createProgram(codeId);
+      const tx = router.createProgram(codeId);
       await tx.send();
       const programId = await tx.getProgramId();
 

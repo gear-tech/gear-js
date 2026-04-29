@@ -1,11 +1,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  globalSetup: './test/setup/setup.ts',
-  globalTeardown: './test/setup/teardown.ts',
   clearMocks: true,
-  coverageProvider: 'v8',
-  coveragePathIgnorePatterns: ['<rootDir>/test'],
   testEnvironment: 'node',
   verbose: true,
   preset: 'ts-jest/presets/default-esm',
@@ -25,9 +21,8 @@ const config: Config.InitialOptions = {
       },
     ],
   },
-  testSequencer: './test/setup/testSequencer.js',
+  testMatch: ['**/test/unit/**/*.test.ts'],
   forceExit: true,
-  testTimeout: 20_000,
 };
 
 export default config;
