@@ -15,7 +15,7 @@ export const useCreateProgram = () => {
   const createProgram = async (codeId: Hex) => {
     if (!api) return;
 
-    const tx = await api.eth.router.createProgram(codeId);
+    const tx = api.eth.router.createProgramBuilder(codeId).build();
     await tx.send();
     const id = await tx.getProgramId();
     const receipt = await tx.getReceipt();
