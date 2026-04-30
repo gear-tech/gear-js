@@ -206,8 +206,8 @@ Interface for interacting with the Router contract - the main entry point for co
 const router = api.eth.router;
 
 // Create program from validated code (builder selects the right on-chain method automatically)
-await router.createProgramBuilder(codeId).build();
-await router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build(); // with Solidity ABI
+router.createProgramBuilder(codeId).build();
+router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build(); // with Solidity ABI
 
 // Permit-based code validation (no prior approve needed)
 const deadline = BigInt(Date.now() + 60_000);
