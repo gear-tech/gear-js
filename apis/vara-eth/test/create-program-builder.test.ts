@@ -15,7 +15,7 @@ import {
 import { walletClientToSigner } from '../src/signer';
 import { config } from './config';
 
-let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
+let publicClient: PublicClient;
 let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let signer: ITransactionSigner;
 let router: RouterClient;
@@ -26,7 +26,7 @@ let initialProgramsCount: bigint;
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
 
-  publicClient = createPublicClient({ transport }) as PublicClient<WebSocketTransport, Chain, undefined>;
+  publicClient = createPublicClient({ transport });
 
   const account = privateKeyToAccount(config.privateKey);
 
@@ -37,9 +37,13 @@ beforeAll(async () => {
 
   initialProgramsCount = await router.programsCount();
 
-  const { abi, bytecode: { object: bytecode } } = JSON.parse(
-    fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8'),
-  ) as { abi: Abi; bytecode: { object: Hex } };
+  const {
+    abi,
+    bytecode: { object: bytecode },
+  } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8')) as {
+    abi: Abi;
+    bytecode: { object: Hex };
+  };
 
   const deployHash = await walletClient.deployContract({ abi, bytecode });
   const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
@@ -47,7 +51,7 @@ beforeAll(async () => {
   if (!receipt.contractAddress) throw new Error('Counter ABI deployment failed');
 
   abiContractAddr = receipt.contractAddress.toLowerCase() as Hex;
-});
+}, config.longRunningTestTimeout * 3);
 
 afterAll(async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -101,7 +105,8 @@ describe('CreateProgramBuilder', () => {
     const deadline = BigInt(Date.now() + 10_000);
     const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
 
-    const tx = router.createProgramBuilder(codeId)
+    const tx = router
+      .createProgramBuilder(codeId)
       .withExecutableBalance(initialExecutableBalance, deadline, signature)
       .build();
 
@@ -120,7 +125,8 @@ describe('CreateProgramBuilder', () => {
     const deadline = BigInt(Date.now() + 10_000);
     const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
 
-    const tx = router.createProgramBuilder(codeId)
+    const tx = router
+      .createProgramBuilder(codeId)
       .withAbiInterface(abiContractAddr)
       .withExecutableBalance(initialExecutableBalance, deadline, signature)
       .build();
