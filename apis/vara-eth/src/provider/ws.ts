@@ -48,6 +48,15 @@ export interface ConnectionOptions {
   requestTimeout?: number;
 }
 
+interface WsSocket extends WebSocket {
+  on(event: 'ping', cb: (data: Buffer) => void): this;
+  pong(data?: Buffer): void;
+}
+
+function isWsSocket(conn: WebSocket): conn is WsSocket {
+  return typeof (conn as WsSocket).on === 'function';
+}
+
 interface ISubscriptionParameters<Error = unknown, Result = unknown> {
   isInitialized: boolean;
   callback: ISubscriptionCallback<Error, Result>;
@@ -173,6 +182,13 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     for (const subscription of this._subscriptions.values()) {
       subscription.callback(error, null);
     }
+  }
+
+  private _setupPongHandler(): void {
+    if (!this._conn || !isWsSocket(this._conn)) return;
+    this._conn.on('ping', () => {
+      (this._conn as WsSocket).pong();
+    });
   }
 
   private _onClose = (event: CloseEvent) => {
@@ -313,6 +329,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
       try {
         this._conn = new WebSocket(this._url);
+        this._setupPongHandler();
 
         this._onOpen = () => {
           this._cleanupConnectionListeners();

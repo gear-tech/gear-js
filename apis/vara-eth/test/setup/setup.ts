@@ -2,13 +2,10 @@ import { spawn } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as net from 'node:net';
 import { config } from 'dotenv';
+import ws from 'ws';
 import { generateCodeHash } from '../../src/util/hash';
 
-if (typeof WebSocket === 'undefined') {
-  import('ws').then((module) => {
-    global.WebSocket = module.default as any;
-  });
-}
+global.WebSocket = ws as unknown as typeof WebSocket;
 
 config({ quiet: true });
 

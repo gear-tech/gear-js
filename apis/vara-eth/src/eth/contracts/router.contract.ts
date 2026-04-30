@@ -333,7 +333,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   public async requestCodeValidation(
     code: Uint8Array,
     deadline: bigint,
-    wvaraPermitSignature: Signature,
+    wvaraPermitSignature: Signature | Hex,
   ): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
     const { v, r, s } = getRVSComponents(wvaraPermitSignature);
@@ -367,8 +367,8 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     code: Uint8Array,
     blobHashes: Hex[],
     deadline: bigint,
-    requestCodeValidationSignature: Signature,
-    wvaraPermitSignature: Signature,
+    requestCodeValidationSignature: Signature | Hex,
+    wvaraPermitSignature: Signature | Hex,
   ): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
 
@@ -482,7 +482,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     abiInterface: Address,
     initialExecutableBalance: bigint,
     deadline: bigint,
-    wvaraPermitSignature: Signature,
+    wvaraPermitSignature: Signature | Hex,
     salt?: Hex,
     overrideInitializer?: Address,
   ): TxManagerWithHelpers<CreateProgramHelpers> {
@@ -522,7 +522,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     codeId: Hex,
     initialExecutableBalance: bigint,
     deadline: bigint,
-    wvaraPermitSignature: Signature,
+    wvaraPermitSignature: Signature | Hex,
     salt?: Hex,
     overrideInitializer?: Address,
   ): TxManagerWithHelpers<CreateProgramHelpers> {

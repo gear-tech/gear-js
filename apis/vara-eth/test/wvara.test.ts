@@ -1,4 +1,4 @@
-import type { Address, Chain, PublicClient, Signature, WalletClient, WebSocketTransport } from 'viem';
+import type { Address, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, recoverTypedDataAddress, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -132,7 +132,7 @@ describe('permit function', () => {
   let spender: Address;
   let value: bigint;
   let deadline: bigint;
-  let signature: Signature;
+  let signature: Hex;
 
   beforeAll(async () => {
     spender = router.address;

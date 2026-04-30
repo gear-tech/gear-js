@@ -1,4 +1,4 @@
-import type { Hash, Signature, TransactionRequest } from 'viem';
+import type { Hash, Hex, TransactionRequest } from 'viem';
 
 import type { ITransactionSigner, SignTypedDataParams } from '../../types/signer.js';
 import { SigningError } from '../errors.js';
@@ -44,7 +44,7 @@ export class DynamicSigner implements ITransactionSigner {
     return this._signer.sendTransaction(tx);
   }
 
-  async signTypedData(params: SignTypedDataParams): Promise<Signature> {
+  async signTypedData(params: SignTypedDataParams): Promise<Hex> {
     return this._signer.signTypedData(params);
   }
 }

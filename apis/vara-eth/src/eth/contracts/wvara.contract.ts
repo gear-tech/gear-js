@@ -1,4 +1,4 @@
-import type { Address, Signature } from 'viem';
+import type { Address, Hex, Signature } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import { convertEventParams } from '../../util/index.js';
@@ -138,7 +138,13 @@ export class WrappedVaraClient extends EIP712ContractClient<typeof IWRAPPEDVARA_
     return txManager as TxManagerWithHelpers<WVaraTransferHelpers>;
   }
 
-  permit(owner: Address, spender: Address, value: bigint, deadline: bigint, permitSignature: Signature): ITxManager {
+  permit(
+    owner: Address,
+    spender: Address,
+    value: bigint,
+    deadline: bigint,
+    permitSignature: Signature | Hex,
+  ): ITxManager {
     const signer = this._ensureSigner();
     const { v, r, s } = getRVSComponents(permitSignature);
     const tx = {
@@ -170,7 +176,7 @@ export class WrappedVaraClient extends EIP712ContractClient<typeof IWRAPPEDVARA_
     spender: Address;
     value: bigint;
     deadline: bigint;
-    signature: Signature;
+    signature: Hex;
   }> {
     const signer = this._ensureSigner();
     const owner = await signer.getAddress();
