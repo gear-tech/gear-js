@@ -184,7 +184,7 @@ jobs:
           name: vara-eth-log
           path: apis/vara-eth/vara-eth.log
           if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 1
 
 
   check-gear-idea-version:

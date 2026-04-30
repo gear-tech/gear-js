@@ -28,11 +28,13 @@ export class MockWebSocket {
   public readyState: number = MockWebSocket.CONNECTING;
   public url: string;
   public shouldThrowOnSend = false;
+  public pongCallCount = 0;
 
   public messageHandlers: MessageHandler[] = [];
   private errorHandlers: ErrorHandler[] = [];
   private closeHandlers: CloseHandler[] = [];
   private openHandlers: OpenHandler[] = [];
+  private wsPingHandlers: Array<(data: Buffer) => void> = [];
 
   constructor(url: string) {
     this.url = url;
@@ -83,6 +85,19 @@ export class MockWebSocket {
 
   close(): void {
     this.readyState = MockWebSocket.CLOSED;
+  }
+
+  pong(): void {
+    this.pongCallCount++;
+  }
+
+  on(event: 'ping', cb: (data: Buffer) => void): this {
+    if (event === 'ping') this.wsPingHandlers.push(cb);
+    return this;
+  }
+
+  simulatePing(): void {
+    for (const h of this.wsPingHandlers) h(Buffer.alloc(0));
   }
 
   // Test utilities
