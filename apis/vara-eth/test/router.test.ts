@@ -13,6 +13,7 @@ import {
   type WrappedVaraClient,
 } from '../src';
 import { walletClientToSigner } from '../src/signer';
+import { initKzgLoading } from '../src/util';
 import { waitNBlocks } from './common';
 import { config } from './config';
 
@@ -30,6 +31,7 @@ let wvara: WrappedVaraClient;
 let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
+  initKzgLoading();
   const transport = webSocket(config.wsRpc);
 
   publicClient = createPublicClient({
