@@ -389,6 +389,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     const signer = this._ensureSigner();
     const requester = await signer.getAddress();
 
+    await waitForKzg();
     const blobs = simpleSidecarEncode(code);
     const { blobVersionedHashes: blobHashes } = calculateBlobVersionedHashesAndCommitments(blobs);
     const codeId = generateCodeHash(code);
