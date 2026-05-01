@@ -45,6 +45,11 @@
       "types": "./lib/eth/contracts/router.contract.d.ts",
       "import": "./lib/eth/contracts/router.contract.js",
       "require": "./lib/eth/contracts/router.contract.cjs"
+    },
+    "./util": {
+      "types": "./lib/util/index.d.ts",
+      "import": "./lib/util/index.js",
+      "require": "./lib/util/index.cjs"
     }
   },
   "peerDependencies": {

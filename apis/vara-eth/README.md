@@ -299,6 +299,19 @@ const tx = api.eth.router.createProgramBuilder(codeId).build();
 
 You can also upload and validate code directly via the `RouterClient` API, without the CLI. The fee is charged in WVARA using an EIP-2612 permit — no prior `approve` call is needed.
 
+#### KZG initialization
+
+Code upload relies on the `kzg-wasm` WASM library, which is memory-intensive. To avoid loading it eagerly at module import time, call `initKzgLoading` once at application startup. This starts KZG initialization in the background so it is ready by the time you upload code, without consuming memory in applications that never use this feature.
+
+```typescript
+import { initKzgLoading } from '@vara-eth/api/util';
+
+// Call once at startup, before any code upload operations
+initKzgLoading();
+```
+
+If you skip this call, KZG loading begins lazily the first time a code upload is triggered — slightly increasing the latency of that first upload.
+
 ```typescript
 import { readFileSync } from 'node:fs';
 
