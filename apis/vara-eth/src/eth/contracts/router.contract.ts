@@ -279,7 +279,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     const maxFeePerBlobGas = baseFeePerBlobGas * this._maxFeePerBlobGasMultiplier;
 
     await waitForKzg();
-    const { blobVersionedHashes, blobCommitmentsMap } = await calculateBlobVersionedHashesAndCommitments(blobs);
+    const { blobVersionedHashes, blobCommitmentsMap } = calculateBlobVersionedHashesAndCommitments(blobs);
 
     const signerAddress = await signer.getAddress();
 
@@ -390,7 +390,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     const requester = await signer.getAddress();
 
     const blobs = simpleSidecarEncode(code);
-    const { blobVersionedHashes: blobHashes } = await calculateBlobVersionedHashesAndCommitments(blobs);
+    const { blobVersionedHashes: blobHashes } = calculateBlobVersionedHashesAndCommitments(blobs);
     const codeId = generateCodeHash(code);
 
     const [nonce, domain] = await Promise.all([this.nonces(requester), this.eip712Domain()]);
