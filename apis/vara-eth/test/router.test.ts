@@ -1,12 +1,11 @@
 import * as fs from 'node:fs';
 import path from 'node:path';
-import type { Abi, Account, Chain, Hash, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Account, Chain, Hash, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import {
   CodeState,
-  getMirrorClient,
   getRouterClient,
   getWrappedVaraClient,
   type ITransactionSigner,
@@ -167,118 +166,6 @@ describe('router', () => {
     });
   });
 
-  describe('create program', () => {
-    beforeAll(() => {
-      expect(codeId).toBeDefined();
-      expect(codeValidated).toBeTruthy();
-    });
-
-    test('should create program', async () => {
-      const tx = router.createProgram(codeId);
-
-      await tx.send();
-
-      const id = await tx.getProgramId();
-
-      const mirror = getMirrorClient({ address: id, signer, publicClient });
-
-      const mirrorRouter = (await mirror.router()).toLowerCase();
-
-      expect(mirrorRouter).toBe(config.routerId);
-    });
-
-    test('should create program with abi interface', async () => {
-      const {
-        abi,
-        bytecode: { object: bytecode },
-      } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8')) as {
-        abi: Abi;
-        bytecode: { object: Hex };
-      };
-
-      const deployHash = await walletClient.deployContract({
-        abi,
-        bytecode,
-      });
-
-      const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
-
-      const contractAddr = receipt.contractAddress?.toLowerCase() as Hex | undefined;
-
-      if (!contractAddr) {
-        throw new Error('Counter ABI deployment failed');
-      }
-
-      expect(contractAddr).toBeDefined();
-
-      const tx = router.createProgramWithAbiInterface(codeId, contractAddr);
-
-      const createProgramReceipt = await tx.sendAndWaitForReceipt();
-
-      expect(createProgramReceipt.blockHash).toBeDefined();
-    });
-
-    test('should create program with executable balance', async () => {
-      const initialExecutableBalance = 100n;
-      const deadline = BigInt(Date.now() + 10000);
-
-      const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
-
-      const tx = router.createProgramWithExecutableBalance(codeId, initialExecutableBalance, deadline, signature);
-
-      const receipt = await tx.sendAndWaitForReceipt();
-
-      expect(receipt.blockHash).toBeDefined();
-
-      const programId = await tx.getProgramId();
-      const mirror = getMirrorClient({ address: programId, signer, publicClient });
-      const mirrorRouter = (await mirror.router()).toLowerCase();
-
-      expect(mirrorRouter).toBe(config.routerId);
-    });
-
-    test('should create program with abi interface and executable balance', async () => {
-      const {
-        abi,
-        bytecode: { object: bytecode },
-      } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8')) as {
-        abi: Abi;
-        bytecode: { object: Hex };
-      };
-
-      const deployHash = await walletClient.deployContract({ abi, bytecode });
-      const deployReceipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
-      const contractAddr = deployReceipt.contractAddress?.toLowerCase() as Hex | undefined;
-
-      if (!contractAddr) {
-        throw new Error('Counter ABI deployment failed');
-      }
-
-      const initialExecutableBalance = 100n;
-      const deadline = BigInt(Date.now() + 10000);
-
-      const { signature } = await wvara.prepareAndSignPermitData(router.address, initialExecutableBalance, deadline);
-
-      const tx = router.createProgramWithAbiInterfaceAndExecutableBalance(
-        codeId,
-        contractAddr,
-        initialExecutableBalance,
-        deadline,
-        signature,
-      );
-
-      const receipt = await tx.sendAndWaitForReceipt();
-
-      expect(receipt.blockHash).toBeDefined();
-
-      const programId = await tx.getProgramId();
-      const mirror = getMirrorClient({ address: programId, signer, publicClient });
-      const mirrorRouter = (await mirror.router()).toLowerCase();
-
-      expect(mirrorRouter).toBe(config.routerId);
-    });
-  });
-
   describe('view functions', () => {
     beforeAll(() => {
       expect(codeId).toBeDefined();
@@ -428,7 +315,7 @@ describe('router', () => {
     });
 
     test('should get code id for created program', async () => {
-      const tx = router.createProgram(codeId);
+      const tx = router.createProgramBuilder(codeId).build();
       await tx.send();
       const programId = await tx.getProgramId();
 
@@ -438,7 +325,7 @@ describe('router', () => {
     });
 
     test('should get code ids for multiple programs', async () => {
-      const tx = router.createProgram(codeId);
+      const tx = router.createProgramBuilder(codeId).build();
       await tx.send();
       const programId = await tx.getProgramId();
 

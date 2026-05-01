@@ -49,7 +49,7 @@ describe('setup', () => {
   let programWithAbiInterfaceId: Hex;
 
   test('should create program', async () => {
-    const tx = api.eth.router.createProgram(config.codeId);
+    const tx = api.eth.router.createProgramBuilder(config.codeId).build();
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
@@ -123,7 +123,7 @@ describe('setup', () => {
   });
 
   test('should create program with abi interface', async () => {
-    const tx = api.eth.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
+    const tx = api.eth.router.createProgramBuilder(config.codeId).withAbiInterface(counterAbiContractAddress).build();
 
     const receipt = await tx.sendAndWaitForReceipt();
 

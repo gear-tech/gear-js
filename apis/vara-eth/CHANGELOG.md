@@ -19,6 +19,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `watchEIP712DomainChangedEvent()` method on `RouterClient` and `WrappedVaraClient` — subscribes to `EIP712DomainChanged` contract events (https://github.com/gear-tech/gear-js/pull/2446)
 - `signTypedData()` method added to `IMessageSigner`, `DynamicSigner`, and `WalletClientAdapter` — required for EIP-712 permit flows (https://github.com/gear-tech/gear-js/pull/2446)
 - `RouterContractClientParams` exported type — extends the base contract params with optional `maxFeePerBlobGasMultiplier?: bigint` (defaults to `3n`) for tuning blob gas bids on congested networks (https://github.com/gear-tech/gear-js/pull/2446)
+- `CreateProgramBuilder` class — a fluent builder for assembling program-creation transactions. Obtain an instance via `RouterClient.createProgramBuilder(codeId)`, configure optional features with `withAbiInterface()`, `withExecutableBalance()`, `withSalt()`, and `withOverrideInitializer()`, then call `build()` to produce a transaction manager. The builder automatically selects the correct on-chain function (`createProgram`, `createProgramWithAbiInterface`, `createProgramWithExecutableBalance`, or `createProgramWithAbiInterfaceAndExecutableBalance`) based on which options are set (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramBuilder()` — factory method that constructs a `CreateProgramBuilder` for the given code ID (https://github.com/gear-tech/gear-js/pull/2453)
+
+### Removed
+- `RouterClient.createProgram()` — replaced by `RouterClient.createProgramBuilder(codeId).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithAbiInterface()` — replaced by `RouterClient.createProgramBuilder(codeId).withAbiInterface(address).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithExecutableBalance()` — replaced by `RouterClient.createProgramBuilder(codeId).withExecutableBalance(amount, deadline, signature).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithAbiInterfaceAndExecutableBalance()` — replaced by `RouterClient.createProgramBuilder(codeId).withAbiInterface(address).withExecutableBalance(amount, deadline, signature).build()` (https://github.com/gear-tech/gear-js/pull/2453)
 
 ### Changed
 - `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature | Hex` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
