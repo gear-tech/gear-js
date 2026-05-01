@@ -160,7 +160,7 @@ describe('Injected Transactions', () => {
 
   describe('setup', () => {
     test('should create program', async () => {
-      const tx = await api.eth.router.createProgram(config.codeId);
+      const tx = api.eth.router.createProgramBuilder(config.codeId).build();
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();

@@ -739,9 +739,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.60"
+version = "1.2.61"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43c5703da9466b66a946814e1adf53ea2c90f10063b86290cc9eb67ce3478a20"
+checksum = "d16d90359e986641506914ba71350897565610e87ce0ad9e6f28569db3dd5c6d"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -1421,7 +1421,7 @@ dependencies = [
 [[package]]
 name = "ethexe-common"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "alloy-primitives",
  "anyhow",
@@ -1763,7 +1763,7 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "blake2",
  "bytemuck",
@@ -1807,7 +1807,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "enum-iterator",
  "gear-workspace-hack",
@@ -1846,7 +1846,7 @@ dependencies = [
 [[package]]
 name = "gear-ss58"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "blake2",
  "bs58",
@@ -1897,7 +1897,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "derive_more 2.1.1",
  "enum-iterator",
@@ -2015,7 +2015,7 @@ dependencies = [
 [[package]]
 name = "gprimitives"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "bytemuck",
  "derive_more 2.1.1",
@@ -2044,7 +2044,7 @@ dependencies = [
 [[package]]
 name = "gsigner"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "alloy-primitives",
  "anyhow",
@@ -2117,7 +2117,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "bytemuck",
  "gear-workspace-hack",
@@ -2421,9 +2421,9 @@ dependencies = [
 
 [[package]]
 name = "idna_adapter"
-version = "1.2.1"
+version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3acae9609540aa318d1bc588455225fb2085b9ed0c4f6bd0d9d5bcd86f1a0344"
+checksum = "cb68373c0d6620ef8105e855e7745e18b0d00d3bdb07fb532e434244cdb9a714"
 dependencies = [
  "icu_normalizer",
  "icu_properties",
@@ -2533,10 +2533,12 @@ checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 
 [[package]]
 name = "js-sys"
-version = "0.3.95"
+version = "0.3.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2964e92d1d9dc3364cae4d718d93f227e3abb088e747d92e0395bfdedf1c12ca"
+checksum = "a1840c94c045fbcf8ba2812c95db44499f7c64910a912551aaaa541decebcacf"
 dependencies = [
+ "cfg-if",
+ "futures-util",
  "once_cell",
  "wasm-bindgen",
 ]
@@ -2609,9 +2611,9 @@ checksum = "09edd9e8b54e49e587e4f6295a7d29c3ea94d469cb40ab8ca70b288248a81db2"
 
 [[package]]
 name = "libc"
-version = "0.2.185"
+version = "0.2.186"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52ff2c0fe9bc6cb6b14a0592c2ff4fa9ceb83eea9db979b0487cd054946a2b8f"
+checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libc-print"
@@ -2866,7 +2868,7 @@ dependencies = [
 [[package]]
 name = "numerated"
 version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#c09f5d8b0be85470b8ef025deb9f810bff590f4e"
+source = "git+https://github.com/gear-tech/gear#4cb89523d11de656a8f99f2193c92caa47e1c4ca"
 dependencies = [
  "derive_more 2.1.1",
  "gear-workspace-hack",
@@ -3075,13 +3077,6 @@ name = "pin-project-lite"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a89322df9ebe1c1578d689c92318e070967d1042b512afbe49518723f4e6d5cd"
-
-[[package]]
-name = "ping"
-version = "0.1.0"
-dependencies = [
- "sails-rs",
-]
 
 [[package]]
 name = "ping"
@@ -3521,9 +3516,9 @@ dependencies = [
 
 [[package]]
 name = "ruint"
-version = "1.17.2"
+version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c141e807189ad38a07276942c6623032d3753c8859c146104ac2e4d68865945a"
+checksum = "0298da754d1395046b0afdc2f20ee76d29a8ae310cd30ffa84ed42acba9cb12a"
 dependencies = [
  "alloy-rlp",
  "ark-ff 0.3.0",
@@ -4681,7 +4676,7 @@ dependencies = [
  "indexmap",
  "toml_datetime 1.1.1+spec-1.1.0",
  "toml_parser",
- "winnow 1.0.1",
+ "winnow 1.0.2",
 ]
 
 [[package]]
@@ -4690,7 +4685,7 @@ version = "1.1.2+spec-1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2abe9b86193656635d2411dc43050282ca48aa31c2451210f4202550afb7526"
 dependencies = [
- "winnow 1.0.1",
+ "winnow 1.0.2",
 ]
 
 [[package]]
@@ -4983,9 +4978,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.118"
+version = "0.2.120"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0bf938a0bacb0469e83c1e148908bd7d5a6010354cf4fb73279b7447422e3a89"
+checksum = "df52b6d9b87e0c74c9edfa1eb2d9bf85e5d63515474513aa50fa181b3c4f5db1"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -4996,9 +4991,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.118"
+version = "0.2.120"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eeff24f84126c0ec2db7a449f0c2ec963c6a49efe0698c4242929da037ca28ed"
+checksum = "78b1041f495fb322e64aca85f5756b2172e35cd459376e67f2a6c9dffcedb103"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -5006,9 +5001,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.118"
+version = "0.2.120"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d08065faf983b2b80a79fd87d8254c409281cf7de75fc4b773019824196c904"
+checksum = "9dcd0ff20416988a18ac686d4d4d0f6aae9ebf08a389ff5d29012b05af2a1b41"
 dependencies = [
  "bumpalo",
  "proc-macro2",
@@ -5019,9 +5014,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.118"
+version = "0.2.120"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5fd04d9e306f1907bd13c6361b5c6bfc7b3b3c095ed3f8a9246390f8dbdee129"
+checksum = "49757b3c82ebf16c57d69365a142940b384176c24df52a087fb748e2085359ea"
 dependencies = [
  "unicode-ident",
 ]
@@ -5275,9 +5270,9 @@ dependencies = [
 
 [[package]]
 name = "winnow"
-version = "1.0.1"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09dac053f1cd375980747450bfc7250c264eaae0583872e845c0c7cd578872b5"
+checksum = "2ee1708bef14716a11bae175f579062d4554d95be2c6829f518df847b7b3fdd0"
 dependencies = [
  "memchr",
 ]

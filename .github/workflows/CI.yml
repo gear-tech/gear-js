@@ -177,6 +177,16 @@ jobs:
         env:
           PATH_TO_ETHEXE: ./ethexe
 
+      - name: 'Upload vara-eth node log'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vara-eth-log
+          path: apis/vara-eth/vara-eth.log
+          if-no-files-found: ignore
+          retention-days: 1
+
+
   check-gear-idea-version:
     runs-on: ubuntu-latest
     steps:

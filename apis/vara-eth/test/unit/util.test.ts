@@ -53,6 +53,32 @@ describe('getRVSComponents', () => {
     const result = getRVSComponents({ r, s, v: 27n, yParity: 1 });
     expect(result.v).toBe(27);
   });
+
+  test('accepts a compact hex string and parses r, s, v=27 (last byte 0x1b)', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}1b` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.r).toBe(`0x${'aa'.repeat(32)}`);
+    expect(result.s).toBe(`0x${'bb'.repeat(32)}`);
+    expect(result.v).toBe(27);
+  });
+
+  test('accepts a compact hex string and parses r, s, v=28 (last byte 0x1c)', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}1c` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.v).toBe(28);
+  });
+
+  test('normalizes recovery ID 0 to v=27 (last byte 0x00)', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}00` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.v).toBe(27);
+  });
+
+  test('normalizes recovery ID 1 to v=28 (last byte 0x01)', () => {
+    const hex = `0x${'aa'.repeat(32)}${'bb'.repeat(32)}01` as `0x${string}`;
+    const result = getRVSComponents(hex);
+    expect(result.v).toBe(28);
+  });
 });
 
 // ---------------------------------------------------------------------------

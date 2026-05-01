@@ -249,7 +249,7 @@ export class MirrorClient extends BaseContractClient<typeof IMIRROR_ABI> impleme
   async executableBalanceTopUpWithPermit(
     value: bigint,
     deadline: bigint,
-    permitSignature: Signature,
+    permitSignature: Signature | Hex,
   ): Promise<ITxManager> {
     const signer = this._ensureSigner();
     const { v, r, s } = getRVSComponents(permitSignature);
