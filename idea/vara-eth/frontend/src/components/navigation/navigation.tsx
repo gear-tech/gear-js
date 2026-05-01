@@ -2,11 +2,10 @@ import { clsx } from 'clsx';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import type { Hex } from 'viem';
 
+import { UploadCodeButton } from '@/features/codes';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
-
-import { LinkButton } from '../ui';
 
 import styles from './navigation.module.scss';
 
@@ -33,9 +32,7 @@ const Navigation = () => {
         <div className={styles.navigation}>{renderLinks()}</div>
 
         {matchPath(routes.codes, pathname) && (
-          <LinkButton href="https://wiki.vara.network/docs/vara-eth/deploy/upload-validation" size="xs">
-            Upload Code
-          </LinkButton>
+          <UploadCodeButton />
         )}
 
         {codeId && <CreateProgramButton codeId={codeId} />}
