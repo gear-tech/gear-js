@@ -1,10 +1,15 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  min-height: 0;
 }
 
 .column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: 24px;
+  overflow: auto;
 
   &:not(:last-child) {
     border-right: 1px solid #292929;
@@ -22,13 +27,30 @@
 }
 
 .payload {
+  min-height: 0;
   word-break: break-all;
+  overflow-y: auto;
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+  }
 
   &Title {
-    margin-bottom: 24px;
-
     font-size: 16px;
     font-weight: 400;
     color: #a8f593;
   }
+}
+
+.payloadTabs {
+  margin-bottom: 0;
+}
+
+.payloadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
 }

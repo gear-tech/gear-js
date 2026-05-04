@@ -1,4 +1,8 @@
+import { useAtomValue } from 'jotai';
+
+import { nodeAtom } from '@/app/store';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
+import { getEtherscanBaseUrl } from '@/shared/config';
 import type { PropsWithClassName } from '@/shared/types';
 import { cx } from '@/shared/utils';
 
@@ -12,10 +16,13 @@ type Props = PropsWithClassName & {
 };
 
 const ExplorerLink = ({ path, id, className }: Props) => {
+  const { ethChainId } = useAtomValue(nodeAtom);
+  const etherscanBaseUrl = getEtherscanBaseUrl(ethChainId);
+
   return (
     <Tooltip value="View on Etherscan">
       <a
-        href={`https://hoodi.etherscan.io/${path}/${id}`}
+        href={`${etherscanBaseUrl}/${path}/${id}`}
         target="_blank"
         rel="noreferrer"
         className={cx(styles.link, className)}>

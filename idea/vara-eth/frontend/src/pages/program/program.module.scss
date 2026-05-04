@@ -1,5 +1,7 @@
 .container {
+  flex: 1;
   min-height: 0; // sails actions overflow
+  overflow-y: auto;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -62,17 +64,4 @@
 
 .unavailable {
   color: rgba(255, 255, 255, 0.4);
-}
-
-.emptyState {
-  margin: auto 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
 }

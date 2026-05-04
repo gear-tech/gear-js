@@ -15,16 +15,16 @@
     "clean": "echo \"clean gear-idea-squid\" && rm -rf lib"
   },
   "dependencies": {
-    "@gear-js/api": "0.44.2",
+    "@gear-js/api": "0.45.0",
     "@polkadot/api": "16.5.6",
-    "@subsquid/substrate-processor": "8.6.1",
+    "@subsquid/substrate-processor": "8.7.0",
     "@subsquid/substrate-runtime": "2.0.1",
-    "@subsquid/typeorm-migration": "1.3.0",
-    "@subsquid/typeorm-store": "1.7.0",
-    "dotenv": "17.3.1",
+    "@subsquid/typeorm-migration": "1.3.1",
+    "@subsquid/typeorm-store": "1.9.0",
+    "dotenv": "17.4.2",
     "gear-idea-indexer-db": "1.4.26",
     "pg": "8.20.0",
-    "redis": "5.11.0",
+    "redis": "5.12.1",
     "reflect-metadata": "0.2.2",
     "sails-js": "0.5.1",
     "typeorm": "0.3.28"
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "3.2.0",
     "@subsquid/substrate-typegen": "8.1.0",
-    "@subsquid/typeorm-codegen": "2.0.2",
+    "@subsquid/typeorm-codegen": "2.2.0",
     "@types/redis": "^4.0.11"
   }
 }
