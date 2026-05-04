@@ -1,3 +1,4 @@
+export type { CreateProgramParams } from './hooks';
 export {
   useCreateProgram,
   useInitProgram,

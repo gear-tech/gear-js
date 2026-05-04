@@ -45,6 +45,31 @@ const Transaction = ({ item, isMyActivity = false }: Props) => {
   }
 
   if (item.type === TransactionTypes.createProgram) {
+    const isFailed = item.resultStatus === 'error' || Boolean(item.error);
+
+    if (isFailed) {
+      return (
+        <div className={styles.row}>
+          <Badge color="danger">Create program failed</Badge>
+          <div className={styles.failureDetails}>
+            {item.codeId ? (
+              <div className={styles.failureContext}>
+                Program creation failed for this code ID:{' '}
+                <HashLink hash={item.codeId} href={generatePath(routes.code, { codeId: item.codeId })} />
+              </div>
+            ) : (
+              <div className={styles.failureContext}>Program creation failed.</div>
+            )}
+            <span className={styles.error}>{item.error || 'Unknown error'}</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (!item.programId) {
+      return null;
+    }
+
     return (
       <div className={styles.transaction}>
         Program <HashLink hash={item.programId} href={generatePath(routes.program, { programId: item.programId })} />{' '}
