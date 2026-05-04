@@ -14,12 +14,13 @@ import { generateCodeHash } from '../../util/hash.js';
 import { getRVSComponents } from '../../util/signature.js';
 import { IROUTER_ABI, type IRouterContract } from '../abi/IRouter.js';
 import { IWRAPPEDVARA_ABI } from '../abi/IWrappedVara.js';
-import { CodeState, type CodeValidationHelpers, type CreateProgramHelpers } from '../interfaces/router.js';
+import { CodeState, type CodeValidationHelpers } from '../interfaces/router.js';
 import type { ITxManager, TxManagerWithHelpers } from '../interfaces/tx-manager.js';
 import { TxManager } from '../tx-manager.js';
 import type { ContractClientParams } from './base.contract.js';
+import { CreateProgramBuilder } from './create-program.builder.js';
 import { EIP712ContractClient } from './eip-712.contract.js';
-import { getOverrideInitializer, getProgramId, getSalt, waitForCodeGotValidated } from './router.helper.js';
+import { waitForCodeGotValidated } from './router.helper.js';
 
 const DEFAULT_MAX_FEE_PER_BLOB_GAS_MULTIPLIER = 3n;
 
@@ -278,7 +279,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     const maxFeePerBlobGas = baseFeePerBlobGas * this._maxFeePerBlobGasMultiplier;
 
     await waitForKzg();
-    const { blobVersionedHashes, blobCommitmentsMap } = await calculateBlobVersionedHashesAndCommitments(blobs);
+    const { blobVersionedHashes, blobCommitmentsMap } = calculateBlobVersionedHashesAndCommitments(blobs);
 
     const signerAddress = await signer.getAddress();
 
@@ -388,8 +389,9 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     const signer = this._ensureSigner();
     const requester = await signer.getAddress();
 
+    await waitForKzg();
     const blobs = simpleSidecarEncode(code);
-    const { blobVersionedHashes: blobHashes } = await calculateBlobVersionedHashesAndCommitments(blobs);
+    const { blobVersionedHashes: blobHashes } = calculateBlobVersionedHashesAndCommitments(blobs);
     const codeId = generateCodeHash(code);
 
     const [nonce, domain] = await Promise.all([this.nonces(requester), this.eip712Domain()]);
@@ -414,135 +416,72 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     return { codeId, requester, blobHashes, deadline, signature };
   }
 
-  private _createProgramTxManager(data: Hex): TxManagerWithHelpers<CreateProgramHelpers> {
-    const txManager: ITxManager = new TxManager(this._pc, this._ensureSigner(), { to: this.address, data }, this._abi, {
-      getProgramId,
-    });
-
-    return txManager as TxManagerWithHelpers<CreateProgramHelpers>;
-  }
-
   /**
-   * Creates a new program from validated code.
+   * Returns a fluent builder for creating a program from validated code.
    *
-   * @param codeId - The ID of the validated code to use
-   * @param overrideInitializer - Optional address to override the initializer
-   * @param salt - Optional salt for deterministic program address generation
-   * @returns A transaction manager with program creation helper functions
+   * The builder selects the appropriate on-chain function automatically based on
+   * which optional features are configured:
+   *
+   * | `.withAbiInterface()` | `.withExecutableBalance()` | On-chain function |
+   * |---|---|---|
+   * | — | — | `createProgram` |
+   * | ✓ | — | `createProgramWithAbiInterface` |
+   * | — | ✓ | `createProgramWithExecutableBalance` |
+   * | ✓ | ✓ | `createProgramWithAbiInterfaceAndExecutableBalance` |
+   *
+   * @param codeId - The ID of the validated code to instantiate
+   * @returns A {@link CreateProgramBuilder} instance
+   *
+   * @example Basic usage — create a program from validated code:
+   * ```typescript
+   * const tx = router.createProgramBuilder(codeId).build();
+   * await tx.sendAndWaitForReceipt();
+   * const programId = await tx.getProgramId();
+   * ```
+   *
+   * @example With an Etherscan-compatible ABI interface:
+   * ```typescript
+   * const tx = router.createProgramBuilder(codeId)
+   *   .withAbiInterface(abiContractAddress)
+   *   .build();
+   * await tx.sendAndWaitForReceipt();
+   * ```
+   *
+   * @example With an initial WVARA executable balance (no ABI, gas-efficient Mirror):
+   * ```typescript
+   * const deadline = BigInt(Date.now() + 60_000);
+   * const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+   *
+   * const tx = router.createProgramBuilder(codeId)
+   *   .withExecutableBalance(amount, deadline, signature)
+   *   .build();
+   * await tx.sendAndWaitForReceipt();
+   * ```
+   *
+   * @example With both ABI interface and initial executable balance:
+   * ```typescript
+   * const deadline = BigInt(Date.now() + 60_000);
+   * const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+   *
+   * const tx = router.createProgramBuilder(codeId)
+   *   .withAbiInterface(abiContractAddress)
+   *   .withExecutableBalance(amount, deadline, signature)
+   *   .build();
+   * await tx.sendAndWaitForReceipt();
+   * const programId = await tx.getProgramId();
+   * ```
+   *
+   * @example With a deterministic address (salt) and custom initializer:
+   * ```typescript
+   * const tx = router.createProgramBuilder(codeId)
+   *   .withSalt('0x' + '00'.repeat(32))
+   *   .withOverrideInitializer(initializerAddress)
+   *   .build();
+   * await tx.sendAndWaitForReceipt();
+   * ```
    */
-  createProgram(codeId: Hex, overrideInitializer?: Address, salt?: Hex): TxManagerWithHelpers<CreateProgramHelpers> {
-    const encodedData = encodeFunctionData({
-      functionName: 'createProgram',
-      args: [codeId, getSalt(salt), getOverrideInitializer(overrideInitializer)],
-      abi: IROUTER_ABI,
-    });
-
-    return this._createProgramTxManager(encodedData);
-  }
-
-  /**
-   * Facilitates the creation of a program within the co-processor by associating it
-   * with both a WASM code implementation and an ABI interface.
-   * @param codeId - A unique identifier for the WASM implementation of the program.
-   * @param abiInterfaceAddress - An address representing the ABI interface to be associated with the program.
-   * @param overrideInitializer - (optional) An address that can override the program's initialization routine.
-   * @param salt - (optional) A value used to ensure the uniqueness of the deployment address.
-   * @returns
-   */
-  createProgramWithAbiInterface(
-    codeId: Hex,
-    abiInterfaceAddress: Address,
-    overrideInitializer?: Address,
-    salt?: Hex,
-  ): TxManagerWithHelpers<CreateProgramHelpers> {
-    const encodedData = encodeFunctionData({
-      abi: IROUTER_ABI,
-      functionName: 'createProgramWithAbiInterface',
-      args: [codeId, getSalt(salt), getOverrideInitializer(overrideInitializer), abiInterfaceAddress],
-    });
-
-    return this._createProgramTxManager(encodedData);
-  }
-
-  /**
-   * Creates a program with an ABI interface and an initial WVARA executable balance.
-   * Uses a WVARA permit signature so the fee transfer does not require a prior `approve` call.
-   * Emits `ProgramCreated`. The resulting Mirror is deployed with `isSmall = false` (Etherscan-compatible ABI).
-   * @param codeId - Validated code ID
-   * @param salt - Salt for deterministic address derivation
-   * @param overrideInitializer - Initializer address; uses `msg.sender` when `address(0)`
-   * @param abiInterface - ABI interface address for Etherscan display
-   * @param initialExecutableBalance - Initial WVARA executable balance to transfer to the Mirror
-   * @param deadline - Permit signature expiry timestamp
-   * @param wvaraPermitSignature - EIP-712 permit signature authorising the WVARA fee transfer
-   * @returns A transaction manager with program creation helper functions
-   */
-  createProgramWithAbiInterfaceAndExecutableBalance(
-    codeId: Hex,
-    abiInterface: Address,
-    initialExecutableBalance: bigint,
-    deadline: bigint,
-    wvaraPermitSignature: Signature | Hex,
-    salt?: Hex,
-    overrideInitializer?: Address,
-  ): TxManagerWithHelpers<CreateProgramHelpers> {
-    const { v, r, s } = getRVSComponents(wvaraPermitSignature);
-    const encodedData = encodeFunctionData({
-      abi: IROUTER_ABI,
-      functionName: 'createProgramWithAbiInterfaceAndExecutableBalance',
-      args: [
-        codeId,
-        getSalt(salt),
-        getOverrideInitializer(overrideInitializer),
-        abiInterface,
-        initialExecutableBalance,
-        deadline,
-        v,
-        r,
-        s,
-      ],
-    });
-
-    return this._createProgramTxManager(encodedData);
-  }
-
-  /**
-   * Creates a program with an initial WVARA executable balance.
-   * Uses a WVARA permit signature so the fee transfer does not require a prior `approve` call.
-   * Emits `ProgramCreated`. The resulting Mirror is deployed with `isSmall = true` (gas-efficient, no ABI).
-   * @param codeId - Validated code ID
-   * @param salt - Salt for deterministic address derivation
-   * @param overrideInitializer - Initializer address; uses `msg.sender` when `address(0)`
-   * @param initialExecutableBalance - Initial WVARA executable balance to transfer to the Mirror
-   * @param deadline - Permit signature expiry timestamp
-   * @param wvaraPermitSignature - EIP-712 permit signature authorising the WVARA fee transfer
-   * @returns A transaction manager with program creation helper functions
-   */
-  createProgramWithExecutableBalance(
-    codeId: Hex,
-    initialExecutableBalance: bigint,
-    deadline: bigint,
-    wvaraPermitSignature: Signature | Hex,
-    salt?: Hex,
-    overrideInitializer?: Address,
-  ): TxManagerWithHelpers<CreateProgramHelpers> {
-    const { v, r, s } = getRVSComponents(wvaraPermitSignature);
-    const encodedData = encodeFunctionData({
-      abi: IROUTER_ABI,
-      functionName: 'createProgramWithExecutableBalance',
-      args: [
-        codeId,
-        getSalt(salt),
-        getOverrideInitializer(overrideInitializer),
-        initialExecutableBalance,
-        deadline,
-        v,
-        r,
-        s,
-      ],
-    });
-
-    return this._createProgramTxManager(encodedData);
+  createProgramBuilder(codeId: Hex): CreateProgramBuilder {
+    return new CreateProgramBuilder(codeId, this._pc, () => this._ensureSigner(), this.address);
   }
 }
 

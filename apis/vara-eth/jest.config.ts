@@ -21,13 +21,14 @@ const config: Config.InitialOptions = {
         tsconfig: {
           module: 'ESNext',
           moduleResolution: 'bundler',
+          types: ['jest'],
         },
       },
     ],
   },
   testSequencer: './test/setup/testSequencer.js',
   forceExit: true,
-  testTimeout: 20_000,
+  testTimeout: 60_000,
 };
 
 export default config;

@@ -34,13 +34,10 @@ utils/util/lib/
 .binpath
 target/
 
-
-
 .nx/cache
 .nx/workspace-data
 
 artifacts/
-
 
 # Compiler files
 apis/vara-eth/cache/
@@ -48,3 +45,5 @@ apis/vara-eth/out/
 
 # Ignores development broadcast logs
 apis/vara-eth/broadcast
+
+*.tsbuildinfo

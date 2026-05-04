@@ -1,12 +1,43 @@
 import { loadKZG } from 'kzg-wasm';
 import { bytesToHex, type Hex, hexToBytes, sha256 } from 'viem';
 
-const kzgLoadPromise = loadKZG();
+let loadKzgPromise: ReturnType<typeof loadKZG>;
 
-let kzg: Awaited<typeof kzgLoadPromise> | undefined;
+/**
+ * Starts loading the KZG WASM library in the background.
+ *
+ * `kzg-wasm` is memory-intensive and is only needed when submitting EIP-4844 blob
+ * transactions (i.e. code upload via `RouterClient.requestCodeValidation`). Without
+ * this call, the module would be loaded eagerly at import time, consuming memory even
+ * in applications that never use code upload.
+ *
+ * Call this once at application startup if your application uses code upload
+ * functionality. This allows KZG initialization to proceed in parallel with other
+ * setup work, so `waitForKzg` resolves immediately (or with minimal delay) when a
+ * code upload is eventually triggered.
+ *
+ * If not called explicitly, loading begins lazily on the first call to `waitForKzg`.
+ *
+ * @example
+ * import { initKzgLoading } from '@vara-eth/api/util';
+ *
+ * // Call once at startup, before any code upload operations
+ * initKzgLoading();
+ */
+export const initKzgLoading = () => {
+  if (loadKzgPromise === undefined) {
+    loadKzgPromise = loadKZG();
+  }
+};
+
+let kzg: Awaited<ReturnType<typeof loadKZG>> | undefined;
 
 export const waitForKzg = async () => {
-  kzg = await kzgLoadPromise;
+  if (loadKzgPromise === undefined) {
+    initKzgLoading();
+  }
+
+  kzg = await loadKzgPromise;
 
   return kzg;
 };
@@ -66,10 +97,10 @@ export function simpleSidecarEncode(data: Uint8Array): Uint8Array[] {
   return blobs;
 }
 
-export async function calculateBlobVersionedHashesAndCommitments(blobs: Uint8Array[]) {
+export function calculateBlobVersionedHashesAndCommitments(blobs: Uint8Array[]) {
   const blobHexes = blobs.map((b) => bytesToHex(b));
 
-  const kzg = await getKzg();
+  const kzg = getKzg();
 
   const commitmentHexes = blobHexes.map((hex) => kzg.blobToKZGCommitment(hex) as Hex);
 

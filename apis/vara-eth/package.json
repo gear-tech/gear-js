@@ -45,6 +45,11 @@
       "types": "./lib/eth/contracts/router.contract.d.ts",
       "import": "./lib/eth/contracts/router.contract.js",
       "require": "./lib/eth/contracts/router.contract.cjs"
+    },
+    "./util": {
+      "types": "./lib/util/index.d.ts",
+      "import": "./lib/util/index.js",
+      "require": "./lib/util/index.cjs"
     }
   },
   "peerDependencies": {
@@ -55,7 +60,7 @@
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
     "viem": "npm:@vara-eth/viem@2.47.7-1",
-    "ws": "8.18.3"
+    "ws": "8.20.0"
   },
   "files": [
     "lib"
