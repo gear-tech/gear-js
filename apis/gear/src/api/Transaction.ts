@@ -2,6 +2,7 @@ import type { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkad
 import type { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import type { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
+
 import { TransactionError } from '../errors';
 import type { GearApi } from '../GearApi';
 import type { TransactionStatusCb } from '../types';
@@ -31,10 +32,10 @@ export class GearTransaction {
       : [optionsOrCallback, optionalCallback];
 
     try {
-      return await this.extrinsic.signAndSend(account, options, callback);
+      return await this.extrinsic.signAndSend(account, options ?? {}, callback);
     } catch (error) {
-      console.log(error);
-      const errorCode = +error.message.split(':')[0];
+      console.error(error);
+      const errorCode = Number(error.message.split(':')[0]);
       if (errorCode === 1010) {
         throw new TransactionError('Account balance too low');
       }

@@ -49,8 +49,8 @@ export interface ConnectionOptions {
 }
 
 interface WsSocket extends WebSocket {
-  on(event: 'ping', cb: (data: Buffer) => void): this;
-  pong(data?: Buffer): void;
+  on(event: 'ping', cb: (data: ArrayBufferLike) => void): this;
+  pong(data?: ArrayBufferLike): void;
 }
 
 function isWsSocket(conn: WebSocket): conn is WsSocket {
