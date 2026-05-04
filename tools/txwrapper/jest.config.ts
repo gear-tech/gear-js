@@ -6,7 +6,9 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   transformIgnorePatterns: ['node_modules/(?!@polkadot)/'],
   verbose: true,
-  preset: 'ts-jest/presets/js-with-babel',
+  transform: {
+    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
+  },
   testTimeout: 30000,
   forceExit: true,
 };
