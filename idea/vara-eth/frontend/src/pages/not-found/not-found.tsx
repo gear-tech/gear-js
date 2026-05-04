@@ -1,13 +1,17 @@
+import { useAtomValue } from 'jotai';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { Hex } from 'viem';
 
+import { nodeAtom } from '@/app/store';
 import { Button, LinkButton } from '@/components';
-import { routes } from '@/shared/config';
+import { getEtherscanBaseUrl, routes } from '@/shared/config';
 
 import styles from './not-found.module.scss';
 
 export const NotFound = () => {
   const navigate = useNavigate();
+  const { ethChainId } = useAtomValue(nodeAtom);
+  const etherscanBaseUrl = getEtherscanBaseUrl(ethChainId);
 
   const location = useLocation();
   const searchQuery = location.state as Hex | null;
@@ -35,7 +39,7 @@ export const NotFound = () => {
           <LinkButton
             variant="outline"
             className={styles.button}
-            href={`https://hoodi.etherscan.io/search?f=0&q=${searchQuery}`}>
+            href={`${etherscanBaseUrl}/search?f=0&q=${searchQuery}`}>
             Search on Etherscan
           </LinkButton>
         )}

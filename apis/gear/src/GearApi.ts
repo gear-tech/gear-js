@@ -43,7 +43,7 @@ export class GearApi extends ApiPromise {
   public readonly ethBridge: GearEthBridge;
   public readonly builtin: GearBuiltin;
   public readonly provider: WsProvider;
-  private _rpcMethods: string[];
+  private _rpcMethods: string[] | undefined;
 
   constructor(options: GearApiOptions = {}) {
     const { types = {}, derives = {}, providerAddress, noInitWarn, ...restOptions } = options;

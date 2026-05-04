@@ -1,0 +1,126 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.buttonGroup {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid transparent;
+
+  &.open {
+    border-color: var(--foreground-30);
+  }
+}
+
+.primaryButton,
+.triggerButton {
+  background-color: var(--foreground);
+  color: var(--background);
+  border: none;
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: all 0.2s;
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    background-color: var(--foreground-50);
+    cursor: not-allowed;
+  }
+}
+
+.primaryButton {
+  min-height: 26px;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.triggerButton {
+  min-height: 26px;
+  width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(13, 13, 13, 0.3);
+}
+
+.arrow {
+  width: 14px;
+  height: 14px;
+
+  path {
+    stroke: var(--background);
+    stroke-opacity: 1;
+  }
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+}
+
+.menu {
+  position: fixed;
+  z-index: 999;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: #0f0f0f;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.option {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--foreground);
+  text-align: left;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  &.selected {
+    border-color: var(--border);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.optionLabel {
+  font-size: 12px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.optionDescription {
+  color: var(--foreground-50);
+  font-size: 12px;
+  line-height: 1.35;
+  text-transform: none;
+  font-weight: 400;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}

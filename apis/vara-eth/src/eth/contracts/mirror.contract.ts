@@ -1,9 +1,9 @@
-import type { Address, Hex, TransactionRequest, TransactionRequestBase } from 'viem';
+import type { Address, Hex, Signature, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
 
-import { convertEventParams } from '../util/index.js';
-import { IMIRROR_ABI, type IMirrorContract } from './abi/IMirror.js';
-import { BaseContractClient, type ContractClientParams } from './base-contract.js';
+import { convertEventParams } from '../../util/index.js';
+import { getRVSComponents } from '../../util/signature.js';
+import { IMIRROR_ABI, type IMirrorContract } from '../abi/IMirror.js';
 import type {
   ITxManager,
   MessageHelpers,
@@ -12,52 +12,66 @@ import type {
   ReplyHelpers,
   TxManagerWithHelpers,
   ValueClaimingRequestedLog,
-} from './interfaces/index.js';
-import { TxManager } from './tx-manager.js';
+} from '../interfaces/index.js';
+import { TxManager } from '../tx-manager.js';
+import { BaseContractClient, type ContractClientParams } from './base.contract.js';
 
 /**
- * A contract wrapper for interacting with a Mirror contract.
- * Provides methods for sending messages, replies, claiming values, and managing balance.
+ * Contract client for the Mirror contract.
+ *
+ * Mirror is the on-chain representation of a Gear program deployed inside the co-processor.
+ * It exposes methods to send messages/replies, claim values, and top up the program's
+ * executable balance. Every mutating call emits a *requesting* event that validator nodes
+ * pick up and process inside the co-processor.
  */
-export class MirrorClient extends BaseContractClient implements IMirrorContract {
-  router(): Promise<Address> {
-    return this._pc.readContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'router',
-    });
+export class MirrorClient extends BaseContractClient<typeof IMIRROR_ABI> implements IMirrorContract {
+  private _cachedRouter: Address | undefined;
+
+  constructor(params: Omit<ContractClientParams, 'abi'>) {
+    super({ ...params, abi: IMIRROR_ABI });
   }
 
+  /** Returns `true` if the program has exited. */
+  exited(): Promise<boolean> {
+    return this.read('exited');
+  }
+
+  /**
+   * Returns the address of the `Router` contract that governs this Mirror.
+   * Result is fetched once and cached for subsequent calls.
+   */
+  async router(): Promise<Address> {
+    if (this._cachedRouter === undefined) {
+      this._cachedRouter = await this.read('router');
+    }
+
+    return this._cachedRouter;
+  }
+
+  /** Returns the current state hash of the program. */
   stateHash(): Promise<Hex> {
-    return this._pc.readContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'stateHash',
-    });
+    return this.read('stateHash');
   }
 
+  /**
+   * Returns the nonce used to generate unique message IDs.
+   * Incremented with each message received from Ethereum; nonce 0 is always the init message.
+   */
   nonce(): Promise<bigint> {
-    return this._pc.readContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'nonce',
-    });
+    return this.read('nonce');
   }
 
+  /**
+   * Returns the inheritor address set by the program on exit.
+   * Any remaining program value is transferred to this address after exit.
+   */
   inheritor(): Promise<Address> {
-    return this._pc.readContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'inheritor',
-    });
+    return this.read('inheritor');
   }
 
+  /** Returns the address eligible to send the first (init) message to the program. */
   initializer(): Promise<Address> {
-    return this._pc.readContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'initializer',
-    });
+    return this.read('initializer');
   }
 
   /**
@@ -227,6 +241,40 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
   }
 
   /**
+   * Tops up the executable balance with permit
+   * @param value - The amount to top up
+   * @param deadline - Signature deadline
+   * @param permitSignature - Signature of the permit
+   */
+  async executableBalanceTopUpWithPermit(
+    value: bigint,
+    deadline: bigint,
+    permitSignature: Signature | Hex,
+  ): Promise<ITxManager> {
+    const signer = this._ensureSigner();
+    const { v, r, s } = getRVSComponents(permitSignature);
+
+    await this._pc.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'executableBalanceTopUpWithPermit',
+      args: [value, deadline, v, r, s],
+      account: await signer.getAddress(),
+    });
+
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'executableBalanceTopUpWithPermit',
+        args: [value, deadline, v, r, s],
+      }),
+    };
+
+    return new TxManager(this._pc, signer, tx, IMIRROR_ABI);
+  }
+
+  /**
    * Listens to StateChanged event on the mirror contract.
    * @param callback - a function that will be invoked with the new state hash when a StateChanged event occurs
    * @returns An unwatch function that can be called to stop listening to events
@@ -244,6 +292,12 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
     });
   }
 
+  /**
+   * Waits for a `Reply` event matching the given message ID.
+   * @param messageId - ID of the sent message to wait for a reply to
+   * @param fromBlockNumber - Start scanning from this block (use the send-tx block number to avoid missing events)
+   * @returns Resolved reply payload, value, reply code, block number, and tx hash
+   */
   async waitForReply(messageId: Hex, fromBlockNumber?: bigint) {
     const id = messageId.toLowerCase();
 
@@ -256,7 +310,9 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
       _reject = reject;
     });
 
-    const unwatch = this._pc.watchContractEvent({
+    let unwatch: (() => void) | undefined;
+
+    unwatch = this._pc.watchContractEvent({
       address: this.address,
       abi: IMIRROR_ABI,
       eventName: 'Reply',
@@ -265,6 +321,7 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
 
         for (const log of logs) {
           if (log.args.replyTo?.toLowerCase() === id) {
+            unwatch?.();
             settled = true;
             const { payload, value, replyCode } = log.args;
             if (payload === undefined || value === undefined || replyCode === undefined) {
@@ -287,7 +344,7 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
     try {
       return await promise;
     } finally {
-      unwatch();
+      unwatch?.();
     }
   }
 }
@@ -298,6 +355,6 @@ export class MirrorClient extends BaseContractClient implements IMirrorContract 
  * @param params - {@link ContractClientParams} parameters for creating the Mirror contract client
  * @returns A new {@link MirrorClient} instance that implements the {@link IMirrorContract} interface
  */
-export function getMirrorClient(params: ContractClientParams): MirrorClient {
+export function getMirrorClient(params: Omit<ContractClientParams, 'abi'>): MirrorClient {
   return new MirrorClient(params);
 }

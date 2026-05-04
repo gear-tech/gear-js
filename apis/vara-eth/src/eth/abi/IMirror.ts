@@ -2,14 +2,27 @@ export const IMIRROR_ABI = [
   {
     type: 'function',
     name: 'claimValue',
-    inputs: [{ name: 'claimedId', type: 'bytes32', internalType: 'bytes32' }],
+    inputs: [{ name: '_claimedId', type: 'bytes32', internalType: 'bytes32' }],
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     name: 'executableBalanceTopUp',
-    inputs: [{ name: 'value', type: 'uint128', internalType: 'uint128' }],
+    inputs: [{ name: '_value', type: 'uint128', internalType: 'uint128' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'executableBalanceTopUpWithPermit',
+    inputs: [
+      { name: '_value', type: 'uint128', internalType: 'uint128' },
+      { name: '_deadline', type: 'uint256', internalType: 'uint256' },
+      { name: '_v', type: 'uint8', internalType: 'uint8' },
+      { name: '_r', type: 'bytes32', internalType: 'bytes32' },
+      { name: '_s', type: 'bytes32', internalType: 'bytes32' },
+    ],
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -29,17 +42,6 @@ export const IMIRROR_ABI = [
   },
   {
     type: 'function',
-    name: 'initialize',
-    inputs: [
-      { name: 'initializer', type: 'address', internalType: 'address' },
-      { name: 'abiInterface', type: 'address', internalType: 'address' },
-      { name: 'isSmall', type: 'bool', internalType: 'bool' },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
     name: 'initializer',
     inputs: [],
     outputs: [{ name: '', type: 'address', internalType: 'address' }],
@@ -54,58 +56,6 @@ export const IMIRROR_ABI = [
   },
   {
     type: 'function',
-    name: 'performStateTransition',
-    inputs: [
-      {
-        name: 'transition',
-        type: 'tuple',
-        internalType: 'struct Gear.StateTransition',
-        components: [
-          { name: 'actorId', type: 'address', internalType: 'address' },
-          { name: 'newStateHash', type: 'bytes32', internalType: 'bytes32' },
-          { name: 'exited', type: 'bool', internalType: 'bool' },
-          { name: 'inheritor', type: 'address', internalType: 'address' },
-          { name: 'valueToReceive', type: 'uint128', internalType: 'uint128' },
-          { name: 'valueToReceiveNegativeSign', type: 'bool', internalType: 'bool' },
-          {
-            name: 'valueClaims',
-            type: 'tuple[]',
-            internalType: 'struct Gear.ValueClaim[]',
-            components: [
-              { name: 'messageId', type: 'bytes32', internalType: 'bytes32' },
-              { name: 'destination', type: 'address', internalType: 'address' },
-              { name: 'value', type: 'uint128', internalType: 'uint128' },
-            ],
-          },
-          {
-            name: 'messages',
-            type: 'tuple[]',
-            internalType: 'struct Gear.Message[]',
-            components: [
-              { name: 'id', type: 'bytes32', internalType: 'bytes32' },
-              { name: 'destination', type: 'address', internalType: 'address' },
-              { name: 'payload', type: 'bytes', internalType: 'bytes' },
-              { name: 'value', type: 'uint128', internalType: 'uint128' },
-              {
-                name: 'replyDetails',
-                type: 'tuple',
-                internalType: 'struct Gear.ReplyDetails',
-                components: [
-                  { name: 'to', type: 'bytes32', internalType: 'bytes32' },
-                  { name: 'code', type: 'bytes4', internalType: 'bytes4' },
-                ],
-              },
-              { name: 'call', type: 'bool', internalType: 'bool' },
-            ],
-          },
-        ],
-      },
-    ],
-    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
     name: 'router',
     inputs: [],
     outputs: [{ name: '', type: 'address', internalType: 'address' }],
@@ -115,18 +65,18 @@ export const IMIRROR_ABI = [
     type: 'function',
     name: 'sendMessage',
     inputs: [
-      { name: 'payload', type: 'bytes', internalType: 'bytes' },
-      { name: 'callReply', type: 'bool', internalType: 'bool' },
+      { name: '_payload', type: 'bytes', internalType: 'bytes' },
+      { name: '_callReply', type: 'bool', internalType: 'bool' },
     ],
-    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    outputs: [{ name: 'messageId', type: 'bytes32', internalType: 'bytes32' }],
     stateMutability: 'payable',
   },
   {
     type: 'function',
     name: 'sendReply',
     inputs: [
-      { name: 'repliedTo', type: 'bytes32', internalType: 'bytes32' },
-      { name: 'payload', type: 'bytes', internalType: 'bytes' },
+      { name: '_repliedTo', type: 'bytes32', internalType: 'bytes32' },
+      { name: '_payload', type: 'bytes', internalType: 'bytes' },
     ],
     outputs: [],
     stateMutability: 'payable',
@@ -139,26 +89,46 @@ export const IMIRROR_ABI = [
     stateMutability: 'view',
   },
   {
-    type: 'function',
-    name: 'transferLockedValueToInheritor',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
     type: 'event',
     name: 'ExecutableBalanceTopUpRequested',
-    inputs: [{ name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' }],
+    inputs: [
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
     anonymous: false,
   },
   {
     type: 'event',
     name: 'Message',
     inputs: [
-      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'destination', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      {
+        name: 'id',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'destination',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'payload',
+        type: 'bytes',
+        indexed: false,
+        internalType: 'bytes',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
     ],
     anonymous: false,
   },
@@ -166,9 +136,24 @@ export const IMIRROR_ABI = [
     type: 'event',
     name: 'MessageCallFailed',
     inputs: [
-      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'destination', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      {
+        name: 'id',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'destination',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
     ],
     anonymous: false,
   },
@@ -176,28 +161,80 @@ export const IMIRROR_ABI = [
     type: 'event',
     name: 'MessageQueueingRequested',
     inputs: [
-      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
-      { name: 'callReply', type: 'bool', indexed: false, internalType: 'bool' },
+      {
+        name: 'id',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'source',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'payload',
+        type: 'bytes',
+        indexed: false,
+        internalType: 'bytes',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+      {
+        name: 'callReply',
+        type: 'bool',
+        indexed: false,
+        internalType: 'bool',
+      },
     ],
     anonymous: false,
   },
   {
     type: 'event',
     name: 'OwnedBalanceTopUpRequested',
-    inputs: [{ name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' }],
+    inputs: [
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
     anonymous: false,
   },
   {
     type: 'event',
     name: 'Reply',
     inputs: [
-      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
-      { name: 'replyTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'replyCode', type: 'bytes4', indexed: true, internalType: 'bytes4' },
+      {
+        name: 'payload',
+        type: 'bytes',
+        indexed: false,
+        internalType: 'bytes',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+      {
+        name: 'replyTo',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'replyCode',
+        type: 'bytes4',
+        indexed: true,
+        internalType: 'bytes4',
+      },
     ],
     anonymous: false,
   },
@@ -205,9 +242,24 @@ export const IMIRROR_ABI = [
     type: 'event',
     name: 'ReplyCallFailed',
     inputs: [
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
-      { name: 'replyTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'replyCode', type: 'bytes4', indexed: true, internalType: 'bytes4' },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+      {
+        name: 'replyTo',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'replyCode',
+        type: 'bytes4',
+        indexed: true,
+        internalType: 'bytes4',
+      },
     ],
     anonymous: false,
   },
@@ -215,25 +267,119 @@ export const IMIRROR_ABI = [
     type: 'event',
     name: 'ReplyQueueingRequested',
     inputs: [
-      { name: 'repliedTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      {
+        name: 'repliedTo',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'source',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'payload',
+        type: 'bytes',
+        indexed: false,
+        internalType: 'bytes',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ReplyTransferFailed',
+    inputs: [
+      {
+        name: 'destination',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
     ],
     anonymous: false,
   },
   {
     type: 'event',
     name: 'StateChanged',
-    inputs: [{ name: 'stateHash', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
+    inputs: [
+      {
+        name: 'stateHash',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'TransferLockedValueToInheritorFailed',
+    inputs: [
+      {
+        name: 'inheritor',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ValueClaimFailed',
+    inputs: [
+      {
+        name: 'claimedId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
+    ],
     anonymous: false,
   },
   {
     type: 'event',
     name: 'ValueClaimed',
     inputs: [
-      { name: 'claimedId', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      {
+        name: 'claimedId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'value',
+        type: 'uint128',
+        indexed: false,
+        internalType: 'uint128',
+      },
     ],
     anonymous: false,
   },
@@ -241,17 +387,73 @@ export const IMIRROR_ABI = [
     type: 'event',
     name: 'ValueClaimingRequested',
     inputs: [
-      { name: 'claimedId', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
+      {
+        name: 'claimedId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'source',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
     ],
     anonymous: false,
   },
+  { type: 'error', name: 'AbiInterfaceAlreadySet', inputs: [] },
+  { type: 'error', name: 'CallerNotRouter', inputs: [] },
+  { type: 'error', name: 'EnforcedPause', inputs: [] },
+  { type: 'error', name: 'EtherTransferToRouterFailed', inputs: [] },
+  { type: 'error', name: 'InheritorMustBeZero', inputs: [] },
+  { type: 'error', name: 'InitMessageNotCreated', inputs: [] },
+  {
+    type: 'error',
+    name: 'InitMessageNotCreatedAndCallerNotInitializer',
+    inputs: [],
+  },
+  { type: 'error', name: 'InitializerAlreadySet', inputs: [] },
+  { type: 'error', name: 'InvalidActorId', inputs: [] },
+  { type: 'error', name: 'InvalidFallbackCall', inputs: [] },
+  { type: 'error', name: 'IsSmallAlreadySet', inputs: [] },
+  { type: 'error', name: 'ProgramExited', inputs: [] },
+  { type: 'error', name: 'ProgramNotExited', inputs: [] },
+  {
+    type: 'error',
+    name: 'TransferLockedValueToInheritorExternalFailed',
+    inputs: [],
+  },
+  { type: 'error', name: 'WVaraTransferFailed', inputs: [] },
 ] as const;
 
 /**
  * Interface for IMirror contract methods
  */
 export interface IMirrorContract {
+  /**
+   * Checks if the program has exited
+   * @returns Promise resolving to true if exited
+   */
+  exited(): Promise<boolean>;
+
+  /**
+   * Gets the inheritor address
+   * @returns Promise resolving to the inheritor address
+   */
+  inheritor(): Promise<string>;
+  /**
+   * Gets the initializer address
+   * @returns Promise resolving to the initializer address
+   */
+  initializer(): Promise<string>;
+
+  /**
+   * Gets the current nonce
+   * @returns Promise resolving to the nonce
+   */
+  nonce(): Promise<bigint>;
+
   /**
    * Gets the router address
    * @returns Promise resolving to the router address
@@ -263,22 +465,4 @@ export interface IMirrorContract {
    * @returns Promise resolving to the state hash
    */
   stateHash(): Promise<string>;
-
-  /**
-   * Gets the current nonce
-   * @returns Promise resolving to the nonce
-   */
-  nonce(): Promise<bigint>;
-
-  /**
-   * Gets the inheritor address
-   * @returns Promise resolving to the inheritor address
-   */
-  inheritor(): Promise<string>;
-
-  /**
-   * Gets the initializer address
-   * @returns Promise resolving to the initializer address
-   */
-  initializer(): Promise<string>;
 }

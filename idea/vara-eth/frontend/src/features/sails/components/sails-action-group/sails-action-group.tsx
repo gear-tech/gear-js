@@ -17,7 +17,7 @@ type Props = {
 };
 
 const SailsActionGroup = ({ name, sails, items }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const count = items.length;
   const isEmpty = count === 0;

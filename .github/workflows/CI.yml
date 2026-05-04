@@ -55,7 +55,7 @@ jobs:
 
   test-gear-api:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'S1-skip-gear-api-tests') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
@@ -80,11 +80,6 @@ jobs:
         run: |
           wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
           sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
-
-      - name: "Install: Foundry"
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
 
       - name: 'Install dependencies'
         run: yarn workspaces focus gear-js @gear-js/api
@@ -112,7 +107,7 @@ jobs:
 
   test-varaeth-api:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-varaeth-tests') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
@@ -152,7 +147,7 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly-c07d504b4ae67754584f4e05ff0c547a43c50f7b
+          version: v1.7.0
 
       - name: 'Install dependencies'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
@@ -181,6 +176,16 @@ jobs:
         run: yarn test
         env:
           PATH_TO_ETHEXE: ./ethexe
+
+      - name: 'Upload vara-eth node log'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true' && always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: vara-eth-log
+          path: apis/vara-eth/vara-eth.log
+          if-no-files-found: ignore
+          retention-days: 1
+
 
   check-gear-idea-version:
     runs-on: ubuntu-latest

@@ -1254,3 +1254,15 @@ describe('WsVaraEthProvider - Edge Cases', () => {
     await provider.disconnect();
   });
 });
+
+describe('WsVaraEthProvider - Ping/Pong', () => {
+  test('should respond with pong when server sends ping', async () => {
+    const { provider, ws } = await createConnectedProvider(mock);
+
+    ws.simulatePing();
+
+    expect(ws.pongCallCount).toBe(1);
+
+    await provider.disconnect();
+  });
+});

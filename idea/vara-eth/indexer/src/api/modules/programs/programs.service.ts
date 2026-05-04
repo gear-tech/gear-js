@@ -2,10 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
+
 import { Program } from '../../../model/index.js';
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
-import type { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+import type { QueryProgramsDto } from './dto/query-programs.dto.js';
 
 @Injectable()
 export class ProgramsService {
@@ -14,7 +15,7 @@ export class ProgramsService {
     private readonly _programRepository: Repository<Program>,
   ) {}
 
-  async findAll(query: QueryProgramsWithBlockRangeDto): Promise<PaginatedResponse<ProgramResponseDto>> {
+  async findAll(query: QueryProgramsDto): Promise<PaginatedResponse<ProgramResponseDto>> {
     const { limit, offset, sortBy, order, codeId, fromBlock, toBlock } = query;
 
     const where: FindOptionsWhere<Program> = {};
