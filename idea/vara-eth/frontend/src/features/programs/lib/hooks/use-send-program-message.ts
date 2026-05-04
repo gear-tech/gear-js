@@ -9,7 +9,6 @@ import type { FormattedPayloadValue } from '@/features/sails/lib';
 type SendMessageParams = {
   serviceName: string;
   messageName: string;
-  isQuery: boolean;
   payload: FormattedPayloadValue;
 };
 
@@ -17,11 +16,10 @@ const useSendProgramMessage = (programId: Hex, sails: Sails | undefined) => {
   const mirrorContract = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {
+  const sendMessage = async ({ serviceName, messageName, payload }: SendMessageParams) => {
     if (!mirrorContract || !sails) return;
 
-    const messageKey = isQuery ? 'queries' : 'functions';
-    const sailsMessage = sails?.services[serviceName][messageKey][messageName];
+    const sailsMessage = sails?.services[serviceName].functions[messageName];
 
     const tx = await mirrorContract.sendMessage(payload.encoded);
     const response = await tx.send();

@@ -7,7 +7,9 @@ const config: Config.InitialOptions = {
   transformIgnorePatterns: ['node_modules/(?!@polkadot)/'],
   verbose: true,
   testSequencer: './test/testSequencer.js',
-  preset: 'ts-jest/presets/js-with-babel',
+  transform: {
+    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
+  },
   testTimeout: 10000,
   forceExit: true,
 };

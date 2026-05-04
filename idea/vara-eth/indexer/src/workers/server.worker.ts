@@ -1,5 +1,6 @@
 import { parentPort } from 'node:worker_threads';
 import { createLogger } from '@gear-js/logger';
+
 import { bootstrap } from '../api/main.js';
 
 const logger = createLogger('server-worker');

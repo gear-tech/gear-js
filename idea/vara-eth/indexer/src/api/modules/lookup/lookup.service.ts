@@ -1,13 +1,15 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
+
 import { EntityType, HashRegistry } from '../../../model/index.js';
-import type { BatchesService } from '../batches/batches.service.js';
-import type { CodesService } from '../codes/codes.service.js';
-import type { MessagesService } from '../messages/messages.service.js';
-import type { ProgramsService } from '../programs/programs.service.js';
-import type { StateTransitionsService } from '../state-transitions/state-transitions.service.js';
-import type { TransactionsService } from '../transactions/transactions.service.js';
+import { BatchesService } from '../batches/batches.service.js';
+import { CodesService } from '../codes/codes.service.js';
+import { MessagesService } from '../messages/messages.service.js';
+import { ProgramsService } from '../programs/programs.service.js';
+import { StateTransitionsService } from '../state-transitions/state-transitions.service.js';
+import { TransactionsService } from '../transactions/transactions.service.js';
 
 type EntityResult =
   | { type: 'Batch'; data: any }

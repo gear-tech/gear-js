@@ -9,6 +9,7 @@
   flex-direction: column;
   min-height: 0;
   padding: 24px;
+  overflow: auto;
 
   &:not(:last-child) {
     border-right: 1px solid #292929;
@@ -30,11 +31,26 @@
   word-break: break-all;
   overflow-y: auto;
 
-  &Title {
-    margin-bottom: 24px;
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+  }
 
+  &Title {
     font-size: 16px;
     font-weight: 400;
     color: #a8f593;
   }
+}
+
+.payloadTabs {
+  margin-bottom: 0;
+}
+
+.payloadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
 }

@@ -1,5 +1,5 @@
-import type { Chain, PublicClient, WalletClient, WebSocketTransport } from 'viem';
-import { createPublicClient, createWalletClient, webSocket } from 'viem';
+import type { Address, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, recoverTypedDataAddress, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { getWrappedVaraClient, RouterClient, type WrappedVaraClient } from '../src';
@@ -114,5 +114,58 @@ describe('transactions', () => {
     expect(transferLog.from).toBeDefined();
     expect(transferLog.to).toBeDefined();
     expect(transferLog.value).toBe(amount);
+  });
+});
+
+const PERMIT_TYPES = {
+  Permit: [
+    { name: 'owner', type: 'address' },
+    { name: 'spender', type: 'address' },
+    { name: 'value', type: 'uint256' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint256' },
+  ],
+} as const;
+
+describe('permit function', () => {
+  let owner: Address;
+  let spender: Address;
+  let value: bigint;
+  let deadline: bigint;
+  let signature: Hex;
+
+  beforeAll(async () => {
+    spender = router.address;
+    value = await router.requestCodeValidationBaseFee();
+    deadline = BigInt(Date.now() + 100_000);
+
+    ({ owner, signature } = await wvara.prepareAndSignPermitData(spender, value, deadline));
+  });
+
+  test('should recover owner address from permit signature', async () => {
+    const nonce = await wvara.nonces(owner);
+    const domain = await wvara.eip712Domain();
+
+    const recovered = await recoverTypedDataAddress({
+      domain,
+      types: PERMIT_TYPES,
+      primaryType: 'Permit',
+      message: { owner, spender, value, nonce, deadline },
+      signature,
+    });
+
+    expect(recovered.toLowerCase()).toBe(owner.toLowerCase());
+  });
+
+  test('should send permit tx and check the allowance', async () => {
+    const allowanceBefore = await wvara.allowance(owner, spender);
+    expect(allowanceBefore).toBe(0n);
+
+    const tx = wvara.permit(owner, spender, value, deadline, signature);
+    await tx.estimateGas();
+    await tx.sendAndWaitForReceipt();
+
+    const allowanceAfter = await wvara.allowance(owner, spender);
+    expect(allowanceAfter).toBe(value);
   });
 });

@@ -4,6 +4,7 @@ export { clsx as cx } from 'clsx';
 
 export { fetchWithGuard } from './fetch-with-guard';
 export { isString, isUndefined } from './is';
+export { getNeighbourPages, getTotalPages } from './pagination';
 
 const noop = () => {};
 

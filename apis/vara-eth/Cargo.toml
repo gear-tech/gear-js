@@ -7,7 +7,7 @@ repository = "https://github.com/gear-tech/gear-js"
 
 [workspace]
 resolver = "3"
-members = ["programs/counter", "programs/counter-idl", "programs/injected"]
+members = ["programs/counter", "programs/counter-idl", "programs/injected", "programs/ping"]
 
 [workspace.dependencies]
 sails-rs = "0.10.3"
