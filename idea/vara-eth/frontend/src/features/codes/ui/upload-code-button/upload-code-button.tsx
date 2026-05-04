@@ -11,6 +11,7 @@ export const UploadCodeButton = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { address } = useAccount();
+  const close = () => setIsOpen(false);
 
   if (!address) return null;
 
@@ -18,23 +19,17 @@ export const UploadCodeButton = () => {
     inputRef.current?.click();
   };
 
-  const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const arrayBuffer = reader.result;
-      if (!arrayBuffer || typeof arrayBuffer === 'string') return;
+    try {
+      const arrayBuffer = await file.arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
-
-      uploadCode.mutate(uint8Array, {
-        onError: () => {
-          setIsOpen(false);
-        },
-      });
-    };
-    reader.readAsArrayBuffer(file);
+      uploadCode.mutate(uint8Array, { onError: close, onSuccess: close });
+    } catch (error) {
+      console.error('Error reading file:', error);
+    }
   };
 
   return (
@@ -46,7 +41,7 @@ export const UploadCodeButton = () => {
       {isOpen && (
         <Modal
           heading="Upload Code"
-          close={() => setIsOpen(false)}
+          close={close}
           action={
             <Button size="xs" onClick={onSelectFile} isLoading={uploadCode.isPending}>
               Select File
