@@ -1,4 +1,16 @@
-import type { Address, Hash, TransactionRequest } from 'viem';
+import type { Address, Hash, Hex, TransactionRequest, TypedDataDomain } from 'viem';
+
+/** The parameters for signing a typed data message */
+export type SignTypedDataParams = {
+  /** Type definitions for the message */
+  types: Record<string, Array<{ name: string; type: string }>>;
+  /** The primary type of the message */
+  primaryType: string;
+  /** The message to sign */
+  message: Record<string, unknown>;
+  /** Optional domain for the message */
+  domain?: TypedDataDomain;
+};
 
 /**
  * Minimal signer interface for signing messages and retrieving the address.
@@ -11,6 +23,18 @@ export interface IMessageSigner {
    * @returns Signature as hex string (with 0x prefix)
    */
   signMessage(message: Uint8Array | string): Promise<Hash>;
+
+  /**
+   * Sign a typed data message using ECDSA
+   *
+   * @param message - Message to sign
+   * @param types - Type definitions for the message
+   * @param primaryType - Primary type of the message
+   * @param domain - Optional domain for the message
+   *
+   * @returns Signature as hex string (with 0x prefix)
+   */
+  signTypedData(params: SignTypedDataParams): Promise<Hex>;
 
   /**
    * Get the signer's Ethereum address

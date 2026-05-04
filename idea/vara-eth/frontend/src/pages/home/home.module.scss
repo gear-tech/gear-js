@@ -1,4 +1,8 @@
 .container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   border: 1px solid rgba(41, 41, 41, 1);

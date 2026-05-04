@@ -1,6 +1,7 @@
 import { MessageData } from './components';
-import { ProgramMessagesTable } from './ui';
 import {
+  getDecodedPayload,
+  getMessageRoute,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
@@ -10,9 +11,13 @@ import {
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
 } from './lib';
+import { ProgramMessagesTable } from './ui';
 
 export {
+  getDecodedPayload,
+  getMessageRoute,
   MessageData,
+  ProgramMessagesTable,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
@@ -21,5 +26,4 @@ export {
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
-  ProgramMessagesTable,
 };

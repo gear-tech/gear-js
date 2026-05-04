@@ -401,7 +401,7 @@ describe('Subscriptions', () => {
     const tx1 = api.message.send({
       destination: programId2,
       payload: registry.createType('MessageAction', 'Plain').toHex(),
-      gasLimit: 20_000_000_000,
+      gasLimit: api.blockGasLimit,
     });
 
     const [msg, blockHash] = await sendTransaction(tx1, alice, ['MessageQueued']);
@@ -412,13 +412,15 @@ describe('Subscriptions', () => {
     let isFinalized = false;
 
     while (!isFinalized) {
+      await sleep(2000);
       const finBlockHash = await api.blocks.getFinalizedHead();
-      const finBlockNumber = (await api.blocks.getBlockNumber(finBlockHash)).toNumber();
-      if (finBlockNumber > blockNumber) {
+      const finBlockNumber = await api.blocks.getBlockNumber(finBlockHash);
+      if (finBlockNumber.toNumber() > blockNumber) {
         isFinalized = true;
       }
-      await sleep(1000);
     }
+
+    expect(callback).toHaveBeenCalled();
 
     const reply = callback.mock.calls.find(([call]) => call.reply?.to === msg.id.toHex())?.[0];
     expect(reply).toBeDefined();

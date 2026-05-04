@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 
 import LogoSVG from '@/assets/logo.svg?react';
 import { HeaderBalance } from '@/components';
+import { NodesSwitch } from '@/features/codes/nodes-switch';
 import { routes } from '@/shared/config';
 
 import { WalletButton } from '../wallet/wallet-button';
@@ -20,7 +21,7 @@ const Header = () => {
           <LogoSVG />
         </Link>
 
-        {/* <NodesSwitch /> */}
+        <NodesSwitch />
       </div>
 
       <div className={styles.rightGroup}>

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
+
 import { Batch } from '../../../model/index.js';
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import type { QueryBatchesDto } from './dto/query-batches.dto.js';

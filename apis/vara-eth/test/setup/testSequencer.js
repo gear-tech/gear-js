@@ -6,7 +6,8 @@ export default class CustomSequencer extends Sequencer {
       const getPriority = (test) => {
         if (test.path.includes('wvara')) return 0;
         if (test.path.includes('router')) return 1;
-        return 2;
+        if (test.path.includes('create-program-builder')) return 2;
+        return 3;
       };
 
       const priorityA = getPriority(testA);
