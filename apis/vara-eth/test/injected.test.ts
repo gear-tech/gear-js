@@ -431,11 +431,10 @@ describe('Injected Transactions', () => {
   });
 
   describe('queries', () => {
-    test('should get injected transaction by id', async () => {
-      expect(injectedTxs).toHaveLength(2);
-      const itx = injectedTxs[0];
-      const tx = await api.query.injected.getTransaction(itx.id);
-
+    const assertTx = (
+      tx: Awaited<ReturnType<typeof api.query.injected.getTransaction>>,
+      itx: (typeof injectedTxs)[0],
+    ) => {
       expect(tx).toHaveProperty('data');
       expect(tx).toHaveProperty('signature');
       expect(tx).toHaveProperty('address');
@@ -444,6 +443,14 @@ describe('Injected Transactions', () => {
       expect(tx.data).toHaveProperty('value', itx.value);
       expect(tx.data).toHaveProperty('referenceBlock', itx.referenceBlock);
       expect(tx.data).toHaveProperty('salt', itx.salt);
+    };
+
+    test('should get injected transaction by id', async () => {
+      expect(injectedTxs).toHaveLength(2);
+      const itx = injectedTxs[0];
+      const tx = await api.query.injected.getTransaction(itx.id);
+
+      assertTx(tx, itx);
     });
 
     test('should request non-existing transaction and throw not found error', async () => {
@@ -460,25 +467,7 @@ describe('Injected Transactions', () => {
       const txs = await api.query.injected.getTransactions(injectedTxs.map((i) => i.id));
 
       expect(txs).toHaveLength(2);
-      let itx = injectedTxs[0];
-      expect(txs[0]).toHaveProperty('data');
-      expect(txs[0]).toHaveProperty('signature');
-      expect(txs[0]).toHaveProperty('address');
-      expect(txs[0].data).toHaveProperty('destination', itx.destination);
-      expect(txs[0].data).toHaveProperty('payload', itx.payload);
-      expect(txs[0].data).toHaveProperty('value', itx.value);
-      expect(txs[0].data).toHaveProperty('referenceBlock', itx.referenceBlock);
-      expect(txs[0].data).toHaveProperty('salt', itx.salt);
-
-      itx = injectedTxs[1];
-      expect(txs[1]).toHaveProperty('data');
-      expect(txs[1]).toHaveProperty('signature');
-      expect(txs[1]).toHaveProperty('address');
-      expect(txs[1].data).toHaveProperty('destination', itx.destination);
-      expect(txs[1].data).toHaveProperty('payload', itx.payload);
-      expect(txs[1].data).toHaveProperty('value', itx.value);
-      expect(txs[1].data).toHaveProperty('referenceBlock', itx.referenceBlock);
-      expect(txs[1].data).toHaveProperty('salt', itx.salt);
+      txs.forEach((tx, i) => assertTx(tx!, injectedTxs[i]));
     });
 
     test('should request multiple transaction with some non-existing ids and get null for them', async () => {

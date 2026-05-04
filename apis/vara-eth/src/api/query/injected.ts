@@ -1,4 +1,4 @@
-import type { IVaraEthProvider } from 'types';
+import type { IVaraEthProvider } from '../../types/index.js';
 import type { Address, Hash, Hex } from 'viem';
 
 type InjectedTx = {
@@ -15,7 +15,7 @@ export class InjectedQueries {
 
     const tx = txs[0];
 
-    if (tx === null) {
+    if (!tx) {
       throw new Error(`Transaction with id ${id} not found`);
     }
 
@@ -25,7 +25,7 @@ export class InjectedQueries {
   async getTransactions(ids: Hash[]) {
     if (ids.length === 0) return [];
 
-    const response = await this._provider.send<InjectedTx[]>('injected_getTransactions', [ids]);
+    const response = await this._provider.send<(InjectedTx | null)[]>('injected_getTransactions', [ids]);
 
     return response;
   }

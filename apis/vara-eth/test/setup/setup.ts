@@ -40,7 +40,7 @@ async function setupVaraEth() {
       detached: true,
       env: {
         ...process.env,
-        RUST_LOG: 'trace',
+        RUST_LOG: 'debug',
       },
     },
   );
