@@ -15,7 +15,6 @@ const useOutsideClick = <TElement extends Element>(callback: (event: MouseEvent)
     window.addEventListener('click', handleClick);
 
     return () => window.removeEventListener('click', handleClick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
 
   return ref;

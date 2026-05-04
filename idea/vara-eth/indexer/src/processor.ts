@@ -1,13 +1,13 @@
-import { Store } from '@subsquid/typeorm-store';
-import {
-  BlockHeader,
-  DataHandlerContext,
-  EvmBatchProcessor,
-  EvmBatchProcessorFields,
-  Log as _Log,
-  Transaction as _Transaction,
-} from '@subsquid/evm-processor';
 import { hostname } from 'node:os';
+import {
+  type Log as _Log,
+  type Transaction as _Transaction,
+  type BlockHeader,
+  type DataHandlerContext,
+  EvmBatchProcessor,
+  type EvmBatchProcessorFields,
+} from '@subsquid/evm-processor';
+import type { Store } from '@subsquid/typeorm-store';
 
 import { config } from './config.js';
 

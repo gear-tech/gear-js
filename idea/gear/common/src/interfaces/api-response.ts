@@ -1,9 +1,9 @@
-import { IMessage } from './message';
-import { IPaginationResult } from './pagination';
-import { IProgram } from './program';
-import { ICode } from './code';
-import { RpcErrorCode } from '../enums';
-import { IState } from './state';
+import type { RpcErrorCode } from '../enums';
+import type { ICode } from './code';
+import type { IMessage } from './message';
+import type { IPaginationResult } from './pagination';
+import type { IProgram } from './program';
+import type { IState } from './state';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -65,16 +65,16 @@ interface IRpcError {
   message: string;
 }
 
-export {
-  AllMessagesResult,
-  GetAllProgramsResult,
-  GetAllCodeResult,
+export type {
   AddMetaResult,
-  AddStateResult,
-  GetAllStateResult,
-  ProgramDataResult,
-  IRpcResponse,
-  IRpcError,
-  GetStatesResult,
   AddSailsResult,
+  AddStateResult,
+  AllMessagesResult,
+  GetAllCodeResult,
+  GetAllProgramsResult,
+  GetAllStateResult,
+  GetStatesResult,
+  IRpcError,
+  IRpcResponse,
+  ProgramDataResult,
 };

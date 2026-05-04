@@ -14,7 +14,7 @@ describe('hashes', () => {
 
     expect(generateCodeHash(hexCode)).toBe(CODE_HASH);
 
-    hexCode = '0x' + hexCode;
+    hexCode = `0x${hexCode}`;
 
     expect(generateCodeHash(hexCode)).toBe(CODE_HASH);
   });

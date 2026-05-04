@@ -1,5 +1,5 @@
-import { Enum } from '@polkadot/types';
-import { Hash } from '@polkadot/types/interfaces';
+import type { Enum } from '@polkadot/types';
+import type { Hash } from '@polkadot/types/interfaces';
 
 export type ReservationId = Hash;
 

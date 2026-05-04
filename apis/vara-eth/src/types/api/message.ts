@@ -1,6 +1,6 @@
 import type { Address, Hash, Hex } from 'viem';
 
-import { ReplyCode } from '../../errors/reply-code.js';
+import type { ReplyCode } from '../../errors/reply-code.js';
 
 export type MessageId = Hash;
 

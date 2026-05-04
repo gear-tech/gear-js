@@ -1,10 +1,10 @@
-import { DeriveBalancesAll } from '@polkadot/api-derive/types';
+import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from '@/context';
 
-import { QueryParameters } from '../../../types';
+import type { QueryParameters } from '../../../types';
 import { useQuery } from '../../use-query';
 
 type UseDeriveBalancesAllParameters<T> = QueryParameters<DeriveBalancesAll, T> & {
@@ -36,10 +36,8 @@ function useDeriveBalancesAll<T = DeriveBalancesAll>({ address, watch, query }: 
     });
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, address, watch]);
 
   return useQuery({
@@ -50,5 +48,5 @@ function useDeriveBalancesAll<T = DeriveBalancesAll>({ address, watch, query }: 
   });
 }
 
-export { useDeriveBalancesAll };
 export type { UseDeriveBalancesAllParameters };
+export { useDeriveBalancesAll };

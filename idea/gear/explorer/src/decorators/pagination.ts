@@ -1,5 +1,5 @@
 export function Pagination() {
-  return function (_target: any, _propKey: string, descriptor: PropertyDescriptor) {
+  return (_target: any, _propKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
     descriptor.value = function (...args: any[]) {

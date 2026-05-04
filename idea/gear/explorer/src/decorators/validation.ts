@@ -1,10 +1,10 @@
 import {
-  registerDecorator,
-  ValidationOptions,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-  ValidationArguments,
   isEmpty,
+  registerDecorator,
+  type ValidationArguments,
+  type ValidationOptions,
+  ValidatorConstraint,
+  type ValidatorConstraintInterface,
 } from 'class-validator';
 
 @ValidatorConstraint({ async: false })
@@ -24,7 +24,7 @@ class IsOneOfConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsOneOf(values: string[], required = false, options?: ValidationOptions) {
-  return function (obj: any, propertyName: string) {
+  return (obj: any, propertyName: string) => {
     registerDecorator({
       target: obj.constructor,
       propertyName,

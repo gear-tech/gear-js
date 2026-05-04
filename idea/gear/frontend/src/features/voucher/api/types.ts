@@ -1,6 +1,6 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { PaginationParameters } from '@/api';
+import type { PaginationParameters } from '@/api';
 
 type VouchersParameters = PaginationParameters & {
   id?: string;
@@ -28,4 +28,4 @@ type Voucher = {
   isDeclined: boolean;
 };
 
-export type { VouchersParameters, Voucher };
+export type { Voucher, VouchersParameters };

@@ -1,4 +1,4 @@
-import { DependencyList, EffectCallback, useEffect, useRef } from 'react';
+import { type DependencyList, type EffectCallback, useEffect, useRef } from 'react';
 
 export const useChangeEffect = (callback: EffectCallback, dependencies: DependencyList) => {
   const mounted = useRef(false);
@@ -17,7 +17,5 @@ export const useChangeEffect = (callback: EffectCallback, dependencies: Dependen
 
     mounted.current = true;
     return undefined;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };

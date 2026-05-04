@@ -1,4 +1,4 @@
-import { FIELD_NAME, VOUCHER_TYPE } from './consts';
+import { FIELD_NAME, type VOUCHER_TYPE } from './consts';
 
 type VoucherType = (typeof VOUCHER_TYPE)[keyof typeof VOUCHER_TYPE];
 
@@ -8,4 +8,4 @@ type Values = {
   [FIELD_NAME.DURATION]: string;
 };
 
-export type { VoucherType, Values };
+export type { Values, VoucherType };

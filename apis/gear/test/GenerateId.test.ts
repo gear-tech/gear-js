@@ -1,7 +1,7 @@
-import { HexString } from '@polkadot/util/types';
-import { join } from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { u8aToHex } from '@polkadot/util';
+import type { HexString } from '@polkadot/util/types';
 
 import { generateCodeHash, generateProgramId } from '../src';
 import { TEST_WASM_DIR } from './config';

@@ -1,8 +1,8 @@
-import { ISailsFuncArg } from '@gear-js/sails-payload-form';
+import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 const useSails = (idl: string | null) => {
   const initSails = async () => {
@@ -35,10 +35,16 @@ type SailsAction = {
   action: string;
   args: ISailsFuncArg[];
   isEnabled?: boolean;
+  requiresAccount?: boolean;
   tooltip?: string;
   encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
+  splitAction?: {
+    selectedValue: string;
+    options: readonly { value: string; label: string; description?: string }[];
+    onOptionClick: (value: string) => void;
+  };
 };
 
+export type { FormattedPayloadValue, SailsAction };
 export { useSails };
-export type { SailsAction, FormattedPayloadValue };

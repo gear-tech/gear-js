@@ -1,12 +1,12 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 import CopySVG from '../../assets/images/actions/copyGreen.svg?react';
 import IdSVG from '../../assets/images/indicators/id.svg?react';
-import { getShortName, copyToClipboard } from '../../helpers';
+import { copyToClipboard, getShortName } from '../../helpers';
 
 import styles from './IdBlock.module.scss';
 
@@ -28,7 +28,6 @@ const IdBlock = (props: Props) => {
   const handleCopy = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     copyToClipboard(id, alert);
   };
 

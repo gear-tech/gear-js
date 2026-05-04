@@ -1,5 +1,5 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import { MessageReadReason } from '../enums';
+import type { MessageReadReason } from '../enums';
 
 import { BaseEntity } from './base.entity';
 

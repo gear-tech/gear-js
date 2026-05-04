@@ -1,4 +1,4 @@
-export const enum Calls {
+export enum Calls {
   UploadProgram = 'Gear.upload_program',
   CreateProgram = 'Gear.create_program',
   UploadCode = 'Gear.upload_code',

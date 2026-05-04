@@ -1,5 +1,5 @@
-import { HexString, ProgramMetadata } from '@gear-js/api';
-import { useState, useMemo } from 'react';
+import { type HexString, ProgramMetadata } from '@gear-js/api';
+import { useMemo, useState } from 'react';
 
 import { useMetadata } from './use-metadata';
 

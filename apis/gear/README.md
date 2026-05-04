@@ -511,7 +511,7 @@ const api = await GearApi.create();
 const messageId = '0x...';
 
 // Prepare the transaction
-const tx = await api.mailbox.claimValue.submit(messageId);
+const tx = api.mailbox.claimValue(messageId);
 
 // Sign and send the transaction
 await tx.signAndSend(account, ({ events, status }) => {

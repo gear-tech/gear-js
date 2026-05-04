@@ -1,4 +1,4 @@
-import { useIsVftWhitelistAvailable, useVftWhitelist, useIsVftProgram } from './api';
-import { VftTag, VftEventPayload, VftApplicationLink } from './ui';
+import { useIsVftProgram, useIsVftWhitelistAvailable, useVftWhitelist } from './api';
+import { VftApplicationLink, VftEventPayload, VftTag } from './ui';
 
-export { useIsVftWhitelistAvailable, useVftWhitelist, useIsVftProgram, VftTag, VftEventPayload, VftApplicationLink };
+export { useIsVftProgram, useIsVftWhitelistAvailable, useVftWhitelist, VftApplicationLink, VftEventPayload, VftTag };

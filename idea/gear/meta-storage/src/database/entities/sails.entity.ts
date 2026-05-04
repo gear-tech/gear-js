@@ -13,6 +13,9 @@ export class SailsIdl {
   @Column()
   public data: string;
 
-  @OneToMany(() => Code, (code) => code.id)
+  @OneToMany(
+    () => Code,
+    (code) => code.id,
+  )
   public codes: Code[];
 }

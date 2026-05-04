@@ -1,6 +1,6 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
-import { PropsWithClassName } from '@/shared/types';
+import type { PropsWithClassName } from '@/shared/types';
 import { cx } from '@/shared/utils';
 
 import styles from './page-container.module.scss';

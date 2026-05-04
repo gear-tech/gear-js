@@ -1,8 +1,8 @@
-import { Bool, Bytes, Option, Struct, u32, Text } from '@polkadot/types';
+import type { Bool, Bytes, Option, Struct, Text, u32 } from '@polkadot/types';
+import type { H256 } from '@polkadot/types/interfaces';
 import { hexToU8a, isHex, isU8a } from '@polkadot/util';
-import { H256 } from '@polkadot/types/interfaces';
 
-import { HexString } from '../../common';
+import type { HexString } from '../../common';
 
 export class PayloadFilter {
   public readonly pattern: Uint8Array;

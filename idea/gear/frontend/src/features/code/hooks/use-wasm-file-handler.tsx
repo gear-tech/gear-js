@@ -1,12 +1,12 @@
-import { HexString, generateCodeHash } from '@gear-js/api';
-import { useApi, useAlert } from '@gear-js/react-hooks';
+import { generateCodeHash, type HexString } from '@gear-js/api';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { generatePath } from 'react-router-dom';
 
 import { FileTypes, routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 
 import { WASM_FILE_TYPE } from '../consts';
-import { WasmFileType } from '../types';
+import type { WasmFileType } from '../types';
 
 type OnChange = (value: File | undefined, buffer: Buffer | undefined) => void;
 
@@ -26,7 +26,6 @@ function useWasmFileHandler(type: WasmFileType, onChange: OnChange = () => {}) {
 
   return async (value: File | undefined) => {
     if (!value) return onChange(undefined, undefined);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
     if (value.type !== FileTypes.Wasm) return alert.error('Invalid file type');
 
     const arrayBuffer = await value.arrayBuffer();

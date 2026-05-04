@@ -3,7 +3,7 @@ import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
-import { MirrorClient, VaraEthApi, WsVaraEthProvider, createVaraEthApi, getMirrorClient } from '../src';
+import { createVaraEthApi, getMirrorClient, type MirrorClient, type VaraEthApi, WsVaraEthProvider } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { expectDispatch, expectHex, expectMaybeHash, expectNumeric, hasProps } from './common';
 import { config } from './config';
@@ -46,7 +46,7 @@ afterAll(async () => {
 describe('Program Queries', () => {
   describe('setup', () => {
     test('should create program', async () => {
-      const tx = await api.eth.router.createProgram(config.codeId);
+      const tx = api.eth.router.createProgramBuilder(config.codeId).build();
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();

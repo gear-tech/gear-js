@@ -1,11 +1,10 @@
-import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
-
-import { IResumeSessionCommitArgs, IResumeSessionInitArgs, IResumeSessionPushArgs } from '../types';
 import { ResumeSessionCommitError, ResumeSessionInitError, ResumeSessionPushError } from '../errors';
+import type { GearApi } from '../GearApi';
 import { CreateType } from '../metadata';
-import { GearApi } from '../GearApi';
+import type { IResumeSessionCommitArgs, IResumeSessionInitArgs, IResumeSessionPushArgs } from '../types';
 import { GearTransaction } from './Transaction';
 
 const SIXTEEN_KB = 0x4000;
@@ -74,9 +73,8 @@ export class GearResumeSession extends GearTransaction {
       !memoryPages.every(([_, page]) => {
         if (typeof page === 'string') {
           return page.length === SIXTEEN_KB * 2 + 2;
-        } else {
-          return page.length === SIXTEEN_KB;
         }
+        return page.length === SIXTEEN_KB;
       })
     ) {
       throw new ResumeSessionPushError(sessionId, 'Invalid memory page length. Must be 16KB.');

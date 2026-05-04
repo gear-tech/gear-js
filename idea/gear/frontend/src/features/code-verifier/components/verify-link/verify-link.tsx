@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { clsx } from 'clsx';
 import { generatePath } from 'react-router-dom';
 

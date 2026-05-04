@@ -3,4 +3,4 @@ import { useAddIdl } from './use-add-idl';
 import { useSails } from './use-sails';
 import { useSailsWithFile } from './use-sails-with-file';
 
-export { useConstructor, useService, useSails, useSailsWithFile, useAddIdl };
+export { useAddIdl, useConstructor, useSails, useSailsWithFile, useService };

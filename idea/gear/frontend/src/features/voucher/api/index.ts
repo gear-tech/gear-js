@@ -1,5 +1,5 @@
 import { useVouchers } from './hooks';
-import { Voucher } from './types';
+import type { Voucher } from './types';
 
-export { useVouchers };
 export type { Voucher };
+export { useVouchers };

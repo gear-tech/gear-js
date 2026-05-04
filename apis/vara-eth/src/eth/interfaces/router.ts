@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import type { Hash, Hex } from 'viem';
 
 /**
  * Helper functions for code validation.
@@ -8,6 +8,11 @@ export interface CodeValidationHelpers {
    * The ID of the code being validated.
    */
   codeId: Hex;
+
+  /**
+   * The hashes of the blobs that make up the code, in the order they were provided during validation request.
+   */
+  blobVersionedHashes: Hash[];
 
   /**
    * Waits for the code to be validated.
@@ -32,9 +37,9 @@ export interface CreateProgramHelpers {
  */
 export enum CodeState {
   /** Code is not yet submitted for validation */
-  Unknown,
+  Unknown = 0,
   /** Code validation has been requested but not yet completed */
-  ValidationRequested,
+  ValidationRequested = 1,
   /** Code has been validated and is ready for use */
-  Validated,
+  Validated = 2,
 }

@@ -1,7 +1,7 @@
-import { PayloadType } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
+import type { PayloadType } from '@gear-js/api';
+import type { HexString } from '@polkadot/util/types';
 
-import { GasMethod } from '@/shared/config';
+import type { GasMethod } from '@/shared/config';
 
 type Values = {
   value: string;
@@ -22,4 +22,4 @@ type Result = IGasInfo & {
   limit: number;
 };
 
-export type { Values, Code, Result };
+export type { Code, Result, Values };

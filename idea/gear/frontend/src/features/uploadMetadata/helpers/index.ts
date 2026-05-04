@@ -1,3 +1,3 @@
-import { getNamedTypes, getFlatNamedTypeEntries } from './helpers';
+import { getFlatNamedTypeEntries, getNamedTypes } from './helpers';
 
-export { getNamedTypes, getFlatNamedTypeEntries };
+export { getFlatNamedTypeEntries, getNamedTypes };

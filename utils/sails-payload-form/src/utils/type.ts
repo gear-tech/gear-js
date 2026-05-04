@@ -1,4 +1,4 @@
-import { ISailsPrimitiveDef, ISailsTypeDef } from 'sails-js-types';
+import type { ISailsPrimitiveDef, ISailsTypeDef } from 'sails-js-types';
 
 const getPrimitiveType = (def: ISailsPrimitiveDef) => {
   if (def.isNull) return 'Null';
@@ -56,7 +56,7 @@ const getType = (def: ISailsTypeDef): string => {
     return JSON.stringify({ _enum: Object.fromEntries(result) as Record<string, string> });
   }
 
-  throw new Error('Unknown type: ' + JSON.stringify(def));
+  throw new Error(`Unknown type: ${JSON.stringify(def)}`);
 };
 
 export { getType };

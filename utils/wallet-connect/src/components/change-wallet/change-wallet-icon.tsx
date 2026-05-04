@@ -1,6 +1,6 @@
 import { useRender } from '@base-ui-components/react';
 
-import { SVGComponent } from '@/types';
+import type { SVGComponent } from '@/types';
 
 import { useDialogContext } from '../dialog';
 

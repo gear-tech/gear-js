@@ -1,4 +1,4 @@
-import { Link, LinkProps } from 'react-router-dom';
+import { Link, type LinkProps } from 'react-router-dom';
 
 import { getShortName } from '@/shared/helpers';
 

@@ -1,8 +1,8 @@
 import { logger } from 'gear-idea-common';
-import { AppDataSource } from './database';
 import { main } from './app';
-import { MetaService } from './service';
 import config from './config';
+import { AppDataSource } from './database';
+import { MetaService } from './service';
 
 const port = config.server.port;
 

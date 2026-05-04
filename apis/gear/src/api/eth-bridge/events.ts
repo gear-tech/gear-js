@@ -1,8 +1,8 @@
-import { GenericEventData, Struct, U256, u8, Vec } from '@polkadot/types';
-import { H256 } from '@polkadot/types/interfaces';
+import type { GenericEventData, Struct, U256, u8, Vec } from '@polkadot/types';
+import type { H256 } from '@polkadot/types/interfaces';
 
-import { HexString } from '../../types';
-import { GearApi } from '../../GearApi';
+import type { GearApi } from '../../GearApi';
+import type { HexString } from '../../types';
 
 /**
  * The Message from GearEthBridge.MessageQueued event

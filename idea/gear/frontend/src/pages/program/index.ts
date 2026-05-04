@@ -1,5 +1,5 @@
 import { Program as Page } from './program';
-import { MessagesTab, EventsTab, VouchersTab, MetadataTab } from './tabs';
+import { EventsTab, MessagesTab, MetadataTab, VouchersTab } from './tabs';
 
 const Program = {
   Page,

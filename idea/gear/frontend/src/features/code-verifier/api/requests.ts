@@ -1,7 +1,7 @@
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { API_URL } from './consts';
-import { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
+import type { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
 
 const verifyCode = (parameters: VerifyParameters) =>
   fetchWithGuard<VerifyResponse>({
@@ -17,4 +17,4 @@ const getVerifiedCode = (id: string) => fetchWithGuard<CodeResponse>({ url: `${A
 
 const getDockerImageVersions = () => fetchWithGuard<string[]>({ url: `${API_URL}/supported_versions` });
 
-export { verifyCode, getVerificationStatus, getVerifiedCode, getDockerImageVersions };
+export { getDockerImageVersions, getVerificationStatus, getVerifiedCode, verifyCode };

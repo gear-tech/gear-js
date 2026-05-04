@@ -1,5 +1,5 @@
-import { Radio as UIRadio, RadioProps } from '@gear-js/ui';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
+import { type RadioProps, Radio as UIRadio } from '@gear-js/ui';
+import { type FieldValues, type Path, type PathValue, useFormContext } from 'react-hook-form';
 
 type Props<T> = Omit<RadioProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;
@@ -12,7 +12,6 @@ const Radio = <T extends FieldValues>({ name, value, label, className, onSubmit 
 
   const onChange = () => handleSubmit(onSubmit)();
 
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
   return <UIRadio label={label} className={className} value={value} {...register(name, { onChange })} />;
 };
 

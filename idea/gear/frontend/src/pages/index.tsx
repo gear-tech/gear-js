@@ -1,6 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Events, Block } from '@/features/explorer';
+import { Block, Events } from '@/features/explorer';
 import { useEvents } from '@/hooks';
 import { routes } from '@/shared/config';
 

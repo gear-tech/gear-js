@@ -1,4 +1,4 @@
-import { FieldValues, useFormContext, useController, Path } from 'react-hook-form';
+import { type FieldValues, type Path, useController, useFormContext } from 'react-hook-form';
 
 import { DateRangeInput } from './date-range-input';
 

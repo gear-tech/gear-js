@@ -1,12 +1,17 @@
 import { Keyring } from '@polkadot/api';
-import { InjectedAccount, InjectedWindowProvider, InjectedWindow, Unsubcall } from '@polkadot/extension-inject/types';
-import { Signer } from '@polkadot/types/types';
+import type {
+  InjectedAccount,
+  InjectedWindow,
+  InjectedWindowProvider,
+  Unsubcall,
+} from '@polkadot/extension-inject/types';
+import type { Signer } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
 
 import { VARA_SS58_FORMAT } from '../../consts';
 
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
-import { Account, Wallet, Wallets } from './types';
+import type { Account, Wallet, Wallets } from './types';
 
 const getAccounts = (source: string, signer: Signer, accounts: InjectedAccount[]): Account[] =>
   accounts
@@ -141,4 +146,4 @@ function isTelegramMiniApp() {
   return params.has('tgWebAppPlatform') && params.has('tgWebAppVersion');
 }
 
-export { getWallets, getLoggedInAccount, isTelegramMiniApp };
+export { getLoggedInAccount, getWallets, isTelegramMiniApp };

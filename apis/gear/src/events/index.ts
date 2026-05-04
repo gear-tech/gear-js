@@ -1,4 +1,4 @@
-export * from './GearEvents';
-export * from './GearEventData';
-export * from './types';
 export * from './Events';
+export * from './GearEventData';
+export * from './GearEvents';
+export * from './types';

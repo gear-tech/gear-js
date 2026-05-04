@@ -1,5 +1,5 @@
 import { useRender } from '@base-ui-components/react';
-import { PropsWithChildren, ReactElement } from 'react';
+import type { PropsWithChildren, ReactElement } from 'react';
 
 import { useWallet } from '../../hooks';
 import { DefaultDialog } from '../default-dialog';

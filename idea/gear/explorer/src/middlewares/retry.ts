@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
-import { client, hash, isRedisConnected } from './redis';
 import { logger } from 'gear-idea-common';
+import { client, hash, isRedisConnected } from './redis';
 
 export function retryMethodsJob(classInstance: any) {
   new CronJob(
@@ -38,8 +38,8 @@ export function retryMethodsJob(classInstance: any) {
   );
 }
 
-export function Retry(count = 100, resultInsteadOfError: string) {
-  return function (_target: any, propKey: string, descriptor: PropertyDescriptor) {
+export function Retry(count, resultInsteadOfError: string) {
+  return (_target: any, propKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {

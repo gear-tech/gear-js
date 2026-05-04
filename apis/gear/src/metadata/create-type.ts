@@ -1,10 +1,10 @@
-import { Codec, Registry } from '@polkadot/types/types';
 import { TypeRegistry } from '@polkadot/types';
+import type { Codec, Registry } from '@polkadot/types/types';
 
+import { GEAR_TYPES } from '../default';
+import type { HexString } from '../types';
 import { isJSON, toJSON } from '../utils/json';
 import { GearMetadata } from './metadata';
-import { GEAR_TYPES } from '../default';
-import { HexString } from '../types';
 
 export class CreateType {
   public registry: Registry;

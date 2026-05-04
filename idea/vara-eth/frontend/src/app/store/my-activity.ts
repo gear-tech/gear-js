@@ -1,7 +1,7 @@
 import { atom, useSetAtom } from 'jotai';
-import { Hex, TransactionReceipt } from 'viem';
+import type { Hex, TransactionReceipt } from 'viem';
 import { useConfig } from 'wagmi';
-import { getBlockNumber, getBlock } from 'wagmi/actions';
+import { getBlock, getBlockNumber } from 'wagmi/actions';
 
 const TransactionTypes = {
   codeValidation: 'code-validation',
@@ -10,6 +10,7 @@ const TransactionTypes = {
   approve: 'approve',
   programMessage: 'program-message',
   programReply: 'program-reply',
+  readProgramReply: 'read-program-reply',
   initProgram: 'init-program',
   injectedTx: 'injected-tx',
   injectedTxResponse: 'injected-tx-response',
@@ -40,6 +41,16 @@ type ReplyActivity = {
   replyCode: string;
   blockNumber: bigint;
   hash: Hex;
+  from: Hex;
+  value: string;
+  params?: Record<string, unknown>;
+};
+
+type ReadReplyActivity = {
+  type: typeof TransactionTypes.readProgramReply;
+  serviceName: string;
+  messageName: string;
+  replyCode: string;
   from: Hex;
   value: string;
   params?: Record<string, unknown>;
@@ -102,6 +113,7 @@ type MyActivity =
   | ApproveActivity
   | SendMessageActivity
   | ReplyActivity
+  | ReadReplyActivity
   | InitProgramActivity
   | InjectedTxActivity
   | InjectedTxResponseActivity;
@@ -147,4 +159,4 @@ const useAddMyActivity = () => {
   };
 };
 
-export { myActivityAtom, useAddMyActivity, TransactionTypes, unpackReceipt, type MyActivity };
+export { type MyActivity, myActivityAtom, TransactionTypes, unpackReceipt, useAddMyActivity };

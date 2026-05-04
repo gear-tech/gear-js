@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useAccount, useBalance } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 

@@ -1,4 +1,4 @@
-import { Node, NodeSection } from '@/entities/node';
+import type { Node, NodeSection } from '@/entities/node';
 import { LocalStorage } from '@/shared/config';
 
 import { DEVELOPMENT_SECTION } from '../model/consts';
@@ -15,7 +15,6 @@ const getLocalNodes = (nodes: Node[]): Node[] =>
 const getLocalNodesFromLS = (): Node[] => {
   const nodes = localStorage.getItem(LocalStorage.Nodes);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- TODO(#1800): resolve eslint comments
   return nodes ? JSON.parse(nodes) : [];
 };
 
@@ -31,4 +30,4 @@ const concatNodes = (nodeSections: NodeSection[], value: Node | Node[]) =>
     return section;
   });
 
-export { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS };
+export { concatNodes, getLocalNodes, getLocalNodesFromLS, isDevSection };

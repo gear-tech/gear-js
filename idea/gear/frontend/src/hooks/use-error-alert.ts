@@ -8,7 +8,6 @@ function useErrorAlert(error: Error | null) {
     if (!error) return;
 
     alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 }
 

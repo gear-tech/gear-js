@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Alert } from './alert';
 
@@ -119,14 +119,14 @@ const NotificationWithFooter: Story = {
 
 export default meta;
 export {
-  Success,
   Error,
-  Loading,
   Info,
-  WithFooter,
-  NotificationSuccess,
+  Loading,
   NotificationError,
-  NotificationLoading,
   NotificationInfo,
+  NotificationLoading,
+  NotificationSuccess,
   NotificationWithFooter,
+  Success,
+  WithFooter,
 };

@@ -7,7 +7,7 @@ import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
-import { MessageFromProgram, MessageToProgram } from '../../api';
+import type { MessageFromProgram, MessageToProgram } from '../../api';
 import { isMessageFromProgramWithError, isMessageWithError } from '../../utils';
 
 import styles from './message-card.module.scss';

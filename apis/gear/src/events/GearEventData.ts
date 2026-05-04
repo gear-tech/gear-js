@@ -1,7 +1,7 @@
-import { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
-import { BTreeMap, BTreeSet, GenericEventData, Option, u128, u32 } from '@polkadot/types';
+import { type BTreeMap, type BTreeSet, GenericEventData, type Option, type u32, type u128 } from '@polkadot/types';
+import type { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
 
-import {
+import type {
   CodeId,
   GasNodeId,
   GearCommonEventCodeChangeKind,
@@ -101,6 +101,6 @@ export interface VoucherRevokedData extends GenericEventData {
 }
 
 export interface VoucherDeclinedData extends GenericEventData {
-  spender: AccountId32,
-  voucherId: PalletGearVoucherInternalVoucherId
+  spender: AccountId32;
+  voucherId: PalletGearVoucherInternalVoucherId;
 }

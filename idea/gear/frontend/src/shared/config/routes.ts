@@ -37,4 +37,4 @@ const absoluteRoutes = {
   singleDns: `${routes.dns}/${routes.singleDns}`,
 };
 
-export { routes, absoluteRoutes };
+export { absoluteRoutes, routes };

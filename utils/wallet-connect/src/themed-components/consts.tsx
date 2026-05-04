@@ -5,7 +5,7 @@ import CopySVG from '@/assets/copy.svg?react';
 import ExitSVG from '@/assets/exit.svg?react';
 
 import { GearButton as ExtendedGearButton } from './gear-button';
-import { HTMLProps } from './types';
+import type { HTMLProps } from './types';
 
 const UI_CONFIG = {
   vara: {
@@ -18,7 +18,6 @@ const UI_CONFIG = {
       </VaraButton>
     ),
 
-    // eslint-disable-next-line react/no-children-prop
     CopyAccountAddressTrigger: <VaraButton children={undefined} icon={CopySVG} size="medium" color="transparent" />,
 
     ChangeWalletTrigger: <VaraButton text="" color="transparent" />,

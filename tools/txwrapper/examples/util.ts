@@ -1,6 +1,6 @@
-import { KeyringPair } from '@polkadot/keyring/types';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
-import { OptionsWithMeta, createMetadata } from '@substrate/txwrapper-core';
+import { createMetadata, type OptionsWithMeta } from '@substrate/txwrapper-core';
 
 /**
  * Send a JSONRPC request to the node at http://0.0.0.0:9933.

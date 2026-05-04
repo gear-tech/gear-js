@@ -1,10 +1,10 @@
 import { Button, buttonStyles, Input } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { MailboxItem } from '@/features/mailbox';
+import type { MailboxItem } from '@/features/mailbox';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import letterSVG from '@/shared/assets/images/actions/letter.svg?react';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';

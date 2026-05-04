@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { ProgramState } from '@vara-eth/api';
-import { useRef, useEffect } from 'react';
-import { Hex } from 'viem';
+import type { ProgramState } from '@vara-eth/api';
+import { useEffect, useRef } from 'react';
+import type { Hex } from 'viem';
 
-import { useMirrorContract, useApi } from '@/app/api';
+import { useApi, useMirrorContract } from '@/app/api';
 
 class TimeoutError extends Error {
   constructor(name: string) {

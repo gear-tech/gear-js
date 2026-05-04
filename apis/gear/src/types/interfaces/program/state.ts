@@ -1,8 +1,8 @@
-import { Bytes } from '@polkadot/types-codec';
+import type { Bytes } from '@polkadot/types-codec';
 
-import { ProgramMetadata } from '../../../metadata';
-import { PayloadType } from '../../payload';
-import { HexString } from '../../common';
+import type { ProgramMetadata } from '../../../metadata';
+import type { HexString } from '../../common';
+import type { PayloadType } from '../../payload';
 
 export interface ReadStateParams {
   /**

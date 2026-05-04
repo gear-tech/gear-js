@@ -1,22 +1,22 @@
-import { Hex, hexToBytes } from 'viem';
+import { type Hex, hexToBytes } from 'viem';
 
-export const enum EReplyCode {
+export enum EReplyCode {
   Success = 0,
   Error = 1,
 }
 
-export const enum ESuccessReply {
+export enum ESuccessReply {
   Auto = 0,
   Manual = 1,
 }
 
-const enum EErrorReplyReason {
+enum EErrorReplyReason {
   Execution = 0,
   UnavailableActor = 2,
   RemovedFromWaitlist = 3,
 }
 
-export const enum ESimpleExecutionError {
+export enum ESimpleExecutionError {
   RanOutOfGas = 0,
   MemoryOverflow = 1,
   BackendError = 2,
@@ -25,7 +25,7 @@ export const enum ESimpleExecutionError {
   StackLimitExceeded = 5,
 }
 
-export const enum ESimpleUnavailableActorError {
+export enum ESimpleUnavailableActorError {
   ProgramExited = 0,
   InitializationFailure = 1,
   Uninitialized = 2,
@@ -252,4 +252,4 @@ class UnavailableActorError extends ReplyCodeDetails {
   }
 }
 
-export type { SuccessReply, ErrorReply, ExecutionError, UnavailableActorError };
+export type { ErrorReply, ExecutionError, SuccessReply, UnavailableActorError };

@@ -1,17 +1,17 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { generatePath, useParams } from 'react-router-dom';
-import { formatEther, formatUnits, Hex } from 'viem';
+import { formatEther, formatUnits, type Hex } from 'viem';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import LoadingSVG from '@/assets/icons/loading.svg?react';
-import { Badge, Balance, ChainEntity, HashLink, Skeleton, UploadIdlButton } from '@/components';
+import { Badge, Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import {
   TopUpExecBalance,
-  useReadContractState,
   useGetProgramByIdQuery,
+  useReadContractState,
   useWatchProgramStateChange,
 } from '@/features/programs';
-import { SailsProgramActions } from '@/features/sails';
+import { SailsProgramPanel } from '@/features/sails';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
 import { isUndefined } from '@/shared/utils';
@@ -34,7 +34,7 @@ const Program = () => {
   const isInitialized = isActive && programState.program.Active.initialized;
 
   const { decimals, isPending: isDecimalsPending } = useWrappedVaraBalance(programId);
-  const { idl, saveIdl } = useIdlStorage(codeId);
+  const { idl, isLoading: isIdlLoading, saveIdl } = useIdlStorage(codeId);
 
   const watchInit = useWatchProgramStateChange(programId);
   const watchBalance = useWatchProgramStateChange(programId);
@@ -153,24 +153,19 @@ const Program = () => {
       </div>
 
       <div className={styles.card}>
-        {idl ? (
-          <SailsProgramActions
-            programId={programId}
-            idl={idl}
-            init={{
-              isRequired: !isInitialized,
-              isEnabled: hasExecutableBalance && !watchInit.isPending,
-              tooltip: hasExecutableBalance ? '' : 'Executable balance top up is required',
-              onSuccess: handleSuccessfulInit,
-            }}
-            hasExecutableBalance={hasExecutableBalance}
-          />
-        ) : (
-          <div className={styles.emptyState}>
-            <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
-            <UploadIdlButton onSaveIdl={saveIdl} />
-          </div>
-        )}
+        <SailsProgramPanel
+          programId={programId}
+          idl={idl}
+          isLoading={isIdlLoading}
+          onSaveIdl={saveIdl}
+          init={{
+            isRequired: !isInitialized,
+            isEnabled: hasExecutableBalance && !watchInit.isPending,
+            tooltip: hasExecutableBalance ? '' : 'Executable balance top up is required',
+            onSuccess: handleSuccessfulInit,
+          }}
+          hasExecutableBalance={hasExecutableBalance}
+        />
       </div>
     </div>
   );

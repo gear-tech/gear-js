@@ -1,8 +1,8 @@
 import { Button, Checkbox } from '@gear-js/ui';
-import { Dispatch, SetStateAction, ChangeEvent } from 'react';
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 import { FILTER_VALUES, LOCAL_STORAGE } from '../../consts';
-import { FilterValues } from '../../types';
+import type { FilterValues } from '../../types';
 
 import styles from './filter.module.scss';
 

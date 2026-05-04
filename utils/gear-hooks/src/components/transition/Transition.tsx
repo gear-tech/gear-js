@@ -1,8 +1,8 @@
-import { useRef, ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 import { Transition as AlertTransition } from 'react-transition-group';
-import { TransitionProps } from 'react-transition-group/Transition';
+import type { TransitionProps } from 'react-transition-group/Transition';
 
-import { DURATION, DEFAULT_STYLE, TRANSITION_STYLES } from './const';
+import { DEFAULT_STYLE, DURATION, TRANSITION_STYLES } from './const';
 
 type Props = Partial<TransitionProps> & {
   children: ReactNode;

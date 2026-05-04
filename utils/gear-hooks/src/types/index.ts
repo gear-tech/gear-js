@@ -1,14 +1,14 @@
 import {
+  type AlertContainerFactory,
+  type AlertInstance,
+  type AlertOptions,
+  type AlertTemplateProps,
+  type AlertTimer,
   AlertType,
-  AlertOptions,
-  TemplateAlertOptions,
-  AlertInstance,
-  AlertTimer,
-  AlertTemplateProps,
-  AlertContainerFactory,
-  DefaultTemplateOptions,
+  type DefaultTemplateOptions,
+  type TemplateAlertOptions,
 } from './alert';
-import { QueryParameters } from './query';
+import type { QueryParameters } from './query';
 
 type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
 
@@ -18,16 +18,16 @@ type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
 
-export { AlertType };
 export type {
-  AlertOptions,
-  TemplateAlertOptions,
-  AlertInstance,
-  AlertTimer,
-  AlertTemplateProps,
   AlertContainerFactory,
+  AlertInstance,
+  AlertOptions,
+  AlertTemplateProps,
+  AlertTimer,
   DefaultTemplateOptions,
-  ProviderProps,
   Entries,
+  ProviderProps,
   QueryParameters,
+  TemplateAlertOptions,
 };
+export { AlertType };

@@ -2,14 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useAccount } from '@/context';
 
-import {
+import type {
   FunctionName,
-  ServiceName,
   GenericTransactionReturn,
+  ServiceName,
+  SignAndSendOptions,
   Transaction,
   TransactionReturn,
   UsePrepareProgramTransactionParameters,
-  SignAndSendOptions,
 } from './types';
 
 function usePrepareProgramTransaction<
@@ -80,5 +80,5 @@ function usePrepareProgramTransaction<
   };
 }
 
-export { usePrepareProgramTransaction };
 export type { UsePrepareProgramTransactionParameters };
+export { usePrepareProgramTransaction };

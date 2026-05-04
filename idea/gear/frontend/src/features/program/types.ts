@@ -1,6 +1,6 @@
-import { OwnerFilter } from '@/api/consts';
+import type { OwnerFilter } from '@/api/consts';
 
-import { ProgramStatus } from './consts';
+import type { ProgramStatus } from './consts';
 
 type FiltersValues = {
   owner: OwnerFilter;

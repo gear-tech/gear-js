@@ -1,8 +1,9 @@
-import { IsOptional, IsIn, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { PaginationDto } from '../../../common/dto/pagination.dto.js';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
-export class QueryTransactionsDto extends PaginationDto {
+import { PaginatedBlockRangeDTO } from '../../../common/dto/range.dto.js';
+
+export class QueryTransactionsDto extends PaginatedBlockRangeDTO {
   @ApiPropertyOptional({
     description: 'Filter by function selector',
     example: '0x12345678',
@@ -26,18 +27,4 @@ export class QueryTransactionsDto extends PaginationDto {
   @IsOptional()
   @IsIn(['createdAt', 'blockNumber'])
   sortBy?: 'createdAt' | 'blockNumber' = 'createdAt';
-
-  @ApiPropertyOptional({
-    description: 'Start block number (inclusive)',
-    type: Number,
-  })
-  @IsOptional()
-  fromBlock?: number;
-
-  @ApiPropertyOptional({
-    description: 'End block number (inclusive)',
-    type: Number,
-  })
-  @IsOptional()
-  toBlock?: number;
 }

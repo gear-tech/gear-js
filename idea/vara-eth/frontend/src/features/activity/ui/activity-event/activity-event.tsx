@@ -5,7 +5,7 @@ import { Badge, Balance, ExpandableItem, HashLink } from '@/components';
 import { routes } from '@/shared/config';
 import { formatBalance } from '@/shared/utils';
 
-import { Event, EventArgs } from '../../lib/use-activity';
+import type { Event, EventArgs } from '../../lib/use-activity';
 import { Params } from '../params';
 
 import styles from './activity-event.module.scss';

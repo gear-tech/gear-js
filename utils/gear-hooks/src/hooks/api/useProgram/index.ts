@@ -1,9 +1,9 @@
-import { GasLimit, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import type { GasLimit, ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
 
 import { useAccount, useAlert, useApi } from '@/context';
 
-import { TransactionName, Options, Code, CodeId, UseProgram } from './types';
+import { type Code, type CodeId, type Options, TransactionName, type UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';
 
@@ -48,23 +48,17 @@ function useProgram(
     const { address, signer } = account;
 
     // @ts-expect-error - TODO(#1738): explain why it should be ignored
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
     const { programId } = api.program[method](program, metadata, payloadType);
 
     const alertId = alert.loading('SignIn', { title });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1816): resolve eslint comments
     const initialization = waitForProgramInit(api, programId);
 
-    return (
-      api.program
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
-        .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
-        .then(() => initialization)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
-        .then((status) => handleInitStatus({ status, programId, onError }))
-        .catch(({ message }: Error) => handleError({ message, alertId, onError }))
-    );
+    return api.program
+      .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
+      .then(() => initialization)
+      .then((status) => handleInitStatus({ status, programId, onError }))
+      .catch(({ message }: Error) => handleError({ message, alertId, onError }));
   };
 
   return action;
@@ -78,4 +72,4 @@ function useCreateProgram(codeId: CodeId | undefined, metadata?: ProgramMetadata
   return useProgram('create', codeId, metadata, payloadType);
 }
 
-export { useUploadProgram, useCreateProgram };
+export { useCreateProgram, useUploadProgram };

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { UploadIdlButton, SyntaxHighlighter, ChainEntity, Skeleton, Tabs } from '@/components';
+import { ChainEntity, Skeleton, SyntaxHighlighter, Tabs, UploadIdlButton } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { ProgramsTable } from '@/features/programs';
-import { useSails, SailsServices } from '@/features/sails';
+import { SailsServices, useSails } from '@/features/sails';
 import { useIdlStorage } from '@/shared/hooks';
 
 import styles from './code.module.scss';
@@ -49,7 +49,15 @@ const Code = () => {
       <div className={styles.extraData}>
         <Tabs tabs={TABS} tabIndex={tabIndex} onTabIndexChange={setTabIndex} className={styles.tabs} />
 
-        {tabIndex === 0 && <ProgramsTable codeId={codeId} pageSize={5} positionedAt="bottom" />}
+        {tabIndex === 0 && (
+          <ProgramsTable
+            codeId={codeId}
+            openPageSize={5}
+            collapsedPageSize={15}
+            positionedAt="bottom"
+            truncateSize="xl"
+          />
+        )}
 
         {tabIndex === 1 && !sails.isLoading && (
           <div className={styles.idlContainer}>

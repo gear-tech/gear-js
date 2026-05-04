@@ -1,22 +1,21 @@
-import { Bytes, Option, u32 } from '@polkadot/types';
+import type { Bytes, Option, u32 } from '@polkadot/types';
+import type { H256 } from '@polkadot/types/interfaces';
+import type { ITuple } from '@polkadot/types-codec/types';
 import { u8aToNumber } from '@polkadot/util';
-import { H256 } from '@polkadot/types/interfaces';
-import { ITuple } from '@polkadot/types-codec/types';
-
-import {
-  GearCoreProgram,
-  GearCoreProgramActiveProgram,
-  IGearPages,
-  PausedProgramBlockAndHash,
-  HexString,
-} from '../types';
 import {
   PausedProgramDoesNotExistError,
   ProgramDoesNotExistError,
   ProgramExitedError,
   ProgramTerminatedError,
 } from '../errors';
-import { GearApi } from '../GearApi';
+import type { GearApi } from '../GearApi';
+import type {
+  GearCoreProgram,
+  GearCoreProgramActiveProgram,
+  HexString,
+  IGearPages,
+  PausedProgramBlockAndHash,
+} from '../types';
 
 export class GearProgramStorage {
   constructor(protected _api: GearApi) {}

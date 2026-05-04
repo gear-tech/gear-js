@@ -1,12 +1,12 @@
-import { Unsubcall } from '@polkadot/extension-inject/types';
+import type { Unsubcall } from '@polkadot/extension-inject/types';
 import TWA from '@twa-dev/sdk';
 import { injectVaranWallet } from '@varan-wallet/varan-connect';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ProviderProps } from '../../types';
+import type { ProviderProps } from '../../types';
 
-import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
-import { Account, Wallet, Wallets } from './types';
+import { DEFAULT_INJECT_TIMEOUT_MS, LOCAL_STORAGE_KEY } from './consts';
+import type { Account, Wallet, Wallets } from './types';
 import { getLoggedInAccount, getWallets, isTelegramMiniApp } from './utils';
 
 type Value = {
@@ -76,7 +76,6 @@ function AccountProvider({ appName, children }: Props) {
     if (isTelegramMiniApp()) injectVaranWallet(TWA);
 
     const timeoutId = setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {
         setWallets(result);
         setAccount(getLoggedInAccount(result));
@@ -86,10 +85,9 @@ function AccountProvider({ appName, children }: Props) {
     return () => {
       clearTimeout(timeoutId);
 
-      unsubsRef.current.forEach((unsub) => unsub());
+      unsubsRef.current.forEach((unsub) => void unsub());
       unsubsRef.current = [];
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(
@@ -100,6 +98,4 @@ function AccountProvider({ appName, children }: Props) {
   return <Provider value={value}>{children}</Provider>;
 }
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { AccountProvider, useAccount };

@@ -1,8 +1,8 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { Code } from '@/features/code';
-import { Program } from '@/features/program';
-import { IBase } from '@/shared/types';
+import type { Code } from '@/features/code';
+import type { Program } from '@/features/program';
+import type { IBase } from '@/shared/types';
 
 type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {
   codeId: HexString | null;
@@ -14,4 +14,4 @@ type LocalProgram = ChainProgram | DBProgram;
 
 type LocalCode = Pick<Code, 'id' | 'name' | 'metahash'>;
 
-export type { DBProgram, LocalProgram, LocalCode };
+export type { DBProgram, LocalCode, LocalProgram };

@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from './button';
+import { Button, type ButtonProps } from './button';
 import buttonStyles from './button.module.scss';
 
-export { Button, buttonStyles };
 export type { ButtonProps };
+export { Button, buttonStyles };

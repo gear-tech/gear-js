@@ -1,5 +1,5 @@
-import { Address } from 'viem';
 import dotenv from 'dotenv';
+import type { Address } from 'viem';
 
 dotenv.config({ quiet: true, path: ['.env', '../../../.env'] });
 

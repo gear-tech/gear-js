@@ -1,6 +1,6 @@
 import { useApi } from '@gear-js/react-hooks';
 import { Button, Select } from '@gear-js/ui';
-import { INumber } from '@polkadot/types/types';
+import type { INumber } from '@polkadot/types/types';
 import { useMemo } from 'react';
 
 import { Input } from '@/shared/ui';

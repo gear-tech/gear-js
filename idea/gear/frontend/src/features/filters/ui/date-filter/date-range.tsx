@@ -1,12 +1,12 @@
 import { Button } from '@gear-js/ui';
 import { useState } from 'react';
 import {
-  DateRange as DateRangeType,
+  type CaptionLabelProps,
+  type DateRange as DateRangeType,
   DayFlag,
   DayPicker,
   SelectionState,
   UI,
-  CaptionLabelProps,
 } from 'react-day-picker';
 
 import { isString } from '@/shared/helpers';

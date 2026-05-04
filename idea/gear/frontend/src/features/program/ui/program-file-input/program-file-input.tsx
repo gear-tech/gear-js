@@ -1,4 +1,4 @@
-import { FileInput, FileInputProps } from '@gear-js/ui';
+import { FileInput, type FileInputProps } from '@gear-js/ui';
 
 import { FileTypes } from '@/shared/config';
 

@@ -1,9 +1,9 @@
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
 import { METADATA_STORAGE_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
-import { GetMetaResponse } from './types';
+import type { GetMetaResponse } from './types';
 
 const fetchMetadata = (hash: HexString) => {
   const url = new URL(`${METADATA_STORAGE_API_URL}/meta`);

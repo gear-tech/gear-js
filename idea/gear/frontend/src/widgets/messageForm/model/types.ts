@@ -1,4 +1,4 @@
-import { PayloadValue } from '@/entities/formPayload';
+import type { PayloadValue } from '@/entities/formPayload';
 
 type FormValues = {
   value: string;

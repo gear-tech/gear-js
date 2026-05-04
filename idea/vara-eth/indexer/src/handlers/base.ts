@@ -1,9 +1,9 @@
-import { Entity } from '@subsquid/typeorm-store/lib/store.js';
 import type { Logger } from '@subsquid/logger';
+import type { Entity } from '@subsquid/typeorm-store/lib/store.js';
 
+import { type EntityType, HashRegistry } from '../model/index.js';
+import type { Context } from '../processor.js';
 import { mapValues } from '../util/collection.js';
-import { Context } from '../processor.js';
-import { EntityType, HashRegistry } from '../model/index.js';
 
 type LogSettings = { addr?: string; topic0?: string[] };
 type TransactionSettings = { addr: string; sighash: string[] };
@@ -15,8 +15,6 @@ export abstract class BaseHandler {
   protected _ctx: Context;
 
   private _hashes: Map<string, HashRegistry>;
-
-  constructor() {}
 
   public getLogs(): LogSettings[] {
     return this._logs;

@@ -1,10 +1,10 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
 
 import { useApi } from '@/context';
 
-import { QueryParameters } from '../../types';
+import type { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
 type UseSailsParameters<T> = QueryParameters<Sails, T> & {
@@ -42,5 +42,5 @@ function useSails<T = Sails>({ programId, idl, query }: UseSailsParameters<T> = 
   });
 }
 
-export { useSails };
 export type { UseSailsParameters };
+export { useSails };

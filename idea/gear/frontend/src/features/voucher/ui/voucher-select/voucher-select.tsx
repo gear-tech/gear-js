@@ -1,6 +1,6 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
+import type { HexString, IVoucherDetails } from '@gear-js/api';
 import { getTypedEntries, useAccountVouchers } from '@gear-js/react-hooks';
-import { InputWrapper, InputWrapperProps } from '@gear-js/ui';
+import { InputWrapper, type InputWrapperProps } from '@gear-js/ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -53,4 +53,4 @@ const CodeVoucherSelect = () => {
   return <VoucherSelect entries={entries} direction="y" />;
 };
 
-export { ProgramVoucherSelect, CodeVoucherSelect };
+export { CodeVoucherSelect, ProgramVoucherSelect };

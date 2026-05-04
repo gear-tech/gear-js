@@ -1,4 +1,4 @@
-import { Values } from './types';
+import type { Values } from './types';
 
 const FIELD_NAME = {
   VOUCHER_TYPE: 'type',
@@ -57,12 +57,12 @@ const DEFAULT_FILTER_VALUES = {
 } as const;
 
 export {
-  FIELD_NAME,
-  VOUCHER_TYPE,
+  DEFAULT_FILTER_VALUE,
+  DEFAULT_FILTER_VALUES,
   DEFAULT_VALUES,
+  FIELD_NAME,
   FILTER_NAME,
   FILTER_VALUE,
   FILTER_VALUES,
-  DEFAULT_FILTER_VALUE,
-  DEFAULT_FILTER_VALUES,
+  VOUCHER_TYPE,
 };

@@ -1,7 +1,7 @@
-import { rmSync } from 'fs';
+import { rmSync } from 'node:fs';
+import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import commonjs from '@rollup/plugin-commonjs';
 
 function cleanOldBuild() {
   return {
@@ -14,7 +14,13 @@ function cleanOldBuild() {
 
 const externalPackages = ['viem', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@noble/hashes'];
 
-const INPUT = ['src/index.ts', 'src/eth/abi/index.ts', 'src/signer/index.ts'];
+const INPUT = [
+  'src/index.ts',
+  'src/eth/abi/index.ts',
+  'src/signer/index.ts',
+  'src/eth/contracts/index.ts',
+  'src/util/index.ts',
+];
 
 export default [
   {
@@ -37,7 +43,6 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        include: ['src/**/*.ts'],
       }),
     ],
     external: externalPackages,
@@ -61,7 +66,6 @@ export default [
       typescript({
         outDir: 'lib/cjs',
         declaration: false,
-        include: ['src/**/*.ts'],
       }),
     ],
     external: externalPackages,

@@ -7,14 +7,14 @@ jest.mock('@gear-js/api', () => {
 
   const mockTx = {
     balances: {
-      transferKeepAlive: jest.fn((addr: string, amount: BN) => {
+      transferKeepAlive: jest.fn((addr: string, _amount: BN) => {
         _address = addr;
         return `tx-${addr}`;
       }),
     },
     utility: {
       forceBatch: jest.fn(() => ({
-        signAndSend: jest.fn().mockImplementation((account, callback) => {
+        signAndSend: jest.fn().mockImplementation((_account, callback) => {
           const mockEvents = [
             { event: { method: 'Transfer', data: { to: { toHex: () => _address } } } },
             { event: { method: 'ExtrinsicSuccess' } },
@@ -35,7 +35,7 @@ jest.mock('@gear-js/api', () => {
     },
   };
 
-  const GearApi = jest.fn().mockImplementation(({ providerAddress }) => ({
+  const GearApi = jest.fn().mockImplementation(() => ({
     tx: mockTx,
     isReady: Promise.resolve(),
     isReadyOrError: Promise.resolve(),
@@ -52,4 +52,4 @@ jest.mock('@gear-js/api', () => {
   };
 });
 
-import { BN } from '@polkadot/util';
+import type { BN } from '@polkadot/util';

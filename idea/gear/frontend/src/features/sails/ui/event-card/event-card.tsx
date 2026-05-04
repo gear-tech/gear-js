@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import type { HexString } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { VftEventPayload } from '@/features/vft-whitelist';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
@@ -13,7 +13,7 @@ import { getErrorMessage } from '@/shared/helpers';
 import { PreformattedBlock, UILink } from '@/shared/ui';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
-import { EventType } from '../../api';
+import type { EventType } from '../../api';
 import LinkSVG from '../../assets/link.svg?react';
 
 import styles from './event-card.module.scss';

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { useSetPayloadValue } from '../hooks';
-import { FieldProps } from '../types';
-import { getNestedName, getDefaultValue } from '../utils';
+import type { FieldProps } from '../types';
+import { getDefaultValue, getNestedName } from '../utils';
 
 function EnumField({ sails, def, name, render, renderField }: FieldProps) {
   const { variants } = def.asEnum;

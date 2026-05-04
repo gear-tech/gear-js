@@ -1,9 +1,9 @@
-import { U8aLike } from '@polkadot/util/types';
-import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { stringToU8a, u8aToU8a } from '@polkadot/util';
+import type { U8aLike } from '@polkadot/util/types';
+import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
 import { CreateType } from '../metadata';
-import { HexString } from '../types';
+import type { HexString } from '../types';
 
 const VOUCHER_PREFIX_BEFORE_1100 = stringToU8a('modlpy/voucher__');
 const VOUCHER_PREFIX = stringToU8a('voucher');

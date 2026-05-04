@@ -36,7 +36,6 @@ function useVoucherStatus(expirationBlock: number | undefined) {
     getVoucherStatus(expirationBlock)
       .then((result) => setStatus(result))
       .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, expirationBlock]);
 
   return status === undefined
@@ -44,4 +43,4 @@ function useVoucherStatus(expirationBlock: number | undefined) {
     : { ...status, isVoucherStatusReady: true as const };
 }
 
-export { useVoucherStatus, useGetVoucherStatus };
+export { useGetVoucherStatus, useVoucherStatus };

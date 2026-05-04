@@ -1,11 +1,11 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Header } from '@polkadot/types/interfaces';
-import { ReactNode, useState, useEffect } from 'react';
+import type { Header } from '@polkadot/types/interfaces';
+import { type ReactNode, useEffect, useState } from 'react';
 
-import { RecentBlock } from '@/features/recentBlocks';
+import type { RecentBlock } from '@/features/recentBlocks';
 
 import { BlocksContext } from './Context';
-import { getTime, getBlock } from './helpers';
+import { getBlock, getTime } from './helpers';
 
 type Props = {
   children: ReactNode;
@@ -34,10 +34,8 @@ const BlocksProvider = ({ children }: Props) => {
     );
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       unsub.then((unsubscribe) => unsubscribe());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return <BlocksContext.Provider value={blocks}>{children}</BlocksContext.Provider>;

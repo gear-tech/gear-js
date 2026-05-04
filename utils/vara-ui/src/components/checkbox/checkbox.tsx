@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ComponentPropsWithRef, ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 import styles from './checkbox.module.scss';
 
@@ -20,5 +20,6 @@ const Checkbox = ({ label, className, type = 'checkbox', size = 'default', error
     </label>
   );
 };
-export { Checkbox };
+
 export type { Props as CheckboxProps };
+export { Checkbox };

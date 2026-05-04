@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 
 import { GearApi, GearKeyring } from '@gear-js/api';
 import { PATH_TO_OPT } from '../config';

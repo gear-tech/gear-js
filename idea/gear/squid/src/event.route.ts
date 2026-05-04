@@ -1,31 +1,6 @@
-import { Store } from '@subsquid/typeorm-store';
-import { Block } from '@subsquid/substrate-processor';
+import type { Block } from '@subsquid/substrate-processor';
+import type { Store } from '@subsquid/typeorm-store';
 import { ZERO_ADDRESS } from 'sails-js';
-import {
-  Code,
-  MessageEntryPoint,
-  MessageFromProgram,
-  MessageToProgram,
-  MetaType,
-  Program,
-  CodeStatus,
-  MessageReadReason,
-  ProgramStatus,
-  Voucher,
-} from './model';
-
-import { Event, Fields, ProcessorContext } from './processor';
-import { TempState } from './temp-state';
-import {
-  isCreateProgram,
-  isUploadCode,
-  isUploadProgram,
-  isSendMessageCall,
-  isSendReplyCall,
-  isVoucherCall,
-} from './types/calls';
-import {} from './model';
-import { getMetahash } from './util';
 import {
   handleCreateProgram,
   handleSendMessageCall,
@@ -34,21 +9,44 @@ import {
   handleVoucherCall,
 } from './call.route';
 import {
-  ECodeChanged,
-  EProgramChanged,
-  EMessageQueuedEvent,
-  EMessagesDispatched,
-  EUserMessageRead,
-  EUserMessageSent,
+  Code,
+  CodeStatus,
+  type MessageEntryPoint,
+  MessageFromProgram,
+  MessageReadReason,
+  MessageToProgram,
+  MetaType,
+  Program,
+  ProgramStatus,
+  Voucher,
+} from './model';
+import type { Event, Fields, ProcessorContext } from './processor';
+import type { TempState } from './temp-state';
+import {
+  type ECodeChanged,
+  type EMessageQueuedEvent,
+  type EMessagesDispatched,
+  type EProgramChanged,
+  type EUserMessageRead,
+  type EUserMessageSent,
   ReplyCode,
 } from './types';
 import {
+  isCreateProgram,
+  isSendMessageCall,
+  isSendReplyCall,
+  isUploadCode,
+  isUploadProgram,
+  isVoucherCall,
+} from './types/calls';
+import type {
   EBalanceTransfer,
   EVoucherDeclined,
   EVoucherIssued,
   EVoucherRevoked,
   EVoucherUpdated,
 } from './types/events/voucher';
+import { getMetahash } from './util';
 
 export interface IHandleEventProps<E = Event> {
   ctx: ProcessorContext<Store>;
@@ -277,7 +275,7 @@ export async function handleVoucherUpdated({
   }
 
   if (call.args.appendPrograms.__kind === 'Some') {
-    voucher.programs!.push(...call.args.appendPrograms.value);
+    voucher.programs?.push(...call.args.appendPrograms.value);
   }
 
   if (call.args.codeUploading) {

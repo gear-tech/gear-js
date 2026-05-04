@@ -49,4 +49,4 @@ const getTruncatedText = (value: string, prefixLength = 6) => {
   return `${value.substring(0, prefixLength)}...${value.slice(-prefixLength)}`;
 };
 
-export { cx, copyToClipboard, isTelegramMiniApp, getTruncatedText };
+export { copyToClipboard, cx, getTruncatedText, isTelegramMiniApp };

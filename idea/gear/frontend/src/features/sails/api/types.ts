@@ -1,7 +1,7 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { PaginationParameters } from '@/api';
-import { IBase } from '@/shared/types';
+import type { PaginationParameters } from '@/api';
+import type { IBase } from '@/shared/types';
 
 type GetEventsParameters = PaginationParameters & {
   service?: string;
@@ -24,4 +24,4 @@ type GetIdlResponse = {
   data: string;
 };
 
-export type { GetEventsParameters, EventType, GetIdlResponse };
+export type { EventType, GetEventsParameters, GetIdlResponse };

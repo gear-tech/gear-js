@@ -14,7 +14,7 @@ import {
 import { useGetAllProgramsQuery } from '@/features/programs';
 import { useGetAllTransactionsQuery } from '@/features/transactions';
 import { routes } from '@/shared/config';
-import { SVGComponent } from '@/shared/types';
+import type { SVGComponent } from '@/shared/types';
 import { formatNumber, isUndefined } from '@/shared/utils';
 
 import styles from './home.module.scss';

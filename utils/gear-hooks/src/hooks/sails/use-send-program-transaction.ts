@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import {
+import type {
   FunctionName,
   GenericTransactionReturn,
   SendTransactionParameters,
@@ -56,5 +56,5 @@ function useSendProgramTransaction<
   };
 }
 
-export { useSendProgramTransaction };
 export type { UseSendProgramTransactionParameters };
+export { useSendProgramTransaction };

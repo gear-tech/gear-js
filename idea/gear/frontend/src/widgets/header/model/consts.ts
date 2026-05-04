@@ -1,5 +1,5 @@
 import { VERIFY_ROUTES } from '@/features/code-verifier';
-import { routes, absoluteRoutes } from '@/shared/config';
+import { absoluteRoutes, routes } from '@/shared/config';
 
 const SHORT_HEADER_HEIGHT = '6.4375rem';
 const FULL_HEADER_HEIGHT = '10.28125rem';
@@ -19,4 +19,4 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   VERIFY_ROUTES.STATUS,
 ];
 
-export { SHORT_HEADER_HEIGHT, FULL_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE };
+export { FULL_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE, SHORT_HEADER_HEIGHT };

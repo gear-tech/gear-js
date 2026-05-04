@@ -1,4 +1,4 @@
-import { FallbackProps } from 'react-error-boundary';
+import type { FallbackProps } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 
 import { useChangeEffect } from '@/hooks';
@@ -14,7 +14,7 @@ const getErrorMessage = (error: unknown) => {
   try {
     const json = JSON.stringify(error, null, 2);
 
-    return json.length > 500 ? json.slice(0, 500) + '...' : json;
+    return json.length > 500 ? `${json.slice(0, 500)}...` : json;
   } catch {
     return "Can't retrieve error message";
   }

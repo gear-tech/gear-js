@@ -1,10 +1,10 @@
-import { AnyJson } from '@polkadot/types/types';
-import { Sails } from 'sails-js';
-import { ISailsTypeDef } from 'sails-js-types';
+import type { AnyJson } from '@polkadot/types/types';
+import type { Sails } from 'sails-js';
+import type { ISailsTypeDef } from 'sails-js-types';
 import { z } from 'zod';
 
 import { RESULT } from '../../consts';
-import { HexString, ISailsFuncArg } from '../../types';
+import type { HexString, ISailsFuncArg } from '../../types';
 
 const asJSON = <T extends z.ZodType<string>>(schema: T) =>
   schema.transform((value, ctx) => {
@@ -59,7 +59,7 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args
       return isUnion(variants) ? z.union(variants) : variants[0] || z.null();
     }
 
-    throw new Error('Unknown type: ' + JSON.stringify(def));
+    throw new Error(`Unknown type: ${JSON.stringify(def)}`);
   };
 
   const result = args.map(({ typeDef }, index) => [index, getSchema(typeDef)] as const);

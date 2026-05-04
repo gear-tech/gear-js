@@ -1,12 +1,12 @@
-import { ProgramMetadata, GasInfo } from '@gear-js/api';
-import { useApi, useAccount } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import type { GasInfo, ProgramMetadata } from '@gear-js/api';
+import { useAccount, useApi } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
 import isPlainObject from 'lodash.isplainobject';
 
 import { GasMethod } from '@/shared/config';
 
 import { preparedGasInfo } from './helpers';
-import { Values, Code, Result } from './types';
+import type { Code, Result, Values } from './types';
 
 const useGasCalculate = () => {
   const { api, isApiReady } = useApi();
@@ -27,7 +27,7 @@ const useGasCalculate = () => {
       const isPayloadEmpty = isPlainObject(payload) && Object.keys(payload as object).length === 0;
 
       if (isPayloadEmpty) throw new Error(`Payload can't be empty`);
-      if (!account) throw new Error(`No account`);
+      if (!account) throw new Error('No account');
 
       const { decodedAddress } = account;
 
@@ -80,7 +80,6 @@ const useGasCalculate = () => {
 
       return preparedGasInfo(estimatedGas);
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- TODO(#1800): resolve eslint comments
       return Promise.reject(error);
     }
   };

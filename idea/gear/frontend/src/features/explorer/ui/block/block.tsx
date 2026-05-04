@@ -1,10 +1,10 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Block as DotBlock } from '@polkadot/types/interfaces';
+import type { Block as DotBlock } from '@polkadot/types/interfaces';
 import { isHex } from '@polkadot/util';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { EventRecords } from '../../types';
+import type { EventRecords } from '../../types';
 import { MainTable } from '../main-table';
 import { Summary } from '../summary';
 import { System } from '../system';
@@ -42,12 +42,10 @@ const Block = () => {
     api.blocks
       .get(id)
       .then((result) => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         api.blocks.getEvents(result.block.hash).then((recordsResult) => setEventRecords(recordsResult));
         setBlock(result.block);
       })
       .catch(({ message }: Error) => setError(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockId]);
 
   return (

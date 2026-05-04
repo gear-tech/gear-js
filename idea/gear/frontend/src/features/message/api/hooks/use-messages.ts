@@ -4,7 +4,7 @@ import { INFINITE_QUERY } from '@/api';
 import { useChain, useErrorAlert } from '@/hooks';
 
 import { getMessagesFromProgram, getMessagesToProgram } from '../requests';
-import { MessagesFromProgramParameters, MessagesToProgramParameters } from '../types';
+import type { MessagesFromProgramParameters, MessagesToProgramParameters } from '../types';
 
 function useMessagesToProgram(parameters: MessagesToProgramParameters, enabled: boolean) {
   const { isDevChain } = useChain();
@@ -52,4 +52,4 @@ function useMessagesFromProgram(parameters: MessagesFromProgramParameters, enabl
   return query;
 }
 
-export { useMessagesToProgram, useMessagesFromProgram };
+export { useMessagesFromProgram, useMessagesToProgram };

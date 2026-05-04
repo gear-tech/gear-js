@@ -1,12 +1,9 @@
-import { Hash } from 'viem';
+import type { Hash } from 'viem';
 
-import { MaybeHash } from '../types';
+import type { MaybeHash } from '../types';
 
 export function transformMaybeHash(value: any): MaybeHash {
-  if (value == undefined) {
-    return null;
-  }
-  if (value === 'Empty') {
+  if (value === undefined || value === null || value === 'Empty') {
     return null;
   }
   if (typeof value === 'string') {

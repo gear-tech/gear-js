@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { ComponentPropsWithRef, useId } from 'react';
+import { type ComponentPropsWithRef, useId } from 'react';
 
 import { useClearButton } from '../../hooks';
-import { InputProps, SVGComponent } from '../../types';
+import type { InputProps, SVGComponent } from '../../types';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
 
@@ -106,7 +106,5 @@ const Input = (props: Props) => {
   );
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { Input, styles as inputStyles };
 export type { Props as InputProps };
+export { Input, styles as inputStyles };

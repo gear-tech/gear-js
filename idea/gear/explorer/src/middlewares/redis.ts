@@ -1,6 +1,6 @@
-import { createClient, RedisClientType } from 'redis';
-import { logger } from 'gear-idea-common';
 import * as crypto from 'node:crypto';
+import { logger } from 'gear-idea-common';
+import { createClient, type RedisClientType } from 'redis';
 
 import { config } from '../config';
 

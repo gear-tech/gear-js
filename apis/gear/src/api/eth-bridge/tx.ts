@@ -1,8 +1,8 @@
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { ISubmittableResult } from '@polkadot/types/types';
 
-import { GearApi } from '../../GearApi';
-import { HexString } from '../../types';
+import type { GearApi } from '../../GearApi';
+import type { HexString } from '../../types';
 
 /**
  * Transaction building utilities for Gear-Ethereum bridge operations.

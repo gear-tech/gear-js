@@ -1,7 +1,6 @@
-import { HexString } from '@polkadot/util/types';
-import { readFileSync } from 'fs';
-
+import { readFileSync } from 'node:fs';
 import { GearApi, getProgramMetadata, getStateMetadata } from '@gear-js/api';
+import type { HexString } from '@polkadot/util/types';
 import { PATH_TO_META, PATH_TO_STATE_WASM } from '../config';
 
 const [programId] = process.argv.slice(2) as [HexString];

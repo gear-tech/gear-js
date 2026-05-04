@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Radio } from './radio';
 
@@ -32,4 +32,4 @@ const Checked: Story = {
 };
 
 export default meta;
-export { Default, Checked };
+export { Checked, Default };

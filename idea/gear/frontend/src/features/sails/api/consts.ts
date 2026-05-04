@@ -7,4 +7,4 @@ const errorMessage = {
   sailsIdlNotFound: 'SailsIdlNotFound',
 };
 
-export { METHOD, errorMessage };
+export { errorMessage, METHOD };

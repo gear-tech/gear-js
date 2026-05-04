@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import type { FindOptionsWhere, Repository } from 'typeorm';
 import { StateTransition } from '../../../model/index.js';
-import { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
-import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
+import type { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
 
 @Injectable()
 export class StateTransitionsService {
   constructor(
     @InjectRepository(StateTransition)
-    private readonly stateTransitionRepository: Repository<StateTransition>,
+    private readonly _stateTransitionRepository: Repository<StateTransition>,
   ) {}
 
   async findAll(query: QueryStateTransitionsDto): Promise<PaginatedResponse<StateTransition>> {
@@ -25,7 +25,7 @@ export class StateTransitionsService {
       where.exited = exited;
     }
 
-    const [data, total] = await this.stateTransitionRepository.findAndCount({
+    const [data, total] = await this._stateTransitionRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
@@ -43,7 +43,7 @@ export class StateTransitionsService {
   }
 
   async findOne(id: string): Promise<StateTransition> {
-    const stateTransition = await this.stateTransitionRepository.findOne({
+    const stateTransition = await this._stateTransitionRepository.findOne({
       where: { id: id.toLowerCase() },
       relations: ['program', 'batch'],
     });

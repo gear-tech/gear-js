@@ -1,6 +1,6 @@
-import { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
-import { LabelContainer, LabelContainerProps } from '../label-container';
+import { LabelContainer, type LabelContainerProps } from '../label-container';
 
 import styles from './textarea.module.scss';
 
@@ -14,5 +14,5 @@ const Textarea = ({ className, label, error, size, rows = 5, block, ...attrs }: 
   );
 };
 
-export { Textarea };
 export type { Props as TextareaProps };
+export { Textarea };

@@ -6,7 +6,7 @@ import { useLocalPrograms } from '@/features/local-indexer';
 import { useChain, useErrorAlert } from '@/hooks';
 
 import { getPrograms, getProgramsBatch } from '../requests';
-import { Program, ProgramsParameters } from '../types';
+import type { Program, ProgramsParameters } from '../types';
 
 function usePrograms(parameters: ProgramsParameters, enabled = true) {
   const { isDevChain } = useChain();

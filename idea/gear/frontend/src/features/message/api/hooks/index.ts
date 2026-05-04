@@ -1,4 +1,4 @@
-import { useMessageToProgram, useMessageFromProgram } from './use-message';
-import { useMessagesToProgram, useMessagesFromProgram } from './use-messages';
+import { useMessageFromProgram, useMessageToProgram } from './use-message';
+import { useMessagesFromProgram, useMessagesToProgram } from './use-messages';
 
-export { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram };
+export { useMessageFromProgram, useMessagesFromProgram, useMessagesToProgram, useMessageToProgram };

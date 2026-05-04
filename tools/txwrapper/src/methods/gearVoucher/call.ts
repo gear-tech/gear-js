@@ -1,8 +1,14 @@
-import { Args, BaseTxInfo, defineMethod, OptionsWithMeta, UnsignedTransaction } from '@substrate/txwrapper-core';
-import { SendMessageArgs } from '../gear/sendMessage';
-import { SendReplyArgs } from '../gear/sendReply';
-import { UploadCodeArgs } from '../gear/uploadCode';
-import { DeclineArgs } from './decline';
+import {
+  type Args,
+  type BaseTxInfo,
+  defineMethod,
+  type OptionsWithMeta,
+  type UnsignedTransaction,
+} from '@substrate/txwrapper-core';
+import type { SendMessageArgs } from '../gear/sendMessage';
+import type { SendReplyArgs } from '../gear/sendReply';
+import type { UploadCodeArgs } from '../gear/uploadCode';
+import type { DeclineArgs } from './decline';
 
 export interface SendMessageWithVoucher extends Args {
   SendMessage: SendMessageArgs;

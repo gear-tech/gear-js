@@ -1,5 +1,5 @@
-import { ProgramMetadata } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
+import type { ProgramMetadata } from '@gear-js/api';
+import type { HexString } from '@polkadot/util/types';
 
 type ParamsToUploadCode = {
   optBuffer: Buffer;

@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { RecentBlock } from '@/features/recentBlocks';
+import type { RecentBlock } from '@/features/recentBlocks';
 
 const BlocksContext = createContext<RecentBlock[]>([]);
 

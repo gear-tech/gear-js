@@ -22,7 +22,7 @@
     "build-base": "rm -rf dist && npx vite build --mode base",
     "build-deprecated": "rm -rf dist-temp && npx vite build --mode deprecated",
     "copy-deprecated-css": "cp dist-temp/style.css dist/style-deprecated.css",
-    "rm-deprecated-dts": "rm dist/index-deprecated.d.ts",
+    "rm-deprecated-dts": "rm -f dist/index-deprecated.d.ts",
     "build": "yarn run build-base && yarn run build-deprecated && yarn run copy-deprecated-css && yarn run rm-deprecated-dts",
     "build-sb": "storybook build",
     "preview": "npx vite preview",

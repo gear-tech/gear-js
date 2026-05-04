@@ -1,5 +1,5 @@
 import { Tooltip as BaseTooltip } from '@base-ui/react';
-import { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import styles from './tooltip.module.scss';
 

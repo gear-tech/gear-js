@@ -1,6 +1,6 @@
-@import url('non.geist');
-@import url('./resets.css');
+@import url("non.geist");
+@import url("./resets.css");
 
 body {
-  font-family: 'Geist Variable', sans-serif;
+  font-family: "Geist Variable", sans-serif;
 }

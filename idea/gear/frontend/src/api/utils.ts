@@ -1,6 +1,6 @@
 import { DEFAULT_LIMIT } from '@/shared/config';
 
-import { PaginationResponse } from './types';
+import type { PaginationResponse } from './types';
 
 const getNextPageParam = <T>({ result, count }: PaginationResponse<T>, allPages: PaginationResponse<T>[]) => {
   const lastPageCount = result.length;

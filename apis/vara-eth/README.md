@@ -29,9 +29,10 @@ TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepape
   - [5. Working with TxManager](#5-working-with-txmanager)
 - [Vara.Eth Side Operations](#varaeth-side-operations)
   - [1. Instantiating VaraEthApi](#1-instantiating-varaethapi)
-  - [2. Injected Transactions](#2-injected-transactions)
-  - [3. Querying Program Data](#3-querying-program-data)
-  - [4. Reading Program State via calculateReplyForHandle](#4-reading-program-state-via-calculatereplyforhandle)
+  - [2. Validator Pool](#2-validator-pool)
+  - [3. Injected Transactions](#3-injected-transactions)
+  - [4. Querying Program Data](#4-querying-program-data)
+  - [5. Reading Program State via calculateReplyForHandle](#5-reading-program-state-via-calculatereplyforhandle)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -46,8 +47,10 @@ npm install @vara-eth/api
 Install required peer dependencies:
 
 ```bash
-npm install viem@^2.39.0 kzg-wasm@1.0.0
+npm install viem@npm:@vara-eth/viem@2.47.7-1 kzg-wasm@1.0.0
 ```
+
+> **Note:** `@vara-eth/viem` is a temporary fork of [viem](https://viem.sh) that adds support for [EIP-7594](https://eips.ethereum.org/EIPS/eip-7594), which is not yet available in the upstream package. Once EIP-7594 support lands in the official viem release, this library will switch back to the original package.
 
 ## Quick Start
 
@@ -88,6 +91,7 @@ The library uses two signer interfaces to express the exact capabilities require
 // For message signing only (injected transactions, Metamask Snap adapters)
 interface IMessageSigner {
   signMessage(message: Uint8Array | string): Promise<Hash>;
+  signTypedData(params: SignTypedDataParams): Promise<Signature>; // required for EIP-712 permit flows
   getAddress(): Promise<Address>;
 }
 
@@ -201,8 +205,18 @@ Interface for interacting with the Router contract - the main entry point for co
 // Access via api.eth (recommended)
 const router = api.eth.router;
 
-await router.createProgram(codeId); // Create program from validated code
-await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
+// Create program from validated code (builder selects the right on-chain method automatically)
+router.createProgramBuilder(codeId).build();
+router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build(); // with Solidity ABI
+
+// Permit-based code validation (no prior approve needed)
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature: permitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+const tx = await router.requestCodeValidation(code, deadline, permitSig);
+
+// On-behalf validation (requester and fee payer can be different signers)
+const { codeId, blobHashes, signature: reqSig } = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline);
+const tx2 = await router.requestCodeValidationOnBehalf(requester, code, blobHashes, deadline, reqSig, permitSig);
 ```
 
 ### MirrorClient
@@ -232,6 +246,11 @@ const wvara = api.eth.wvara;
 await wvara.approve(spender, amount); // Approve spending
 await wvara.balanceOf(address); // Check balance
 await wvara.allowance(owner, spender); // Check allowance
+
+// EIP-2612 permit — approve without a separate transaction
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature } = await wvara.prepareAndSignPermitData(spender, amount, deadline);
+await wvara.permit(owner, spender, amount, deadline, signature);
 ```
 
 ## Uploading Program Code
@@ -273,22 +292,66 @@ The CLI will submit code via EIP-4844 blob transactions, request validation, and
 
 ```typescript
 const codeId = '0x...'; // From CLI output
-const tx = await api.eth.router.createProgram(codeId);
+const tx = api.eth.router.createProgramBuilder(codeId).build();
+```
+
+### Uploading Programmatically
+
+You can also upload and validate code directly via the `RouterClient` API, without the CLI. The fee is charged in WVARA using an EIP-2612 permit — no prior `approve` call is needed.
+
+#### KZG initialization
+
+Code upload relies on the `kzg-wasm` WASM library, which is memory-intensive. To avoid loading it eagerly at module import time, call `initKzgLoading` once at application startup. This starts KZG initialization in the background so it is ready by the time you upload code, without consuming memory in applications that never use this feature.
+
+```typescript
+import { initKzgLoading } from '@vara-eth/api/util';
+
+// Call once at startup, before any code upload operations
+initKzgLoading();
+```
+
+If you skip this call, KZG loading begins lazily the first time a code upload is triggered — slightly increasing the latency of that first upload.
+
+```typescript
+import { readFileSync } from 'node:fs';
+
+const code = readFileSync('path/to/program.opt.wasm');
+const router = api.eth.router;
+const wvara = api.eth.wvara;
+
+const fee = (await router.requestCodeValidationBaseFee()) + (await router.requestCodeValidationExtraFee());
+const deadline = BigInt(Date.now() + 60_000);
+
+// Sign a WVARA permit to cover the fee
+const { signature: wvaraPermitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+
+// Submit the code as an EIP-7594 blob transaction
+const tx = await router.requestCodeValidation(code, deadline, wvaraPermitSig);
+const { codeId } = tx;
+
+// Wait for validators to confirm the code
+await tx.waitForCodeGotValidated();
+
+// Now create a program from the validated code
+const createTx = router.createProgramBuilder(codeId).build();
 ```
 
 ## Ethereum Side Operations
 
 ### 1. Program Creation
 
-Create programs from validated code:
+Create programs from validated code using the fluent `CreateProgramBuilder`. Call
+`createProgramBuilder(codeId)`, chain any optional configuration methods, then call
+`build()` to obtain a transaction manager. The builder automatically selects the
+correct on-chain function based on which options are set.
 
 > **Note**: Code must be uploaded and validated before creating programs. Use the [Vara.Eth CLI](https://github.com/gear-tech/gear/tree/master/ethexe/cli) to upload and validate WASM code. The CLI will provide you with a `codeId` after successful validation.
 
 ```typescript
-// Create program from validated code
 const codeId = '0x...'; // Code ID from vara-eth CLI
 
-const tx = await api.eth.router.createProgram(codeId);
+// Basic — create a program from validated code
+const tx = router.createProgramBuilder(codeId).build();
 await tx.sendAndWaitForReceipt();
 
 // Get the program ID
@@ -299,22 +362,56 @@ console.log('Program created:', programId);
 const mirror = getMirrorClient({ address: programId, signer, publicClient });
 ```
 
-#### Creating Program with Solidity ABI Interface
+#### With a Solidity ABI Interface (Etherscan-compatible)
 
 ```typescript
-const codeId = '0x...'; // Code ID from vara-eth CLI
-
-// Deploy Solidity ABI contract
-const deployHash = await walletClient.deployContract({
-  abi: counterAbi,
-  bytecode: counterBytecode,
-});
-
+// Deploy Solidity ABI contract first
+const deployHash = await walletClient.deployContract({ abi: counterAbi, bytecode: counterBytecode });
 const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
 const abiAddress = receipt.contractAddress;
 
-// Create program with ABI interface
-const tx = await api.eth.router.createProgramWithAbiInterface(codeId, abiAddress);
+// Create program with ABI interface attached
+const tx = router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build();
+await tx.sendAndWaitForReceipt();
+```
+
+#### With an Initial WVARA Executable Balance
+
+```typescript
+const amount = 100n;
+const deadline = BigInt(Date.now() + 60_000);
+const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+
+// No prior approve needed — permit signature covers the transfer
+const tx = router.createProgramBuilder(codeId)
+  .withExecutableBalance(amount, deadline, signature)
+  .build();
+await tx.sendAndWaitForReceipt();
+```
+
+#### With Both ABI Interface and Executable Balance
+
+```typescript
+const amount = 100n;
+const deadline = BigInt(Date.now() + 60_000);
+const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+
+const tx = router.createProgramBuilder(codeId)
+  .withAbiInterface(abiAddress)
+  .withExecutableBalance(amount, deadline, signature)
+  .build();
+await tx.sendAndWaitForReceipt();
+const programId = await tx.getProgramId();
+```
+
+#### With a Deterministic Address
+
+```typescript
+// Providing the same salt always produces the same program address
+const tx = router.createProgramBuilder(codeId)
+  .withSalt('0x' + '00'.repeat(32))
+  .withOverrideInitializer(initializerAddress) // optional
+  .build();
 await tx.sendAndWaitForReceipt();
 ```
 
@@ -396,7 +493,7 @@ const nonce = await mirror.nonce();
 Contract write methods return a `TxManager` instance that handles transaction lifecycle:
 
 ```typescript
-const tx = await api.eth.router.createProgram(codeId);
+const tx = api.eth.router.createProgramBuilder(codeId).build();
 
 // Send transaction and get response
 const response = await tx.send();
@@ -428,7 +525,7 @@ const programId = await tx.getProgramId(); // Available on createProgram transac
 
 Each transaction type can have specific helper methods:
 
-- `createProgram`: `getProgramId()` - extracts program ID from event
+- `createProgramBuilder(...).build()`: `getProgramId()` - extracts program ID from event
 - `requestCodeValidation`: `waitForCodeGotValidated()` - waits for validation completion
 - `approve`: `getApprovalLog()` - gets approval event data
 - `sendMessage`: `getMessage()`, `setupReplyListener()` - message handling
@@ -457,7 +554,86 @@ await api.provider.disconnect();
 - **HttpVaraEthProvider**: Best for one-time queries and calls. Simpler, no persistent connection.
 - **WsVaraEthProvider**: Required for subscriptions and real-time event listening. Maintains persistent connection.
 
-### 2. Injected Transactions
+### 2. Validator Pool
+
+By default, injected transactions are sent to a single provider endpoint. A **validator pool** maintains a direct WebSocket connection to each known validator node, allowing the library to route each transaction to the validator that is scheduled to produce the next block. This eliminates one network hop and reduces confirmation latency.
+
+**When to use a pool:**
+
+- You know the RPC endpoints of the active validator set
+- You want transactions delivered directly to the producing validator rather than relying on peer-to-peer forwarding
+
+**Creating a pool:**
+
+```typescript
+import { createVaraEthApi, VaraEthValidatorWsPool } from '@vara-eth/api';
+
+const pool = new VaraEthValidatorWsPool([
+  { address: '0xValidator1...', url: 'wss://validator-1.example.com' },
+  { address: '0xValidator2...', url: 'wss://validator-2.example.com' },
+  { address: '0xValidator3...', url: 'wss://validator-3.example.com' },
+]);
+
+const api = await createVaraEthApi(pool, publicClient, routerAddress, signer);
+```
+
+Each entry maps a validator's Ethereum address to its WebSocket RPC URL. Addresses are compared case-insensitively.
+
+**Managing pool membership at runtime:**
+
+```typescript
+// Add a new validator (connects immediately)
+await pool.addValidator('0xNewValidator...', 'wss://validator-4.example.com');
+
+// Remove a validator (disconnects its WebSocket)
+await pool.removeValidator('0xValidator1...');
+
+// Inspect current pool members
+console.log(pool.validatorAddresses);
+
+// Check whether a specific address is in the pool
+const inPool = pool.hasValidator('0xValidator2...');
+```
+
+**How routing works with injected transactions:**
+
+When you call `setRecipient()`, `setSlotValidator()` (or the deprecated but still supported `setNextValidator()`), or `setDefaultValidator()` on an `InjectedTx`, the library:
+
+1. Computes the target validator address (either the one you specified, the slot-scheduled validator, or the zero address)
+2. Sets that address as the transaction `recipient` field
+3. If the provider is a pool **and** the target address is in the pool, routes the send/subscribe calls through that validator's dedicated WebSocket connection
+4. If the address is not in the pool (e.g. a new validator added on-chain that hasn't been added to the pool yet), the transaction is sent via the currently active pool connection — the receiving node will forward it to the intended validator
+
+**Targeting a specific validator:**
+
+```typescript
+const injected = await api.createInjectedTransaction({ destination: programId, payload });
+
+// Target the validator scheduled to produce the imminent block
+await injected.setSlotValidator();
+
+// Or target a specific validator by address
+await injected.setRecipient('0xValidator1...');
+
+await injected.send();
+```
+
+`setSlotValidator()` derives the assigned validator from the current slot (`floor(timestamp / blockDuration) % validators.length`), where `timestamp` is projected two blocks ahead to account for network propagation.
+
+**Sending without targeting a specific validator:**
+
+```typescript
+const injected = await api.createInjectedTransaction({ destination: programId, payload });
+
+// Set zero address — any validator can process this transaction
+injected.setDefaultValidator();
+
+await injected.send();
+```
+
+Use `setDefaultValidator()` when validator targeting is not important. The transaction will be processed by whichever validator produces the next available slot.
+
+### 3. Injected Transactions
 
 Injected transactions are Vara.Eth-native transactions sent directly to the network, bypassing Ethereum. They provide faster execution and lower costs for operations that don't require Ethereum settlement.
 
@@ -527,7 +703,7 @@ await injected.setRecipient(validatorAddress);
 await injected.send();
 ```
 
-### 3. Querying Program Data
+### 4. Querying Program Data
 
 Query program information from Vara.Eth network:
 
@@ -549,7 +725,7 @@ if ('Active' in state.program) {
 }
 ```
 
-### 4. Reading Program State via `calculateReplyForHandle`
+### 5. Reading Program State via `calculateReplyForHandle`
 
 Perform read-only queries on program state without sending transactions:
 

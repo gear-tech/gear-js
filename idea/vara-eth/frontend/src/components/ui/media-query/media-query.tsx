@@ -28,4 +28,4 @@ const MediaQuery = {
   xxl: createSizeComponent('xxl'),
 };
 
-export { MediaQuery, type BreakpointSize };
+export { type BreakpointSize, MediaQuery };

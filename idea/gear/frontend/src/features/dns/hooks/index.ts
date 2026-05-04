@@ -4,4 +4,4 @@ import { useDnsSchema } from './use-dns-schema';
 import { useSendDnsTransaction } from './use-send-dns-transaction';
 import { useSingleDns } from './use-single-dns';
 
-export { useDns, useDnsFilters, useSendDnsTransaction, useDnsSchema, useSingleDns };
+export { useDns, useDnsFilters, useDnsSchema, useSendDnsTransaction, useSingleDns };

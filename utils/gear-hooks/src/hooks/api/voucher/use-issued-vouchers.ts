@@ -18,7 +18,6 @@ function useIssuedVouchers(accountAddress: string | undefined) {
       .getAllIssuedByAccount(accountAddress)
       .then((result) => setVouchers(result))
       .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddress, api, isApiReady]);
 
   return { vouchers, isEachVoucherReady };
@@ -30,4 +29,4 @@ function useAccountIssuedVouchers() {
   return useIssuedVouchers(account?.address);
 }
 
-export { useIssuedVouchers, useAccountIssuedVouchers };
+export { useAccountIssuedVouchers, useIssuedVouchers };

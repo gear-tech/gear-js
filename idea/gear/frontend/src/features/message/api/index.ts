@@ -1,18 +1,17 @@
-import { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram } from './hooks';
-import {
-  MessageToProgram,
+import { useMessageFromProgram, useMessagesFromProgram, useMessagesToProgram, useMessageToProgram } from './hooks';
+import type {
   MessageFromProgram,
-  MessagesToProgramParameters,
   MessagesFromProgramParameters,
+  MessagesToProgramParameters,
+  MessageToProgram,
   PaginationResponse,
 } from './types';
 
-export { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram };
-
 export type {
-  MessageToProgram,
   MessageFromProgram,
-  MessagesToProgramParameters,
   MessagesFromProgramParameters,
+  MessagesToProgramParameters,
+  MessageToProgram,
   PaginationResponse,
 };
+export { useMessageFromProgram, useMessagesFromProgram, useMessagesToProgram, useMessageToProgram };

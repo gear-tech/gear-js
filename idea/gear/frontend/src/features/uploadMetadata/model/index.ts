@@ -1,3 +1,3 @@
-import { MetadataTypes, MedatadaTypesValue } from './types';
+import type { MedatadaTypesValue, MetadataTypes } from './types';
 
-export type { MetadataTypes, MedatadaTypesValue };
+export type { MedatadaTypesValue, MetadataTypes };

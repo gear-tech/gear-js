@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ReactNode, MouseEvent } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { useRootPortal } from '../../hooks';
@@ -27,8 +27,8 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
 
   return useRootPortal(
     'modal-root',
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- TODO(#1810): resolve eslint comments
-    <div className={styles.overlay} onClick={handleOverlayClick}>
+    // biome-ignore lint/a11y: keyboard handling is provided by button inside the modal
+    <div className={styles.overlay} onClick={handleOverlayClick} role="button">
       <div
         className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}
         style={isCustomMaxWidth ? { maxWidth } : undefined}>
@@ -49,5 +49,5 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
   );
 };
 
-export { Modal };
 export type { Props as ModalProps };
+export { Modal };

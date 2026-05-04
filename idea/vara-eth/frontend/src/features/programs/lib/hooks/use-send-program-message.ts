@@ -1,15 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
-import { Sails } from 'sails-js';
-import { Hex } from 'viem';
+import type { Sails } from 'sails-js';
+import type { Hex } from 'viem';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
-import { FormattedPayloadValue } from '@/features/sails/lib';
+import type { FormattedPayloadValue } from '@/features/sails/lib';
 
 type SendMessageParams = {
   serviceName: string;
   messageName: string;
-  isQuery: boolean;
   payload: FormattedPayloadValue;
 };
 
@@ -17,11 +16,10 @@ const useSendProgramMessage = (programId: Hex, sails: Sails | undefined) => {
   const mirrorContract = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, messageName, isQuery, payload }: SendMessageParams) => {
+  const sendMessage = async ({ serviceName, messageName, payload }: SendMessageParams) => {
     if (!mirrorContract || !sails) return;
 
-    const messageKey = isQuery ? 'queries' : 'functions';
-    const sailsMessage = sails?.services[serviceName][messageKey][messageName];
+    const sailsMessage = sails?.services[serviceName].functions[messageName];
 
     const tx = await mirrorContract.sendMessage(payload.encoded);
     const response = await tx.send();

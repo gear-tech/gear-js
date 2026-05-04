@@ -1,11 +1,11 @@
-import { Fields, ISailsFuncArg } from '@gear-js/sails-payload-form';
-import { InputProps, InputWrapper, Select } from '@gear-js/ui';
-import { ComponentProps } from 'react';
-import { Sails } from 'sails-js';
+import { Fields, type ISailsFuncArg } from '@gear-js/sails-payload-form';
+import { type InputProps, InputWrapper, Select } from '@gear-js/ui';
+import type { ComponentProps } from 'react';
+import type { Sails } from 'sails-js';
 
 import { Checkbox, Fieldset, Input, Textarea } from '@/shared/ui';
 
-import { useConstructor, useService } from '../../hooks';
+import type { useConstructor, useService } from '../../hooks';
 
 import styles from './payload-form.module.scss';
 
@@ -26,7 +26,6 @@ type ServiceProps = BaseProps & {
 type Props = ConstructorProps | ServiceProps;
 
 function PayloadSelect(props: Omit<ComponentProps<typeof Select>, 'direction' | 'gap'>) {
-  // eslint-disable-next-line react/no-children-prop
   return <Select {...props} direction="y" children="" />;
 }
 

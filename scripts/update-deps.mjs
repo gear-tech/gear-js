@@ -1,9 +1,9 @@
-import { ROOT_DIR } from './common.mjs';
-import rootPkg from '../package.json' with { type: 'json' };
+import assert from 'node:assert';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import gearJsApi from '../apis/gear/package.json' with { type: 'json' };
-import * as path from 'path';
-import * as fs from 'fs';
-import assert from 'assert';
+import rootPkg from '../package.json' with { type: 'json' };
+import { ROOT_DIR } from './common.mjs';
 
 const dependency = process.argv[2];
 
@@ -36,12 +36,12 @@ for (const pkg of workspaces) {
     pkgJson.devDependencies = devDependencies;
   }
 
-  fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2) + '\n');
+  fs.writeFileSync(pkgPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
 }
 
 async function updateDependencies(deps, versions) {
   for (const dep of Object.keys(deps)) {
-    if (dependency == 'polkadot') {
+    if (dependency === 'polkadot') {
       if (dep.startsWith('@polkadot/')) {
         if (!versions.has(dep)) {
           versions.set(dep, await fetchPkgVersionFromUnpkg(dep));

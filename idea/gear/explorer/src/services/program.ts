@@ -1,9 +1,9 @@
 import { Program } from 'gear-idea-indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import type { DataSource, Repository } from 'typeorm';
 import { Pagination } from '../decorators';
-import { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types';
-import { ProgramNotFound } from '../errors';
 import { RequiredParams } from '../decorators/required';
+import { ProgramNotFound } from '../errors';
+import type { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types';
 
 export class ProgramService {
   private _repo: Repository<Program>;

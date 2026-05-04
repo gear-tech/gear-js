@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- Precalculated blob versioned hash to the `requestCodeValidation` method in the Router client (https://github.com/gear-tech/gear-js/pull/2435)
+- EIP-2612 permit support for `requestCodeValidation` — charges the WVARA fee via a signed permit, so no prior `approve` call is needed (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.requestCodeValidationOnBehalf()` — submits code validation on behalf of another address using two EIP-712 signatures: one from the requester authorising the validation request, one authorising the WVARA fee transfer (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.prepareAndSignRequestCodeValidationPermitData()` — signs EIP-712 `RequestCodeValidationOnBehalf` typed data and returns the resulting signature, `codeId`, blob hashes, requester address, and deadline, ready to pass directly into `requestCodeValidationOnBehalf` (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterClient.nonces()` — returns the EIP-2612 nonce for a given address on the Router contract (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.prepareAndSignPermitData()` — signs EIP-712 `Permit` typed data and returns owner, spender, value, deadline, and signature, ready to pass into `WrappedVaraClient.permit()` or `RouterClient.requestCodeValidation()` (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.permit()` — submits an EIP-2612 permit transaction to set a WVARA allowance without a prior `approve` (https://github.com/gear-tech/gear-js/pull/2446)
+- `WrappedVaraClient.nonces()` — returns the EIP-2612 nonce for a given address on the WrappedVara contract (https://github.com/gear-tech/gear-js/pull/2446)
+- `eip712Domain()` method on `RouterClient` and `WrappedVaraClient` — returns the EIP-712 domain separator used for typed data signing (https://github.com/gear-tech/gear-js/pull/2446)
+- `watchEIP712DomainChangedEvent()` method on `RouterClient` and `WrappedVaraClient` — subscribes to `EIP712DomainChanged` contract events (https://github.com/gear-tech/gear-js/pull/2446)
+- `signTypedData()` method added to `IMessageSigner`, `DynamicSigner`, and `WalletClientAdapter` — required for EIP-712 permit flows (https://github.com/gear-tech/gear-js/pull/2446)
+- `RouterContractClientParams` exported type — extends the base contract params with optional `maxFeePerBlobGasMultiplier?: bigint` (defaults to `3n`) for tuning blob gas bids on congested networks (https://github.com/gear-tech/gear-js/pull/2446)
+- `CreateProgramBuilder` class — a fluent builder for assembling program-creation transactions. Obtain an instance via `RouterClient.createProgramBuilder(codeId)`, configure optional features with `withAbiInterface()`, `withExecutableBalance()`, `withSalt()`, and `withOverrideInitializer()`, then call `build()` to produce a transaction manager. The builder automatically selects the correct on-chain function (`createProgram`, `createProgramWithAbiInterface`, `createProgramWithExecutableBalance`, or `createProgramWithAbiInterfaceAndExecutableBalance`) based on which options are set (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramBuilder()` — factory method that constructs a `CreateProgramBuilder` for the given code ID (https://github.com/gear-tech/gear-js/pull/2453)
+- `initKzgLoading()` exported from `@vara-eth/api/util` — starts loading the `kzg-wasm` WASM library in the background. Call this once at application startup if your app uses code upload functionality so KZG is ready by the time `requestCodeValidation` is invoked. Without it, loading begins lazily on the first code upload, adding latency to that call. The `kzg-wasm` module is no longer loaded eagerly at import time, so applications that never upload code no longer pay its memory cost. (https://github.com/gear-tech/gear-js/pull/2455)
+
+### Removed
+- `RouterClient.createProgram()` — replaced by `RouterClient.createProgramBuilder(codeId).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithAbiInterface()` — replaced by `RouterClient.createProgramBuilder(codeId).withAbiInterface(address).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithExecutableBalance()` — replaced by `RouterClient.createProgramBuilder(codeId).withExecutableBalance(amount, deadline, signature).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+- `RouterClient.createProgramWithAbiInterfaceAndExecutableBalance()` — replaced by `RouterClient.createProgramBuilder(codeId).withAbiInterface(address).withExecutableBalance(amount, deadline, signature).build()` (https://github.com/gear-tech/gear-js/pull/2453)
+
+### Changed
+- `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature | Hex` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
+- `EthereumClient` constructor accepts an optional 4th `options` parameter (`{ maxFeePerBlobGasMultiplier?: bigint }`) passed through to the underlying `RouterClient` (https://github.com/gear-tech/gear-js/pull/2446)
+
+### Fixed
+- `WalletClientAdapter.signMessage` now correctly handles non-hex string inputs by forwarding them as UTF-8 personal-sign messages instead of unsafely casting to `Uint8Array` (https://github.com/gear-tech/gear-js/pull/2446)
+
+## [0.3.2]
+
+### Added
+
+- `IVaraEthValidatorPoolProvider.hasValidator()` method to check whether a given address is present in the pool (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setSlotValidator()` method that targets the validator assigned to the current slot via round-robin scheduling (`floor(timestamp / blockDuration) % validators.length`, projected two blocks ahead) (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setDefaultValidator()` method that sets the recipient to the zero address, allowing any validator to process the transaction (https://github.com/gear-tech/gear-js/pull/2416)
+
+### Changed
+
+- `InjectedTx.setNextValidator()` and `InjectedTx.setRecipient()` no longer require a pool provider — both work with any provider; if the provider is a pool and the target address is in the pool, the send is routed directly to that validator's connection, otherwise the transaction is forwarded by the receiving node (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setRecipient()` called without an address now targets the current slot validator (via `setSlotValidator()`) instead of the zero address; use `setDefaultValidator()` explicitly to retain the old zero-address behavior (https://github.com/gear-tech/gear-js/pull/2416)
+- `InjectedTx.setRecipient()` with an explicit address no longer unconditionally calls `setActiveValidator` — it only does so when the provider is a pool and the address is present in the pool (https://github.com/gear-tech/gear-js/pull/2416)
+- Constructor: setting `tx.recipient` now only calls `setActiveValidator` when the provider is a pool and the address is in the pool (same routing logic as above) (https://github.com/gear-tech/gear-js/pull/2416)
+
+### Deprecated
+
+- `InjectedTx.setNextValidator()` — use `InjectedTx.setSlotValidator()` instead; the old method remains as a thin wrapper (https://github.com/gear-tech/gear-js/pull/2416)
+
+## [0.3.1]
+
+### Added
+
+- `RouterClient.requestCodeValidation()` method (previously private and unimplemented) for uploading Wasm program code as an EIP-7594 blob transaction (https://github.com/gear-tech/gear-js/pull/2405)
+- EIP-7594 multi-blob encoding via `simpleSidecarEncode()` — replaces the old single-blob `prepareBlob()` and correctly encodes arbitrary-length data across multiple blobs following the Simple Sidecar Encoding format (https://github.com/gear-tech/gear-js/pull/2405)
+- `computeCellsAndKzgProofs` KZG hook required by EIP-7594 (https://github.com/gear-tech/gear-js/pull/2405)
+
+### Changed
+
+- Peer dependency `viem` switched from `^2.39.0` to `@vara-eth/viem@2.47.7-1` — a temporary fork at https://github.com/StackOverflowExcept1on/viem/tree/feat/eip-7594-support-for-blob-txs that adds EIP-7594 blob transaction support not yet available upstream; will revert to the official package once merged (https://github.com/gear-tech/gear-js/pull/2405)
+- `requestCodeValidation` blob transactions now use `blobVersion: '7594'` (EIP-7594) instead of the standard EIP-4844 format (https://github.com/gear-tech/gear-js/pull/2405)
+- `maxFeePerBlobGas` is now derived dynamically from `getFeeHistory` (3× the latest base fee) instead of the previous hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+- Gas limit for code validation transactions is now estimated via `estimateGas` instead of a hardcoded value (https://github.com/gear-tech/gear-js/pull/2405)
+
 ## [0.3.0]
 
 ### Added

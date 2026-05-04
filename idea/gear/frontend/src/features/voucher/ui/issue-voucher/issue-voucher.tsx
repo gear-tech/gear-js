@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 

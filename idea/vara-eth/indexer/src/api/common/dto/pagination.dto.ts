@@ -1,6 +1,6 @@
-import { IsOptional, IsNumber, Min, Max, IsIn } from 'class-validator';
-import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { API_CONSTANTS } from '../constants.js';
 
 export class PaginationDto {

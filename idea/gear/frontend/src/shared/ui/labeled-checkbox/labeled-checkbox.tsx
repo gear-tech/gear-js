@@ -1,5 +1,5 @@
-import { InputWrapper, Checkbox, InputProps } from '@gear-js/ui';
-import { ReactNode } from 'react';
+import { Checkbox, type InputProps, InputWrapper } from '@gear-js/ui';
+import type { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import styles from './labeled-checkbox.module.scss';

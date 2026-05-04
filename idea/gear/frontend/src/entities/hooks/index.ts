@@ -1,3 +1,3 @@
-import { OperationCallbacks, ParamsToSignAndSend } from './model/types';
+import type { OperationCallbacks, ParamsToSignAndSend } from './model/types';
 
 export type { OperationCallbacks, ParamsToSignAndSend };

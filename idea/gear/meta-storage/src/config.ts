@@ -1,5 +1,5 @@
+import { strict as assert } from 'node:assert';
 import { config } from 'dotenv';
-import { strict as assert } from 'assert';
 
 config();
 
@@ -15,7 +15,7 @@ export const getEnv = (envName: string, defaultValue?: string) => {
 export default {
   db: {
     host: getEnv('DB_HOST', 'localhost'),
-    port: parseInt(getEnv('DB_PORT', '5432'), 10),
+    port: Number.parseInt(getEnv('DB_PORT', '5432'), 10),
     user: getEnv('DB_USER', 'postgres'),
     password: getEnv('DB_PASSWORD', 'postgres'),
     name: getEnv('DB_NAME', 'meta'),

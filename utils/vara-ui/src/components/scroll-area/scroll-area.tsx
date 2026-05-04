@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { ComponentPropsWithoutRef, ElementType, PropsWithChildren } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, PropsWithChildren } from 'react';
 
 import styles from './scroll-area.module.scss';
 
@@ -19,5 +19,5 @@ function ScrollArea<T extends ElementType = 'div'>({ as, children, className, ..
   );
 }
 
-export { ScrollArea };
 export type { Props as ScrollAreaProps };
+export { ScrollArea };

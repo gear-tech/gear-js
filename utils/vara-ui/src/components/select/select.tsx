@@ -1,6 +1,6 @@
-import { OptionHTMLAttributes, useMemo, ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, type OptionHTMLAttributes, useMemo } from 'react';
 
-import { LabelContainer, LabelContainerProps } from '../label-container';
+import { LabelContainer, type LabelContainerProps } from '../label-container';
 
 import styles from './select.module.scss';
 
@@ -21,5 +21,5 @@ const Select = ({ options, className, label, error, size, block, ...attrs }: Pro
   );
 };
 
-export { Select };
 export type { Props as SelectProps };
+export { Select };

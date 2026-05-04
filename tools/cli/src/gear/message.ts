@@ -1,8 +1,8 @@
-import { CreateType, GearApi, MessageQueued, ProgramMetadata } from '@gear-js/api';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { u64 } from '@polkadot/types';
+import { CreateType, type GearApi, type MessageQueued, type ProgramMetadata } from '@gear-js/api';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { u64 } from '@polkadot/types';
 import { u8aToHex } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
 import { logger } from '../utils';
 import { getReply, isMsgDispatchedSuccessfully } from './findEvents';

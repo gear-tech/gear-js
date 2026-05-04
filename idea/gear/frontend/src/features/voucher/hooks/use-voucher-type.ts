@@ -1,7 +1,7 @@
-import { useState, ChangeEvent } from 'react';
+import { type ChangeEvent, useState } from 'react';
 
-import { VOUCHER_TYPE, FIELD_NAME } from '../consts';
-import { VoucherType } from '../types';
+import { FIELD_NAME, VOUCHER_TYPE } from '../consts';
+import type { VoucherType } from '../types';
 
 function useVoucherType() {
   const [type, setType] = useState<VoucherType>(VOUCHER_TYPE.PROGRAM);

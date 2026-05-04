@@ -1,6 +1,6 @@
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
-import { MailboxItem } from '@/features/mailbox';
+import type { MailboxItem } from '@/features/mailbox';
 
 import { Message } from '../message';
 

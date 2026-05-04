@@ -1,22 +1,22 @@
-import { ProgramMetadata } from '@gear-js/api';
+import type { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@polkadot/util/types';
-import { useState, useMemo } from 'react';
+import type { HexString } from '@polkadot/util/types';
+import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { PayloadValue } from '@/entities/formPayload';
-import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
+import type { PayloadValue } from '@/entities/formPayload';
+import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
-import { useGasCalculate, useChangeEffect, useBalanceSchema, useGasLimitSchema } from '@/hooks';
-import { Result } from '@/hooks/useGasCalculate/types';
-import { GasMethod } from '@/shared/config';
+import { useBalanceSchema, useChangeEffect, useGasCalculate, useGasLimitSchema } from '@/hooks';
+import type { Result } from '@/hooks/useGasCalculate/types';
+import type { GasMethod } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
-import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
+import { Box, Input, LabeledCheckbox, ValueField } from '@/shared/ui';
 
-import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
+import { type FormValues, INITIAL_VALUES, type SubmitHelpers } from '../model';
 
 import styles from './ProgramForm.module.scss';
 
@@ -73,7 +73,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
     const preparedValues = {
       ...values,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload as PayloadValue),
     };
 
@@ -97,7 +96,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       value,
       gasLimit,
       payloadType: metadata ? undefined : payloadType,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,
       programName,
       keepAlive,

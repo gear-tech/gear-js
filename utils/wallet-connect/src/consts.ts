@@ -4,7 +4,7 @@ import PolkadotSVG from './assets/polkadot.svg?react';
 import SubWalletSVG from './assets/subwallet.svg?react';
 import TalismanSVG from './assets/talisman.svg?react';
 import VaranSVG from './assets/varan.svg?react';
-import { Wallets } from './types';
+import type { Wallets } from './types';
 import { isTelegramMiniApp } from './utils';
 
 const IS_MOBILE_DEVICE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

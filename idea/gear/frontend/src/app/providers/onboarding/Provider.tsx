@@ -1,5 +1,5 @@
-import { ProviderProps, useAccount } from '@gear-js/react-hooks';
-import { useState, useEffect } from 'react';
+import { type ProviderProps, useAccount } from '@gear-js/react-hooks';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { LocalStorage, routes } from '@/shared/config';

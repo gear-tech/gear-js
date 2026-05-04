@@ -1,4 +1,4 @@
-import { Signer } from '@polkadot/api/types';
+import type { Signer } from '@polkadot/api/types';
 
 type OperationCallbacks = {
   reject?: () => void;

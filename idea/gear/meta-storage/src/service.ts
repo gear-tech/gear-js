@@ -1,20 +1,20 @@
+import * as crypto from 'node:crypto';
+import { type HumanTypesRepr, MetadataVersion, ProgramMetadata } from '@gear-js/api';
 import {
-  AddMetaDetailsParams,
-  AddSailsIdlParams,
-  GetMetaParams,
+  type AddMetaDetailsParams,
+  type AddSailsIdlParams,
+  type GetMetaParams,
   InvalidMetadataError,
   InvalidParamsError,
   logger,
   MetaNotFoundError,
   SailsIdlNotFoundError,
 } from 'gear-idea-common';
-import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
-import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
+import type { Repository } from 'typeorm';
 
-import { Meta, AppDataSource, SailsIdl } from './database';
-import { validateMetaHex } from './util/validate';
+import { AppDataSource, Meta, SailsIdl } from './database';
 import { Code } from './database/entities/code.entity';
+import { validateMetaHex } from './util/validate';
 
 const getHash = (data: string) => crypto.createHash('sha256').update(data).digest('hex');
 

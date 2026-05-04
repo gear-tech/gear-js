@@ -1,4 +1,4 @@
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useParams } from 'react-router-dom';
 
 import { useMailboxItem } from '@/features/mailbox';

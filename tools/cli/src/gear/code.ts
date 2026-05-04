@@ -1,9 +1,9 @@
-import { CodeChangedData, GearApi, generateCodeHash } from '@gear-js/api';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { HexString } from '@polkadot/util/types';
-import fs from 'fs';
+import fs from 'node:fs';
+import { type CodeChangedData, type GearApi, generateCodeHash } from '@gear-js/api';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { HexString } from '@polkadot/util/types';
 
-import { ICode, SchemeCode } from '../types';
+import type { ICode, SchemeCode } from '../types';
 import { logger } from '../utils';
 
 export async function uploadCode(api: GearApi, account: KeyringPair, pathToProgram: string) {
@@ -15,7 +15,7 @@ export async function uploadCode(api: GearApi, account: KeyringPair, pathToProgr
   const uploadedCode = await api.code.storage(codeHash);
 
   if (uploadedCode.isSome) {
-    logger.warn(`Code is already uploaded`, { lvl: 1 });
+    logger.warn('Code is already uploaded', { lvl: 1 });
     return { codeHash };
   }
 

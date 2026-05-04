@@ -1,5 +1,5 @@
-import { Vec } from '@polkadot/types';
-import { EventRecord } from '@polkadot/types/interfaces';
+import type { Vec } from '@polkadot/types';
+import type { EventRecord } from '@polkadot/types/interfaces';
 
 import { Placeholder } from '@/entities/placeholder';
 import { IdeaEvent } from '@/features/explorer';

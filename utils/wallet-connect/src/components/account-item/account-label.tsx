@@ -1,4 +1,4 @@
-import { useRender, mergeProps } from '@base-ui-components/react';
+import { mergeProps, useRender } from '@base-ui-components/react';
 
 import { getTruncatedText } from '@/utils';
 

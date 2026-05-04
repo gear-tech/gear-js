@@ -1,8 +1,8 @@
 use ethexe_common::{
+    ToDigest,
     ecdsa::{PrivateKey, Signature, SignedMessage},
     gprimitives::{ActorId, H256},
     injected::{InjectedTransaction, Promise},
-    ToDigest,
 };
 use gear_core::rpc::ReplyInfo;
 use gear_core_errors::{ReplyCode, SuccessReplyReason};
@@ -15,10 +15,10 @@ pub fn main() {
 
     let tx = InjectedTransaction {
         destination: ActorId::zero(),
-        payload: Vec::from([0, 1, 2]).into(),
+        payload: Vec::from([0, 1, 2]).try_into().unwrap(),
         value: 256,
         reference_block: H256::zero(),
-        salt: Vec::from([3, 4, 5]).into(),
+        salt: Vec::from([3, 4, 5]).try_into().unwrap(),
     };
 
     println!("hash: <{:?}>", tx.to_digest());

@@ -4,14 +4,14 @@ import { useParams } from 'react-router-dom';
 
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
-import { Values } from '@/hooks/useProgramActions/types';
+import type { Values } from '@/hooks/useProgramActions/types';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
 import { BackButton } from '@/shared/ui';
 import { Subheader } from '@/shared/ui/subheader';
-import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
+import { ProgramForm, SailsProgramForm, type SubmitHelpers } from '@/widgets/programForm';
 
-import { PageParams } from '../model';
+import type { PageParams } from '../model';
 
 import styles from './InitializeProgram.module.scss';
 
@@ -37,7 +37,6 @@ const InitializeProgram = () => {
       disableSubmitting();
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, disableSubmitting);
   };
 

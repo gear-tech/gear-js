@@ -1,9 +1,11 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { ProgramsService } from './programs.service.js';
-import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
+
 import { ProgramResponseDto } from './dto/program-response.dto.js';
+import { QueryProgramsDto } from './dto/query-programs.dto.js';
+import { ProgramsService } from './programs.service.js';
 
 @ApiTags('programs')
 @Controller('programs')
@@ -19,7 +21,7 @@ export class ProgramsController {
     type: ProgramResponseDto,
     isArray: true,
   })
-  async findAll(@Query() query: QueryProgramsWithBlockRangeDto) {
+  async findAll(@Query() query: QueryProgramsDto) {
     return this.programsService.findAll(query);
   }
 

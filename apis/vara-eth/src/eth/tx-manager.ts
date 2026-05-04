@@ -1,19 +1,20 @@
 import type {
   Abi,
-  TransactionReceipt,
-  Hash,
+  Address,
   ContractEventName,
   DecodeEventLogReturnType,
   EstimateGasParameters,
-  TransactionRequest,
-  Log,
+  Hash,
   Hex,
+  Log,
   PublicClient,
+  TransactionReceipt,
+  TransactionRequest,
 } from 'viem';
-import { decodeEventLog } from 'viem';
+import { decodeEventLog } from 'viem/utils';
 
-import { ITxManager } from './interfaces/tx-manager.js';
-import { ITransactionSigner } from '../types/signer.js';
+import type { ITransactionSigner } from '../types/signer.js';
+import type { ITxManager } from './interfaces/tx-manager.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -42,8 +43,8 @@ export class TxManager<
    * @param txIndependentHelperFns - Helper functions that do not depend on the transaction
    */
   constructor(
-    private _pc: PublicClient,
-    private _signer: ITransactionSigner,
+    public readonly pc: PublicClient,
+    public readonly signer: ITransactionSigner,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {
@@ -71,8 +72,8 @@ export class TxManager<
   async estimateGas(): Promise<bigint> {
     try {
       const gasParams: EstimateGasParameters = this._tx as EstimateGasParameters;
-
-      this._tx.gas = await this._pc.estimateGas(gasParams);
+      gasParams.account = await this.signer.getAddress();
+      this._tx.gas = await this.pc.estimateGas(gasParams);
 
       return this._tx.gas;
     } catch (error) {
@@ -87,7 +88,7 @@ export class TxManager<
    * @returns The transaction hash
    */
   async send(): Promise<Hash> {
-    const hash = await this._signer.sendTransaction(this._tx);
+    const hash = await this.signer.sendTransaction(this._tx);
     this._hash = hash;
     return hash;
   }
@@ -99,7 +100,7 @@ export class TxManager<
    */
   async sendAndWaitForReceipt(): Promise<TransactionReceipt> {
     const hash = await this.send();
-    this._receipt = await this._pc.waitForTransactionReceipt({ hash });
+    this._receipt = await this.pc.waitForTransactionReceipt({ hash });
     if (!this._receipt) {
       throw new Error('Transaction receipt not found');
     }
@@ -116,7 +117,7 @@ export class TxManager<
       return this._receipt;
     }
     if (this._hash) {
-      this._receipt = await this._pc.waitForTransactionReceipt({ hash: this._hash });
+      this._receipt = await this.pc.waitForTransactionReceipt({ hash: this._hash });
       if (!this._receipt) {
         throw new Error('Transaction receipt not found');
       }
@@ -150,9 +151,7 @@ export class TxManager<
         if (decoded.eventName === eventName) {
           return decoded as DecodeEventLogReturnType<abi, eventName>;
         }
-      } catch {
-        continue;
-      }
+      } catch {}
     }
 
     throw new Error(`${eventName} event not found in transaction receipt`);
@@ -165,5 +164,25 @@ export class TxManager<
    */
   getTx(): TransactionRequest {
     return this._tx;
+  }
+
+  /**
+   * Gets the block number of the transaction.
+   *
+   * @returns The block number or null if not available
+   */
+  get blockNumber(): bigint | null {
+    if (this._receipt) {
+      return this._receipt.blockNumber;
+    }
+
+    return null;
+  }
+
+  get contractAddress(): Address {
+    if (!this._tx.to) {
+      throw new Error('Contract address not available');
+    }
+    return this._tx.to as Address;
   }
 }

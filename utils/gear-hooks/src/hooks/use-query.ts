@@ -1,11 +1,11 @@
-import { DefaultError, QueryKey, QueryClient } from '@tanstack/query-core';
+import type { DefaultError, QueryClient, QueryKey } from '@tanstack/query-core';
 import {
+  type DefinedInitialDataOptions,
+  type DefinedUseQueryResult,
+  type UndefinedInitialDataOptions,
+  type UseQueryOptions,
+  type UseQueryResult,
   useQuery as useTanstackQuery,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  UndefinedInitialDataOptions,
-  UseQueryResult,
-  UseQueryOptions,
 } from '@tanstack/react-query';
 
 function useQuery<

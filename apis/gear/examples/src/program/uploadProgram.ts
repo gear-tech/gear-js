@@ -1,5 +1,5 @@
-import { GearApi, GearKeyring, decodeAddress, getProgramMetadata } from '@gear-js/api';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import { decodeAddress, GearApi, GearKeyring, getProgramMetadata } from '@gear-js/api';
 
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
 import { waitForInit } from './waitForInit';

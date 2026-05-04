@@ -1,6 +1,6 @@
-import { GearApi } from '@gear-js/api';
+import type { GearApi } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
-import { KeyringPair } from '@polkadot/keyring/types';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 import { logger } from '../utils';
 

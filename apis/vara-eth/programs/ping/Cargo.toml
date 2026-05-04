@@ -1,0 +1,13 @@
+[package]
+name = "ping"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sails-rs = { workspace = true, features = ["ethexe"] }
+
+[build-dependencies]
+sails-rs = { workspace = true, features = ["ethexe", "wasm-builder"] }

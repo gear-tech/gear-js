@@ -1,6 +1,6 @@
 import ExternalResourceSVG from '@/shared/assets/images/actions/externalResource.svg?react';
 import AppSVG from '@/shared/assets/images/indicators/app.svg?react';
-import { EXAMPLES_HREF, AnimationTimeout } from '@/shared/config';
+import { AnimationTimeout, EXAMPLES_HREF } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from '../Menu.module.scss';

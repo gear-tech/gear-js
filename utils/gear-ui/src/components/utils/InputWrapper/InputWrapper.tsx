@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { Gap } from '../../../types';
+import type { Gap } from '../../../types';
 import { Tooltip } from '../../Tooltip/Tooltip';
 
 import styles from './InputWrapper.module.scss';
@@ -50,7 +50,5 @@ const InputWrapper = (props: Props) => {
   );
 };
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
-export { InputWrapper, styles as inputWrapperStyles };
 export type { Props as InputWrapperProps };
+export { InputWrapper, styles as inputWrapperStyles };

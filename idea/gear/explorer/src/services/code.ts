@@ -1,9 +1,9 @@
 import { Code } from 'gear-idea-indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import type { DataSource, Repository } from 'typeorm';
 import { Pagination } from '../decorators';
-import { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types';
-import { CodeNotFound } from '../errors';
 import { RequiredParams } from '../decorators/required';
+import { CodeNotFound } from '../errors';
+import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types';
 
 export class CodeService {
   private _repo: Repository<Code>;

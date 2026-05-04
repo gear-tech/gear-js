@@ -2,17 +2,17 @@ import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { getResetPayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 import { z } from 'zod';
 
 import { GasField } from '@/features/gasField';
 import { PayloadForm, useService } from '@/features/sails';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
-import { Result } from '@/hooks/useGasCalculate/types';
+import type { Result } from '@/hooks/useGasCalculate/types';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { GasMethod } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
@@ -89,7 +89,6 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
     if (isReply) return replyMessage({ reply: { ...values, replyToId: id }, payloadType, voucherId, reject, resolve });
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendMessage({ message: { ...values, destination: id }, payloadType, voucherId, reject, resolve });
   });
 

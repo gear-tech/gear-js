@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 import LoadingIcon from '@/assets/icons/loading.svg?react';
 

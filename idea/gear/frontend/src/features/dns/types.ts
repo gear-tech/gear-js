@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
 import { FIELD_NAME } from './consts';
 
@@ -34,4 +34,4 @@ type DnsResponse = {
   count: number;
 };
 
-export type { Values, Dns, DnsParams, DnsResponse, DnsFilterParams, SortDirection };
+export type { Dns, DnsFilterParams, DnsParams, DnsResponse, SortDirection, Values };

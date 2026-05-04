@@ -2,7 +2,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { WALLET } from './consts';
-import { WalletId } from './types';
+import type { WalletId } from './types';
 
 // isDialogOpen is needed to reset walletId when dialog is opened
 function useWallet(isDialogOpen: boolean) {

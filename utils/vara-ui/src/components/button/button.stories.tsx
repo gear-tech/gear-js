@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 
@@ -60,4 +60,4 @@ const Children: Story = {
 };
 
 export default meta;
-export { Default, Border, Grey, Transparent, Contrast, Plain, Danger, Icon, IconAndText, Children };
+export { Border, Children, Contrast, Danger, Default, Grey, Icon, IconAndText, Plain, Transparent };

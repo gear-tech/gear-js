@@ -1,4 +1,4 @@
-import { Address, Hex } from 'viem';
+import type { Address, Hex } from 'viem';
 
 /**
  * Helper functions for messages sent via the Mirror contract.

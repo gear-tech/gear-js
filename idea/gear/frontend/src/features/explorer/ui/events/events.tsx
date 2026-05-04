@@ -5,8 +5,8 @@ import { Placeholder } from '@/entities/placeholder';
 import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
 
 import { FILTER_VALUES, LOCAL_STORAGE } from '../../consts';
-import { IdeaEvent } from '../../idea-event';
-import { FilterValues } from '../../types';
+import type { IdeaEvent } from '../../idea-event';
+import type { FilterValues } from '../../types';
 import { Event } from '../event';
 import { Filter } from '../filter';
 
@@ -20,7 +20,6 @@ const Events = ({ events }: Props) => {
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
 
   const [filterValues, setFilterValues] = useState<FilterValues>(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     localFilterValues ? JSON.parse(localFilterValues) : FILTER_VALUES,
   );
 

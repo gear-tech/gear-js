@@ -1,6 +1,6 @@
 import { Combobox } from '@base-ui/react';
 import { Button } from '@gear-js/ui';
-import { Ref, useId, useState } from 'react';
+import { type Ref, useId, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';

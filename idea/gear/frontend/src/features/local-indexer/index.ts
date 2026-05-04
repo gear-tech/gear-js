@@ -1,16 +1,15 @@
-import { getLocalMetadata, addLocalProgram, addLocalProgramName, addLocalMetadata } from './api';
-import { useLocalProgram, useLocalPrograms, useLocalCode, useLocalCodes } from './hooks';
-import { LocalProgram, LocalCode } from './types';
+import { addLocalMetadata, addLocalProgram, addLocalProgramName, getLocalMetadata } from './api';
+import { useLocalCode, useLocalCodes, useLocalProgram, useLocalPrograms } from './hooks';
+import type { LocalCode, LocalProgram } from './types';
 
+export type { LocalCode, LocalProgram };
 export {
-  getLocalMetadata,
+  addLocalMetadata,
   addLocalProgram,
   addLocalProgramName,
-  addLocalMetadata,
-  useLocalProgram,
-  useLocalPrograms,
+  getLocalMetadata,
   useLocalCode,
   useLocalCodes,
+  useLocalProgram,
+  useLocalPrograms,
 };
-
-export type { LocalProgram, LocalCode };

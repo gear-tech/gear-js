@@ -1,11 +1,11 @@
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { HexString } from '@polkadot/util/types';
 
+import { BaseGearProgram } from '../src';
+import { getApi } from './common';
 import { TEST_CODE } from './config';
 import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { getApi } from './common';
-import { BaseGearProgram } from '../src';
 
 const api = getApi();
 let alice: KeyringPair;
@@ -101,15 +101,15 @@ describe('BaseGearProgram', () => {
     const result = await program.sendBatchMessages([{ payload: payload1 }, { payload: payload2 }]);
 
     expect(result.success).toBeTruthy();
-    if (result.success == true) {
+    if (result.success === true) {
       expect(result.sentMessages).toHaveLength(2);
       expect(result.sentMessages[0].success).toBeTruthy();
-      if (result.sentMessages[0].success == true) {
+      if (result.sentMessages[0].success === true) {
         expect(result.sentMessages[0].id).toMatch(/^0x[0-9a-fA-F]{64}$/);
       }
       expect(result.sentMessages[1].success).toBeTruthy();
-      if (result.sentMessages[1].success == true) {
-        expect(result.sentMessages![1].id).toMatch(/^0x[0-9a-fA-F]{64}$/);
+      if (result.sentMessages[1].success === true) {
+        expect(result.sentMessages?.[1].id).toMatch(/^0x[0-9a-fA-F]{64}$/);
       }
     }
   });

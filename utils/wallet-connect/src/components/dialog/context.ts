@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { useWallet } from '../../hooks';
+import type { useWallet } from '../../hooks';
 
 export type DialogContextValue = ReturnType<typeof useWallet>;
 

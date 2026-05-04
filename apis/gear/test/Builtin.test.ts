@@ -1,5 +1,5 @@
-import { sleep } from './utilsFunctions';
 import { getApi } from './common';
+import { sleep } from './utilsFunctions';
 
 const api = getApi();
 

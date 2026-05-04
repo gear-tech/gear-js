@@ -1,6 +1,6 @@
 import { u8aToU8a } from '@polkadot/util';
 
-import { HexString } from '../types';
+import type { HexString } from '../types';
 
 interface IReplyCodeReason {
   readonly explanation: string;
@@ -28,7 +28,7 @@ function checkAndGetCodeBytes(code: Uint8Array, prevByteValue?: number, prevByte
   return code;
 }
 
-export const enum EReplyCode {
+export enum EReplyCode {
   Success = 0,
   Error = 1,
 }
@@ -47,7 +47,7 @@ export class ReplyCode {
   ) {
     this._bytes = checkAndGetCodeBytes(u8aToU8a(codeBytes));
 
-    if (this._bytes.length != 4) {
+    if (this._bytes.length !== 4) {
       throw new Error('Invalid message reply code length');
     }
 
@@ -77,7 +77,7 @@ export class ReplyCode {
   }
 }
 
-export const enum ESuccessReply {
+export enum ESuccessReply {
   Auto = 0,
   Manual = 1,
 }
@@ -115,7 +115,7 @@ export class SuccessReplyReason implements IReplyCodeReason {
   }
 }
 
-const enum EErrorReplyReason {
+enum EErrorReplyReason {
   Execution = 0,
   FailedToCreateProgram = 1,
   UnavailableActor = 2,
@@ -162,12 +162,15 @@ export class ErrorReplyReason implements IReplyCodeReason {
         if (this._specVersion && this._specVersion < 1800) {
           return 'Reinstrumentation failed.';
         }
+        // falls through
       }
-      // falls through
       default: {
         this._throwUnsupported();
+        break;
       }
     }
+    // not reached — _throwUnsupported() always throws
+    return this._bytes[1].toString();
   }
 
   get isExecution(): boolean {
@@ -203,7 +206,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
   }
 }
 
-export const enum ESimpleExecutionError {
+export enum ESimpleExecutionError {
   RanOutOfGas = 0,
   MemoryOverflow = 1,
   BackendError = 2,
@@ -249,31 +252,31 @@ export class ExecutionErrorReason implements IReplyCodeReason {
   }
 
   get isRanOutOfGas(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.RanOutOfGas;
+    return this._bytes[2] === ESimpleExecutionError.RanOutOfGas;
   }
 
   get isMemoryOverflow(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.MemoryOverflow;
+    return this._bytes[2] === ESimpleExecutionError.MemoryOverflow;
   }
 
   get isBackendError(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.BackendError;
+    return this._bytes[2] === ESimpleExecutionError.BackendError;
   }
 
   get isUserspacePanic(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.UserspacePanic;
+    return this._bytes[2] === ESimpleExecutionError.UserspacePanic;
   }
 
   get isUnreachableInstruction(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.UnreachableInstruction;
+    return this._bytes[2] === ESimpleExecutionError.UnreachableInstruction;
   }
 
   get isStackLimitExceeded(): boolean {
-    return this._bytes[2] == ESimpleExecutionError.StackLimitExceeded;
+    return this._bytes[2] === ESimpleExecutionError.StackLimitExceeded;
   }
 }
 
-export const enum ESimpleUnavailableActorError {
+export enum ESimpleUnavailableActorError {
   ProgramExited = 0,
   InitializationFailure = 1,
   Uninitialized = 2,
@@ -311,27 +314,30 @@ export class UnavailableActorErrorReason implements IReplyCodeReason {
       }
       default: {
         this._throwUnsupported();
+        break;
       }
     }
+    // not reached — _throwUnsupported() always throws
+    return this._bytes[2].toString();
   }
 
   get isProgramExited(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ProgramExited;
+    return this._bytes[2] === ESimpleUnavailableActorError.ProgramExited;
   }
 
   get isInitializationFailure(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.InitializationFailure;
+    return this._bytes[2] === ESimpleUnavailableActorError.InitializationFailure;
   }
 
   get isUninitialized(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.Uninitialized;
+    return this._bytes[2] === ESimpleUnavailableActorError.Uninitialized;
   }
 
   get isProgramNotCreated(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ProgramNotCreated;
+    return this._bytes[2] === ESimpleUnavailableActorError.ProgramNotCreated;
   }
 
   get isReinstrumentationFailure(): boolean {
-    return this._bytes[2] == ESimpleUnavailableActorError.ReinstrumentationFailure;
+    return this._bytes[2] === ESimpleUnavailableActorError.ReinstrumentationFailure;
   }
 }

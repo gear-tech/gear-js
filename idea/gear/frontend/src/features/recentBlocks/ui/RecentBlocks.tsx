@@ -1,7 +1,7 @@
 import { useApi } from '@gear-js/react-hooks';
-import { U128 } from '@polkadot/types';
+import type { U128 } from '@polkadot/types';
 import { clsx } from 'clsx';
-import { useState, useEffect } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
@@ -10,10 +10,9 @@ import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { AnimationTimeout } from '@/shared/config';
 
 import { getMinWidth } from '../helpers';
-import { RecentBlock } from '../types';
-
-import styles from './RecentBlocks.module.scss';
+import type { RecentBlock } from '../types';
 import { Graph } from './graph';
+import styles from './RecentBlocks.module.scss';
 import { RecentBlocksList } from './recentBlocksList';
 
 const RecentBlocks = () => {
@@ -28,6 +27,13 @@ const RecentBlocks = () => {
 
   const toggleList = () => setIsOpen((prevValue) => !prevValue);
   const closeList = () => setIsOpen(false);
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleList();
+    }
+  };
 
   const sectionRef = useOutsideClick<HTMLSelectElement>(closeList, isOpen);
 
@@ -52,15 +58,12 @@ const RecentBlocks = () => {
       setTimeInstance(0);
     }
     setBlock(lastBlock);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks]);
 
   useEffect(() => {
     if (!isApiReady) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.query.gear.blockNumber((result: U128) => setGearBlock(result.toNumber()));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   useEffect(() => {
@@ -80,8 +83,8 @@ const RecentBlocks = () => {
       {/* TODO(#1780): remove nodeRef prop */}
       <CSSTransition nodeRef={sectionRef} in={isOpen} timeout={AnimationTimeout.Default}>
         <section ref={sectionRef} className={blocksClasses}>
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-          <div className={styles.content} onClick={toggleList}>
+          {/* biome-ignore lint/a11y/useSemanticElements: div acts as a clickable toggle */}
+          <div className={styles.content} onClick={toggleList} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
             <Graph blocks={blocks} className={styles.graph} />
 
             <div className={styles.blockInfo}>

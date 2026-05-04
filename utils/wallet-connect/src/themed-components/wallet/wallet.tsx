@@ -7,7 +7,7 @@ import { AccountList } from '../account-list';
 import { Balance } from '../balance';
 import { UI_CONFIG } from '../consts';
 import { ModalFooter } from '../modal-footer';
-import { ThemeProps } from '../types';
+import type { ThemeProps } from '../types';
 import { WalletList } from '../wallet-list';
 
 import styles from './wallet.module.scss';

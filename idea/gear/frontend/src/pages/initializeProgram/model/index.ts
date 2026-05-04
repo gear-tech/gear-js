@@ -1,3 +1,3 @@
-import { PageParams } from './types';
+import type { PageParams } from './types';
 
 export type { PageParams };

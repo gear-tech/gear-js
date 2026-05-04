@@ -1,4 +1,4 @@
-import { Gap } from '../types';
+import type { Gap } from '../types';
 
 const getLabelGap = (gap: Gap) => {
   const [labelColumn, inputColumn] = gap.split('/');
@@ -17,4 +17,4 @@ const getFileSize = (bytes: number) => {
   return `${size} ${unit}`;
 };
 
-export { getLabelGap, getFileSize };
+export { getFileSize, getLabelGap };

@@ -1,9 +1,9 @@
-import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
+import { type CheckboxProps, checkboxStyles } from '@gear-js/ui';
 import { clsx } from 'clsx';
 import { useId } from 'react';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
+import { type FieldValues, type Path, type PathValue, useFormContext } from 'react-hook-form';
 
-import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
+import { BulbBlock, type BulbStatus } from '@/shared/ui/bulbBlock';
 
 type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;
@@ -25,7 +25,6 @@ const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onS
         id={id}
         value={value}
         className={clsx(checkboxStyles.input, checkboxStyles.checkbox)}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
         {...register(name, { onChange })}
       />
 

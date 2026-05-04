@@ -42,7 +42,6 @@ function useVoucherFilters() {
     return status ? { [status]: true } : {};
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
 
   useChangeEffect(() => {

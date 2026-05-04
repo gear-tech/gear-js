@@ -1,4 +1,4 @@
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 const getParsedFilterValue = (value: string) => {
   const [group, item = ''] = value.split('.');

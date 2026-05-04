@@ -1,5 +1,5 @@
-import { BTreeMap, Option, Struct, Text, u32, u8, Vec } from '@polkadot/types';
-import { HexString } from '../common';
+import type { BTreeMap, Option, Struct, Text, u8, u32, Vec } from '@polkadot/types';
+import type { HexString } from '../common';
 
 export interface TypesRepr extends Struct {
   input: Option<u32>;

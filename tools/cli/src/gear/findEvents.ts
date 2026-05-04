@@ -1,11 +1,11 @@
-import {
+import type {
   GearApi,
   GearCommonEventDispatchStatus,
   MessagesDispatched,
   ProgramChanged,
   UserMessageSent,
 } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
 export async function isProgramInitialized(
   api: GearApi,
@@ -28,7 +28,8 @@ export async function isProgramInitialized(
 
       if (data.change.isActive) {
         return true;
-      } else if (data.change.isTerminated) {
+      }
+      if (data.change.isTerminated) {
         return false;
       }
     }

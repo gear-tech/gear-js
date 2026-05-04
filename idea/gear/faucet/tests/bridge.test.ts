@@ -2,12 +2,12 @@ import './__mocks__/viem';
 import './__mocks__/typeorm';
 import './__mocks__/gear-js';
 
+import { Keyring } from '@polkadot/api';
 import request from 'supertest';
-import { hash } from '../src/services/db/last-seen';
 import { FaucetType, RequestStatus } from '../src/database';
 import { FaucetApp } from '../src/main';
+import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
-import { Keyring } from '@polkadot/api';
 
 const ETH_USER_ADDRESS = '0x0000000000000000000000000000000000000001';
 const ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000002';
@@ -80,7 +80,7 @@ describe('Bridge requests', () => {
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[1].status).toBe(RequestStatus.Completed);
 
-    let userLastSeenData = repos.UserLastSeen._data();
+    const userLastSeenData = repos.UserLastSeen._data();
     expect(userLastSeenData).toHaveProperty(hash(ETH_USER_ADDRESS, ETH_CONTRACT_ADDRESS));
   });
 
@@ -121,7 +121,7 @@ describe('Bridge requests', () => {
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[2].status).toBe(RequestStatus.Completed);
 
-    let userLastSeenData = repos.UserLastSeen._data();
+    const userLastSeenData = repos.UserLastSeen._data();
     expect(userLastSeenData).toHaveProperty(hash(ALICE, VARA_GENESIS));
   });
 

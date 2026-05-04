@@ -1,4 +1,4 @@
 import { getLabel, getNestedName } from './field';
-import { getDefaultValue, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from './payload';
+import { getDefaultPayloadValue, getDefaultValue, getPayloadSchema, getResetPayloadValue } from './payload';
 
-export { getLabel, getNestedName, getDefaultValue, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue };
+export { getDefaultPayloadValue, getDefaultValue, getLabel, getNestedName, getPayloadSchema, getResetPayloadValue };

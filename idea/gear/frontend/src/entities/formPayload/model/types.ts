@@ -1,5 +1,5 @@
-import { ProgramMetadata, TypeKind } from '@gear-js/api';
-import { BigNumber } from 'bignumber.js';
+import type { ProgramMetadata, TypeKind } from '@gear-js/api';
+import type { BigNumber } from 'bignumber.js';
 
 type TypeStructure = {
   name: string;
@@ -34,4 +34,4 @@ type PayloadSchemaParams = {
   gasMultiplier: BigNumber;
 };
 
-export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };
+export type { PayloadSchemaModel, PayloadSchemaParams, PayloadValue, TypeStructure };

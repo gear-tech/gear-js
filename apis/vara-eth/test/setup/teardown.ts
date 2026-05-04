@@ -23,7 +23,7 @@ function shutdownVaraEth() {
   }
 
   // Close the log file stream if it exists
-  if (logFile && logFile.value) {
+  if (logFile?.value) {
     try {
       logFile.value.end();
     } catch (err: any) {

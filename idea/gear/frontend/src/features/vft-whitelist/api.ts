@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
@@ -59,4 +59,4 @@ function useIsVftProgram(programId: HexString) {
   return useVftWhitelist(isVft);
 }
 
-export { useIsVftWhitelistAvailable, useVftWhitelist, useIsVftProgram };
+export { useIsVftProgram, useIsVftWhitelistAvailable, useVftWhitelist };

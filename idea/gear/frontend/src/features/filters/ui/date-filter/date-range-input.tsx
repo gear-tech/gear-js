@@ -1,6 +1,6 @@
 import { Popover } from '@base-ui/react';
 import { useRef, useState } from 'react';
-import { DateRange as DateRangeType } from 'react-day-picker';
+import type { DateRange as DateRangeType } from 'react-day-picker';
 
 import { DateInput } from './date-input';
 import { DateRange } from './date-range';

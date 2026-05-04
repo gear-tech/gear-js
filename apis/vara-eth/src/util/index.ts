@@ -1,6 +1,8 @@
-export * from './snake-camel.js';
-export * from './maybe-hash.js';
-export * from './event.js';
 export * from './bigint.js';
+export { initKzgLoading } from './blob.js';
+export * from './error.js';
+export * from './event.js';
 export * from './hash.js';
+export * from './maybe-hash.js';
 export * from './normalize.js';
+export * from './snake-camel.js';

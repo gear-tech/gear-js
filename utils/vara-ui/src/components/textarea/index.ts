@@ -1,5 +1,5 @@
-import { Textarea, TextareaProps } from './textarea';
+import { Textarea, type TextareaProps } from './textarea';
 import textareaStyles from './textarea.module.scss';
 
-export { Textarea, textareaStyles };
 export type { TextareaProps };
+export { Textarea, textareaStyles };

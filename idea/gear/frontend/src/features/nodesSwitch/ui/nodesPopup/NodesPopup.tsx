@@ -1,9 +1,9 @@
 import { Button } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { Ref } from 'react';
+import type { Ref } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { NodeSection } from '@/entities/node';
+import type { NodeSection } from '@/entities/node';
 import closeSVG from '@/shared/assets/images/actions/close.svg?react';
 import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import switchSVG from '@/shared/assets/images/actions/switch.svg?react';

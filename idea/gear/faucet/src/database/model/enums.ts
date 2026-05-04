@@ -1,13 +1,13 @@
 export enum FaucetType {
-  VaraTestnet,
-  BridgeErc20,
-  BridgeVaraTestnet,
-  WVara,
+  VaraTestnet = 0,
+  BridgeErc20 = 1,
+  BridgeVaraTestnet = 2,
+  WVara = 3,
 }
 
 export enum RequestStatus {
-  Pending,
-  Processing,
-  Completed,
-  Failed,
+  Pending = 0,
+  Processing = 1,
+  Completed = 2,
+  Failed = 3,
 }

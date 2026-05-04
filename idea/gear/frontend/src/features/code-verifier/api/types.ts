@@ -1,4 +1,4 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
 type VerifyParameters = {
   base_path: string;
@@ -33,4 +33,4 @@ type CodeResponse = {
   repo_link: string;
 };
 
-export type { VerifyParameters, VerifyResponse, StatusResponse, CodeResponse };
+export type { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse };

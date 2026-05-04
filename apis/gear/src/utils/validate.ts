@@ -1,10 +1,10 @@
+import { u64, u128 } from '@polkadot/types';
 import { BN, u8aToBigInt } from '@polkadot/util';
-import { u128, u64 } from '@polkadot/types';
-import { HexString, GearCoreMessageUserUserStoredMessage } from '../types';
-
-import { GasLimit, Value } from '../types/common';
-import { GearApi } from '../GearApi';
 import { ValidationError } from '../errors';
+
+import type { GearApi } from '../GearApi';
+import type { GearCoreMessageUserUserStoredMessage, HexString } from '../types';
+import type { GasLimit, Value } from '../types/common';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
   if (!value) return;

@@ -1,6 +1,6 @@
-import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
-import { AlertContainerFactory } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import { encodeAddress, type Transfer, type UserMessageSent } from '@gear-js/api';
+import type { AlertContainerFactory } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
 import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
@@ -26,7 +26,6 @@ const messageSentEventsHandler = (
   const code = details.unwrap().code;
   const isError = details.isSome && !code.isSuccess;
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
   const showAlert = isError ? alert.error : alert.success;
 
   showAlert(

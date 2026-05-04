@@ -1,2 +1,2 @@
-export { Root } from './root';
 export { useWalletContext } from './context';
+export { Root } from './root';

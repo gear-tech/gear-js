@@ -1,14 +1,14 @@
 import './__mocks__/gear-js';
 import './__mocks__/typeorm';
 
-import request from 'supertest';
-import { FaucetApp } from '../src/main';
-import { repos } from './__mocks__/db';
-import { RequestStatus } from '../src/database';
-import { hash } from '../src/services/db/last-seen';
-import { Keyring } from '@polkadot/api';
 import { decodeAddress } from '@gear-js/api';
+import { Keyring } from '@polkadot/api';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
+import request from 'supertest';
+import { RequestStatus } from '../src/database';
+import { FaucetApp } from '../src/main';
+import { hash } from '../src/services/db/last-seen';
+import { repos } from './__mocks__/db';
 
 const ALICE = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d';
 const BOB = 'kGim5ByTuPokQf21odiQskRXcVEwaunk5PwC4dmGz8M6zuwkq';
@@ -80,7 +80,7 @@ describe('Testnet requests', () => {
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[1].status).toBe(RequestStatus.Completed);
 
-    let userLastSeenData = repos.UserLastSeen._data();
+    const userLastSeenData = repos.UserLastSeen._data();
     expect(userLastSeenData).toHaveProperty(hash(ALICE, VARA_GENESIS));
   });
 
@@ -119,7 +119,7 @@ describe('Testnet requests', () => {
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[2].status).toBe(RequestStatus.Completed);
 
-    let userLastSeenData = repos.UserLastSeen._data();
+    const userLastSeenData = repos.UserLastSeen._data();
     expect(userLastSeenData).toHaveProperty(hash(decodeAddress(BOB), VARA_GENESIS));
   });
 

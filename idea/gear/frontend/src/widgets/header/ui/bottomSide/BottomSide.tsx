@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import { Ref } from 'react';
+import type { Ref } from 'react';
 
 import { useModal } from '@/hooks';
 import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';

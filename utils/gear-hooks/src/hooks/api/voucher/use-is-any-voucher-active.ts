@@ -1,5 +1,5 @@
-import { HexString } from '@gear-js/api';
-import { useState, useEffect, useMemo } from 'react';
+import type { HexString } from '@gear-js/api';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useAccount, useAlert } from '@/context';
 
@@ -35,7 +35,6 @@ function useIsAnyVoucherActive(accountAddress: string | undefined, programId: He
     getIsActive()
       .then((result) => setIsAnyVoucherActive(result))
       .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voucherEntries, getVoucherStatus]);
 
   return { isAnyVoucherActive, isAnyVoucherActiveReady };
@@ -47,4 +46,4 @@ function useIsAnyAccountVoucherActive(programId: HexString | undefined) {
   return useIsAnyVoucherActive(account?.address, programId);
 }
 
-export { useIsAnyVoucherActive, useIsAnyAccountVoucherActive };
+export { useIsAnyAccountVoucherActive, useIsAnyVoucherActive };

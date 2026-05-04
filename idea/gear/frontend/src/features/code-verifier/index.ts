@@ -1,13 +1,13 @@
-import { useVerifyCode, useIsCodeVerified, useVerificationStatus } from './api';
-import { VerifyLink, VerificationStatus, VerifyForm } from './components';
+import { useIsCodeVerified, useVerificationStatus, useVerifyCode } from './api';
+import { VerificationStatus, VerifyForm, VerifyLink } from './components';
 import { VERIFY_ROUTES } from './consts';
 
 export {
-  VerifyLink,
-  VerificationStatus,
-  VerifyForm,
-  VERIFY_ROUTES,
-  useVerifyCode,
   useIsCodeVerified,
   useVerificationStatus,
+  useVerifyCode,
+  VERIFY_ROUTES,
+  VerificationStatus,
+  VerifyForm,
+  VerifyLink,
 };

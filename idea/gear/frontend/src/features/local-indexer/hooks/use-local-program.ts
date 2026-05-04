@@ -1,13 +1,13 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
-import { IMeta } from '@/entities/metadata';
+import type { IMeta } from '@/entities/metadata';
 import { isState } from '@/features/metadata';
 import { useProgramStatus } from '@/features/program';
 
 import { METADATA_LOCAL_FORAGE, PROGRAMS_LOCAL_FORAGE } from '../consts';
-import { DBProgram } from '../types';
+import type { DBProgram } from '../types';
 
 function useLocalProgram() {
   const { api, isApiReady } = useApi();

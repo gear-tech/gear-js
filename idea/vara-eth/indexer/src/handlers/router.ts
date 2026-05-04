@@ -1,6 +1,8 @@
-import { Address, zeroAddress, zeroHash } from 'viem';
 import { In } from 'typeorm';
+import { type Address, zeroAddress, zeroHash } from 'viem';
 
+import { RouterAbi } from '../abi/router.abi.js';
+import { config } from '../config.js';
 import {
   Batch,
   Code,
@@ -12,12 +14,10 @@ import {
   ReplySent,
   StateTransition,
 } from '../model/index.js';
+import type { Context, Log } from '../processor.js';
+import type { BlockDataCommon } from '../types/block.js';
 import { createHash, fromPgBytea, mapKeys, mapValues, toPgBytea, toPgByteaString } from '../util/index.js';
-import { RouterAbi } from '../abi/router.abi.js';
-import { Context, Log } from '../processor.js';
 import { BaseHandler } from './base.js';
-import { config } from '../config.js';
-import { BlockDataCommon } from '../types/block.js';
 
 export class RouterHandler extends BaseHandler {
   private _address: Address;
@@ -196,7 +196,7 @@ export class RouterHandler extends BaseHandler {
       }),
     );
     this._addHashEntry(EntityType.Code, id, common.timestamp);
-    this._logger.info({ codeId: data.args.codeId }, `Code validation requested`);
+    this._logger.info({ codeId: data.args.codeId }, 'Code validation requested');
   }
 
   private _handleCodeGotValidated(log: Log) {
@@ -204,7 +204,7 @@ export class RouterHandler extends BaseHandler {
     const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
     this._codeStatuses.set(data.args.codeId.toLowerCase(), status);
-    this._logger.info({ codeId: data.args.codeId, status }, `Code validation completed`);
+    this._logger.info({ codeId: data.args.codeId, status }, 'Code validation completed');
   }
 
   private _handleProgramCreated(log: Log, common: BlockDataCommon) {
@@ -229,7 +229,7 @@ export class RouterHandler extends BaseHandler {
     }
 
     this._programs.set(program.id, program);
-    this._logger.info(program, `Program created`);
+    this._logger.info(program, 'Program created');
   }
 
   private _handleBatchCommitted(log: Log, common: BlockDataCommon) {
@@ -272,7 +272,7 @@ export class RouterHandler extends BaseHandler {
       this._stateTransitions.set(stateTransition.id, stateTransition);
       this._logger.info(
         { id: stateTransition.id, hash: trans.newStateHash, block: common.blockNumber },
-        `State transition created`,
+        'State transition created',
       );
       this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.timestamp);
 

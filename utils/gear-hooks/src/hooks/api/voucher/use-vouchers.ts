@@ -1,9 +1,12 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
-import { useState, useEffect } from 'react';
+import type { HexString, IVoucherDetails } from '@gear-js/api';
+import { useEffect, useState } from 'react';
 
 import { useAccount, useAlert, useApi } from '@/context';
 
-function useVouchers(accountAddress: string | undefined, programId?: HexString) {
+function useVouchers(
+  ...args: [accountAddress: string | undefined] | [accountAddress: string | undefined, programId?: HexString]
+) {
+  const [accountAddress, programId] = args;
   const { api, isApiReady } = useApi();
   const alert = useAlert();
 
@@ -13,25 +16,25 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString) 
   useEffect(() => {
     setVouchers(undefined);
 
-    const isProgramIdSpecified = arguments.length > 1;
+    const isProgramIdSpecified = args.length > 1;
     if (!isApiReady || !accountAddress || (isProgramIdSpecified && !programId)) return;
 
     api.voucher
       .getAllForAccount(accountAddress, programId)
       .then((result) => setVouchers(result))
       .catch((error) => alert.error(error instanceof Error ? error.message : String(error)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, api, accountAddress, programId]);
 
   return { vouchers, isEachVoucherReady };
 }
 
-function useAccountVouchers(programId?: HexString) {
+function useAccountVouchers(...args: [] | [programId?: HexString]) {
   const { account } = useAccount();
+  const [programId] = args;
 
-  const args: Parameters<typeof useVouchers> = arguments.length ? [account?.address, programId] : [account?.address];
+  const voucherArgs: Parameters<typeof useVouchers> = args.length ? [account?.address, programId] : [account?.address];
 
-  return useVouchers(...args);
+  return useVouchers(...voucherArgs);
 }
 
-export { useVouchers, useAccountVouchers };
+export { useAccountVouchers, useVouchers };

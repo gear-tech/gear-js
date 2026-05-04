@@ -1,10 +1,10 @@
-import { GasInfo, GearApi } from '@gear-js/api';
+import type { GasInfo, GearApi } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
+import type { Event } from '@polkadot/types/interfaces';
 import { BigNumber } from 'bignumber.js';
 
 import { VARA_SS58_FORMAT } from '@/consts';
-import { Entries } from '@/types';
+import type { Entries } from '@/types';
 
 const getAutoGasLimit = ({ waited, min_limit }: GasInfo, _multiplier?: number) => {
   const limit = new BigNumber(min_limit.toString());
@@ -25,4 +25,4 @@ const getVaraAddress = (address: string) => new Keyring().encodeAddress(address,
 
 const getTypedEntries = <T extends object>(value: T) => Object.entries(value) as Entries<T>;
 
-export { getAutoGasLimit, withoutCommas, getExtrinsicFailedMessage, getVaraAddress, getTypedEntries };
+export { getAutoGasLimit, getExtrinsicFailedMessage, getTypedEntries, getVaraAddress, withoutCommas };

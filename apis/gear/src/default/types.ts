@@ -1,4 +1,4 @@
-import { RegistryTypes } from '@polkadot/types/types';
+import type { RegistryTypes } from '@polkadot/types/types';
 
 export const GEAR_TYPES: RegistryTypes = {
   InflationInfo: {

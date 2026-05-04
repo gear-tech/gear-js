@@ -1,4 +1,4 @@
-import { KeyringPair$Json } from '@polkadot/keyring/types';
+import type { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface CreateKeyring {
   keyPairJson?: KeyringPair$Json | string;

@@ -1,6 +1,6 @@
-import { GearApi, GearKeyring, MessageQueued, decodeAddress, getProgramMetadata } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import { decodeAddress, GearApi, GearKeyring, getProgramMetadata, type MessageQueued } from '@gear-js/api';
+import type { HexString } from '@polkadot/util/types';
 
 import { PATH_TO_META } from '../config';
 import { waitForReply } from './waitForReply';

@@ -1,4 +1,4 @@
-import { FieldsetHTMLAttributes } from 'react';
+import type { FieldsetHTMLAttributes } from 'react';
 
 import styles from './fieldset.module.scss';
 

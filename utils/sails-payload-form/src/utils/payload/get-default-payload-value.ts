@@ -1,5 +1,5 @@
-import { Sails } from 'sails-js';
-import {
+import type { Sails } from 'sails-js';
+import type {
   ISailsEnumDef,
   ISailsFixedSizeArrayDef,
   ISailsMapDef,
@@ -12,7 +12,7 @@ import {
 } from 'sails-js-types';
 
 import { RESULT } from '../../consts';
-import { PayloadValue, ISailsFuncArg } from '../../types';
+import type { ISailsFuncArg, PayloadValue } from '../../types';
 
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
@@ -51,7 +51,7 @@ const getDefaultValue = (sails: Sails) => {
     if (def.isStruct) return getStructValue(def.asStruct);
     if (def.isEnum) return getEnumValue(def.asEnum);
 
-    throw new Error('Unknown type: ' + JSON.stringify(def));
+    throw new Error(`Unknown type: ${JSON.stringify(def)}`);
   };
 
   return getValue;
@@ -63,4 +63,4 @@ const getDefaultPayloadValue = (sails: Sails, args: ISailsFuncArg[]) => {
   return Object.fromEntries(result);
 };
 
-export { getDefaultValue, getDefaultPayloadValue };
+export { getDefaultPayloadValue, getDefaultValue };

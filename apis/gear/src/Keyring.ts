@@ -1,12 +1,12 @@
-import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
+import { Keyring } from '@polkadot/api';
+import type { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { hexToU8a, isString, isU8a, stringToU8a, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate, mnemonicToMiniSecret } from '@polkadot/util-crypto';
-import { Keypair } from '@polkadot/util-crypto/types';
-import { Keyring } from '@polkadot/api';
+import type { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 
-import { decodeAddress } from './utils';
 import { VARA_SS58_FORMAT } from './consts';
+import { decodeAddress } from './utils';
 
 export class GearKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {

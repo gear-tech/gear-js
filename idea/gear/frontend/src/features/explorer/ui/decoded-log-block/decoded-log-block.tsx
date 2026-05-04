@@ -1,5 +1,5 @@
 import { Method } from '../../consts';
-import { FormattedUserMessageSentData } from '../../types';
+import type { FormattedUserMessageSentData } from '../../types';
 import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
 
 type Props = {

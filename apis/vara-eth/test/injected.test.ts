@@ -1,43 +1,47 @@
-import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
-import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
+import type { Hash, PublicClient, WalletClient } from 'viem';
+import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 
 import {
-  InjectedTxPromise,
-  VaraEthApi,
-  getMirrorClient,
-  WsVaraEthProvider,
-  InjectedTx,
-  IInjectedTransaction,
   createVaraEthApi,
+  getMirrorClient,
+  type IInjectedTransaction,
+  InjectedTx,
+  InjectedTxPromise,
+  type VaraEthApi,
+  WsVaraEthProvider,
 } from '../src';
+import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
-import type { InjectedTransactionPromiseRaw } from '../src/api/injected/promise';
 
 let api: VaraEthApi;
-let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
-let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
+let publicClient: PublicClient;
+let walletClient: WalletClient;
 let signer: ReturnType<typeof walletClientToSigner>;
 
 let mirror: ReturnType<typeof getMirrorClient>;
 
-let programId: `0x${string}`;
+let programId: Hash;
+
+const injectedTxs: {
+  id: Hash;
+  referenceBlock: Hash;
+  payload: string;
+  destination: Hash;
+  value: number;
+  salt: string;
+}[] = [];
 
 beforeAll(async () => {
-  const transport = webSocket(config.wsRpc);
-
-  publicClient = createPublicClient({
-    transport,
-  }) as PublicClient<WebSocketTransport, Chain, undefined>;
   const account = privateKeyToAccount(config.privateKey);
 
-  walletClient = createWalletClient({
-    account,
-    transport,
-  }) as WalletClient<WebSocketTransport, Chain, Account>;
+  const transport = webSocket(config.wsRpc);
+  publicClient = createPublicClient({ transport });
+
+  walletClient = createWalletClient({ account, transport });
   signer = walletClientToSigner(walletClient);
 
   api = await createVaraEthApi(new WsVaraEthProvider(), publicClient, config.routerId, signer);
@@ -160,7 +164,7 @@ describe('Injected Transactions', () => {
 
   describe('setup', () => {
     test('should create program', async () => {
-      const tx = await api.eth.router.createProgram(config.codeId);
+      const tx = api.eth.router.createProgramBuilder(config.codeId).build();
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();
@@ -246,10 +250,10 @@ describe('Injected Transactions', () => {
   describe('transactions', () => {
     let unwatch: () => void;
 
-    let currentStateHash: Hex;
-    let newStateHash: Hex;
+    let currentStateHash: Hash;
+    let newStateHash: Hash;
 
-    let messageId: Hex;
+    let messageId: Hash;
 
     let testTx: InjectedTx;
 
@@ -271,8 +275,16 @@ describe('Injected Transactions', () => {
       expect(testTx.recipient).toBe('0x70997970c51812dc3a010c7d01b50e0d17dc79c8');
     });
 
-    test('should set zero address as default in setRecipient', async () => {
+    test('should set slot validator using setRecipient without args', async () => {
       const recipient = await testTx.setRecipient();
+
+      expect(recipient).not.toBe(zeroAddress);
+      expect(recipient).toMatch(/^0x[0-9a-fA-F]{40}$/);
+      expect(testTx.recipient).toBe(recipient);
+    });
+
+    test('should set zero address using setDefaultValidator', () => {
+      const recipient = testTx.setDefaultValidator();
 
       expect(recipient).toBe(zeroAddress);
       expect(testTx.recipient).toBe(zeroAddress);
@@ -301,9 +313,17 @@ describe('Injected Transactions', () => {
 
       const result = await tx.send();
 
-      expect(tx.recipient).toBe(zeroAddress);
+      expect(tx.recipient).not.toBeNull();
 
       messageId = tx.messageId;
+      injectedTxs.push({
+        id: tx.messageId,
+        referenceBlock: tx.referenceBlock!,
+        payload,
+        destination: programId,
+        value: 0,
+        salt: tx.salt,
+      });
 
       expect(result).toBe('Accept');
     });
@@ -345,7 +365,16 @@ describe('Injected Transactions', () => {
 
       const tx = await api.createInjectedTransaction(injected);
 
-      expect(tx.recipient).not.toBe(zeroAddress);
+      expect(tx.recipient).toBeNull();
+
+      injectedTxs.push({
+        id: tx.messageId,
+        referenceBlock: tx.referenceBlock!,
+        payload,
+        destination: programId,
+        value: 0,
+        salt: tx.salt,
+      });
 
       const result = await tx.sendAndWaitForPromise();
 
@@ -397,6 +426,70 @@ describe('Injected Transactions', () => {
 
       await expect(tx.sendAndWaitForPromise()).rejects.toThrow(
         'RpcError(-32602): Invalid params :: Injected transactions with non-zero value are not supported',
+      );
+    });
+  });
+
+  describe('queries', () => {
+    const assertTx = (
+      tx: Awaited<ReturnType<typeof api.query.injected.getTransaction>>,
+      itx: (typeof injectedTxs)[0],
+    ) => {
+      expect(tx).toHaveProperty('data');
+      expect(tx).toHaveProperty('signature');
+      expect(tx).toHaveProperty('address');
+      expect(tx.data).toHaveProperty('destination', itx.destination);
+      expect(tx.data).toHaveProperty('payload', itx.payload);
+      expect(tx.data).toHaveProperty('value', itx.value);
+      expect(tx.data).toHaveProperty('referenceBlock', itx.referenceBlock);
+      expect(tx.data).toHaveProperty('salt', itx.salt);
+    };
+
+    test('should get injected transaction by id', async () => {
+      expect(injectedTxs).toHaveLength(2);
+      const itx = injectedTxs[0];
+      const tx = await api.query.injected.getTransaction(itx.id);
+
+      assertTx(tx, itx);
+    });
+
+    test('should request non-existing transaction and throw not found error', async () => {
+      const nonExistingId = `0x${'00'.repeat(32)}` as Hash;
+
+      await expect(api.query.injected.getTransaction(nonExistingId)).rejects.toThrow(
+        `Transaction with id ${nonExistingId} not found`,
+      );
+    });
+
+    test('should request multiple transactions by ids', async () => {
+      expect(injectedTxs).toHaveLength(2);
+
+      const txs = await api.query.injected.getTransactions(injectedTxs.map((i) => i.id));
+
+      expect(txs).toHaveLength(2);
+      txs.forEach((tx, i) => {
+        assertTx(tx!, injectedTxs[i]);
+      });
+    });
+
+    test('should request multiple transaction with some non-existing ids and get null for them', async () => {
+      const nonExistingId = `0x${'00'.repeat(32)}` as Hash;
+
+      expect(injectedTxs).toHaveLength(2);
+
+      const txs = await api.query.injected.getTransactions([injectedTxs[0].id, nonExistingId, injectedTxs[1].id]);
+
+      expect(txs).toHaveLength(3);
+      expect(txs[0]).not.toBeNull();
+      expect(txs[1]).toBeNull();
+      expect(txs[2]).not.toBeNull();
+    });
+
+    test('should request more than 100 transactions and get error', async () => {
+      const ids = Array.from({ length: 101 }, (_, i) => `0x${i.toString(16).padStart(64, '0')}` as Hash);
+
+      await expect(api.query.injected.getTransactions(ids)).rejects.toThrow(
+        'RpcError(-32602): Invalid params :: Too many transaction ids requested. Maximum is 100.',
       );
     });
   });

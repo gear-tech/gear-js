@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import styles from './program-tab-layout.module.scss';
 
@@ -24,7 +24,7 @@ function ProgramTabLayout({ heading, count, renderList, renderSearch, renderFilt
       {(renderSearch || renderFilters) && (
         <div>
           {renderSearch && <div className={styles.search}>{renderSearch()}</div>}
-          {renderFilters && renderFilters()}
+          {renderFilters?.()}
         </div>
       )}
     </div>

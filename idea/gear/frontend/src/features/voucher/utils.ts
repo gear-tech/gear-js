@@ -20,12 +20,12 @@ function getTime(ms: number) {
 
   let result = '';
 
-  if (months) result += getPluralizedUnit(months, 'month') + ' ';
-  if (days) result += getPluralizedUnit(days, 'day') + ' ';
-  if (hours) result += getPluralizedUnit(hours, 'hour') + ' ';
+  if (months) result += `${getPluralizedUnit(months, 'month')} `;
+  if (days) result += `${getPluralizedUnit(days, 'day')} `;
+  if (hours) result += `${getPluralizedUnit(hours, 'hour')} `;
   if (minutes) result += getPluralizedUnit(minutes, 'minute');
 
   return result.trim();
 }
 
-export { getPluralizedUnit, getMilliseconds, getTime };
+export { getMilliseconds, getPluralizedUnit, getTime };

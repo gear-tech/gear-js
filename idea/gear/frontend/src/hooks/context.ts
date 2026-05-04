@@ -12,4 +12,4 @@ const useModal = () => useContext(ModalContext);
 const useChain = () => useContext(ChainContext);
 const useOnboarding = () => useContext(OnboardingContext);
 
-export { useBlocks, useEvents, useModal, useChain, useOnboarding };
+export { useBlocks, useChain, useEvents, useModal, useOnboarding };

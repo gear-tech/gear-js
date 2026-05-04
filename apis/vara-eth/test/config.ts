@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true, path: ['scripts/anvil.env'] });
@@ -12,7 +12,7 @@ export const assertEnv = (name: string, _default?: string) => {
   return env;
 };
 
-const blockTime = parseInt(process.env.BLOCK_TIME || '1');
+const blockTime = Number.parseInt(process.env.BLOCK_TIME || '1', 10);
 
 export const config = {
   codeId: assertEnv('CODE_ID').toLowerCase() as `0x${string}`,

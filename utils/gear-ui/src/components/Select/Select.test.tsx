@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { Select } from './Select';
 import styles from './Select.module.scss';
@@ -19,7 +19,7 @@ describe('select tests', () => {
     const select = screen.getByRole('combobox');
     const options = screen.getAllByRole('option');
 
-    options.forEach((option) => expect(select).toContainElement(option));
+    options.forEach((option) => void expect(select).toContainElement(option));
   });
 
   it('renders select with label', () => {

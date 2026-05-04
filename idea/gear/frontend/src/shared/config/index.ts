@@ -1,4 +1,4 @@
-import { routes, absoluteRoutes } from './routes';
+import { absoluteRoutes, routes } from './routes';
 
 export * from './consts';
-export { routes, absoluteRoutes };
+export { absoluteRoutes, routes };

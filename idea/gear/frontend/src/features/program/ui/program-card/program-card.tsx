@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
-import { Link, generatePath } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 
-import { LocalProgram } from '@/features/local-indexer';
+import type { LocalProgram } from '@/features/local-indexer';
 import { useIsVftProgram, VftTag } from '@/features/vft-whitelist';
 import { IssueVoucher, VoucherBadge } from '@/features/voucher';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
@@ -11,7 +11,7 @@ import { BulbBlock } from '@/shared/ui/bulbBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
-import { Program } from '../../api';
+import type { Program } from '../../api';
 import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
 import { getBulbStatus } from '../../utils';
 

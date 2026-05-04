@@ -1,6 +1,6 @@
-import { FunctionComponent, SVGProps, ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef, FunctionComponent, SVGProps } from 'react';
 
-import { LabelContainer, LabelContainerProps } from '../label-container';
+import { LabelContainer, type LabelContainerProps } from '../label-container';
 
 import styles from './input.module.scss';
 
@@ -18,5 +18,6 @@ const Input = ({ icon: Icon, className, label, error, type = 'text', size, block
     </LabelContainer>
   );
 };
-export { Input };
+
 export type { Props as InputProps };
+export { Input };

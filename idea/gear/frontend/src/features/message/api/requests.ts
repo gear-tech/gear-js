@@ -1,12 +1,12 @@
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
 import { METHOD } from './consts';
-import {
-  MessagesToProgramParameters,
-  PaginationResponse,
-  MessageToProgram,
-  MessagesFromProgramParameters,
+import type {
   MessageFromProgram,
+  MessagesFromProgramParameters,
+  MessagesToProgramParameters,
+  MessageToProgram,
+  PaginationResponse,
 } from './types';
 
 const getMessageToProgram = (id: string) => INDEXER_RPC_SERVICE.callRPC<MessageToProgram>(METHOD.TO_PROGRAM, { id });
@@ -20,4 +20,4 @@ const getMessagesToProgram = (parameters: MessagesToProgramParameters) =>
 const getMessagesFromProgram = (parameters: MessagesFromProgramParameters) =>
   INDEXER_RPC_SERVICE.callRPC<PaginationResponse<MessageFromProgram>>(METHOD.FROM_PROGRAM_ALL, parameters);
 
-export { getMessageToProgram, getMessageFromProgram, getMessagesToProgram, getMessagesFromProgram };
+export { getMessageFromProgram, getMessagesFromProgram, getMessagesToProgram, getMessageToProgram };

@@ -27,12 +27,14 @@ export class MockWebSocket {
 
   public readyState: number = MockWebSocket.CONNECTING;
   public url: string;
-  public shouldThrowOnSend: boolean = false;
+  public shouldThrowOnSend = false;
+  public pongCallCount = 0;
 
-  private messageHandlers: MessageHandler[] = [];
+  public messageHandlers: MessageHandler[] = [];
   private errorHandlers: ErrorHandler[] = [];
   private closeHandlers: CloseHandler[] = [];
   private openHandlers: OpenHandler[] = [];
+  private wsPingHandlers: Array<(data: Buffer) => void> = [];
 
   constructor(url: string) {
     this.url = url;
@@ -85,26 +87,48 @@ export class MockWebSocket {
     this.readyState = MockWebSocket.CLOSED;
   }
 
+  pong(): void {
+    this.pongCallCount++;
+  }
+
+  on(event: 'ping', cb: (data: Buffer) => void): this {
+    if (event === 'ping') this.wsPingHandlers.push(cb);
+    return this;
+  }
+
+  simulatePing(): void {
+    for (const h of this.wsPingHandlers) h(Buffer.alloc(0));
+  }
+
   // Test utilities
   simulateOpen(): void {
     this.readyState = MockWebSocket.OPEN;
-    this.openHandlers.forEach((handler) => handler());
+    for (const handler of this.openHandlers) {
+      handler();
+    }
   }
 
   simulateError(_error?: Error): void {
     const event = new Event('error');
-    this.errorHandlers.forEach((handler) => handler(event));
+
+    for (const handler of this.errorHandlers) {
+      handler(event);
+    }
   }
 
-  simulateClose(code: number = 1000, reason: string = '', wasClean: boolean = true): void {
+  simulateClose(code = 1000, reason = '', wasClean = true): void {
     this.readyState = MockWebSocket.CLOSED;
     const event = new CloseEvent('close', { code, reason, wasClean });
-    this.closeHandlers.forEach((handler) => handler(event));
+    for (const handler of this.closeHandlers) {
+      handler(event);
+    }
   }
 
   simulateMessage(data: any): void {
     const event = new MessageEvent('message', { data: JSON.stringify(data) }) as any;
-    this.messageHandlers.forEach((handler) => handler(event));
+    for (const handler of this.messageHandlers) {
+      handler(event);
+    }
   }
 }
 

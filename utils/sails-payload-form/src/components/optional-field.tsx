@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useSetPayloadValue } from '../hooks';
-import { FieldProps } from '../types';
+import type { FieldProps } from '../types';
 import { getDefaultValue, getLabel } from '../utils';
 
 const OPTIONS = [

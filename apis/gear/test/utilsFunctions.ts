@@ -1,12 +1,12 @@
-import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
-import { TypeRegistry } from '@polkadot/types';
-import { Codec } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
+import type { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { Keyring } from '@polkadot/keyring';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import { TypeRegistry } from '@polkadot/types';
+import type { Codec } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { GearApi, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
-import { GearTransaction } from '../src/api/Transaction';
+import type { GearApi, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
+import type { GearTransaction } from '../src/api/Transaction';
 
 export const checkInit = (
   api: GearApi,
@@ -74,10 +74,6 @@ export const getAccount = async (uri: string) => {
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const describeif = (condition: boolean) => (condition ? describe : describe.skip);
-
-export const testif = (condition: boolean) => (condition ? test : test.skip);
-
 export const listenToMessageWaited = (api: GearApi) => {
   const messages: MessageWaitedData[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('MessageWaited', (event) => {
@@ -108,7 +104,8 @@ export const waitForPausedProgram = (
             (data as ProgramChangedData).change.isPaused,
         );
         unsub.then((fn) => fn());
-        resolve([(event[0].event.data as ProgramChangedData).id.toHex(), block.header.hash.toHex()]);
+        const blockHash = block.header.hash.toHex() as HexString;
+        resolve([(event[0].event.data as ProgramChangedData).id.toHex(), blockHash]);
       }
     });
   });

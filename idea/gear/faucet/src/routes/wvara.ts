@@ -1,12 +1,12 @@
+import type { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
-import { Request, Response } from 'express';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
-import { rateLimitMiddleware } from './middleware';
-import { RequestService } from '../services';
-import { FaucetType } from '../database';
-import { BaseRouter } from './base';
 import config from '../config';
+import { FaucetType } from '../database';
+import type { RequestService } from '../services';
+import { BaseRouter } from './base';
+import { rateLimitMiddleware } from './middleware';
 
 const logger = createLogger('wvara-router');
 

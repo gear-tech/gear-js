@@ -1,6 +1,6 @@
 import { Fields } from './components';
-import { ISailsFuncArg, PayloadValue, FormattedPayloadValue } from './types';
-import { getDefaultPayloadValue, getResetPayloadValue, getPayloadSchema } from './utils';
+import type { FormattedPayloadValue, ISailsFuncArg, PayloadValue } from './types';
+import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from './utils';
 
-export { Fields, getDefaultPayloadValue, getResetPayloadValue, getPayloadSchema };
-export type { ISailsFuncArg, PayloadValue, FormattedPayloadValue };
+export type { FormattedPayloadValue, ISailsFuncArg, PayloadValue };
+export { Fields, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue };

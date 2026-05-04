@@ -5,4 +5,4 @@ import { ProgramTable } from './program-table';
 import { ProgramTabs } from './program-tabs';
 import { Programs } from './programs';
 
-export { ProgramTable, ProgramCard, ProgramFilters, Programs, ProgramFileInput, ProgramTabs };
+export { ProgramCard, ProgramFileInput, ProgramFilters, Programs, ProgramTable, ProgramTabs };

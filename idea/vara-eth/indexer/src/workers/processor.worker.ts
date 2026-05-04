@@ -1,6 +1,6 @@
 import { parentPort } from 'node:worker_threads';
-import { runProcessor } from '../runner.js';
 import { createLogger } from '@gear-js/logger';
+import { runProcessor } from '../runner.js';
 
 const logger = createLogger('processor-worker');
 

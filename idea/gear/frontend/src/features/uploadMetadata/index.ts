@@ -1,4 +1,4 @@
-import { getNamedTypes, getFlatNamedTypeEntries } from './helpers';
+import { getFlatNamedTypeEntries, getNamedTypes } from './helpers';
 import { UploadMetadata } from './ui/uploadMetadata';
 
-export { UploadMetadata, getNamedTypes, getFlatNamedTypeEntries };
+export { getFlatNamedTypeEntries, getNamedTypes, UploadMetadata };

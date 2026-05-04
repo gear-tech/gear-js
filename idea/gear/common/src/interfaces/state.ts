@@ -1,4 +1,4 @@
-import { StateFunctions } from '@gear-js/api';
+import type { StateFunctions } from '@gear-js/api';
 
 export interface IState {
   id: string;

@@ -1,6 +1,6 @@
-import { FunctionComponent, SVGProps } from 'react';
+import type { FunctionComponent, SVGProps } from 'react';
 
-import { WALLET } from './consts';
+import type { WALLET } from './consts';
 
 type SVGComponent = FunctionComponent<
   SVGProps<SVGSVGElement> & { title?: string; titleId?: string; desc?: string; descId?: string }
@@ -15,4 +15,4 @@ type WalletId = keyof typeof WALLET;
 
 type Wallets = [WalletId, WalletValue][];
 
-export type { SVGComponent, WalletValue, WalletId, Wallets };
+export type { SVGComponent, WalletId, Wallets, WalletValue };

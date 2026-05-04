@@ -1,6 +1,6 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 import { useState } from 'react';
-import { Sails } from 'sails-js';
+import type { Sails } from 'sails-js';
 
 import { useSails } from './use-sails';
 import { useSailsInit } from './use-sails-init';

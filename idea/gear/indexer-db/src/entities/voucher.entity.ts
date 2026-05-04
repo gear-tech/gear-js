@@ -7,44 +7,44 @@ export class Voucher {
   }
 
   @PrimaryColumn()
-    id!: string;
+  id!: string;
 
   @Column()
-    owner!: string;
+  owner!: string;
 
   @Column()
-    spender!: string;
+  spender!: string;
 
   @Column('bigint')
-    amount!: bigint;
+  amount!: bigint;
 
   @Column('bigint')
-    balance!: bigint;
+  balance!: bigint;
 
   @Column('jsonb', { default: [] })
-    programs?: string[];
+  programs?: string[];
 
   @Column({ name: 'code_uploading' })
-    codeUploading!: boolean;
+  codeUploading!: boolean;
 
   @Column('bigint', { name: 'duration' })
-    expiryAtBlock!: bigint;
+  expiryAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'expiry_at' })
-    expiryAt!: Date;
+  expiryAt!: Date;
 
   @Column('bigint', { name: 'issued_at_block' })
-    issuedAtBlock!: bigint;
+  issuedAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'issued_at' })
-    issuedAt!: Date;
+  issuedAt!: Date;
 
   @Column('bigint', { name: 'updated_at_block' })
-    updatedAtBlock!: bigint;
+  updatedAtBlock!: bigint;
 
   @Column('timestamp without time zone', { name: 'created_at' })
-    updatedAt!: Date;
+  updatedAt!: Date;
 
   @Column({ name: 'is_declined', default: false })
-    isDeclined?: boolean;
+  isDeclined?: boolean;
 }

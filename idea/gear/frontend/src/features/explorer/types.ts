@@ -1,6 +1,6 @@
-import { HexString } from '@gear-js/api';
-import { Vec } from '@polkadot/types';
-import { EventRecord } from '@polkadot/types/interfaces';
+import type { HexString } from '@gear-js/api';
+import type { Vec } from '@polkadot/types';
+import type { EventRecord } from '@polkadot/types/interfaces';
 
 type FilterValues = { [filter: string]: boolean };
 
@@ -29,12 +29,12 @@ type FormattedCreateProgramData = FormattedProgramData & { codeId: HexString };
 type EventRecords = Vec<EventRecord>;
 
 export type {
+  EventRecords,
   FilterValues,
-  FormattedUserMessageSentData,
+  FormattedCreateProgramData,
   FormattedMessageQueuedData,
   FormattedSendMessageData,
   FormattedSendReplyData,
   FormattedUploadProgramData,
-  FormattedCreateProgramData,
-  EventRecords,
+  FormattedUserMessageSentData,
 };

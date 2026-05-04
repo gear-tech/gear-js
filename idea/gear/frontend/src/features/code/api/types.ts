@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { PaginationParameters } from '@/api';
-import { IBase } from '@/shared/types';
+import type { PaginationParameters } from '@/api';
+import type { IBase } from '@/shared/types';
 
-import { CodeStatus } from '../consts';
+import type { CodeStatus } from '../consts';
 
 type GetCodesParameters = PaginationParameters & {
   uploadedBy?: string;
@@ -28,4 +28,4 @@ type Code = IBase & {
   metaType?: 'sails' | 'meta' | null;
 };
 
-export type { GetCodesParameters, SetCodeMetaParameters, Code };
+export type { Code, GetCodesParameters, SetCodeMetaParameters };

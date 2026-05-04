@@ -1,4 +1,4 @@
-import { Radio as GearRadio, RadioProps } from '@gear-js/ui';
+import { Radio as GearRadio, type RadioProps } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 type Props = Omit<RadioProps, 'onChange' | 'onBlur'> & {

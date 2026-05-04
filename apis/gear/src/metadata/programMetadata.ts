@@ -1,7 +1,7 @@
-import { u16, u8 } from '@polkadot/types';
+import type { u8, u16 } from '@polkadot/types';
 import { hexToU8a } from '@polkadot/util';
 
-import {
+import type {
   HumanProgramMetadataReprRustV1,
   HumanProgramMetadataReprRustV2,
   ProgramMetadataRepr,
@@ -99,7 +99,7 @@ export class ProgramMetadata extends GearMetadata {
    */
   static from(hexMetadata: string): ProgramMetadata {
     if (!hexMetadata.startsWith('0x')) {
-      hexMetadata = '0x' + hexMetadata;
+      hexMetadata = `0x${hexMetadata}`;
     }
     const u8aMeta = hexToU8a(hexMetadata);
 

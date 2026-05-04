@@ -1,17 +1,17 @@
-import { Bytes, Option } from '@polkadot/types';
+import type { Bytes, Option } from '@polkadot/types';
 import { u8aToHex } from '@polkadot/util';
 
-import {
+import { SPEC_VERSION } from '../consts';
+import { CodeDoesNotExistError } from '../errors';
+import type {
   CodeUploadResult,
   GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900,
   GearCoreCodeMetadataCodeMetadata,
   HexString,
 } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
-import { CodeDoesNotExistError } from '../errors';
-import { GearTransaction } from './Transaction';
-import { SPEC_VERSION } from '../consts';
 import { getGrReply } from '../wasm';
+import { GearTransaction } from './Transaction';
 
 export class GearCode extends GearTransaction {
   /**
@@ -36,26 +36,23 @@ export class GearCode extends GearTransaction {
     if (this._api.specVersion >= SPEC_VERSION.V1900) {
       const codeMetadata = await this._api.query.gearProgram.codeMetadataStorage(codeId);
       return codeMetadata.isSome;
-    } else {
-      const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<any>;
-      return codeMetadata.isSome;
     }
+    const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<any>;
+    return codeMetadata.isSome;
   }
 
   private _storageV1900(codeId: HexString): Promise<Option<GearCoreCodeMetadataCodeMetadata>> {
     if (this._api.specVersion >= SPEC_VERSION.V1900) {
       return this._api.query.gearProgram.codeMetadataStorage(codeId);
-    } else {
-      throw new Error('Unsupported version');
     }
+    throw new Error(`Unsupported version ${this._api.specVersion}. Only versions >= 1900 are supported`);
   }
 
   private _storageBeforeV1900(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900>> {
     if (this._api.specVersion < SPEC_VERSION.V1900) {
       return this._api.query.gearProgram.codeStorage(codeId);
-    } else {
-      throw new Error('Unsupported version');
     }
+    throw new Error(`Unsupported version ${this._api.specVersion}. Only versions < 1900 are supported`);
   }
 
   /**
@@ -69,9 +66,8 @@ export class GearCode extends GearTransaction {
   ): Promise<Option<GearCoreCodeMetadataCodeMetadata | GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900>> {
     if (this._api.specVersion >= SPEC_VERSION.V1900) {
       return this._storageV1900(codeId);
-    } else {
-      return this._storageBeforeV1900(codeId);
     }
+    return this._storageBeforeV1900(codeId);
   }
 
   /**
@@ -103,12 +99,11 @@ export class GearCode extends GearTransaction {
       }
 
       return getIdsFromKeys(keys, prefix);
-    } else {
-      const prefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
-      const keys = await this._api.rpc.state.getKeysPaged(prefix, count || 1000);
-      const codeIds = getIdsFromKeys(keys, prefix);
-      return codeIds;
     }
+    const prefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
+    const keys = await this._api.rpc.state.getKeysPaged(prefix, count || 1000);
+    const codeIds = getIdsFromKeys(keys, prefix);
+    return codeIds;
   }
 
   async metaHash(codeId: HexString): Promise<HexString> {

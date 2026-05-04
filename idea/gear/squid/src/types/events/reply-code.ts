@@ -57,9 +57,8 @@ export class ReplyCode {
         this._bytes[0] = 1;
         if (this.specVersion < 1800) {
           return this._setSecondErrorByte();
-        } else {
-          return this._setSecondErrorByte1800();
         }
+        return this._setSecondErrorByte1800();
       }
       default: {
         this._unsupportedByte(0);

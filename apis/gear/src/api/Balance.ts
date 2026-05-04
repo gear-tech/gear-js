@@ -1,8 +1,8 @@
-import { BN } from '@polkadot/util';
-import { Balance } from '@polkadot/types/interfaces';
-import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Balance } from '@polkadot/types/interfaces';
+import type { FrameSystemAccountInfo } from '@polkadot/types/lookup';
+import type { ISubmittableResult } from '@polkadot/types/types';
+import type { BN } from '@polkadot/util';
 
 import { GearTransaction } from './Transaction';
 

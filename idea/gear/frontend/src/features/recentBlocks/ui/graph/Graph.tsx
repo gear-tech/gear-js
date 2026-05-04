@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { useEffect, useRef } from 'react';
 
 import { getRandomPercent } from '../../helpers';
-import { RecentBlock } from '../../types';
+import type { RecentBlock } from '../../types';
 
 import styles from './Graph.module.scss';
 

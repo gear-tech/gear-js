@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
-import React, { useMemo, useState } from 'react';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 
 import SortSVG from '@/assets/icons/sort.svg?react';
 
@@ -7,10 +8,15 @@ import { Skeleton } from '../skeleton';
 
 import styles from './table.module.scss';
 
+const SKELETON_WIDTHS = { sm: '6rem', md: '16rem' } as const;
+
+type SkeletonWidth = keyof typeof SKELETON_WIDTHS;
+
 type TableColumn<T> = {
   key: keyof T;
   title: string;
   sortable?: boolean;
+  skeletonWidth?: SkeletonWidth;
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 };
 
@@ -60,8 +66,8 @@ const Table = <T extends { id: string | number }>({
     });
   }, [data, sortKey, sortOrder]);
 
-  const hasExtraColumn = Boolean(headerRight);
   const isEmpty = !isLoading && !data?.length;
+  const lastColumnIndex = columns.length - 1;
 
   const render = () => {
     const placeholderData = Array.from<undefined>({ length: pageSize });
@@ -71,11 +77,13 @@ const Table = <T extends { id: string | number }>({
       <tr key={row ? row.id : `skeleton-${index}`}>
         {columns.map((column) => (
           <td key={column.key as string}>
-            {row ? (column.render?.(row[column.key], row) ?? String(row[column.key])) : <Skeleton width="16rem" />}
+            {row ? (
+              (column.render?.(row[column.key], row) ?? String(row[column.key]))
+            ) : (
+              <Skeleton width={SKELETON_WIDTHS[column.skeletonWidth ?? 'md']} />
+            )}
           </td>
         ))}
-
-        {hasExtraColumn && <td />}
       </tr>
     ));
   };
@@ -84,27 +92,42 @@ const Table = <T extends { id: string | number }>({
     <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], styles[positionedAt])}>
       <thead>
         <tr>
-          {columns.map((column: TableColumn<T>) => (
-            <th
-              key={column.key as string}
-              onClick={() => column.sortable && handleSort(column.key)}
-              className={column.sortable ? styles.sortable : ''}>
-              {column.title} <SortSVG />
-            </th>
-          ))}
+          {columns.map((column: TableColumn<T>, index) => {
+            const isLast = index === lastColumnIndex;
+            const title = (
+              <span className={styles.headerTitle}>
+                {column.title}
+                {column.sortable ? <SortSVG /> : null}
+              </span>
+            );
 
-          {hasExtraColumn && (
-            <th className={styles.headerRightCell}>
-              <div className={styles.headerRight}>{headerRight}</div>
-            </th>
-          )}
+            const onHeaderClick = (event: React.MouseEvent<HTMLTableCellElement>) => {
+              if (!column.sortable) return;
+              if ((event.target as HTMLElement).closest(`.${styles.headerRight}`)) return;
+
+              handleSort(column.key);
+            };
+
+            return (
+              <th key={column.key as string} onClick={onHeaderClick} className={column.sortable ? styles.sortable : ''}>
+                {isLast && headerRight ? (
+                  <div className={styles.headerWithAction}>
+                    {title}
+                    <div className={styles.headerRight}>{headerRight}</div>
+                  </div>
+                ) : (
+                  title
+                )}
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
       <tbody>
         {isEmpty ? (
           <tr className={styles.emptyRow}>
-            <td colSpan={columns.length + Number(hasExtraColumn)}>
+            <td colSpan={columns.length}>
               <div className={styles.emptyContainer}>
                 <span className={styles.title}>
                   <span className={styles.comment}>{'//_'}</span>No Items Yet

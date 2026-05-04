@@ -1,5 +1,5 @@
-import { RecentBlock } from './types';
+import type { RecentBlock } from './types';
 import { RecentBlocks } from './ui/RecentBlocks';
 
-export { RecentBlocks };
 export type { RecentBlock };
+export { RecentBlocks };

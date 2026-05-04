@@ -1,4 +1,4 @@
-export const enum Events {
+export enum Events {
   MessageQueued = 'Gear.MessageQueued',
   UserMessageSent = 'Gear.UserMessageSent',
   UserMessageRead = 'Gear.UserMessageRead',

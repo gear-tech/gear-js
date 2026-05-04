@@ -5,7 +5,7 @@ import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Badge } from '@/components';
 import { cx } from '@/shared/utils';
 
-import { SailsAction as SailsActionType } from '../../lib';
+import type { SailsAction as SailsActionType } from '../../lib';
 import { SailsAction } from '../sails-action';
 
 import styles from './sails-action-group.module.scss';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const SailsActionGroup = ({ name, sails, items }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const count = items.length;
   const isEmpty = count === 0;

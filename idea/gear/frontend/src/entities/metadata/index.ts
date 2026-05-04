@@ -1,3 +1,3 @@
-import { IMeta } from './model';
+import type { IMeta } from './model';
 
 export type { IMeta };

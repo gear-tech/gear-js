@@ -1,4 +1,4 @@
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
 interface IBase {
   genesis: string; // TODO: remove after migration to new indexer

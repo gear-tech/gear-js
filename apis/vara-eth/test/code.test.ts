@@ -1,6 +1,6 @@
 import { createPublicClient, webSocket } from 'viem';
 
-import { createVaraEthApi, VaraEthApi, HttpVaraEthProvider } from '../src';
+import { createVaraEthApi, HttpVaraEthProvider, type VaraEthApi } from '../src';
 import { expectHex } from './common';
 import { config } from './config';
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useApi } from '@/app/api';

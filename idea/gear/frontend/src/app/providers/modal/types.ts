@@ -1,8 +1,8 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 
-import { ModalProps } from '@/entities/modal';
+import type { ModalProps } from '@/entities/modal';
 
-import { MODALS } from './consts';
+import type { MODALS } from './consts';
 
 type ModalName = keyof typeof MODALS;
 
@@ -13,4 +13,4 @@ type ModalContainerFactory = {
   closeModal: () => void;
 };
 
-export type { ModalName, ModalProperties, ModalContainerFactory };
+export type { ModalContainerFactory, ModalName, ModalProperties };

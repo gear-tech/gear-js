@@ -1,10 +1,10 @@
-import { HexString } from '@polkadot/util/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import type { KeyringPair } from '@polkadot/keyring/types';
+import type { HexString } from '@polkadot/util/types';
 
+import { getApi } from './common';
 import { TEST_CODE } from './config';
 import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { getApi } from './common';
 
 const api = getApi();
 let alice: KeyringPair;

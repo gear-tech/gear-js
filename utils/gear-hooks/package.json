@@ -22,7 +22,7 @@
     "clean": "echo \"clean @gear-js/react-hooks\" && rm -rf dist"
   },
   "peerDependencies": {
-    "@gear-js/api": "^0.44.2",
+    "@gear-js/api": "^0.45.0",
     "@polkadot/api": "^16.4.6",
     "@polkadot/api-derive": "^16.4.6",
     "@tanstack/react-query": "^5.56.2",
@@ -31,22 +31,22 @@
     "sails-js": "^0.5.0"
   },
   "dependencies": {
-    "@polkadot/extension-inject": "0.62.6",
-    "@polkadot/util": "14.0.1",
+    "@polkadot/extension-inject": "0.63.1",
+    "@polkadot/util": "14.0.3",
     "@substrate/connect": "2.1.8",
     "@twa-dev/sdk": "8.0.2",
     "@varan-wallet/varan-connect": "1.1.0",
     "bignumber.js": "9.3.1",
-    "nanoid": "5.1.7",
+    "nanoid": "5.1.11",
     "react-transition-group": "4.4.5",
     "sails-js-parser": "0.5.1"
   },
   "devDependencies": {
-    "@gear-js/api": "0.44.2",
+    "@gear-js/api": "0.45.0",
     "@gear-js/frontend-configs": "*",
-    "@polkadot/api": "16.5.4",
-    "@polkadot/api-derive": "16.5.4",
-    "@polkadot/types": "16.5.4",
+    "@polkadot/api": "16.5.6",
+    "@polkadot/api-derive": "16.5.6",
+    "@polkadot/types": "16.5.6",
     "@tanstack/react-query": "5.90.21",
     "bignumber.js": "9.3.1",
     "react": "19.2.4",

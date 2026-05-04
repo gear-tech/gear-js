@@ -1,12 +1,13 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { HashRegistry, EntityType } from '../../../model/index.js';
+import type { Repository } from 'typeorm';
+
+import { EntityType, HashRegistry } from '../../../model/index.js';
 import { BatchesService } from '../batches/batches.service.js';
 import { CodesService } from '../codes/codes.service.js';
 import { MessagesService } from '../messages/messages.service.js';
 import { ProgramsService } from '../programs/programs.service.js';
-import { RepliesService } from '../replies/replies.service.js';
 import { StateTransitionsService } from '../state-transitions/state-transitions.service.js';
 import { TransactionsService } from '../transactions/transactions.service.js';
 
@@ -31,7 +32,6 @@ export class LookupService {
     private readonly codesService: CodesService,
     private readonly messagesService: MessagesService,
     private readonly programsService: ProgramsService,
-    private readonly repliesService: RepliesService,
     private readonly stateTransitionsService: StateTransitionsService,
     private readonly transactionsService: TransactionsService,
   ) {}

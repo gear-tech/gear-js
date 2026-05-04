@@ -1,9 +1,9 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
-import { PaginationParameters } from '@/api';
-import { IBase } from '@/shared/types';
+import type { PaginationParameters } from '@/api';
+import type { IBase } from '@/shared/types';
 
-import { ProgramStatus } from '../consts';
+import type { ProgramStatus } from '../consts';
 
 type ProgramsParameters = PaginationParameters & {
   owner?: string;
@@ -30,4 +30,4 @@ type Program = IBase & {
   metaType?: 'sails' | 'meta' | null;
 };
 
-export type { ProgramsParameters, SetProgramMetaParameters, Program };
+export type { Program, ProgramsParameters, SetProgramMetaParameters };

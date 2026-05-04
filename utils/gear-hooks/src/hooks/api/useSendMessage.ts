@@ -1,7 +1,7 @@
-import { GasLimit, MessageQueued, ProgramMetadata } from '@gear-js/api';
-import { EventRecord } from '@polkadot/types/interfaces';
-import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
+import type { GasLimit, MessageQueued, ProgramMetadata } from '@gear-js/api';
+import type { EventRecord } from '@polkadot/types/interfaces';
+import type { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
+import type { HexString } from '@polkadot/util/types';
 
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@/consts';
 import { useAccount, useAlert, useApi } from '@/context';
@@ -141,5 +141,5 @@ function useSendMessage(
   return sendMessage;
 }
 
-export { useSendMessage };
 export type { SendMessageOptions, UseSendMessageOptions };
+export { useSendMessage };

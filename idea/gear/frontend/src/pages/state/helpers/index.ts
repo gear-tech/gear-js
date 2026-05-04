@@ -1,4 +1,4 @@
-import { AnyJson } from '@polkadot/types/types';
+import type { AnyJson } from '@polkadot/types/types';
 
 const downloadJson = (state: AnyJson) => {
   const json = JSON.stringify(state, null, 2);

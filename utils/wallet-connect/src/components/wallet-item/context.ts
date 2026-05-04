@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { WalletId, WalletValue } from '../../types';
+import type { WalletId, WalletValue } from '../../types';
 
 export type WalletItemContextValue = {
   id: WalletId;

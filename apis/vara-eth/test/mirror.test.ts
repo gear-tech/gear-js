@@ -1,13 +1,19 @@
+import fs from 'node:fs';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { deployContract } from 'viem/actions';
-import fs from 'node:fs';
 
-import { getMirrorClient, VaraEthApi, HttpVaraEthProvider, createVaraEthApi, type ITransactionSigner } from '../src';
+import {
+  createVaraEthApi,
+  getMirrorClient,
+  HttpVaraEthProvider,
+  type ITransactionSigner,
+  type VaraEthApi,
+} from '../src';
+import { walletClientToSigner } from '../src/signer';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
-import { walletClientToSigner } from '../src/signer';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
@@ -43,7 +49,7 @@ describe('setup', () => {
   let programWithAbiInterfaceId: Hex;
 
   test('should create program', async () => {
-    const tx = await api.eth.router.createProgram(config.codeId);
+    const tx = api.eth.router.createProgramBuilder(config.codeId).build();
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
@@ -117,7 +123,7 @@ describe('setup', () => {
   });
 
   test('should create program with abi interface', async () => {
-    const tx = await api.eth.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
+    const tx = api.eth.router.createProgramBuilder(config.codeId).withAbiInterface(counterAbiContractAddress).build();
 
     const receipt = await tx.sendAndWaitForReceipt();
 
@@ -197,7 +203,7 @@ describe('balance', () => {
     async () => {
       const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 
-      let newStateHash: Hex | undefined = undefined;
+      let newStateHash: Hex | undefined;
 
       const currentStateHash = await mirror.stateHash();
 
@@ -227,6 +233,46 @@ describe('balance', () => {
     const state = await api.query.program.readState(hash);
 
     expect(state).toHaveProperty(['executableBalance'], BigInt(10 * 1e12));
+  });
+
+  test(
+    'should top up executable balance with permit',
+    async () => {
+      const value = BigInt(5 * 1e12);
+      const deadline = BigInt(Date.now() + 100_000);
+
+      const { signature } = await api.eth.wvara.prepareAndSignPermitData(mirror.address, value, deadline);
+
+      const tx = await mirror.executableBalanceTopUpWithPermit(value, deadline, signature);
+
+      let newStateHash: Hex | undefined;
+      const currentStateHash = await mirror.stateHash();
+
+      const unwatch = mirror.watchStateChangedEvent((stateHash) => {
+        newStateHash = stateHash;
+      });
+
+      const { status } = await tx.sendAndWaitForReceipt();
+      expect(status).toBe('success');
+
+      while (!newStateHash) {
+        await waitNBlocks(1);
+      }
+
+      expect(newStateHash).toBeDefined();
+      expect(newStateHash).not.toEqual(currentStateHash);
+
+      unwatch();
+    },
+    config.longRunningTestTimeout,
+  );
+
+  test('should check executable balance after permit top up', async () => {
+    const hash = await mirror.stateHash();
+
+    const state = await api.query.program.readState(hash);
+
+    expect(state).toHaveProperty(['executableBalance'], BigInt(15 * 1e12));
   });
 });
 

@@ -1,12 +1,18 @@
-import { createPublicClient, createWalletClient, PublicClient, WalletClient, WebSocketTransport } from 'viem';
-import { Account, privateKeyToAccount } from 'viem/accounts';
-import { parseAbi, parseUnits } from 'viem/utils';
 import { createLogger } from 'gear-idea-common';
+import {
+  createPublicClient,
+  createWalletClient,
+  type PublicClient,
+  type WalletClient,
+  type WebSocketTransport,
+} from 'viem';
+import { type Account, privateKeyToAccount } from 'viem/accounts';
 import { hoodi } from 'viem/chains';
+import { parseAbi, parseUnits } from 'viem/utils';
 
-import { FaucetType, FaucetRequest } from '../../database';
-import { FaucetProcessor } from './abstract';
 import config from '../../config';
+import { type FaucetRequest, FaucetType } from '../../database';
+import { FaucetProcessor } from './abstract';
 
 const ERC20_ABI = parseAbi([
   'function transfer(address to, uint256 amount)',
@@ -50,7 +56,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
         functionName: 'decimals',
       });
       this._contracts.set(address, parseUnits(value, decimals));
-      logger.info(`Contract added`, { address, value: this._contracts.get(address) });
+      logger.info('Contract added', { address, value: this._contracts.get(address) });
     }
 
     if (config.wvara.address && !this._contracts.has(config.wvara.address.toLowerCase())) {

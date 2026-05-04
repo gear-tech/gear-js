@@ -1,10 +1,17 @@
-import { Option, u128, u32 } from '@polkadot/types';
-import { H256 } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Option, u32, u128 } from '@polkadot/types';
+import type { H256 } from '@polkadot/types/interfaces';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { randomAsHex } from '@polkadot/util-crypto';
-
 import {
+  ProgramDoesNotExistError,
+  ProgramHasNoMetahash,
+  RpcMethodNotSupportedError,
+  SubmitProgramError,
+} from '../errors';
+import type { GearApi } from '../GearApi';
+import type { ProgramMetadata } from '../metadata';
+import type {
   GearCoreProgram,
   HexString,
   IProgramCreateResult,
@@ -12,12 +19,6 @@ import {
   ProgramCreateOptions,
   ProgramUploadOptions,
 } from '../types';
-import {
-  ProgramDoesNotExistError,
-  ProgramHasNoMetahash,
-  RpcMethodNotSupportedError,
-  SubmitProgramError,
-} from '../errors';
 import {
   encodePayload,
   generateCodeHash,
@@ -28,10 +29,8 @@ import {
   validateProgramId,
   validateValue,
 } from '../utils';
-import { GearApi } from '../GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
-import { ProgramMetadata } from '../metadata';
 
 const PROGRAM_STATE_CHANGES_SUB = 'gear_subscribeProgramStateChanges';
 
@@ -369,7 +368,7 @@ export class GearProgram extends GearTransaction {
    * @see https://github.com/gear-tech/gear/pull/4895 for implementation details
    */
   public subscribeToStateChanges(
-    programIds: HexString[] | null = null,
+    programIds: HexString[] | null,
     callback: (blockHash: HexString, programIds: HexString[]) => void | Promise<void>,
   ) {
     if (!this._api.rpcMethods.includes(PROGRAM_STATE_CHANGES_SUB)) {

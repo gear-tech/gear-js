@@ -1,10 +1,10 @@
-import { CreateType, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
-import { Sails, getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import { CreateType, type ProgramMetadata } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
+import { getFnNamePrefix, getServiceNamePrefix, type Sails } from 'sails-js';
 
 import { getReplyErrorReason, isNullOrUndefined } from '@/shared/helpers';
 
-import { MessageToProgram, MessageFromProgram } from './api';
+import type { MessageFromProgram, MessageToProgram } from './api';
 import { MESSAGE_ENTRY_POINT } from './consts';
 
 const isMessageFromProgramWithError = (message?: MessageToProgram | MessageFromProgram) =>
@@ -116,4 +116,4 @@ const getDecodedMessagePayload = (
   }
 };
 
-export { isMessageFromProgramWithError, isMessageWithError, getDecodedMessagePayload };
+export { getDecodedMessagePayload, isMessageFromProgramWithError, isMessageWithError };

@@ -1,6 +1,6 @@
-import { HexString } from '@polkadot/util/types';
+import type { HexString } from '@polkadot/util/types';
 
-import { OperationCallbacks } from '@/entities/hooks';
+import type { OperationCallbacks } from '@/entities/hooks';
 
 type ParamsToClaimMessage = OperationCallbacks & {
   messageId: HexString;

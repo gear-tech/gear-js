@@ -1,9 +1,9 @@
-import {
-  IJsonRpcRequest,
+import type {
   IJsonRpcMessage,
+  IJsonRpcRequest,
   IJsonRpcResponseError,
-  IJsonRpcSubscriptionMessage,
   IJsonRpcResult,
+  IJsonRpcSubscriptionMessage,
 } from '../types/index.js';
 
 function generateId(): number {
@@ -44,9 +44,11 @@ export function getErrorMessage(response: IJsonRpcResponseError) {
 function transformBigint(object: unknown): unknown {
   if (typeof object === 'bigint') {
     return Number(object);
-  } else if (Array.isArray(object)) {
+  }
+  if (Array.isArray(object)) {
     return object.map((item) => transformBigint(item));
-  } else if (object !== null && typeof object === 'object') {
+  }
+  if (object !== null && typeof object === 'object') {
     return Object.fromEntries(Object.entries(object).map(([key, value]) => [key, transformBigint(value)]));
   }
   return object;

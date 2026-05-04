@@ -1,6 +1,6 @@
-import { Struct, u128, u64, Vec } from '@polkadot/types';
-import { AnyNumber } from '@polkadot/types/types';
-import { H256, Perquintill } from '@polkadot/types/interfaces';
+import type { Struct, u64, u128, Vec } from '@polkadot/types';
+import type { H256, Perquintill } from '@polkadot/types/interfaces';
+import type { AnyNumber } from '@polkadot/types/types';
 
 export type Value = AnyNumber | u128;
 

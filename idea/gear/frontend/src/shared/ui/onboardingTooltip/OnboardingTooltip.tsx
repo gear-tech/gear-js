@@ -1,7 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { useOnboarding } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';

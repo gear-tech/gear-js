@@ -1,6 +1,6 @@
-import { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
-import { SVGComponent } from '../../types';
+import type { SVGComponent } from '../../types';
 
 type BaseProps = ComponentPropsWithRef<'button'> & {
   text?: string;

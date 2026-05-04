@@ -1,5 +1,5 @@
-import { IBaseDBRecord } from './common';
-import { ProgramStatus } from '../enums';
+import type { ProgramStatus } from '../enums';
+import type { IBaseDBRecord } from './common';
 
 export interface IProgram extends IBaseDBRecord<number | Date> {
   id: string;

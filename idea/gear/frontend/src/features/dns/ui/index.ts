@@ -5,4 +5,4 @@ import { DeleteDns } from './delete-dns';
 import { DnsCard } from './dns-card';
 import { EditDns } from './edit-dns';
 
-export { DnsCard, CreateDns, DeleteDns, EditDns, AdminCard, AddAdmin };
+export { AddAdmin, AdminCard, CreateDns, DeleteDns, DnsCard, EditDns };

@@ -1,7 +1,7 @@
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { ReplyCode } from '../../errors/index.js';
-import { IVaraEthProvider, ReplyInfo } from '../../types/index.js';
+import type { IVaraEthProvider, ReplyInfo } from '../../types/index.js';
 
 interface IReplyInfoRpc extends Omit<ReplyInfo, 'code'> {
   code: Hex;

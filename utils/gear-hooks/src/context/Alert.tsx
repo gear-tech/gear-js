@@ -1,34 +1,34 @@
 import { nanoid } from 'nanoid/non-secure';
 import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-  ReactNode,
-  ComponentType,
+  type ComponentType,
   createContext,
+  type ReactNode,
+  useCallback,
   useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 
 import { Transition } from '@/components';
 import {
-  DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
+  DEFAULT_INFO_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
 } from '@/consts';
 
-import {
-  ProviderProps,
-  AlertTimer,
+import type {
+  AlertContainerFactory,
   AlertInstance,
   AlertOptions,
-  TemplateAlertOptions,
   AlertTemplateProps,
-  AlertContainerFactory,
+  AlertTimer,
+  ProviderProps,
+  TemplateAlertOptions,
 } from '../types';
 
 type Props = ProviderProps & {
@@ -145,7 +145,6 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
     if (containerClassName) root.current.classList.add(containerClassName);
 
     document.body.appendChild(root.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -168,6 +167,4 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
 
 const useAlert = () => useContext(AlertContext);
 
-// TODO: either fix only-export-components or remove rule
-// eslint-disable-next-line react-refresh/only-export-components
 export { AlertProvider, useAlert };

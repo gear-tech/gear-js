@@ -1,5 +1,5 @@
-import { GasInfo } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import type { GasInfo } from '@gear-js/api';
+import type { AnyJson } from '@polkadot/types/types';
 
 type CalculateGas = (initPayload: AnyJson) => Promise<GasInfo>;
 

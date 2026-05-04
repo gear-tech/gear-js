@@ -1,18 +1,20 @@
-import { SubmittableExtrinsic, UnsubscribePromise, VoidFn } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
+import type { SubmittableExtrinsic, UnsubscribePromise, VoidFn } from '@polkadot/api/types';
+import type { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import {
+import { RpcMethodNotSupportedError, SendMessageError, SendReplyError } from '../errors';
+import type { UserMessageSent, UserMessageSentData } from '../events';
+import type { ProgramMetadata } from '../metadata';
+import type {
+  HexString,
   ICalculateReplyForHandleOptions,
   MessageSendOptions,
   MessageSendReplyOptions,
   ReplyInfo,
-  HexString,
   UserMessageSentSubscriptionFilter,
   UserMessageSentSubscriptionItem,
 } from '../types';
-import { SendMessageError, SendReplyError, RpcMethodNotSupportedError } from '../errors';
-import { UserMessageSent, UserMessageSentData } from '../events';
+import type { UserMessageSentSubItem } from '../types/interfaces/message/rpc';
 import {
   decodeAddress,
   encodePayload,
@@ -22,8 +24,6 @@ import {
   validateValue,
 } from '../utils';
 import { GearTransaction } from './Transaction';
-import { ProgramMetadata } from '../metadata';
-import { UserMessageSentSubItem } from '../types/interfaces/message/rpc';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -470,7 +470,7 @@ export class GearMessage extends GearTransaction {
     let isUnsubscribed = false;
 
     const wrappedCallback = (result: UserMessageSentSubItem) => {
-      if (result.ack && result.ack.isSome && result.ack.unwrap().isTrue) return;
+      if (result.ack?.isSome && result.ack.unwrap().isTrue) return;
       if (isUnsubscribed) return;
 
       const event: UserMessageSentSubscriptionItem = {
@@ -483,7 +483,7 @@ export class GearMessage extends GearTransaction {
         value: BigInt(result.value.toString()),
       };
 
-      if (result.reply && result.reply.isSome) {
+      if (result.reply?.isSome) {
         const reply = result.reply.unwrap();
         event.reply = {
           to: reply.to.toHex(),

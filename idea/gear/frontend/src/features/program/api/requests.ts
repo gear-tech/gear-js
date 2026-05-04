@@ -1,8 +1,8 @@
-import { PaginationResponse } from '@/api';
+import type { PaginationResponse } from '@/api';
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
 import { METHOD } from './consts';
-import { Program, ProgramsParameters, SetProgramMetaParameters } from './types';
+import type { Program, ProgramsParameters, SetProgramMetaParameters } from './types';
 
 const getProgram = (id: string) => INDEXER_RPC_SERVICE.callRPC<Program>(METHOD.DATA, { id });
 

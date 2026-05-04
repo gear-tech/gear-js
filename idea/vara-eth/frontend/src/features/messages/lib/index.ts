@@ -1,23 +1,28 @@
+import type { SailsMessageRoute } from './decode';
+import { getDecodedPayload, getMessageName, getMessageRoute } from './decode';
 import {
-  useGetMessageRequestByIdQuery,
-  useGetMessageSentByIdQuery,
-  useGetReplyRequestByIdQuery,
-  useGetReplySentByIdQuery,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
 } from './queries';
-import { MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
+import type { MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
 
+export type { MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute };
 export {
-  useGetMessageRequestByIdQuery,
-  useGetMessageSentByIdQuery,
-  useGetReplyRequestByIdQuery,
-  useGetReplySentByIdQuery,
+  getDecodedPayload,
+  getMessageName,
+  getMessageRoute,
   useGetAllMessageRequestsQuery,
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
 };
-export type { MessageRequest, MessageSent, ReplyRequest, ReplySent };

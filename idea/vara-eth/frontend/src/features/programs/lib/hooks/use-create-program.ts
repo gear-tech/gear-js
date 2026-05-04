@@ -1,20 +1,21 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { Hex } from 'viem';
+import type { Hex } from 'viem';
 
 import { useApi } from '@/app/api';
-import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
+import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 import { routes } from '@/shared/config';
 
 export const useCreateProgram = () => {
   const { data: api } = useApi();
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
+  const queryClient = useQueryClient();
 
   const createProgram = async (codeId: Hex) => {
     if (!api) return;
 
-    const tx = await api.eth.router.createProgram(codeId);
+    const tx = api.eth.router.createProgramBuilder(codeId).build();
     await tx.send();
     const id = await tx.getProgramId();
     const receipt = await tx.getReceipt();
@@ -28,7 +29,10 @@ export const useCreateProgram = () => {
     void navigate(generatePath(routes.program, { programId: id }));
   };
 
-  const mutation = useMutation({ mutationFn: createProgram });
+  const mutation = useMutation({
+    mutationFn: createProgram,
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['allPrograms'] }),
+  });
 
   return mutation;
 };

@@ -1,4 +1,4 @@
-import { type Config } from 'prettier';
+import type { Config } from 'prettier';
 
 const prettierConfig: Config = {
   singleQuote: true,

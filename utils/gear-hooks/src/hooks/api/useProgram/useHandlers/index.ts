@@ -1,7 +1,7 @@
 import { DEFAULT_ERROR_OPTIONS } from '@/consts';
 import { useAlert } from '@/context';
 
-import { HandleInitParams, ProgramStatus, HandleErrorParams } from '../types';
+import { type HandleErrorParams, type HandleInitParams, ProgramStatus } from '../types';
 
 import { useHandleSignStatus } from './useHandleSignStatus';
 
@@ -13,7 +13,6 @@ function useHandlers() {
   const handleInitStatus = (params: HandleInitParams) => {
     const { status, programId, onError } = params;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
     if (status === ProgramStatus.Failed) {
       alert.error(programId, { title: 'Program initialization' });
       if (onError) onError();

@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-import { MessageEntryPoint } from '../enums';
+import type { MessageEntryPoint } from '../enums';
 import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'message_to_program' })

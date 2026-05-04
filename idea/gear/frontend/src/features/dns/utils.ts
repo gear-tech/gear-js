@@ -1,10 +1,10 @@
-import { HexString } from '@gear-js/api';
+import type { HexString } from '@gear-js/api';
 
 import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { DNS_API_URL } from './consts';
-import { Dns, DnsParams, DnsResponse } from './types';
+import type { Dns, DnsParams, DnsResponse } from './types';
 
 type Genesis = {
   genesis: HexString;
@@ -19,7 +19,7 @@ const getDnsProgramId = async ({ genesis }: Genesis) => {
 const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
   const url = new URL(getUrl(genesis, 'dns'));
 
-  Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
+  Object.entries(params).forEach(([key, value]) => void url.searchParams.append(key, String(value)));
 
   return fetchWithGuard<DnsResponse>({ url });
 };
@@ -39,4 +39,4 @@ const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {
   return fetchedCount < totalCount ? fetchedCount : undefined;
 };
 
-export { getDnsProgramId, getDns, getSingleDns, getNextPageParam };
+export { getDns, getDnsProgramId, getNextPageParam, getSingleDns };

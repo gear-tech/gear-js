@@ -1,4 +1,4 @@
-import { Text } from '@polkadot/types';
+import type { Text } from '@polkadot/types';
 import { stringCamelCase } from '@polkadot/util';
 
 export function toCamelCase(array: string[] | Text[]): string {
