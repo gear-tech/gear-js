@@ -1,5 +1,12 @@
 import type { Address, Hash, Hex } from 'viem';
 
+export type NetworkConfig = {
+  readonly name: string;
+  readonly routerAddress: Address;
+  readonly ethereumRpcUrl: string;
+  readonly privateKey: Hash;
+};
+
 export type RequestCodeValidationParams = {
   readonly code: Hex;
   readonly codeId: Hash;

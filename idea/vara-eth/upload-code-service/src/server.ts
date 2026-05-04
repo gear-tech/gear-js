@@ -1,6 +1,6 @@
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { config } from './config.js';
+import { config, networkConfigMap } from './config.js';
 import {
   validateBlobHashes,
   validateCode,
@@ -26,8 +26,17 @@ const FIELD_VALIDATORS: Record<keyof RequestCodeValidationParams, (data: unknown
 const REQUIRED_FIELDS = Object.keys(FIELD_VALIDATORS) as (keyof RequestCodeValidationParams)[];
 
 const requestCodeValidationHandler =
-  (enqueue: (jobId: string) => void) =>
-  async (request: FastifyRequest<{ Body: RequestCodeValidationParams }>, reply: FastifyReply) => {
+  (enqueueForNetwork: (network: string, jobId: string) => void) =>
+  async (
+    request: FastifyRequest<{ Params: { network: string }; Body: RequestCodeValidationParams }>,
+    reply: FastifyReply,
+  ) => {
+    const { network } = request.params;
+    const networkConfig = networkConfigMap.get(network);
+    if (!networkConfig) {
+      return reply.status(404).send({ error: `Unknown network: ${network}` });
+    }
+
     const body = request.body;
 
     const missing = REQUIRED_FIELDS.filter((field) => body[field] === undefined || body[field] === null);
@@ -41,16 +50,16 @@ const requestCodeValidationHandler =
       }
     }
 
-    const jobId = generateJobId(body.codeId);
+    const jobId = generateJobId(network, body.codeId);
     const existing = await getJobStatus(jobId);
     if (existing && existing.status !== 'failed') {
-      return reply.send({ jobId, routerAddress: config.routerAddress });
+      return reply.send({ jobId, routerAddress: networkConfig.routerAddress });
     }
 
-    await createRequest(body);
-    enqueue(jobId);
+    await createRequest(network, body);
+    enqueueForNetwork(network, jobId);
 
-    return reply.send({ jobId, routerAddress: config.routerAddress });
+    return reply.send({ jobId, routerAddress: networkConfig.routerAddress });
   };
 
 const statusHandler = async (request: FastifyRequest<{ Querystring: { jobId: string } }>, reply: FastifyReply) => {
@@ -67,11 +76,16 @@ const statusHandler = async (request: FastifyRequest<{ Querystring: { jobId: str
   return reply.send(status);
 };
 
-export function buildApp(enqueue: (jobId: string) => void) {
-  const fastify = Fastify({ logger: true });
+export async function runServer(enqueueForNetwork: (network: string, jobId: string) => void) {
+  const app = Fastify({ logger: true });
 
-  fastify.post<{ Body: RequestCodeValidationParams }>('/request-code-validation', requestCodeValidationHandler(enqueue));
-  fastify.get<{ Querystring: { jobId: string } }>('/status', statusHandler);
+  app.post<{ Params: { network: string }; Body: RequestCodeValidationParams }>(
+    '/:network/request-code-validation',
+    requestCodeValidationHandler(enqueueForNetwork),
+  );
+  app.get<{ Querystring: { jobId: string } }>('/status', statusHandler);
 
-  return fastify;
+  await app.listen({ port: config.port, host: '0.0.0.0' });
+
+  return app;
 }

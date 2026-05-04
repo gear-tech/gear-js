@@ -1,51 +1,77 @@
 #!/usr/bin/env node
-// Usage: node scripts/request-validation.mjs <wasm-file> <api-url>
-// Env: PRIVATE_KEY
+// Usage: node scripts/request-validation.mjs <wasm-file> <api-url> <network>
+// Env: PRIVATE_KEY, ETHEREUM_RPC_URL, ROUTER_ADDRESS
 
 import { readFileSync } from 'node:fs';
-import { blake2b } from '@noble/hashes/blake2';
-import { loadKZG } from 'kzg-wasm';
+import { getWrappedVaraClient } from '@vara-eth/api/eth/contracts';
+import { getRouterClient } from '@vara-eth/api/eth/router';
+import { walletClientToSigner } from '@vara-eth/api/signer';
+import dotenv from 'dotenv';
+import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { bytesToHex, hexToBytes, sha256 } from 'viem/utils';
+import { bytesToHex } from 'viem/utils';
 
-import { simpleSidecarEncode } from '../../../../apis/vara-eth/lib/util/blob.js';
+dotenv.config();
 
-const [wasmFile, apiUrl] = process.argv.slice(2);
+const [wasmFile, apiUrl, network] = process.argv.slice(2);
 
-if (!wasmFile || !apiUrl) {
-  console.error('Usage: node scripts/request-validation.mjs <wasm-file> <api-url>');
+if (!wasmFile || !apiUrl || !network) {
+  console.error('Usage: node scripts/request-validation.mjs <wasm-file> <api-url> <network>');
   process.exit(1);
 }
 
-if (!process.env.PRIVATE_KEY) {
-  console.error('Missing PRIVATE_KEY env var');
-  process.exit(1);
+for (const envVar of ['PRIVATE_KEY', 'ETHEREUM_RPC_URL', 'ROUTER_ADDRESS']) {
+  if (!process.env[envVar]) {
+    console.error(`Missing ${envVar} env var`);
+    process.exit(1);
+  }
 }
 
 const code = readFileSync(wasmFile);
-const codeHex = bytesToHex(code);
 
-const codeId = bytesToHex(blake2b(code, { dkLen: 32 }));
-console.log('codeId:', codeId);
-
-const blob = simpleSidecarEncode(code)[0];
-const blobHex = bytesToHex(blob);
-
-const kzg = await loadKZG();
-const commitment = kzg.blobToKZGCommitment(blobHex);
-
-const versionedHash = sha256(hexToBytes(commitment), 'bytes');
-versionedHash.set([0x01], 0);
-const blobHash = bytesToHex(versionedHash);
-console.log('blobHash:', blobHash);
-
+const transport = webSocket(process.env.ETHEREUM_RPC_URL);
 const account = privateKeyToAccount(process.env.PRIVATE_KEY);
-const signature = await account.signMessage({ message: blobHash + codeId });
+const publicClient = createPublicClient({ transport });
+const walletClient = createWalletClient({ transport, account });
+const signer = walletClientToSigner(walletClient);
 
-const body = { code: codeHex, codeId, sender: account.address, blobHash, signature };
+const routerAddress = process.env.ROUTER_ADDRESS;
+const router = getRouterClient({ address: routerAddress, publicClient, signer });
+
+const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600);
+
+const [wvaraAddress, baseFee, extraFee] = await Promise.all([
+  router.wrappedVara(),
+  router.requestCodeValidationBaseFee(),
+  router.requestCodeValidationExtraFee(),
+]);
+const totalFee = baseFee + extraFee;
+console.log('WVARA address:', wvaraAddress);
+console.log('Total fee:', totalFee);
+
+const wvara = getWrappedVaraClient({ address: wvaraAddress, publicClient, signer });
+
+const [{ signature: wvaraPermitSignature }, { codeId, blobHashes, signature: requestCodeValidationSignature }] =
+  await Promise.all([
+    wvara.prepareAndSignPermitData(routerAddress, totalFee, deadline),
+    router.prepareAndSignRequestCodeValidationPermitData(code, deadline),
+  ]);
+
+console.log('codeId:', codeId);
+console.log('blobHashes:', blobHashes);
+
+const body = {
+  code: bytesToHex(code),
+  codeId,
+  sender: account.address,
+  blobHashes,
+  deadline: Number(deadline),
+  wvaraPermitSignature,
+  requestCodeValidationSignature,
+};
 
 console.log('Sending request...');
-const res = await fetch(`${apiUrl}/request-code-validation`, {
+const res = await fetch(`${apiUrl}/${network}/request-code-validation`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(body),

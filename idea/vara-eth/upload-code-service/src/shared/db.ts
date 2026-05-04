@@ -1,7 +1,8 @@
-import type { ColumnType, Selectable } from 'kysely';
-import { type Insertable, Kysely, PostgresDialect } from 'kysely';
+import type { ColumnType, Insertable, Selectable } from 'kysely';
+import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import type { Address, Hash, Hex } from 'viem';
+
 import { config } from '../config.js';
 import { generateJobId } from '../util.js';
 import type { JobStatus, RequestCodeValidationParams } from './types.js';
@@ -9,6 +10,7 @@ import type { JobStatus, RequestCodeValidationParams } from './types.js';
 export interface JobsTable {
   job_id: string;
   status: JobStatus;
+  network: string;
   code_id: Hash;
   code: Hex | null;
   blob_hashes: Hash[];
@@ -40,11 +42,12 @@ type NewJob = Insertable<JobsTable>;
 
 const db = new Kysely<Database>({ dialect });
 
-export async function createRequest(data: RequestCodeValidationParams): Promise<string> {
-  const job_id = generateJobId(data.codeId);
+export async function createRequest(network: string, data: RequestCodeValidationParams): Promise<string> {
+  const job_id = generateJobId(network, data.codeId);
 
   const item: NewJob = {
     job_id,
+    network,
     status: 'pending',
     code_id: data.codeId,
     blob_hashes: data.blobHashes,
@@ -90,12 +93,12 @@ export async function setStatus(jobId: string, status: JobStatus, transactionHas
     .execute();
 }
 
-export async function recoverPendingJobs(): Promise<string[]> {
+export async function recoverPendingJobs(): Promise<Array<{ jobId: string; network: string }>> {
   await db.updateTable('jobs').set('status', 'pending').where('status', '=', 'processing').execute();
 
-  const rows = await db.selectFrom('jobs').select('job_id').where('status', '=', 'pending').execute();
+  const rows = await db.selectFrom('jobs').select(['job_id', 'network']).where('status', '=', 'pending').execute();
 
-  return rows.map((r) => r.job_id);
+  return rows.map((r) => ({ jobId: r.job_id, network: r.network }));
 }
 
 export async function getRequest(jobId: string): Promise<Job> {

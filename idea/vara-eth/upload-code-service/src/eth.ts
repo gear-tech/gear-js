@@ -12,26 +12,33 @@ import {
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { config } from './config.js';
+import type { NetworkConfig } from './shared/types.js';
 
-let _routerClient: RouterClient | null = null;
-let _publicClient: PublicClient | null = null;
+type ClientPair = { routerClient: RouterClient; publicClient: PublicClient };
 
-async function getClients() {
-  if (_routerClient && _publicClient) return { routerClient: _routerClient, publicClient: _publicClient };
+const _clientCache = new Map<string, ClientPair>();
 
-  const transport = webSocket(config.ethereumRpcUrl);
-  const account = privateKeyToAccount(config.privateKey);
+async function getClients(networkConfig: NetworkConfig): Promise<ClientPair> {
+  const cached = _clientCache.get(networkConfig.name);
+  if (cached) return cached;
 
-  _publicClient = createPublicClient({ transport });
+  const transport = webSocket(networkConfig.ethereumRpcUrl);
+  const account = privateKeyToAccount(networkConfig.privateKey);
+
+  const publicClient = createPublicClient({ transport });
   const walletClient = createWalletClient({ transport, account });
   const signer = walletClientToSigner(walletClient);
-  _routerClient = getRouterClient({ address: config.routerAddress, publicClient: _publicClient, signer });
+  const routerClient = getRouterClient({ address: networkConfig.routerAddress, publicClient, signer });
 
-  return { routerClient: _routerClient, publicClient: _publicClient };
+  const pair: ClientPair = { routerClient, publicClient };
+  _clientCache.set(networkConfig.name, pair);
+  return pair;
 }
 
-export async function requestCodeValidationOnBehalf(
+export type PreparedTx = Awaited<ReturnType<RouterClient['requestCodeValidationOnBehalf']>>;
+
+export async function prepareCodeValidation(
+  networkConfig: NetworkConfig,
   code: Uint8Array,
   codeId: Hash,
   sender: Address,
@@ -39,8 +46,8 @@ export async function requestCodeValidationOnBehalf(
   deadline: bigint,
   wvaraPermitSignature: Hex,
   requestCodeValidationSignature: Hex,
-) {
-  const { routerClient, publicClient } = await getClients();
+): Promise<PreparedTx> {
+  const { routerClient } = await getClients(networkConfig);
 
   const tx = await routerClient.requestCodeValidationOnBehalf(
     sender,
@@ -50,17 +57,20 @@ export async function requestCodeValidationOnBehalf(
     parseSignature(requestCodeValidationSignature),
     parseSignature(wvaraPermitSignature),
   );
-  console.log({ tx }, 'Transaction created');
 
   if (tx.codeId.toLowerCase() !== codeId.toLowerCase()) {
     throw new Error(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
   }
 
+  return tx;
+}
+
+export async function sendCodeValidation(
+  networkConfig: NetworkConfig,
+  tx: PreparedTx,
+): Promise<{ transactionHash: Hash; status: 'success' | 'reverted' }> {
+  const { publicClient } = await getClients(networkConfig);
   const transactionHash = await tx.send();
   const receipt = await publicClient.waitForTransactionReceipt({ hash: transactionHash });
-
-  return {
-    transactionHash,
-    status: receipt.status,
-  };
+  return { transactionHash, status: receipt.status };
 }

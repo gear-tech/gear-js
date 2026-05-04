@@ -1,7 +1,10 @@
+import { createLogger } from '@gear-js/logger';
+import type { Address, Hash, Hex } from 'viem';
 import { hexToBytes } from 'viem';
 
-import { requestCodeValidationOnBehalf } from './eth.js';
 import { getRequest, setStatus } from './shared/db.js';
+
+const logger = createLogger('queue');
 
 class AsyncQueue<T> {
   private items: T[] = [];
@@ -48,9 +51,21 @@ class Mutex {
 const SHUTDOWN = Symbol('shutdown');
 type Item = string | typeof SHUTDOWN;
 
-export function startQueue(concurrency: number) {
+type PrepareFn<T> = (
+  code: Uint8Array,
+  codeId: Hash,
+  sender: Address,
+  blobHashes: Hash[],
+  deadline: bigint,
+  wvaraPermitSignature: Hex,
+  requestCodeValidationSignature: Hex,
+) => Promise<T>;
+
+type SendFn<T> = (tx: T) => Promise<{ transactionHash: Hash; status: 'success' | 'reverted' }>;
+
+export function startQueue<T>(concurrency: number, prepareFn: PrepareFn<T>, sendFn: SendFn<T>) {
   const queue = new AsyncQueue<Item>();
-  const submitMutex = new Mutex();
+  const sendMutex = new Mutex();
   let shuttingDown = false;
 
   async function processJob(jobId: string): Promise<void> {
@@ -58,25 +73,27 @@ export function startQueue(concurrency: number) {
       await setStatus(jobId, 'processing');
       const job = await getRequest(jobId);
 
-      await submitMutex.acquire();
-      let result: Awaited<ReturnType<typeof requestCodeValidationOnBehalf>>;
+      const tx = await prepareFn(
+        hexToBytes(job.code!),
+        job.code_id,
+        job.sender,
+        job.blob_hashes,
+        BigInt(job.deadline),
+        job.wvara_permit_signature,
+        job.request_code_validation_signature,
+      );
+
+      await sendMutex.acquire();
+      let result: Awaited<ReturnType<SendFn<T>>>;
       try {
-        result = await requestCodeValidationOnBehalf(
-          hexToBytes(job.code!),
-          job.code_id,
-          job.sender,
-          job.blob_hashes,
-          BigInt(job.deadline),
-          job.wvara_permit_signature,
-          job.request_code_validation_signature,
-        );
+        result = await sendFn(tx);
       } finally {
-        submitMutex.release();
+        sendMutex.release();
       }
 
       await setStatus(jobId, result.status === 'success' ? 'success' : 'failed', result.transactionHash);
     } catch (err) {
-      console.error({ jobId, err }, 'Failed to process job');
+      logger.error({ jobId, err }, 'Failed to process job');
       await setStatus(jobId, 'failed').catch(() => {});
     }
   }
