@@ -4,15 +4,15 @@
   "version": "1.4.26",
   "devDependencies": {
     "@types/express": "5.0.6",
-    "@types/supertest": "^6.0.3",
-    "supertest": "^7.1.4"
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "@gear-js/api": "0.45.0",
     "@polkadot/api": "16.5.6",
-    "dotenv": "17.3.1",
+    "dotenv": "17.4.2",
     "express": "5.2.1",
-    "gear-idea-common": "1.4.26",
+    "gear-idea-common": "workspace:*",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",

@@ -179,7 +179,7 @@ jobs:
 
       - name: 'Upload vara-eth node log'
         if: steps.changed-vara-eth.outputs.any_changed == 'true' && always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vara-eth-log
           path: apis/vara-eth/vara-eth.log
