@@ -22,33 +22,43 @@ export const useCodeValidationPolling = () => {
 
     const poll = async () => {
       while (!isCancelled) {
-        const jobs = getValidationJobs();
+        try {
+          const jobs = getValidationJobs();
 
-        if (!jobs.length) {
-          await wait(POLL_INTERVAL_MS);
-          continue;
-        }
-
-        for (const { jobId, codeId } of jobs) {
-          const { status } = await getCodeValidationStatus(CODE_VALIDATION_SERVICE_URL, jobId);
-
-          if (status !== 'success' && status !== 'failed') {
+          if (!jobs.length) {
+            await wait(POLL_INTERVAL_MS);
             continue;
           }
 
-          removeValidationJob(jobId);
+          for (const { jobId, codeId } of jobs) {
+            try {
+              const { status } = await getCodeValidationStatus(CODE_VALIDATION_SERVICE_URL, jobId);
 
-          if (codeId) {
-            await addMyActivity({
-              type: TransactionTypes.codeValidation,
-              codeId,
-              resultStatus: status === 'success' ? 'success' : 'error',
-              error: status === 'success' ? undefined : 'validation error',
-            });
+              if (status !== 'success' && status !== 'failed') {
+                continue;
+              }
+
+              removeValidationJob(jobId);
+
+              if (codeId) {
+                await addMyActivity({
+                  type: TransactionTypes.codeValidation,
+                  codeId,
+                  resultStatus: status === 'success' ? 'success' : 'error',
+                  error: status === 'success' ? undefined : 'validation error',
+                });
+              }
+            } catch (error) {
+              console.error('Code validation polling job failed:', { jobId, error });
+            }
           }
+        } catch (error) {
+          console.error('Code validation polling iteration failed:', error);
         }
 
-        await wait(POLL_INTERVAL_MS);
+        if (!isCancelled) {
+          await wait(POLL_INTERVAL_MS);
+        }
       }
     };
 
