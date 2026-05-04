@@ -22,7 +22,7 @@
     "dotenv": "17.4.2",
     "express": "5.2.1",
     "express-rate-limit": "8.4.1",
-    "gear-idea-common": "1.4.26",
+    "gear-idea-common": "workspace:*",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",

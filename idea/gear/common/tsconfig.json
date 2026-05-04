@@ -4,6 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
+    "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
     "strict": false,
   },

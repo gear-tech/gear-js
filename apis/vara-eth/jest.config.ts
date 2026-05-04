@@ -21,6 +21,7 @@ const config: Config.InitialOptions = {
         tsconfig: {
           module: 'ESNext',
           moduleResolution: 'bundler',
+          types: ['jest'],
         },
       },
     ],

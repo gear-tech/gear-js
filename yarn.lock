@@ -16098,7 +16098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gear-idea-common@npm:1.4.26, gear-idea-common@workspace:idea/gear/common":
+"gear-idea-common@workspace:*, gear-idea-common@workspace:idea/gear/common":
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
@@ -16117,8 +16117,8 @@ __metadata:
     cron: "npm:4.4.0"
     dotenv: "npm:17.4.2"
     express: "npm:5.2.1"
-    gear-idea-common: "npm:1.4.26"
-    gear-idea-indexer-db: "npm:1.4.26"
+    gear-idea-common: "workspace:*"
+    gear-idea-indexer-db: "workspace:*"
     pg: "npm:8.20.0"
     redis: "npm:5.12.1"
     reflect-metadata: "npm:0.2.2"
@@ -16142,7 +16142,7 @@ __metadata:
     dotenv: "npm:17.4.2"
     express: "npm:5.2.1"
     express-rate-limit: "npm:8.4.1"
-    gear-idea-common: "npm:1.4.26"
+    gear-idea-common: "workspace:*"
     pg: "npm:8.20.0"
     reflect-metadata: "npm:0.2.2"
     supertest: "npm:^7.2.2"
@@ -16207,7 +16207,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-idea-indexer-db@npm:1.4.26, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
+"gear-idea-indexer-db@npm:1.4.26, gear-idea-indexer-db@workspace:*, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
@@ -16225,7 +16225,7 @@ __metadata:
     "@types/supertest": "npm:^7.2.0"
     dotenv: "npm:17.4.2"
     express: "npm:5.2.1"
-    gear-idea-common: "npm:1.4.26"
+    gear-idea-common: "workspace:*"
     pg: "npm:8.20.0"
     reflect-metadata: "npm:0.2.2"
     supertest: "npm:^7.2.2"
