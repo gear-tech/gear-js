@@ -33,10 +33,10 @@ const CreateProgram = () => {
   const useOverrideInitializer = watch('useOverrideInitializer');
 
   const onSubmit = (values: CreateProgramFormValues) => {
-    if (!decimals) return;
-
     let executableBalanceWei: bigint | undefined;
     if (values.useExecutableBalance) {
+      if (decimals === undefined) return;
+
       try {
         executableBalanceWei = parseUnits(values.amount.trim(), decimals);
       } catch {
@@ -70,7 +70,8 @@ const CreateProgram = () => {
     createProgram.mutate(params);
   };
 
-  const isSubmitDisabled = !decimals || isWvaraPending || createProgram.isPending;
+  const isSubmitDisabled =
+    createProgram.isPending || (useExecutableBalance && (decimals === undefined || isWvaraPending));
 
   if (!isLoading && !code) {
     return <ChainEntity.NotFound entity="code" id={codeId} />;
