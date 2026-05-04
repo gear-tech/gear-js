@@ -1,5 +1,5 @@
 {
-  "name": "upload-code-service",
+  "name": "varaeth-idea-upload-code-service",
   "type": "module",
   "dependencies": {
     "@gear-js/logger": "workspace:*",
