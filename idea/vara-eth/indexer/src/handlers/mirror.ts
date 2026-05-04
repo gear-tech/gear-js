@@ -1,7 +1,8 @@
+import { EntityType, MessageRequest, Program, ReplyRequest } from '@vara-eth/idea-indexer-db';
+
 import { MirrorAbi } from '../abi/mirror.abi.js';
 import { RouterAbi } from '../abi/router.abi.js';
 import { config } from '../config.js';
-import { EntityType, MessageRequest, Program, ReplyRequest } from '../model/index.js';
 import type { Context, Log } from '../processor.js';
 import type { BlockDataCommon } from '../types/index.js';
 import { toPgBytea } from '../util/index.js';

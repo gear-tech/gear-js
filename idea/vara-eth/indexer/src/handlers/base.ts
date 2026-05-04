@@ -1,7 +1,7 @@
 import type { Logger } from '@subsquid/logger';
 import type { Entity } from '@subsquid/typeorm-store/lib/store.js';
+import { type EntityType, HashRegistry } from '@vara-eth/idea-indexer-db';
 
-import { type EntityType, HashRegistry } from '../model/index.js';
 import type { Context } from '../processor.js';
 import { mapValues } from '../util/collection.js';
 
