@@ -1,5 +1,3 @@
-import type { Hex } from 'viem';
-
 export const IMIRROR_ABI = [
   {
     type: 'function',

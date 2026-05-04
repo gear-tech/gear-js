@@ -1,5 +1,5 @@
-import type { IVaraEthProvider } from '../../types/index.js';
 import type { Address, Hash, Hex } from 'viem';
+import type { IVaraEthProvider } from '../../types/index.js';
 
 type InjectedTx = {
   data: { destination: Address; payload: Hex; value: number; referenceBlock: Hash; salt: Hash };

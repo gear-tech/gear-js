@@ -467,7 +467,9 @@ describe('Injected Transactions', () => {
       const txs = await api.query.injected.getTransactions(injectedTxs.map((i) => i.id));
 
       expect(txs).toHaveLength(2);
-      txs.forEach((tx, i) => assertTx(tx!, injectedTxs[i]));
+      txs.forEach((tx, i) => {
+        assertTx(tx!, injectedTxs[i]);
+      });
     });
 
     test('should request multiple transaction with some non-existing ids and get null for them', async () => {
