@@ -31,9 +31,7 @@ const Navigation = () => {
       <div className={styles.leftSide}>
         <div className={styles.navigation}>{renderLinks()}</div>
 
-        {matchPath(routes.codes, pathname) && (
-          <UploadCodeButton />
-        )}
+        {matchPath(routes.codes, pathname) && <UploadCodeButton />}
 
         {codeId && <CreateProgramButton codeId={codeId} />}
       </div>

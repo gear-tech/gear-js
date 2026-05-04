@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
-import { useAccount } from "wagmi";
+import { useRef, useState } from 'react';
+import { useAccount } from 'wagmi';
 
-import { Button, Modal } from "@/components";
-import { useUploadCode } from "@/features/codes/lib";
+import { Button, Modal } from '@/components';
+import { useUploadCode } from '@/features/codes/lib';
 
-import styles from "./upload-code-button.module.scss";
+import styles from './upload-code-button.module.scss';
 
 export const UploadCodeButton = () => {
   const uploadCode = useUploadCode();
@@ -18,16 +18,14 @@ export const UploadCodeButton = () => {
     inputRef.current?.click();
   };
 
-  const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
+  const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = () => {
       const arrayBuffer = reader.result;
-      if (!arrayBuffer || typeof arrayBuffer === "string") return;
+      if (!arrayBuffer || typeof arrayBuffer === 'string') return;
       const uint8Array = new Uint8Array(arrayBuffer);
 
       uploadCode.mutate(uint8Array, {
@@ -50,15 +48,10 @@ export const UploadCodeButton = () => {
           heading="Upload Code"
           close={() => setIsOpen(false)}
           action={
-            <Button
-              size="xs"
-              onClick={onSelectFile}
-              isLoading={uploadCode.isPending}
-            >
+            <Button size="xs" onClick={onSelectFile} isLoading={uploadCode.isPending}>
               Select File
             </Button>
-          }
-        >
+          }>
           {/* TODO: add drop area */}
           <input
             ref={inputRef}

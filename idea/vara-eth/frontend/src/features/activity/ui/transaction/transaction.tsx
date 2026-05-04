@@ -19,6 +19,18 @@ const Transaction = ({ item, isMyActivity = false }: Props) => {
   const { decimals } = useWrappedVaraBalance();
 
   if (item.type === TransactionTypes.codeValidation) {
+    if (item.resultStatus === 'pending') {
+      return (
+        <div className={styles.row}>
+          <Badge color="secondary">Code validation requested</Badge>
+          <div className={styles.transaction}>
+            Validation request for code{' '}
+            <HashLink hash={item.codeId} href={generatePath(routes.code, { codeId: item.codeId })} /> was submitted.
+          </div>
+        </div>
+      );
+    }
+
     const isSuccess = item.resultStatus === 'success';
 
     return (

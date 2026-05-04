@@ -17,6 +17,7 @@ const TransactionTypes = {
 } as const;
 
 type ResultStatus = 'success' | 'error';
+type CodeValidationResultStatus = 'pending' | ResultStatus;
 
 type ReceiptActivity = {
   blockHash: Hex;
@@ -82,10 +83,10 @@ type ApproveActivity = ReceiptActivity & {
   value: string;
 };
 
-type UploadCodeActivity = ReceiptActivity & {
+type UploadCodeActivity = {
   type: typeof TransactionTypes.codeValidation;
   codeId: string;
-  resultStatus: ResultStatus;
+  resultStatus: CodeValidationResultStatus;
   error: string | undefined;
 };
 
