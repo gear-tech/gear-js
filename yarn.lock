@@ -173,7 +173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/cli@npm:^7.28.3":
+"@babel/cli@npm:^7.28.6":
   version: 7.28.6
   resolution: "@babel/cli@npm:7.28.6"
   dependencies:
@@ -225,7 +225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.21.3, @babel/core@npm:^7.23.9, @babel/core@npm:^7.27.4, @babel/core@npm:^7.28.0, @babel/core@npm:^7.28.5":
+"@babel/core@npm:^7.21.3, @babel/core@npm:^7.23.9, @babel/core@npm:^7.27.4, @babel/core@npm:^7.28.0, @babel/core@npm:^7.29.0":
   version: 7.29.0
   resolution: "@babel/core@npm:7.29.0"
   dependencies:
@@ -8281,9 +8281,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/evm-processor@npm:^1.27.3":
-  version: 1.29.0
-  resolution: "@subsquid/evm-processor@npm:1.29.0"
+"@subsquid/evm-processor@npm:^1.29.1":
+  version: 1.29.1
+  resolution: "@subsquid/evm-processor@npm:1.29.1"
   dependencies:
     "@subsquid/http-client": "npm:^1.8.0"
     "@subsquid/logger": "npm:^1.5.0"
@@ -8292,11 +8292,11 @@ __metadata:
     "@subsquid/util-internal-archive-client": "npm:^0.1.2"
     "@subsquid/util-internal-hex": "npm:^1.2.2"
     "@subsquid/util-internal-ingest-tools": "npm:^1.1.4"
-    "@subsquid/util-internal-processor-tools": "npm:^4.3.0"
+    "@subsquid/util-internal-processor-tools": "npm:^4.4.0"
     "@subsquid/util-internal-range": "npm:^0.3.0"
     "@subsquid/util-internal-validation": "npm:^0.8.0"
     "@subsquid/util-timeout": "npm:^2.3.2"
-  checksum: 10c0/728284bcaafb9cb61a129229cc1c6c31a502e9dc5265089d3140b83a6628ef694f897ad90605873e35f1d726de7badfda516afc24693c31fadc60849aed5590b
+  checksum: 10c0/757ea30a699c0f4c7f3ec8341bbb653e99ce2138c4d1acf4079932eadd995a68ac13527457776ca2054a869082f547f1a9deef0648b2bed488df5397d6ae1c06
   languageName: node
   linkType: hard
 
@@ -8307,7 +8307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/http-client@npm:^1.4.0, @subsquid/http-client@npm:^1.6.1, @subsquid/http-client@npm:^1.8.0":
+"@subsquid/http-client@npm:^1.4.0, @subsquid/http-client@npm:^1.8.0":
   version: 1.8.0
   resolution: "@subsquid/http-client@npm:1.8.0"
   dependencies:
@@ -8329,15 +8329,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/openreader@npm:^5.0.0":
-  version: 5.4.0
-  resolution: "@subsquid/openreader@npm:5.4.0"
+"@subsquid/openreader@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "@subsquid/openreader@npm:5.5.0"
   dependencies:
     "@graphql-tools/merge": "npm:^9.0.1"
     "@subsquid/apollo-server-core": "npm:^3.14.0"
     "@subsquid/apollo-server-express": "npm:^3.14.1"
     "@subsquid/graphiql-console": "npm:^0.3.0"
-    "@subsquid/logger": "npm:^1.4.0"
+    "@subsquid/logger": "npm:^1.5.0"
     "@subsquid/util-internal": "npm:^3.2.0"
     "@subsquid/util-internal-commander": "npm:^1.4.0"
     "@subsquid/util-internal-hex": "npm:^1.2.2"
@@ -8359,11 +8359,11 @@ __metadata:
       optional: true
   bin:
     openreader: bin/main.js
-  checksum: 10c0/8d2370630be140dc06625ac57a6632ce0e0409c4fb7560a66f6bb56ccb148964375bb526e1df6e9b0701a1ad62aedd9797a5992fe5c04615ae72831945471f62
+  checksum: 10c0/6b2e0c69e803cc4c2a5783306809dff03de8950c7e033c6fcc2b48d3f4d48c7e18f9f01d8c7d2c2079a8fc9b1a2fba4c921255814952b0c3a9046237cdec4fec
   languageName: node
   linkType: hard
 
-"@subsquid/rpc-client@npm:^4.13.0, @subsquid/rpc-client@npm:^4.14.0, @subsquid/rpc-client@npm:^4.9.0":
+"@subsquid/rpc-client@npm:^4.14.0, @subsquid/rpc-client@npm:^4.9.0":
   version: 4.14.0
   resolution: "@subsquid/rpc-client@npm:4.14.0"
   dependencies:
@@ -8414,9 +8414,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/substrate-data@npm:^4.4.0":
-  version: 4.4.4
-  resolution: "@subsquid/substrate-data@npm:4.4.4"
+"@subsquid/substrate-data@npm:^4.4.4":
+  version: 4.4.6
+  resolution: "@subsquid/substrate-data@npm:4.4.6"
   dependencies:
     "@subsquid/scale-codec": "npm:^4.0.1"
     "@subsquid/substrate-data-raw": "npm:^1.2.0"
@@ -8430,7 +8430,7 @@ __metadata:
   peerDependencies:
     "@subsquid/rpc-client": ^4.14.0
     "@subsquid/substrate-runtime": ^2.0.1
-  checksum: 10c0/99fbdc82fdb43c2d6ed9fd9100a7420578ea5626aa7dfbd3d31c9ef84078d8234373ee746285ac6b6f7edc151895e8fcf76099a3cc6af47ccd5cf4c8633df3f7
+  checksum: 10c0/df8fad08cafaa92ea57f3e3995a3089882264fa28d7a646a82bb9e011f55dcfc71ffcb8dc03db0a018b66c259faad8b9e7f9c4dcbf3307fff2bd8b0c96f6f16b
   languageName: node
   linkType: hard
 
@@ -8453,26 +8453,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/substrate-processor@npm:8.6.1":
-  version: 8.6.1
-  resolution: "@subsquid/substrate-processor@npm:8.6.1"
+"@subsquid/substrate-processor@npm:8.7.0":
+  version: 8.7.0
+  resolution: "@subsquid/substrate-processor@npm:8.7.0"
   dependencies:
-    "@subsquid/http-client": "npm:^1.6.1"
-    "@subsquid/logger": "npm:^1.4.0"
-    "@subsquid/rpc-client": "npm:^4.13.0"
-    "@subsquid/substrate-data": "npm:^4.4.0"
+    "@subsquid/http-client": "npm:^1.8.0"
+    "@subsquid/logger": "npm:^1.5.0"
+    "@subsquid/rpc-client": "npm:^4.14.0"
+    "@subsquid/substrate-data": "npm:^4.4.4"
     "@subsquid/substrate-data-raw": "npm:^1.2.0"
     "@subsquid/util-internal": "npm:^3.2.0"
     "@subsquid/util-internal-archive-client": "npm:^0.1.2"
     "@subsquid/util-internal-hex": "npm:^1.2.2"
     "@subsquid/util-internal-ingest-tools": "npm:^1.1.4"
     "@subsquid/util-internal-json": "npm:^1.2.3"
-    "@subsquid/util-internal-processor-tools": "npm:^4.2.1"
+    "@subsquid/util-internal-processor-tools": "npm:^4.3.0"
     "@subsquid/util-internal-range": "npm:^0.3.0"
     "@subsquid/util-internal-validation": "npm:^0.8.0"
   peerDependencies:
     "@subsquid/substrate-runtime": ^2.0.1
-  checksum: 10c0/3eda22aa72ee12b566f77b0df8ac299dda6afeeb7934fe69f09e2817c17b7aee1dca1ac4f1a477f0156a78e423e99b69dcb891c341da16fe559bc5604059c918
+  checksum: 10c0/11e16d51697049e8c2195ad102924d44ca78dac3ce224d12aedf0bb56c83fd647d4c44325d7ebc0121cb5b8bafb28ccf6785b0f5cf6a945bf14569ca200202e4
   languageName: node
   linkType: hard
 
@@ -8512,22 +8512,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/typeorm-codegen@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@subsquid/typeorm-codegen@npm:2.0.2"
+"@subsquid/typeorm-codegen@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@subsquid/typeorm-codegen@npm:2.2.0"
   dependencies:
-    "@subsquid/openreader": "npm:^5.0.0"
+    "@subsquid/openreader": "npm:^5.5.0"
     "@subsquid/util-internal": "npm:^3.2.0"
     "@subsquid/util-internal-code-printer": "npm:^1.2.2"
     "@subsquid/util-naming": "npm:^1.3.0"
     commander: "npm:^11.1.0"
   bin:
     squid-typeorm-codegen: bin/run.js
-  checksum: 10c0/a4a90506124c291eba6c6883104d3da5a9ad3abd18721aabaf98647b2bf66832d7b7f092636babbafbb0c8e9e9962237d5701ce9593316ba91458dff864a52fc
+  checksum: 10c0/81be3c0bc3404f4ac2581971d0db251cb2858cfab306b6c9dde6771d1b711108f3a729f28d3965765138265c601c55fbb758d4f28bf02481e31f3773a5949d41
   languageName: node
   linkType: hard
 
-"@subsquid/typeorm-config@npm:^4.1.0, @subsquid/typeorm-config@npm:^4.1.1":
+"@subsquid/typeorm-config@npm:^4.1.1":
   version: 4.1.1
   resolution: "@subsquid/typeorm-config@npm:4.1.1"
   dependencies:
@@ -8543,12 +8543,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/typeorm-migration@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@subsquid/typeorm-migration@npm:1.3.0"
+"@subsquid/typeorm-migration@npm:1.3.1":
+  version: 1.3.1
+  resolution: "@subsquid/typeorm-migration@npm:1.3.1"
   dependencies:
-    "@subsquid/typeorm-config": "npm:^4.1.0"
-    "@subsquid/util-internal": "npm:^3.0.0"
+    "@subsquid/typeorm-config": "npm:^4.1.1"
+    "@subsquid/util-internal": "npm:^3.2.0"
     "@subsquid/util-internal-code-printer": "npm:^1.2.2"
     "@subsquid/util-internal-ts-node": "npm:^0.0.0"
     commander: "npm:^11.1.0"
@@ -8561,20 +8561,20 @@ __metadata:
     squid-typeorm-migration-create: bin/squid-typeorm-migration-create
     squid-typeorm-migration-generate: bin/squid-typeorm-migration-generate
     squid-typeorm-migration-revert: bin/squid-typeorm-migration-revert
-  checksum: 10c0/fe6e7c553708d333cb7bd9daa65df73601c10b67947ffc929c061a7dab2b714b3a8c4ba57b6bc735f227eb6cc73363e5681b5208ab241bae1a0e38c0b87b61b2
+  checksum: 10c0/3fa6c11f42c5d52d470e55ea42c489453fe699f2d0c548634887d9c332f297d465577527be940b1ffed7931a3eeeadc3bf5e7e27549158128406ca3f3fd6ca8d
   languageName: node
   linkType: hard
 
-"@subsquid/typeorm-store@npm:1.7.0, @subsquid/typeorm-store@npm:^1.5.1":
-  version: 1.7.0
-  resolution: "@subsquid/typeorm-store@npm:1.7.0"
+"@subsquid/typeorm-store@npm:1.9.0, @subsquid/typeorm-store@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@subsquid/typeorm-store@npm:1.9.0"
   dependencies:
     "@subsquid/typeorm-config": "npm:^4.1.1"
     "@subsquid/util-internal": "npm:^3.2.0"
   peerDependencies:
     "@subsquid/big-decimal": ^1.0.0
     typeorm: ^0.3.17
-  checksum: 10c0/0286523ed5fdc294bd9e924067bb38e6fc5bc88025dd62903705fbecb52be7adb72768dfcdacd1769fe32075a3fb22612fccd53ff95fdff0dcf808c0061b56eb
+  checksum: 10c0/7d2e0d3be2791639828c85cc5fa9eeb70de6c3b25c8e9ba077ce47d20dfb1a1a1d6b5d23bd326657041a76dbf946a4d908791f5a780fc850c3d40662451ac804
   languageName: node
   linkType: hard
 
@@ -8683,7 +8683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/util-internal-processor-tools@npm:^4.2.1, @subsquid/util-internal-processor-tools@npm:^4.3.0":
+"@subsquid/util-internal-processor-tools@npm:^4.3.0, @subsquid/util-internal-processor-tools@npm:^4.4.0":
   version: 4.4.0
   resolution: "@subsquid/util-internal-processor-tools@npm:4.4.0"
   dependencies:
@@ -16242,12 +16242,12 @@ __metadata:
     "@gear-js/api": "npm:0.45.0"
     "@polkadot/api": "npm:16.5.6"
     "@subsquid/substrate-metadata-explorer": "npm:3.2.0"
-    "@subsquid/substrate-processor": "npm:8.6.1"
+    "@subsquid/substrate-processor": "npm:8.7.0"
     "@subsquid/substrate-runtime": "npm:2.0.1"
     "@subsquid/substrate-typegen": "npm:8.1.0"
-    "@subsquid/typeorm-codegen": "npm:2.0.2"
-    "@subsquid/typeorm-migration": "npm:1.3.0"
-    "@subsquid/typeorm-store": "npm:1.7.0"
+    "@subsquid/typeorm-codegen": "npm:2.2.0"
+    "@subsquid/typeorm-migration": "npm:1.3.1"
+    "@subsquid/typeorm-store": "npm:1.9.0"
     "@types/redis": "npm:^4.0.11"
     dotenv: "npm:17.4.2"
     gear-idea-indexer-db: "npm:1.4.26"
@@ -16272,8 +16272,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-js@workspace:."
   dependencies:
-    "@babel/cli": "npm:^7.28.3"
-    "@babel/core": "npm:^7.28.5"
+    "@babel/cli": "npm:^7.28.6"
+    "@babel/core": "npm:^7.29.0"
     "@babel/plugin-transform-typescript": "npm:^7.28.6"
     "@babel/preset-env": "npm:^7.29.3"
     "@babel/preset-typescript": "npm:^7.28.5"
@@ -25527,9 +25527,9 @@ __metadata:
     "@nestjs/swagger": "npm:^11.4.2"
     "@nestjs/throttler": "npm:^6.5.0"
     "@nestjs/typeorm": "npm:^11.0.1"
-    "@subsquid/evm-processor": "npm:^1.27.3"
-    "@subsquid/logger": "npm:^1.4.0"
-    "@subsquid/typeorm-store": "npm:^1.5.1"
+    "@subsquid/evm-processor": "npm:^1.29.1"
+    "@subsquid/logger": "npm:^1.5.0"
+    "@subsquid/typeorm-store": "npm:^1.9.0"
     "@types/cors": "npm:^2.8.19"
     "@vara-eth/api": "workspace:*"
     class-transformer: "npm:^0.5.1"

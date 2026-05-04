@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "esModuleInterop": true,
     "removeComments": true,
-    "module": "commonjs",
     "target": "esnext",
     "strict": true,
     "allowJs": true,
