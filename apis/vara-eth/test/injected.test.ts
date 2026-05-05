@@ -58,6 +58,7 @@ describe('Injected Transactions', () => {
     let injectedMessageId: string;
     let injectedPromiseHash: string;
     let injectedPromiseSignature: string;
+    let injectedPromiseReplyInfoHash: string;
 
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
 
@@ -82,8 +83,11 @@ describe('Injected Transactions', () => {
         },
       },
       signature:
-        '0x75c0831b0289e9c8f3d8e9e9400e45323818ee3ac88f1bdfb943198c6e5822a23f0673331777cbc2bc2c3220c0be158b5b596b2da3e1f95501727ef73a9328041c',
+        '0x6239210962901c5f3695f6d17fda5f59e39d53f91fc4346d269762aedcf00c7532cf824d73e08e5ea97df63b4bac8232a1a6978442dea95a40558d00356b35001c',
     };
+
+    const HASH_REGEXP = '<(0x[0-9a-f]{64})>';
+    const HEX_REGEXP = '<(0x[0-9a-f]*)>';
 
     const getAndValidateValueByRegexp = (str: string, regexp: string) => {
       const value = str.match(regexp)?.[1];
@@ -102,11 +106,12 @@ describe('Injected Transactions', () => {
 
       const resultStr = result.toString();
 
-      const hash = getAndValidateValueByRegexp(resultStr, 'hash: <(0x[0-9a-f]{64})>');
-      const signature = getAndValidateValueByRegexp(resultStr, 'signature: <(0x[0-9a-f]*)>');
-      const messageId = getAndValidateValueByRegexp(resultStr, 'message_id: <(0x[0-9a-f]{64})>');
-      const promiseHash = getAndValidateValueByRegexp(resultStr, 'promise_hash: <(0x[0-9a-f]{64})>');
-      const promiseSig = getAndValidateValueByRegexp(resultStr, 'promise_signature: <(0x[0-9a-f]*)>');
+      const hash = getAndValidateValueByRegexp(resultStr, `hash: ${HASH_REGEXP}`);
+      const signature = getAndValidateValueByRegexp(resultStr, `signature: ${HEX_REGEXP}`);
+      const messageId = getAndValidateValueByRegexp(resultStr, `message_id: ${HASH_REGEXP}`);
+      const promiseHash = getAndValidateValueByRegexp(resultStr, `promise_hash: ${HASH_REGEXP}`);
+      const promiseSig = getAndValidateValueByRegexp(resultStr, `promise_signature: ${HEX_REGEXP}`);
+      const promiseReplyInfoHash = getAndValidateValueByRegexp(resultStr, `reply_hash: ${HASH_REGEXP}`);
 
       injectedTxHash = hash;
       injectedTxSignature = signature;
@@ -114,6 +119,7 @@ describe('Injected Transactions', () => {
 
       injectedPromiseHash = promiseHash;
       injectedPromiseSignature = promiseSig;
+      injectedPromiseReplyInfoHash = promiseReplyInfoHash;
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
@@ -140,6 +146,11 @@ describe('Injected Transactions', () => {
       const promise = new InjectedTxPromise(PROMISE, api.eth);
 
       expect(promise.hash).toBe(injectedPromiseHash);
+    });
+
+    test('should create a correct reply hash', () => {
+      const promise = new InjectedTxPromise(PROMISE, api.eth);
+      expect(promise.replyHash).toBe(injectedPromiseReplyInfoHash);
     });
 
     test('should create correct promise signature', async () => {
