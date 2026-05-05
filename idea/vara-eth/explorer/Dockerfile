@@ -27,7 +27,7 @@ RUN yarn workspaces focus @vara-eth/idea-indexer-db @vara-eth/idea-explorer @gea
 
 FROM deps
 
-COPY --from=builder /src/idea/vara-eth/explorer/lib /src/idea/vara-eth/explorer/lib
+COPY --from=builder /src/idea/vara-eth/explorer/dist /src/idea/vara-eth/explorer/dist
 COPY --from=builder /src/idea/vara-eth/indexer-db/lib /src/idea/vara-eth/indexer-db/lib
 COPY --from=builder /src/utils/logger/src /src/utils/logger/src
 
