@@ -1,8 +1,8 @@
 use ethexe_common::{
-    ToDigest,
     ecdsa::{PrivateKey, Signature, SignedMessage},
     gprimitives::{ActorId, H256},
     injected::{InjectedTransaction, Promise},
+    ToDigest,
 };
 use gear_core::rpc::ReplyInfo;
 use gear_core_errors::{ReplyCode, SuccessReplyReason};
@@ -31,16 +31,24 @@ pub fn main() {
 
     println!("message_id: <{:?}>", msg_id);
 
-    let promise = Promise {
-        tx_hash: tx.to_hash(),
-        reply: ReplyInfo {
-            payload: Vec::from([0, 1, 2]).into(),
-            value: 256,
-            code: ReplyCode::Success(SuccessReplyReason::Manual),
-        },
+    let reply_info = ReplyInfo {
+        payload: Vec::from([0, 1, 2]).into(),
+        value: 256,
+        code: ReplyCode::Success(SuccessReplyReason::Manual),
     };
 
-    let msg = SignedMessage::create(private_key, promise).unwrap();
+    let reply_hash = reply_info.to_hash();
+
+    println!("reply_hash: <{:?}>", reply_hash);
+
+    let promise = Promise {
+        tx_hash: tx.to_hash(),
+        reply: reply_info,
+    };
+
+    let compact_promise = promise.to_compact();
+
+    let msg = SignedMessage::create(private_key, compact_promise).unwrap();
 
     println!(
         "promise_hash: <0x{}>",

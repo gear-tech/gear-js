@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `CreateProgramBuilder` class — a fluent builder for assembling program-creation transactions. Obtain an instance via `RouterClient.createProgramBuilder(codeId)`, configure optional features with `withAbiInterface()`, `withExecutableBalance()`, `withSalt()`, and `withOverrideInitializer()`, then call `build()` to produce a transaction manager. The builder automatically selects the correct on-chain function (`createProgram`, `createProgramWithAbiInterface`, `createProgramWithExecutableBalance`, or `createProgramWithAbiInterfaceAndExecutableBalance`) based on which options are set (https://github.com/gear-tech/gear-js/pull/2453)
 - `RouterClient.createProgramBuilder()` — factory method that constructs a `CreateProgramBuilder` for the given code ID (https://github.com/gear-tech/gear-js/pull/2453)
 - `initKzgLoading()` exported from `@vara-eth/api/util` — starts loading the `kzg-wasm` WASM library in the background. Call this once at application startup if your app uses code upload functionality so KZG is ready by the time `requestCodeValidation` is invoked. Without it, loading begins lazily on the first code upload, adding latency to that call. The `kzg-wasm` module is no longer loaded eagerly at import time, so applications that never upload code no longer pay its memory cost. (https://github.com/gear-tech/gear-js/pull/2455)
+- `InjectedTxPromise.replyHash` — returns the blake2b-256 hash of the reply info (payload, value, and reply code concatenated) (https://github.com/gear-tech/gear-js/pull/2463)
+- `InjectedTxPromise.compactPromise` — returns `{ txHash, replyHash }`, the compact promise representation used for signing in (https://github.com/gear-tech/gear-js/pull/2463)
 
 ### Removed
 - `RouterClient.createProgram()` — replaced by `RouterClient.createProgramBuilder(codeId).build()` (https://github.com/gear-tech/gear-js/pull/2453)
@@ -32,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 - `RouterClient.requestCodeValidation()` now requires two additional parameters: `deadline: bigint` and `wvaraPermitSignature: Signature | Hex` — callers must obtain a signed WVARA permit via `wvara.prepareAndSignPermitData()` first (https://github.com/gear-tech/gear-js/pull/2446)
 - `EthereumClient` constructor accepts an optional 4th `options` parameter (`{ maxFeePerBlobGasMultiplier?: bigint }`) passed through to the underlying `RouterClient` (https://github.com/gear-tech/gear-js/pull/2446)
+- `InjectedTxPromise.hash` — the signed hash now covers `keccak256(txHash + replyInfoHash)` instead of the previous flat `keccak256(txHash + payload + code + value)`; reply fields are first hashed together with blake2b-256 to produce `replyInfoHash` (https://github.com/gear-tech/gear-js/pull/2463)
 
 ### Fixed
 - `WalletClientAdapter.signMessage` now correctly handles non-hex string inputs by forwarding them as UTF-8 personal-sign messages instead of unsafely casting to `Uint8Array` (https://github.com/gear-tech/gear-js/pull/2446)
