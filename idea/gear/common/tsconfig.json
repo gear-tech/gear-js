@@ -6,6 +6,6 @@
     "declaration": true,
     "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
-  },
+    "strict": false
+  }
 }

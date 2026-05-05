@@ -186,7 +186,7 @@ const getUserActivityKey = (item: MyActivity & { timestamp: number; blockHash: s
 };
 
 const isActivityError = (item: MyActivity) => {
-  if ('error' in item && Boolean(item.error)) return true;
+  if ('error' in item && item.error) return true;
   if ('resultStatus' in item && item.resultStatus === 'error') return true;
   if ('replyCode' in item && typeof item.replyCode === 'string') {
     const normalizedReplyCode = item.replyCode.toLowerCase();

@@ -10337,7 +10337,6 @@ __metadata:
     "@vara-eth/idea-indexer-db": "workspace:*"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.15.1"
-    dotenv: "npm:^17.4.2"
     fastify: "npm:^5.8.5"
     pg: "npm:8.20.0"
     reflect-metadata: "npm:^0.2.2"

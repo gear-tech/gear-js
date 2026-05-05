@@ -16,7 +16,7 @@
     "rootDir": "./src",
     "sourceMap": true,
     "declaration": true,
-    "useUnknownInCatchVariables": false,
+    "useUnknownInCatchVariables": false
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*"]
 }
