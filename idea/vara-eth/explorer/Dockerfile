@@ -6,7 +6,7 @@ RUN apk add --no-cache python3 make g++
 
 COPY . .
 
-RUN yarn workspaces focus @vara-eth/idea-indexer-db @vara-eth/idea-explorer @gear-js/logger
+RUN yarn workspaces focus @vara-eth/idea-indexer-db @vara-eth/idea-explorer @gear-js/logger gear-js
 RUN yarn build:varaeth-idea-indexer-db
 RUN yarn build:varaeth-idea-explorer
 
@@ -23,7 +23,7 @@ COPY idea/vara-eth/explorer/package.json idea/vara-eth/explorer/package.json
 COPY idea/vara-eth/indexer-db/package.json idea/vara-eth/indexer-db/package.json
 COPY utils/logger/package.json utils/logger/package.json
 
-RUN yarn workspaces focus @vara-eth/idea-indexer-db @vara-eth/idea-explorer @gear-js/logger --production
+RUN yarn workspaces focus @vara-eth/idea-indexer-db @vara-eth/idea-explorer @gear-js/logger gear-js --production
 
 FROM deps
 
