@@ -106,13 +106,6 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
     return bytesToHex(this._replyHashU8a);
   }
 
-  public get compactPromise() {
-    return {
-      txHash: this.txHash,
-      replyHash: this.replyHash,
-    };
-  }
-
   /**
    * Computes the keccak256 hash of the promise data (txHash + replyInfoHash)
    * @returns The hash used for signature verification
