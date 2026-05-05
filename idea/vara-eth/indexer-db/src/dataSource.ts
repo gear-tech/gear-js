@@ -14,7 +14,7 @@ import {
   StateTransition,
 } from './entities/index.js';
 
-dotenv.config({ quiet: true });
+dotenv.config({ quiet: true, path: ['.env', '../.env', '../../../.env'] });
 
 const AppDataSource = new DataSource({
   type: 'postgres',

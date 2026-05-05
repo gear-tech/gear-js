@@ -1,3 +1,8 @@
+import { In } from 'typeorm';
+import { type Address, zeroAddress, zeroHash } from 'viem';
+
+import { RouterAbi } from '../abi/router.abi.js';
+import { config } from '../config.js';
 import {
   Batch,
   Code,
@@ -8,12 +13,7 @@ import {
   Program,
   ReplySent,
   StateTransition,
-} from '@vara-eth/idea-indexer-db';
-import { In } from 'typeorm';
-import { type Address, zeroAddress, zeroHash } from 'viem';
-
-import { RouterAbi } from '../abi/router.abi.js';
-import { config } from '../config.js';
+} from '../model/index.js';
 import type { Context, Log } from '../processor.js';
 import type { BlockDataCommon } from '../types/block.js';
 import { createHash, fromPgBytea, mapKeys, mapValues, toPgBytea, toPgByteaString } from '../util/index.js';
