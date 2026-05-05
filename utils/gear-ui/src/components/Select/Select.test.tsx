@@ -17,9 +17,13 @@ describe('select tests', () => {
     render(<Select options={initOptions} />);
 
     const select = screen.getByRole('combobox');
-    const options = screen.getAllByRole('option');
+    const options = select.querySelectorAll('option');
 
-    options.forEach((option) => void expect(select).toContainElement(option));
+    expect(options).toHaveLength(initOptions.length);
+    initOptions.forEach(({ value, label }, index) => {
+      expect(options[index]).toHaveAttribute('value', value);
+      expect(options[index]).toHaveAttribute('label', label);
+    });
   });
 
   it('renders select with label', () => {
