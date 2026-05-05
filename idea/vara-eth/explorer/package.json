@@ -24,14 +24,10 @@
     "@vara-eth/idea-indexer-db": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
-    "cors": "^2.8.6",
     "fastify": "^5.8.5",
     "pg": "8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "typeorm": "0.3.28"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19"
   }
 }

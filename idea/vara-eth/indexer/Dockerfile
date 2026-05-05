@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /src
 
@@ -11,7 +11,7 @@ RUN yarn build:vara-eth-api
 RUN yarn build:varaeth-idea-indexer-db
 RUN yarn build:varaeth-idea-indexer
 
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /src
 
 RUN apk add --no-cache python3 make g++
