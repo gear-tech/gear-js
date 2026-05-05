@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MessageRequest, MessageSent } from '@vara-eth/indexer-db';
+import { MessageRequest, MessageSent } from '@vara-eth/idea-indexer-db';
+
 import { MessagesController } from './messages.controller.js';
 import { MessagesService } from './messages.service.js';
 

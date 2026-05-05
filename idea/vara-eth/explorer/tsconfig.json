@@ -12,7 +12,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./lib",
+    "outDir": "./dist",
     "rootDir": "./src",
     "sourceMap": true,
     "useUnknownInCatchVariables": false,

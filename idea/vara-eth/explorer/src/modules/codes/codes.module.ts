@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Code } from '@vara-eth/indexer-db';
+import { Code } from '@vara-eth/idea-indexer-db';
+
 import { CodesController } from './codes.controller.js';
 import { CodesService } from './codes.service.js';
 

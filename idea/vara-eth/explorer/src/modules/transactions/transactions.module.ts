@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EthereumTx } from '@vara-eth/indexer-db';
+import { EthereumTx } from '@vara-eth/idea-indexer-db';
+
 import { TransactionsController } from './transactions.controller.js';
 import { TransactionsService } from './transactions.service.js';
 

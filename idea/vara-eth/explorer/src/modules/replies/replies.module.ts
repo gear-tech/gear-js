@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ReplyRequest, ReplySent } from '@vara-eth/indexer-db';
+import { ReplyRequest, ReplySent } from '@vara-eth/idea-indexer-db';
+
 import { RepliesController } from './replies.controller.js';
 import { RepliesService } from './replies.service.js';
 

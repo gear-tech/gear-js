@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Code, CodeStatus } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import type { FindOptionsWhere, Repository } from 'typeorm';
-import { Code, CodeStatus } from '@vara-eth/indexer-db';
+
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { CodeResponseDto } from './dto/code-response.dto.js';
 import type { QueryCodesDto } from './dto/query-codes.dto.js';

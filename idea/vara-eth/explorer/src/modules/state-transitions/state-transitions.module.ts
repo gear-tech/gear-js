@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StateTransition } from '@vara-eth/indexer-db';
+import { StateTransition } from '@vara-eth/idea-indexer-db';
+
 import { StateTransitionsController } from './state-transitions.controller.js';
 import { StateTransitionsService } from './state-transitions.service.js';
 

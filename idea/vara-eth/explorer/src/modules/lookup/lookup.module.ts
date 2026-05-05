@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HashRegistry } from '@vara-eth/indexer-db';
+import { HashRegistry } from '@vara-eth/idea-indexer-db';
+
 import { BatchesModule } from '../batches/batches.module.js';
 import { CodesModule } from '../codes/codes.module.js';
 import { MessagesModule } from '../messages/messages.module.js';

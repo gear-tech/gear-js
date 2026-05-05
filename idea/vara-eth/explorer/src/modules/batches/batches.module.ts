@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Batch } from '@vara-eth/indexer-db';
+import { Batch } from '@vara-eth/idea-indexer-db';
+
 import { BatchesController } from './batches.controller.js';
 import { BatchesService } from './batches.service.js';
 

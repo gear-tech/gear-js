@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CodeStatus } from '@vara-eth/idea-indexer-db';
 import { Expose, Transform } from 'class-transformer';
-import { CodeStatus } from '../../../../model/entities/code.js';
 
 export class CodeResponseDto {
   @ApiProperty({

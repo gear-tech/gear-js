@@ -10329,6 +10329,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@vara-eth/idea-explorer@workspace:idea/vara-eth/explorer":
+  version: 0.0.0-use.local
+  resolution: "@vara-eth/idea-explorer@workspace:idea/vara-eth/explorer"
+  dependencies:
+    "@fastify/cors": "npm:^11.2.0"
+    "@fastify/static": "npm:^9.1.3"
+    "@gear-js/logger": "workspace:*"
+    "@nestjs/common": "npm:^11.1.19"
+    "@nestjs/config": "npm:^4.0.4"
+    "@nestjs/core": "npm:^11.1.19"
+    "@nestjs/platform-fastify": "npm:^11.1.19"
+    "@nestjs/swagger": "npm:^11.4.2"
+    "@nestjs/throttler": "npm:^6.5.0"
+    "@nestjs/typeorm": "npm:^11.0.1"
+    "@types/cors": "npm:^2.8.19"
+    "@vara-eth/idea-indexer-db": "workspace:*"
+    class-transformer: "npm:^0.5.1"
+    class-validator: "npm:^0.15.1"
+    cors: "npm:^2.8.6"
+    fastify: "npm:^5.8.5"
+    pg: "npm:8.20.0"
+    reflect-metadata: "npm:^0.2.2"
+    rxjs: "npm:^7.8.2"
+    typeorm: "npm:0.3.28"
+  languageName: unknown
+  linkType: soft
+
 "@vara-eth/idea-indexer-db@workspace:*, @vara-eth/idea-indexer-db@workspace:idea/vara-eth/indexer-db":
   version: 0.0.0-use.local
   resolution: "@vara-eth/idea-indexer-db@workspace:idea/vara-eth/indexer-db"
@@ -10337,6 +10364,23 @@ __metadata:
     pg: "npm:8.20.0"
     reflect-metadata: "npm:^0.2.2"
     typeorm: "npm:0.3.28"
+  languageName: unknown
+  linkType: soft
+
+"@vara-eth/idea-indexer@workspace:idea/vara-eth/indexer":
+  version: 0.0.0-use.local
+  resolution: "@vara-eth/idea-indexer@workspace:idea/vara-eth/indexer"
+  dependencies:
+    "@gear-js/logger": "workspace:*"
+    "@subsquid/evm-processor": "npm:^1.29.1"
+    "@subsquid/logger": "npm:^1.5.0"
+    "@subsquid/typeorm-store": "npm:^1.9.0"
+    "@vara-eth/api": "workspace:*"
+    "@vara-eth/idea-indexer-db": "workspace:*"
+    dotenv: "npm:^17.4.2"
+    typeorm: "npm:0.3.28"
+    viem: "npm:@vara-eth/viem@2.47.7-1"
+    xxhash-addon: "npm:^2.0.3"
   languageName: unknown
   linkType: soft
 
@@ -25496,33 +25540,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"varaeth-idea-explorer@workspace:idea/vara-eth/explorer":
-  version: 0.0.0-use.local
-  resolution: "varaeth-idea-explorer@workspace:idea/vara-eth/explorer"
-  dependencies:
-    "@fastify/cors": "npm:^11.2.0"
-    "@fastify/static": "npm:^9.1.3"
-    "@gear-js/logger": "workspace:*"
-    "@nestjs/common": "npm:^11.1.19"
-    "@nestjs/config": "npm:^4.0.4"
-    "@nestjs/core": "npm:^11.1.19"
-    "@nestjs/platform-fastify": "npm:^11.1.19"
-    "@nestjs/swagger": "npm:^11.4.2"
-    "@nestjs/throttler": "npm:^6.5.0"
-    "@nestjs/typeorm": "npm:^11.0.1"
-    "@types/cors": "npm:^2.8.19"
-    "@vara-eth/idea-indexer-db": "workspace:*"
-    class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.15.1"
-    cors: "npm:^2.8.6"
-    fastify: "npm:^5.8.5"
-    pg: "npm:8.20.0"
-    reflect-metadata: "npm:^0.2.2"
-    rxjs: "npm:^7.8.2"
-    typeorm: "npm:0.3.28"
-  languageName: unknown
-  linkType: soft
-
 "varaeth-idea-frontend@workspace:idea/vara-eth/frontend":
   version: 0.0.0-use.local
   resolution: "varaeth-idea-frontend@workspace:idea/vara-eth/frontend"
@@ -25548,23 +25565,6 @@ __metadata:
     viem: "npm:@vara-eth/viem@2.47.7-1"
     wagmi: "npm:2.19.4"
     zod: "npm:4.3.6"
-  languageName: unknown
-  linkType: soft
-
-"varaeth-idea-indexer@workspace:idea/vara-eth/indexer":
-  version: 0.0.0-use.local
-  resolution: "varaeth-idea-indexer@workspace:idea/vara-eth/indexer"
-  dependencies:
-    "@gear-js/logger": "workspace:*"
-    "@subsquid/evm-processor": "npm:^1.29.1"
-    "@subsquid/logger": "npm:^1.5.0"
-    "@subsquid/typeorm-store": "npm:^1.9.0"
-    "@vara-eth/api": "workspace:*"
-    "@vara-eth/idea-indexer-db": "workspace:*"
-    dotenv: "npm:^17.4.2"
-    typeorm: "npm:0.3.28"
-    viem: "npm:@vara-eth/viem@2.47.7-1"
-    xxhash-addon: "npm:^2.0.3"
   languageName: unknown
   linkType: soft
 

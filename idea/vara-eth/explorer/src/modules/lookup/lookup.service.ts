@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EntityType, HashRegistry } from '@vara-eth/idea-indexer-db';
 import type { Repository } from 'typeorm';
 
-import { EntityType, HashRegistry } from '@vara-eth/indexer-db';
 import { BatchesService } from '../batches/batches.service.js';
 import { CodesService } from '../codes/codes.service.js';
 import { MessagesService } from '../messages/messages.service.js';

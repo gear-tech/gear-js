@@ -10,7 +10,7 @@ import {
   ReplyRequest,
   ReplySent,
   StateTransition,
-} from '@vara-eth/indexer-db';
+} from '@vara-eth/idea-indexer-db';
 
 export function getDatabaseConfig(): TypeOrmModuleOptions {
   const dbUrl = process.env.DB_URL;

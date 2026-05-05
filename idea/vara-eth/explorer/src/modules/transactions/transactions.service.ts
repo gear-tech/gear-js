@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EthereumTx } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
-import { EthereumTx } from '@vara-eth/indexer-db';
+
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 import type { QueryTransactionsDto } from './dto/query-transactions.dto.js';

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ReplyRequest, ReplySent } from '@vara-eth/idea-indexer-db';
 import type { FindOptionsWhere, Repository } from 'typeorm';
-import { ReplyRequest, ReplySent } from '@vara-eth/indexer-db';
+
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import { toByteaBuffer } from '../../common/utils/hex.util.js';
 import type { QueryRepliesDto } from './dto/query-replies.dto.js';
