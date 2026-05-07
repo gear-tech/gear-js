@@ -2,7 +2,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { QueryMessagesDto } from './dto/query-messages.dto.js';
 import { MessagesService } from './messages.service.js';
 
@@ -31,7 +33,7 @@ export class MessagesController {
   @ApiParam({ name: 'id', description: 'Message ID (hex with 0x prefix)' })
   @ApiResponse({ status: 200, description: 'Returns the message request' })
   @ApiResponse({ status: 404, description: 'Message request not found' })
-  async findOneRequest(@Param('id') id: string) {
+  async findOneRequest(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.messagesService.findOneRequest(id);
   }
 
@@ -40,7 +42,7 @@ export class MessagesController {
   @ApiParam({ name: 'id', description: 'Message ID (hex with 0x prefix)' })
   @ApiResponse({ status: 200, description: 'Returns the sent message' })
   @ApiResponse({ status: 404, description: 'Sent message not found' })
-  async findOneSent(@Param('id') id: string) {
+  async findOneSent(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.messagesService.findOneSent(id);
   }
 }

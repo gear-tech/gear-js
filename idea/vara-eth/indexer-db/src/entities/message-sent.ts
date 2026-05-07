@@ -1,43 +1,46 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import type { PgByteaString } from '../helpers/index.js';
 import { Program } from './program.js';
 import { StateTransition } from './state-transition.js';
 
+@Index('idx_msg_sent_program_created_at', ['sourceProgramId', 'createdAt'])
+@Index('idx_msg_sent_destination_created_at', ['destination', 'createdAt'])
 @Entity('message_sent')
 export class MessageSent {
   constructor(props?: Partial<MessageSent>) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: 'bytea' })
+  id: PgByteaString;
 
-  @Column({ name: 'source_program_id' })
-  sourceProgramId: string;
+  @Column({ type: 'bytea', name: 'source_program_id' })
+  sourceProgramId: PgByteaString;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'source_program_id' })
   sourceProgram?: Program;
 
   @Column({ type: 'bytea' })
-  destination: Buffer;
+  destination: PgByteaString;
 
-  @Column({ type: 'bytea' })
-  payload: Buffer;
-
-  @Column({ type: 'bigint' })
-  value: bigint;
-
-  @Column({ name: 'is_call', default: false })
-  isCall: boolean; // TODO: figure out if it is possible that not reply message is call
-
-  @Column({ name: 'state_transition_id' })
-  stateTransitionId: string;
+  @Column({ type: 'bytea', name: 'state_transition_id' })
+  stateTransitionId: PgByteaString;
 
   @ManyToOne(() => StateTransition)
   @JoinColumn({ name: 'state_transition_id' })
   stateTransition?: StateTransition;
 
-  @Column({ type: 'timestamp without time zone', name: 'created_at' })
+  @Column({ type: 'bigint' })
+  value: bigint;
+
+  @Column({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
+
+  @Column({ name: 'is_call', default: false })
+  isCall: boolean;
+
+  @Column({ type: 'bytea' })
+  payload: PgByteaString;
 }

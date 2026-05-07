@@ -2,7 +2,6 @@
   "name": "@vara-eth/idea-indexer-db",
   "private": true,
   "version": "0.0.1",
-  "type": "module",
   "main": "lib/index.js",
   "types": "src/index.ts",
   "exports": {
@@ -17,7 +16,7 @@
   "scripts": {
     "build": "rm -rf lib && npx tsc",
     "migration:generate": "yarn build && npx typeorm migration:generate -d lib/dataSource.js -o db/migrations/$NAME",
-    "migration:run": "npx typeorm migration:run -d lib/dataSource.js"
+    "migration:apply": "npx typeorm migration:run -d lib/dataSource.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2",

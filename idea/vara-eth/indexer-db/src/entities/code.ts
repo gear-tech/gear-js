@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+
+import type { PgByteaString } from '../helpers/index.js';
 
 export enum CodeStatus {
   ValidationRequested = 0,
@@ -6,18 +8,19 @@ export enum CodeStatus {
   Validated = 2,
 }
 
+@Index('idx_code_created_at', ['createdAt'])
 @Entity()
 export class Code {
   constructor(props?: Partial<Code>) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: 'bytea' })
+  id: PgByteaString;
 
   @Column({ default: CodeStatus.ValidationRequested, enum: CodeStatus, type: 'enum' })
   status: number;
 
-  @Column({ name: 'created_at', type: 'timestamp without time zone' })
+  @Column({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 }

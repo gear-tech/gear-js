@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import type { PgByteaString } from '../helpers/index.js';
+
 export enum EntityType {
   Announces = 0,
   Batch = 1,
@@ -17,12 +19,12 @@ export class HashRegistry {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: 'bytea' })
+  id: PgByteaString;
 
   @Column({ type: 'enum', enum: EntityType })
   type: EntityType;
 
-  @Column('timestamp', { name: 'created_at' })
+  @Column('timestamptz', { name: 'created_at' })
   createdAt: Date;
 }

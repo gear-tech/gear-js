@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StateTransition } from '@vara-eth/idea-indexer-db';
+import { StateTransition, type PgByteaString } from '@vara-eth/idea-indexer-db';
+import { plainToInstance } from 'class-transformer';
 import type { FindOptionsWhere, Repository } from 'typeorm';
 
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
 import type { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
+import { StateTransitionResponseDto } from './dto/state-transition-response.dto.js';
 
 @Injectable()
 export class StateTransitionsService {
@@ -13,13 +15,13 @@ export class StateTransitionsService {
     private readonly _stateTransitionRepository: Repository<StateTransition>,
   ) {}
 
-  async findAll(query: QueryStateTransitionsDto): Promise<PaginatedResponse<StateTransition>> {
-    const { limit, offset, sortBy, order, programId, exited } = query;
+  async findAll(query: QueryStateTransitionsDto): Promise<PaginatedResponse<StateTransitionResponseDto>> {
+    const { limit, offset, programId, exited } = query;
 
     const where: FindOptionsWhere<StateTransition> = {};
 
     if (programId) {
-      where.programId = programId.toLowerCase();
+      where.programId = programId;
     }
 
     if (exited !== undefined) {
@@ -31,21 +33,21 @@ export class StateTransitionsService {
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        createdAt: 'DESC',
       },
     });
 
     return {
-      data,
+      data: plainToInstance(StateTransitionResponseDto, data, { excludeExtraneousValues: true }),
       total,
       limit: limit!,
       offset: offset!,
     };
   }
 
-  async findOne(id: string): Promise<StateTransition> {
+  async findOne(id: PgByteaString): Promise<StateTransitionResponseDto> {
     const stateTransition = await this._stateTransitionRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
       relations: ['program', 'batch'],
     });
 
@@ -53,6 +55,6 @@ export class StateTransitionsService {
       throw new NotFoundException(`StateTransition with ID ${id} not found`);
     }
 
-    return stateTransition;
+    return plainToInstance(StateTransitionResponseDto, stateTransition, { excludeExtraneousValues: true });
   }
 }

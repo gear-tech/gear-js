@@ -2,9 +2,11 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { PaginatedBlockRangeDTO } from '../../common/dto/range.dto.js';
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { BatchesService } from './batches.service.js';
-import { QueryBatchesDto } from './dto/query-batches.dto.js';
 
 @ApiTags('batches')
 @Controller('batches')
@@ -15,7 +17,7 @@ export class BatchesController {
   @Get()
   @ApiOperation({ summary: 'Get all batches' })
   @ApiResponse({ status: 200, description: 'Returns paginated list of batches' })
-  async findAll(@Query() query: QueryBatchesDto) {
+  async findAll(@Query() query: PaginatedBlockRangeDTO) {
     return this.batchesService.findAll(query);
   }
 
@@ -24,7 +26,7 @@ export class BatchesController {
   @ApiParam({ name: 'id', description: 'Batch ID (hex with 0x prefix)' })
   @ApiResponse({ status: 200, description: 'Returns the batch' })
   @ApiResponse({ status: 404, description: 'Batch not found' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.batchesService.findOne(id);
   }
 }

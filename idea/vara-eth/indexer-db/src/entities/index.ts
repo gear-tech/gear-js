@@ -1,6 +1,7 @@
 export * from './batch.js';
 export * from './code.js';
 export * from './hash-regestry.js';
+export * from './injected-transaction.js';
 export * from './message-request.js';
 export * from './message-sent.js';
 export * from './program.js';

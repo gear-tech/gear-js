@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Code, CodeStatus } from '@vara-eth/idea-indexer-db';
+import { Code, CodeStatus, type PgByteaString } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import type { FindOptionsWhere, Repository } from 'typeorm';
 
@@ -16,7 +16,7 @@ export class CodesService {
   ) {}
 
   async findAll(query: QueryCodesDto): Promise<PaginatedResponse<CodeResponseDto>> {
-    const { limit, offset, sortBy, order, status } = query;
+    const { limit, offset, status } = query;
 
     const where: FindOptionsWhere<Code> = {};
 
@@ -30,7 +30,7 @@ export class CodesService {
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        createdAt: 'DESC',
       },
     });
 
@@ -46,9 +46,9 @@ export class CodesService {
     };
   }
 
-  async findOne(id: string): Promise<CodeResponseDto> {
+  async findOne(id: PgByteaString): Promise<CodeResponseDto> {
     const code = await this.codeRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
     });
 
     if (!code) {

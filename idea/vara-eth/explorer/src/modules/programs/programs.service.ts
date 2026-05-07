@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Program } from '@vara-eth/idea-indexer-db';
+import { Program, type PgByteaString } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 
@@ -16,12 +16,12 @@ export class ProgramsService {
   ) {}
 
   async findAll(query: QueryProgramsDto): Promise<PaginatedResponse<ProgramResponseDto>> {
-    const { limit, offset, sortBy, order, codeId, fromBlock, toBlock } = query;
+    const { limit, offset, codeId, fromBlock, toBlock } = query;
 
     const where: FindOptionsWhere<Program> = {};
 
     if (codeId) {
-      where.codeId = codeId.toLowerCase();
+      where.codeId = codeId;
     }
 
     if (fromBlock !== undefined && toBlock !== undefined) {
@@ -37,7 +37,7 @@ export class ProgramsService {
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        createdAt: 'DESC',
       },
     });
 
@@ -53,9 +53,9 @@ export class ProgramsService {
     };
   }
 
-  async findOne(id: string): Promise<ProgramResponseDto> {
+  async findOne(id: PgByteaString): Promise<ProgramResponseDto> {
     const program = await this._programRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
       relations: ['code'],
     });
 

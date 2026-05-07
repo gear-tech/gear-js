@@ -2,7 +2,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { CodesService } from './codes.service.js';
 import { CodeResponseDto } from './dto/code-response.dto.js';
 import { QueryCodesDto } from './dto/query-codes.dto.js';
@@ -34,7 +36,7 @@ export class CodesController {
     type: CodeResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Code not found' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.codesService.findOne(id);
   }
 }

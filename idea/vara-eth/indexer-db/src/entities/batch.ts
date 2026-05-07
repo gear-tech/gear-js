@@ -1,29 +1,33 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
+import type { PgByteaString } from '../helpers/index.js';
+
+@Index('idx_batch_committed_at', ['committedAt'])
+@Index('idx_block_hash', ['blockHash'])
 @Entity()
 export class Batch {
   constructor(props?: Partial<Batch>) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: 'bytea' })
+  id: PgByteaString;
 
   @Column({ type: 'bytea', name: 'block_hash' })
-  blockHash: Buffer;
+  blockHash: PgByteaString;
+
+  @Column({ type: 'bytea', name: 'previous_committed_batch_hash' })
+  previousCommittedBatchHash: PgByteaString;
+
+  @Column({ type: 'bigint' })
+  expiry: bigint;
 
   @Column({ type: 'bigint', name: 'block_timestamp' })
   blockTimestamp: bigint;
 
-  @Column({ type: 'bytea', name: 'previous_committed_batch_hash' })
-  previousCommittedBatchHash: Buffer;
-
-  @Column()
-  expiry: number;
-
   @Column({ type: 'bigint', name: 'committed_at_block' })
   committedAtBlock: bigint;
 
-  @Column({ type: 'timestamp without time zone', name: 'committed_at' })
+  @Column({ type: 'timestamptz', name: 'committed_at' })
   committedAt: Date;
 }

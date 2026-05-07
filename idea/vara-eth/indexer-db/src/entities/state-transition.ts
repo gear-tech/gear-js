@@ -1,42 +1,45 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import type { PgByteaString } from '../helpers/index.js';
 import { Batch } from './batch.js';
 import { Program } from './program.js';
 
+@Index('idx_state_transition_program_timestamp', ['programId', 'createdAt'])
+@Index('idx_state_transition_timestamp', ['createdAt'])
 @Entity('state_transition')
 export class StateTransition {
   constructor(props?: Partial<StateTransition>) {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: 'bytea' })
+  id: PgByteaString;
 
   @Column({ type: 'bytea' })
-  hash: Buffer;
+  hash: PgByteaString;
 
   @ManyToOne(() => Batch)
   @JoinColumn({ name: 'batch_hash' })
   batch: Batch;
 
-  @Column({ type: 'timestamp without time zone' })
-  timestamp: Date;
-
-  @Column({ name: 'program_id' })
-  programId: string;
+  @Column({ type: 'bytea', name: 'program_id' })
+  programId: PgByteaString;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'program_id' })
   program?: Program;
 
+  @Column({ type: 'bigint', name: 'value_to_receive', nullable: true })
+  valueToReceive: bigint;
+
+  @Column({ type: 'timestamptz', name: 'created_at' })
+  createdAt: Date;
+
   @Column({ default: false })
   exited: boolean;
 
   @Column({ nullable: true, type: 'bytea' })
-  inheritor?: Buffer | null;
-
-  @Column({ type: 'bigint', name: 'value_to_receive', nullable: true })
-  valueToReceive: bigint;
+  inheritor?: PgByteaString | null;
 
   // TODO: valueClaims
   // TODO: messages

@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EthereumTx } from '@vara-eth/idea-indexer-db';
+import { EthereumTx, type PgByteaString } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 import type { QueryTransactionsDto } from './dto/query-transactions.dto.js';
 import { TransactionDetailResponseDto } from './dto/transaction-detail-response.dto.js';
 import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
@@ -27,7 +26,7 @@ export class TransactionsService {
     }
 
     if (sender) {
-      where.sender = toByteaBuffer(sender);
+      where.sender = sender;
     }
 
     if (fromBlock !== undefined && toBlock !== undefined) {
@@ -38,15 +37,12 @@ export class TransactionsService {
       where.blockNumber = Between(BigInt(0), BigInt(toBlock));
     }
 
-    const sortby = query.sortBy || 'createdAt';
-    const order = query.order || 'desc';
-
     const [data, total] = await this._transactionRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
       order: {
-        [sortby!]: order,
+        createdAt: 'DESC',
       },
     });
 
@@ -62,9 +58,9 @@ export class TransactionsService {
     };
   }
 
-  async findOne(hash: string): Promise<TransactionDetailResponseDto> {
+  async findOne(hash: PgByteaString): Promise<TransactionDetailResponseDto> {
     const transaction = await this._transactionRepository.findOne({
-      where: { id: toBytea(hash) },
+      where: { id: hash },
     });
 
     if (!transaction) {

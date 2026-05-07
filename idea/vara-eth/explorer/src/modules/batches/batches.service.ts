@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Batch } from '@vara-eth/idea-indexer-db';
+import { Batch, type PgByteaString } from '@vara-eth/idea-indexer-db';
+import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import type { QueryBatchesDto } from './dto/query-batches.dto.js';
+import type { PaginatedBlockRangeDTO } from '../../common/dto/range.dto.js';
+import { BatchResponseDto } from './dto/batch-response.dto.js';
 
 @Injectable()
 export class BatchesService {
@@ -13,8 +15,8 @@ export class BatchesService {
     private readonly batchRepository: Repository<Batch>,
   ) {}
 
-  async findAll(query: QueryBatchesDto): Promise<PaginatedResponse<Batch>> {
-    const { limit, offset, sortBy, order, fromBlock, toBlock } = query;
+  async findAll(query: PaginatedBlockRangeDTO): Promise<PaginatedResponse<BatchResponseDto>> {
+    const { limit, offset, fromBlock, toBlock } = query;
 
     const where: FindOptionsWhere<Batch> = {};
 
@@ -31,27 +33,27 @@ export class BatchesService {
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        committedAt: 'DESC',
       },
     });
 
     return {
-      data,
+      data: plainToInstance(BatchResponseDto, data, { excludeExtraneousValues: true }),
       total,
       limit: limit!,
       offset: offset!,
     };
   }
 
-  async findOne(id: string): Promise<Batch> {
+  async findOne(id: PgByteaString): Promise<BatchResponseDto> {
     const batch = await this.batchRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
     });
 
     if (!batch) {
       throw new NotFoundException(`Batch with ID ${id} not found`);
     }
 
-    return batch;
+    return plainToInstance(BatchResponseDto, batch, { excludeExtraneousValues: true });
   }
 }

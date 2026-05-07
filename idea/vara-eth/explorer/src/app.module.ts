@@ -8,6 +8,7 @@ import { getDatabaseConfig } from './config/database.config.js';
 
 // Feature modules
 import { BatchesModule } from './modules/batches/batches.module.js';
+import { InjectedTransactionsModule } from './modules/injected-transactions/injected-transactions.module.js';
 import { CodesModule } from './modules/codes/codes.module.js';
 import { LookupModule } from './modules/lookup/lookup.module.js';
 import { MessagesModule } from './modules/messages/messages.module.js';
@@ -36,6 +37,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module.j
     MessagesModule,
     RepliesModule,
     TransactionsModule,
+    InjectedTransactionsModule,
     LookupModule,
   ],
 })
