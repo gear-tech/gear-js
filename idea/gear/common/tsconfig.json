@@ -2,8 +2,10 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "declaration": false,
+    "rootDir": "./src",
+    "declaration": true,
+    "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
-    "strict": false
-  }
+    "strict": false,
+  },
 }

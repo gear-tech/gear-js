@@ -1,5 +1,7 @@
 .container {
+  flex: 1;
   min-height: 0; // syntax highlighter overflow
+  overflow-y: auto;
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

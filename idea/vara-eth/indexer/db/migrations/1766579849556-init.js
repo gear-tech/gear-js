@@ -7,7 +7,7 @@
  * @class
  * @implements {MigrationInterface}
  */
-module.exports = class Init1766579849556 {
+export default class Init1766579849556 {
   name = 'Init1766579849556';
 
   /**
@@ -103,4 +103,4 @@ module.exports = class Init1766579849556 {
     await queryRunner.query(`DROP TYPE "public"."code_status_enum"`);
     await queryRunner.query(`DROP TABLE "batch"`);
   }
-};
+}

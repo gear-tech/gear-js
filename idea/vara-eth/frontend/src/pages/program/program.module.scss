@@ -1,5 +1,7 @@
 .container {
+  flex: 1;
   min-height: 0; // sails actions overflow
+  overflow-y: auto;
 
   display: grid;
   grid-template-columns: 1fr 1fr;

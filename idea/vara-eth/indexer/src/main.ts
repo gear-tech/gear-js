@@ -68,7 +68,7 @@ class WorkerSupervisor {
         }
       });
 
-      worker.on('error', (error) => {
+      worker.on('error', (error: any) => {
         logger.error(
           {
             error: error.message,

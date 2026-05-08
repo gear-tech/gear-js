@@ -1,11 +1,18 @@
-import { Block } from './block.js';
+import { BlockQueries } from './block.js';
 import { CodeQueries } from './code.js';
+import { InjectedQueries } from './injected.js';
 import { ProgramQueries } from './program.js';
 
-export const query = { block: Block, code: CodeQueries, program: ProgramQueries } as const;
+export const query = {
+  block: BlockQueries,
+  code: CodeQueries,
+  program: ProgramQueries,
+  injected: InjectedQueries,
+} as const;
 
 export type Query = {
-  block: Block;
+  block: BlockQueries;
   code: CodeQueries;
   program: ProgramQueries;
+  injected: InjectedQueries;
 };

@@ -5,6 +5,15 @@
   margin-bottom: 12px;
 }
 
+.messageName {
+  color: rgba(168, 245, 147, 1);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .filterButtons {
   display: flex;
   gap: 4px;
