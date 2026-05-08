@@ -2395,7 +2395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.45.0, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:0.45.0, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -24188,6 +24188,7 @@ __metadata:
   resolution: "varaeth-idea-frontend@workspace:idea/vara-eth/frontend"
   dependencies:
     "@base-ui/react": "npm:1.2.0"
+    "@gear-js/api": "workspace:*"
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/sails-payload-form": "workspace:*"
     "@hookform/resolvers": "npm:5.2.2"
