@@ -66,6 +66,6 @@
     "lib"
   ],
   "dependencies": {
-    "@noble/hashes": "2.2.0"
+    "@noble/hashes": "1.8.0"
   }
 }
