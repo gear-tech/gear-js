@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",
-    "clean": "echo \"clean gear-idea-indexer-db\" && rm -rf lib"
+    "clean": "echo \"clean gear-idea-indexer-db\" && rm -rf lib",
+    "migration:generate": "npx typeorm migration:generate -n $NAME"
   },
-  "main": "lib/index.js",
-  "types": "src/index.ts"
+  "main": "./lib/index.js",
+  "types": "./src/index.ts"
 }

@@ -11,7 +11,7 @@ import {
 import {
   Code,
   CodeStatus,
-  type MessageEntryPoint,
+  MessageEntryPoint,
   MessageFromProgram,
   MessageReadReason,
   MessageToProgram,
@@ -22,7 +22,7 @@ import {
 } from './model/index.js';
 
 import type { Event, Fields, ProcessorContext } from './processor.js';
-import type { TempState } from './temp-state.js';
+import type { BatchState } from './state/index.js';
 import {
   isCreateProgram,
   isSendMessageCall,
@@ -59,7 +59,7 @@ export interface IHandleEventProps<E = Event> {
     blockNumber: string;
     specVersion: number;
   };
-  tempState: TempState;
+  batchState: BatchState;
   block: Block<Fields>;
 }
 
@@ -71,12 +71,18 @@ const callHandlers = [
   { pattern: isSendReplyCall, handler: handleSendReplyCall },
 ];
 
+const MsgEntryPoint = {
+  init: MessageEntryPoint.Init,
+  handle: MessageEntryPoint.Handle,
+  reply: MessageEntryPoint.Reply,
+};
+
 export async function handleMessageQueued({
   ctx,
   block,
   event,
   common,
-  tempState,
+  batchState,
 }: IHandleEventProps<EMessageQueuedEvent>) {
   const call = event.call!;
 
@@ -85,7 +91,7 @@ export async function handleMessageQueued({
     id: event.args.id,
     source: event.args.source,
     destination: event.args.destination,
-    entry: event.args.entry.__kind.toLowerCase() as MessageEntryPoint,
+    entry: MsgEntryPoint[event.args.entry.__kind.toLowerCase()],
   });
 
   const { handler } = callHandlers.find(({ pattern }) => pattern(call)) || {};
@@ -95,19 +101,19 @@ export async function handleMessageQueued({
     throw new Error('Unknown call with message');
   }
 
-  handler({ block, call, common, ctx, event, msg, tempState });
+  handler({ block, call, common, ctx, event, msg, batchState });
 
-  tempState.addMsgToProgram(msg);
+  batchState.messages.addMsgToProgram(msg);
 }
 
-export async function handleUserMessageSent({ event, common, tempState }: IHandleEventProps<EUserMessageSent>) {
+export async function handleUserMessageSent({ event, common, batchState }: IHandleEventProps<EUserMessageSent>) {
   const msg = new MessageFromProgram({
     ...common,
     id: event.args.message.id,
     source: event.args.message.source,
     destination: event.args.message.destination,
     payload: event.args.message.payload,
-    value: event.args.message.value,
+    value: BigInt(event.args.message.value),
     replyToMessageId: event.args.message.details?.to || null,
     expiration: event.args.expiration || null,
     exitCode: !event.args.message.details?.code ? null : event.args.message.details.code.__kind === 'Success' ? 0 : 1,
@@ -116,9 +122,9 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
       : null,
   });
 
-  msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);
+  msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await batchState.messages.getMessageId(msg.id);
 
-  tempState.addMsgFromProgram(msg);
+  batchState.messages.addMsgFromProgram(msg);
 }
 
 const statuses = {
@@ -133,7 +139,7 @@ export async function handleProgramChanged({
   ctx,
   event,
   common,
-  tempState,
+  batchState,
   block,
 }: IHandleEventProps<EProgramChanged>) {
   const {
@@ -145,12 +151,12 @@ export async function handleProgramChanged({
   } = event;
   if (PROGRAM_STATUSES.includes(statusKind)) {
     if (statusKind === 'ProgramSet') {
-      if (call?.name.toLowerCase() === 'gear.run' && !(await tempState.isProgramIndexed(id))) {
-        tempState.addProgram(
+      if (call?.name.toLowerCase() === 'gear.run' && !(await batchState.isProgramIndexed(id))) {
+        batchState.addProgram(
           new Program({
             ...common,
             id,
-            codeId: await tempState.getCodeId(id, block.header),
+            codeId: await batchState.getCodeId(id, block.header),
             owner: null,
             name: id,
             status: ProgramStatus.ProgramSet,
@@ -160,17 +166,17 @@ export async function handleProgramChanged({
     } else {
       const status = statuses[statusKind];
 
-      await tempState.setProgramStatus(id, status);
+      batchState.setProgramStatus(id, status);
     }
   } else {
     ctx.log.error(event.args, 'Unknown program status');
   }
 }
 
-export async function handleCodeChanged({ event, common, tempState }: IHandleEventProps<ECodeChanged>) {
+export async function handleCodeChanged({ event, common, batchState }: IHandleEventProps<ECodeChanged>) {
   if (isUploadCode(event.call) || isUploadProgram(event.call) || isVoucherCall(event.call)) {
     const metahash = await getMetahash(event.call);
-    tempState.addCode(
+    batchState.addCode(
       new Code({
         ...common,
         id: event.args.id,
@@ -182,16 +188,11 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
     );
   }
   const status = event.args.change.__kind;
-  await tempState.setCodeStatus(event.args.id, status === 'Active' ? CodeStatus.Active : CodeStatus.Inactive);
+  batchState.setCodeStatus(event.args.id, status === 'Active' ? CodeStatus.Active : CodeStatus.Inactive);
 }
 
-export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps<EMessagesDispatched>) {
-  await Promise.all(
-    event.args.statuses.map((s) => {
-      tempState.removeParentMsgId(s[0]);
-      return tempState.setDispatchedStatus(s[0], s[1].__kind);
-    }),
-  );
+export async function handleMessagesDispatched({ event, batchState }: IHandleEventProps<EMessagesDispatched>) {
+  await batchState.messages.setDispatchStatuses(event.args.statuses.map((s) => ({ id: s[0], status: s[1].__kind })));
 }
 
 const reasons = {
@@ -200,19 +201,19 @@ const reasons = {
   MessageReplied: MessageReadReason.Replied,
 };
 
-export async function handleUserMessageRead({ ctx, event, tempState }: IHandleEventProps<EUserMessageRead>) {
+export function handleUserMessageRead({ ctx, event, batchState }: IHandleEventProps<EUserMessageRead>) {
   const reason: MessageReadReason = reasons[event.args.reason.value.__kind];
 
-  if (!reason) {
+  if (reason === undefined) {
     ctx.log.error(event.args, 'Unknown message read reason');
   }
 
-  await tempState.setReadStatus(event.args.id, reason);
+  batchState.messages.setReadStatus(event.args.id, reason);
 }
 
 const VOUCHERS_FROM_SPEC_VERSION = 1100;
 
-export function handleVoucherIssued({ event, block, tempState, common }: IHandleEventProps<EVoucherIssued>) {
+export function handleVoucherIssued({ event, block, batchState, common }: IHandleEventProps<EVoucherIssued>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
   const call = event.call!;
@@ -237,73 +238,61 @@ export function handleVoucherIssued({ event, block, tempState, common }: IHandle
     updatedAt: atTime,
   });
 
-  tempState.addVoucher(voucher);
+  batchState.vouchers.addVoucher(voucher);
 }
 
-export async function handleVoucherUpdated({
-  ctx,
-  event,
-  block,
-  tempState,
-  common,
-}: IHandleEventProps<EVoucherUpdated>) {
+export function handleVoucherUpdated({ event, block, batchState, common }: IHandleEventProps<EVoucherUpdated>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
   const call = event.call!;
-
   const atBlock = BigInt(common.blockNumber);
   const atTime = common.timestamp;
 
-  const voucher = await tempState.getVoucher(event.args.voucherId);
+  batchState.vouchers.queueVoucherUpdate(event.args.voucherId, (voucher) => {
+    voucher.updatedAtBlock = atBlock;
+    voucher.updatedAt = atTime;
 
-  if (!voucher) {
-    ctx.log.error(`handleIsVoucherUpdated :: Voucher ${event.args.voucherId} not found`);
-    return;
-  }
+    if (call.args.moveOwnership) {
+      voucher.owner = call.args.moveOwnership;
+    }
 
-  voucher.updatedAtBlock = atBlock;
-  voucher.updatedAt = atTime;
+    if (call.args.balanceTopUp) {
+      voucher.amount = BigInt(voucher.amount) + BigInt(call.args.balanceTopUp);
+    }
 
-  if (call.args.moveOwnership) {
-    voucher.owner = call.args.moveOwnership;
-  }
+    if (call.args.appendPrograms.__kind === 'Some') {
+      voucher.programs?.push(...call.args.appendPrograms.value);
+    }
 
-  if (call.args.balanceTopUp) {
-    voucher.amount = BigInt(voucher.amount) + BigInt(call.args.balanceTopUp);
-  }
+    if (call.args.codeUploading) {
+      voucher.codeUploading = call.args.codeUploading;
+    }
 
-  if (call.args.appendPrograms.__kind === 'Some') {
-    voucher.programs?.push(...call.args.appendPrograms.value);
-  }
-
-  if (call.args.codeUploading) {
-    voucher.codeUploading = call.args.codeUploading;
-  }
-
-  if (call.args.prolongDuration) {
-    voucher.expiryAtBlock = atBlock + BigInt(call.args.prolongDuration);
-    voucher.expiryAt = new Date(atTime.getTime() + call.args.prolongDuration * 3000);
-  }
+    if (call.args.prolongDuration) {
+      voucher.expiryAtBlock = atBlock + BigInt(call.args.prolongDuration);
+      voucher.expiryAt = new Date(atTime.getTime() + call.args.prolongDuration * 3000);
+    }
+  });
 }
 
-export async function handleVoucherDeclined({ event, block, tempState }: IHandleEventProps<EVoucherDeclined>) {
+export function handleVoucherDeclined({ event, block, batchState }: IHandleEventProps<EVoucherDeclined>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  tempState.setVoucherDeclined(event.args.voucherId);
+  batchState.vouchers.setVoucherDeclined(event.args.voucherId);
 }
 
-export function handleVoucherRevoked({ event, block, tempState }: IHandleEventProps<EVoucherRevoked>) {
+export function handleVoucherRevoked({ event, block, batchState }: IHandleEventProps<EVoucherRevoked>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  tempState.setVoucherRevoked(event.args.voucherId);
+  batchState.vouchers.setVoucherRevoked(event.args.voucherId);
 }
 
-export function handleBalanceTransfer({ event, block, tempState }: IHandleEventProps<EBalanceTransfer>) {
+export function handleBalanceTransfer({ event, block, batchState }: IHandleEventProps<EBalanceTransfer>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  const fromBalance = tempState.getTransfer(event.args.from);
-  const toBalance = tempState.getTransfer(event.args.to);
+  const fromBalance = batchState.vouchers.getTransfer(event.args.from);
+  const toBalance = batchState.vouchers.getTransfer(event.args.to);
 
-  tempState.setTransfer(event.args.from, fromBalance - BigInt(event.args.amount));
-  tempState.setTransfer(event.args.to, toBalance + BigInt(event.args.amount));
+  batchState.vouchers.setTransfer(event.args.from, fromBalance - BigInt(event.args.amount));
+  batchState.vouchers.setTransfer(event.args.to, toBalance + BigInt(event.args.amount));
 }

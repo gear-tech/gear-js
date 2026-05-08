@@ -2,6 +2,10 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { hexToBytea } from '../transformers.js';
 
+// Column order is tuned for PostgreSQL alignment.
+// id (bytea) ends at offset 33. Two bools advance to 35; bigint needs 5-byte pad to reach 40.
+// No int4 columns exist to do better — 5 bytes is the minimum with only bools available.
+
 @Entity()
 export class Voucher {
   constructor(props?: Voucher) {
@@ -11,11 +15,15 @@ export class Voucher {
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
   id!: string;
 
-  @Column({ type: 'bytea', transformer: hexToBytea })
-  owner!: string;
+  // 33→34→35: two bools, then 35→(5pad)→40: bigints start ──────────────────
 
-  @Column({ type: 'bytea', transformer: hexToBytea })
-  spender!: string;
+  @Column({ name: 'code_uploading' })
+  codeUploading!: boolean;
+
+  @Column({ name: 'is_declined', default: false })
+  isDeclined?: boolean;
+
+  // 40→48→…→104: zero padding ───────────────────────────────────────────────
 
   @Column('bigint')
   amount!: bigint;
@@ -23,30 +31,32 @@ export class Voucher {
   @Column('bigint')
   balance!: bigint;
 
-  @Column('jsonb', { default: [] })
-  programs?: string[];
-
-  @Column({ name: 'code_uploading' })
-  codeUploading!: boolean;
-
   @Column('bigint', { name: 'duration' })
   expiryAtBlock!: bigint;
 
-  @Column('timestamp without time zone', { name: 'expiry_at' })
+  @Column('timestamptz', { name: 'expiry_at' })
   expiryAt!: Date;
 
   @Column('bigint', { name: 'issued_at_block' })
   issuedAtBlock!: bigint;
 
-  @Column('timestamp without time zone', { name: 'issued_at' })
+  @Column('timestamptz', { name: 'issued_at' })
   issuedAt!: Date;
 
   @Column('bigint', { name: 'updated_at_block' })
   updatedAtBlock!: bigint;
 
-  @Column('timestamp without time zone', { name: 'created_at' })
+  @Column('timestamptz', { name: 'created_at' })
   updatedAt!: Date;
 
-  @Column({ name: 'is_declined', default: false })
-  isDeclined?: boolean;
+  // ── variable-length ───────────────────────────────────────────────────────
+
+  @Column({ type: 'bytea', transformer: hexToBytea })
+  owner!: string;
+
+  @Column({ type: 'bytea', transformer: hexToBytea })
+  spender!: string;
+
+  @Column('jsonb', { default: [] })
+  programs?: string[];
 }

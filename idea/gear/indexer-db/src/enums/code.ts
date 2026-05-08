@@ -1,10 +1,10 @@
 export enum CodeStatus {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Unknown = 'Unknown',
+  Active = 0,
+  Inactive = 1,
+  Unknown = 2,
 }
 
 export enum MetaType {
-  Sails = 'sails',
-  Meta = 'meta',
+  Sails = 0,
+  Meta = 1,
 }

@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node --no-experimental-websocket lib/main.js",
+    "start": "node --no-experimental-websocket --trace-deprecation lib/main.js",
     "run-with-migrations": "squid-typeorm-migration apply && node lib/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "build": "rm -rf lib && npx tsc --build",

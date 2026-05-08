@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export const getEnv = (envName: string, defaultValue?: string) => {
   const env = process.env[envName];
