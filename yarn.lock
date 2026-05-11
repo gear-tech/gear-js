@@ -16990,7 +16990,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
-    "@types/node": "npm:^25.6.2"
     typeorm: "npm:0.3.28"
   languageName: unknown
   linkType: soft

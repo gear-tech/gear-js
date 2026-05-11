@@ -227,7 +227,7 @@ export function handleVoucherIssued({ event, block, batchState, common }: IHandl
     owner: event.args.owner,
     spender: event.args.spender,
     amount: balance,
-    balance: BigInt(0), // it will be set by transfer event
+    balance,
     programs: call.args.programs,
     codeUploading: call.args.codeUploading,
     expiryAtBlock: atBlock + BigInt(call.args.duration),
