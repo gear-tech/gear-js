@@ -82,20 +82,18 @@ export class MessageState {
   async save() {
     await this._updateReadReasons();
 
-    await Promise.all([
-      this._ctx.store.save(Array.from(this._messagesFromProgram.values())),
-      this._ctx.store.save(Array.from(this._messagesToProgram.values())),
-      this._ctx.store.save(Array.from(this._events.values())),
-    ]);
+    await this._ctx.store.save(Array.from(this._messagesFromProgram.values()));
+    await this._ctx.store.save(Array.from(this._messagesToProgram.values()));
+    await this._ctx.store.save(Array.from(this._events.values()));
 
     if (this._messagesFromProgram.size || this._messagesToProgram.size || this._events.size) {
       this._ctx.log.info(
         {
-          msgsFrom: this._messagesFromProgram.size || undefined,
-          msgsTo: this._messagesToProgram.size || undefined,
+          from: this._messagesFromProgram.size || undefined,
+          to: this._messagesToProgram.size || undefined,
           events: this._events.size || undefined,
         },
-        'Data saved',
+        'Messages saved',
       );
     }
   }

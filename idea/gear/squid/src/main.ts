@@ -33,9 +33,10 @@ import {
 } from './types/index.js';
 
 let batchState: BatchState;
+const IS_DEV = process.env.NODE_ENV === 'development';
 
 const handler = async (ctx: ProcessorContext<Store>) => {
-  batchState.newState(ctx);
+  await batchState.newState(ctx);
 
   for (const block of ctx.blocks) {
     const common = {
@@ -72,6 +73,9 @@ const handler = async (ctx: ProcessorContext<Store>) => {
         }
       } catch (err) {
         ctx.log.error({ name: event.name, block: block.header.height, stack: err.stack }, err.message);
+        if (IS_DEV) {
+          process.exit(1);
+        }
       }
     }
   }

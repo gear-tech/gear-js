@@ -287,12 +287,9 @@ export function handleVoucherRevoked({ event, block, batchState }: IHandleEventP
   batchState.vouchers.setVoucherRevoked(event.args.voucherId);
 }
 
-export function handleBalanceTransfer({ event, block, batchState }: IHandleEventProps<EBalanceTransfer>) {
+export function handleBalanceTransfer({ event, block, batchState: { vouchers } }: IHandleEventProps<EBalanceTransfer>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  const fromBalance = batchState.vouchers.getTransfer(event.args.from);
-  const toBalance = batchState.vouchers.getTransfer(event.args.to);
-
-  batchState.vouchers.setTransfer(event.args.from, fromBalance - BigInt(event.args.amount));
-  batchState.vouchers.setTransfer(event.args.to, toBalance + BigInt(event.args.amount));
+  vouchers.setTransfer(event.args.from, -BigInt(event.args.amount));
+  vouchers.setTransfer(event.args.to, BigInt(event.args.amount));
 }

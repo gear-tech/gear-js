@@ -54,7 +54,7 @@ export class BatchState {
     this._codeStatusUpdates.clear();
 
     await this.messages.newBatch(ctx);
-    this.vouchers.newBatch(ctx);
+    await this.vouchers.newBatch(ctx);
   }
 
   async save() {
@@ -74,12 +74,10 @@ export class BatchState {
         );
       }
 
-      await Promise.all([
-        this.messages.save(),
-        this.vouchers.save(),
-        this._applyProgramStatusUpdates(),
-        this._applyCodeStatusUpdates(),
-      ]);
+      await this.messages.save();
+      await this.vouchers.save();
+      await this._applyProgramStatusUpdates();
+      await this._applyCodeStatusUpdates();
 
       await Promise.all([
         this._ctx.store.save(Array.from(this._codes.values())),
@@ -106,11 +104,13 @@ export class BatchState {
   // ── Program / Code ────────────────────────────────────────────────────────
 
   addProgram(program: Program) {
+    this._ctx.log.debug({ id: program.id, codeId: program.codeId, owner: program.owner }, 'addProgram');
     this._programs.set(program.id, program);
     this._newPrograms.add(program.id);
   }
 
   addCode(code: Code) {
+    this._ctx.log.debug({ id: code.id, status: code.status }, 'addCode');
     this._codes.set(code.id, code);
   }
 
@@ -145,10 +145,12 @@ export class BatchState {
   }
 
   setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
+    this._ctx.log.debug({ id, status, expiration }, 'setProgramStatus');
     this._programStatusUpdates.set(id, { status, expiration });
   }
 
   setCodeStatus(id: string, status: CodeStatus) {
+    this._ctx.log.debug({ id, status }, 'setCodeStatus');
     this._codeStatusUpdates.set(id, status);
   }
 
