@@ -21,6 +21,7 @@ const eslintConfig = ({ tsConfigs }: { tsConfigs?: string[] } = {}) =>
       jsxA11y.flatConfigs.recommended,
       importPlugin.flatConfigs.recommended,
       importPlugin.flatConfigs.typescript,
+      reactHooks.configs['recommended-latest'],
       eslintPluginPrettierRecommended,
     ],
 
@@ -38,7 +39,6 @@ const eslintConfig = ({ tsConfigs }: { tsConfigs?: string[] } = {}) =>
     },
 
     plugins: {
-      'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
 
@@ -54,7 +54,6 @@ const eslintConfig = ({ tsConfigs }: { tsConfigs?: string[] } = {}) =>
 
     rules: {
       // plugins
-      ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // import sort
