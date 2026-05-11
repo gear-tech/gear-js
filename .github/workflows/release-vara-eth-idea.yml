@@ -237,27 +237,41 @@ jobs:
         with:
           args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
-  deploy-upload-code-service:
-    needs: [check-changes, set-env-tag]
-    if: ${{ needs.check-changes.outputs.upload-code-service == 'true' }}
+  build-upload-code-service-image:
     runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.upload-code-service == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Install Node.js 22.x
-        uses: actions/setup-node@v6
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
         with:
-          node-version: 22.x
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: yarn workspaces focus gear-js @vara-eth/api upload-code-service
+      - name: Build and push "vara-eth-idea-upload-code-service" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/upload-code-service/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-upload-code-service:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-upload-code-service:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
-      - name: Build
-        run: yarn workspace upload-code-service run build
+  deploy-upload-code-service:
+    needs: [build-upload-code-service-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
 
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -265,8 +279,7 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy handler Lambda
-        run: aws lambda update-function-code --function-name ${{ vars.UPLOAD_CODE_HANDLER_FUNCTION_NAME }} --zip-file fileb://idea/vara-eth/upload-code-service/dist/handler.zip
-
-      - name: Deploy worker Lambda
-        run: aws lambda update-function-code --function-name ${{ vars.UPLOAD_CODE_WORKER_FUNCTION_NAME }} --zip-file fileb://idea/vara-eth/upload-code-service/dist/worker.zip
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.UPLOAD_CODE_SERVICE_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
