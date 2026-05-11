@@ -1,11 +1,12 @@
 import { clsx } from 'clsx';
-import { matchPath, NavLink, useLocation } from 'react-router-dom';
+import { generatePath, matchPath, NavLink, useLocation } from 'react-router-dom';
 import type { Hex } from 'viem';
 
 import { UploadCodeButton } from '@/features/codes';
-import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
+
+import { buttonStyles } from '../ui/button';
 
 import styles from './navigation.module.scss';
 
@@ -33,7 +34,18 @@ const Navigation = () => {
 
         {matchPath(routes.codes, pathname) && <UploadCodeButton />}
 
-        {codeId && <CreateProgramButton codeId={codeId} />}
+        {codeId && (
+          <NavLink
+            to={generatePath(routes.createProgram, { codeId })}
+            className={clsx(
+              styles.createProgramLink,
+              buttonStyles.button,
+              buttonStyles['btn--variant-default'],
+              buttonStyles['size-xs'],
+            )}>
+            Create program
+          </NavLink>
+        )}
       </div>
 
       {/* key to reset search on route change */}

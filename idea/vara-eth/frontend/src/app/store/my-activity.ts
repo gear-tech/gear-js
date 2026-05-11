@@ -90,9 +90,12 @@ type UploadCodeActivity = {
   error: string | undefined;
 };
 
-type CreateProgramActivity = ReceiptActivity & {
+type CreateProgramActivity = Partial<ReceiptActivity> & {
   type: typeof TransactionTypes.createProgram;
-  programId: string;
+  codeId?: string;
+  programId?: string;
+  resultStatus?: ResultStatus;
+  error?: string;
 };
 
 type ExecutableBalanceTopUpActivity = ReceiptActivity & {
