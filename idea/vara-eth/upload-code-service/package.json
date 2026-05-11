@@ -1,5 +1,5 @@
 {
-  "name": "varaeth-idea-upload-code-service",
+  "name": "@vara-eth/idea-upload-code",
   "type": "module",
   "dependencies": {
     "@gear-js/logger": "workspace:*",
@@ -11,14 +11,13 @@
     "pg": "^8.20.0",
     "viem": "npm:@vara-eth/viem@2.47.7-1"
   },
-  "scripts": {
-    "build": "yarn clean && tsc",
-    "clean": "rm -rf dist",
-    "migrate": "node dist/migrate.js"
-  },
   "devDependencies": {
-    "@types/node": "^25.6.0",
-    "@types/pg": "^8",
-    "typescript": "^5"
+    "@types/pg": "^8"
+  },
+  "scripts": {
+    "build": "yarn clean && npx tsc",
+    "clean": "rm -rf dist",
+    "start": "node dist/main.js",
+    "migrate": "node dist/migrate.js"
   }
 }

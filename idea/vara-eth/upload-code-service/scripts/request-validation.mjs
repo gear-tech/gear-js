@@ -79,3 +79,15 @@ const res = await fetch(`${apiUrl}/${network}/request-code-validation`, {
 
 const data = await res.json();
 console.log('Response:', data);
+
+const id = data.jobId;
+
+await new Promise((resolve) => setTimeout(resolve, 3000));
+
+console.log('Checking status...');
+const statusRes = await fetch(`${apiUrl}/status?jobId=${id}`);
+
+const statusData = await statusRes.json();
+console.log('Response:', statusData);
+
+process.exit(0);

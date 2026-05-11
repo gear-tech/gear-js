@@ -9897,6 +9897,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@vara-eth/idea-upload-code@workspace:idea/vara-eth/upload-code-service":
+  version: 0.0.0-use.local
+  resolution: "@vara-eth/idea-upload-code@workspace:idea/vara-eth/upload-code-service"
+  dependencies:
+    "@gear-js/logger": "workspace:*"
+    "@types/pg": "npm:^8"
+    "@vara-eth/api": "workspace:*"
+    dotenv: "npm:^16"
+    fastify: "npm:^5.8.5"
+    kysely: "npm:^0.28.16"
+    kzg-wasm: "npm:^1.0.0"
+    pg: "npm:^8.20.0"
+    viem: "npm:@vara-eth/viem@2.47.7-1"
+  languageName: unknown
+  linkType: soft
+
 "@varan-wallet/varan-connect@npm:1.1.0":
   version: 1.1.0
   resolution: "@varan-wallet/varan-connect@npm:1.1.0"
@@ -24254,7 +24270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3 < 6, typescript@npm:^5":
+"typescript@npm:>=3 < 6":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
   bin:
@@ -24274,7 +24290,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:
@@ -24883,24 +24899,6 @@ __metadata:
     typeorm: "npm:0.3.28"
     viem: "npm:@vara-eth/viem@2.47.7-1"
     xxhash-addon: "npm:^2.0.3"
-  languageName: unknown
-  linkType: soft
-
-"varaeth-idea-upload-code-service@workspace:idea/vara-eth/upload-code-service":
-  version: 0.0.0-use.local
-  resolution: "varaeth-idea-upload-code-service@workspace:idea/vara-eth/upload-code-service"
-  dependencies:
-    "@gear-js/logger": "workspace:*"
-    "@types/node": "npm:^25.6.0"
-    "@types/pg": "npm:^8"
-    "@vara-eth/api": "workspace:*"
-    dotenv: "npm:^16"
-    fastify: "npm:^5.8.5"
-    kysely: "npm:^0.28.16"
-    kzg-wasm: "npm:^1.0.0"
-    pg: "npm:^8.20.0"
-    typescript: "npm:^5"
-    viem: "npm:@vara-eth/viem@2.47.7-1"
   languageName: unknown
   linkType: soft
 
