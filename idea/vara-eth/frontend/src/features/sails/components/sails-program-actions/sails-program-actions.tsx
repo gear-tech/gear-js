@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 import { isHex } from 'viem';
-
-import { Input as UIInput } from '@/components/form/input';
 import { SplitButton, Tabs, UploadIdlButton } from '@/components';
+import { Input as UIInput } from '@/components/form/input';
 import { ProgramMessagesTable } from '@/features/messages';
 import {
   useInitProgram,

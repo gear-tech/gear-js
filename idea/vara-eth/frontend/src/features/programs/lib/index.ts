@@ -6,8 +6,8 @@ export {
   useReadProgramMessage,
   useSendInjectedTransaction,
   useSendProgramMessage,
-  useWatchProgramStateChange,
   useSendRawInjectedTransaction,
   useSendRawProgramMessage,
+  useWatchProgramStateChange,
 } from './hooks';
 export { getAllProgramsQueryOptions, useGetAllProgramsQuery, useGetProgramByIdQuery } from './queries';
