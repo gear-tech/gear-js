@@ -74,10 +74,6 @@ export const getAccount = async (uri: string) => {
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const describeif = (condition: boolean) => (condition ? describe : describe.skip);
-
-export const testif = (condition: boolean) => (condition ? test : test.skip);
-
 export const listenToMessageWaited = (api: GearApi) => {
   const messages: MessageWaitedData[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('MessageWaited', (event) => {
@@ -108,7 +104,8 @@ export const waitForPausedProgram = (
             (data as ProgramChangedData).change.isPaused,
         );
         unsub.then((fn) => fn());
-        resolve([(event[0].event.data as ProgramChangedData).id.toHex(), block.header.hash.toHex()]);
+        const blockHash = block.header.hash.toHex() as HexString;
+        resolve([(event[0].event.data as ProgramChangedData).id.toHex(), blockHash]);
       }
     });
   });

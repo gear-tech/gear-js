@@ -13,7 +13,9 @@
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
     "outDir": "./lib",
-    "sourceMap": true
+    "rootDir": "./src",
+    "sourceMap": true,
+    "useUnknownInCatchVariables": false,
   },
-  "include": ["src/**/*"]
+  "include": ["./src/**/*"],
 }

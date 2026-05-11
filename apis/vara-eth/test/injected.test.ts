@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Hash, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -18,26 +18,30 @@ import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
-let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
-let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
+let publicClient: PublicClient;
+let walletClient: WalletClient;
 let signer: ReturnType<typeof walletClientToSigner>;
 
 let mirror: ReturnType<typeof getMirrorClient>;
 
-let programId: `0x${string}`;
+let programId: Hash;
+
+const injectedTxs: {
+  id: Hash;
+  referenceBlock: Hash;
+  payload: string;
+  destination: Hash;
+  value: number;
+  salt: string;
+}[] = [];
 
 beforeAll(async () => {
-  const transport = webSocket(config.wsRpc);
-
-  publicClient = createPublicClient({
-    transport,
-  }) as PublicClient<WebSocketTransport, Chain, undefined>;
   const account = privateKeyToAccount(config.privateKey);
 
-  walletClient = createWalletClient({
-    account,
-    transport,
-  }) as WalletClient<WebSocketTransport, Chain, Account>;
+  const transport = webSocket(config.wsRpc);
+  publicClient = createPublicClient({ transport });
+
+  walletClient = createWalletClient({ account, transport });
   signer = walletClientToSigner(walletClient);
 
   api = await createVaraEthApi(new WsVaraEthProvider(), publicClient, config.routerId, signer);
@@ -54,6 +58,7 @@ describe('Injected Transactions', () => {
     let injectedMessageId: string;
     let injectedPromiseHash: string;
     let injectedPromiseSignature: string;
+    let injectedPromiseReplyInfoHash: string;
 
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
 
@@ -78,8 +83,11 @@ describe('Injected Transactions', () => {
         },
       },
       signature:
-        '0x75c0831b0289e9c8f3d8e9e9400e45323818ee3ac88f1bdfb943198c6e5822a23f0673331777cbc2bc2c3220c0be158b5b596b2da3e1f95501727ef73a9328041c',
+        '0x6239210962901c5f3695f6d17fda5f59e39d53f91fc4346d269762aedcf00c7532cf824d73e08e5ea97df63b4bac8232a1a6978442dea95a40558d00356b35001c',
     };
+
+    const HASH_REGEXP = '<(0x[0-9a-f]{64})>';
+    const HEX_REGEXP = '<(0x[0-9a-f]*)>';
 
     const getAndValidateValueByRegexp = (str: string, regexp: string) => {
       const value = str.match(regexp)?.[1];
@@ -98,11 +106,12 @@ describe('Injected Transactions', () => {
 
       const resultStr = result.toString();
 
-      const hash = getAndValidateValueByRegexp(resultStr, 'hash: <(0x[0-9a-f]{64})>');
-      const signature = getAndValidateValueByRegexp(resultStr, 'signature: <(0x[0-9a-f]*)>');
-      const messageId = getAndValidateValueByRegexp(resultStr, 'message_id: <(0x[0-9a-f]{64})>');
-      const promiseHash = getAndValidateValueByRegexp(resultStr, 'promise_hash: <(0x[0-9a-f]{64})>');
-      const promiseSig = getAndValidateValueByRegexp(resultStr, 'promise_signature: <(0x[0-9a-f]*)>');
+      const hash = getAndValidateValueByRegexp(resultStr, `hash: ${HASH_REGEXP}`);
+      const signature = getAndValidateValueByRegexp(resultStr, `signature: ${HEX_REGEXP}`);
+      const messageId = getAndValidateValueByRegexp(resultStr, `message_id: ${HASH_REGEXP}`);
+      const promiseHash = getAndValidateValueByRegexp(resultStr, `promise_hash: ${HASH_REGEXP}`);
+      const promiseSig = getAndValidateValueByRegexp(resultStr, `promise_signature: ${HEX_REGEXP}`);
+      const promiseReplyInfoHash = getAndValidateValueByRegexp(resultStr, `reply_hash: ${HASH_REGEXP}`);
 
       injectedTxHash = hash;
       injectedTxSignature = signature;
@@ -110,6 +119,7 @@ describe('Injected Transactions', () => {
 
       injectedPromiseHash = promiseHash;
       injectedPromiseSignature = promiseSig;
+      injectedPromiseReplyInfoHash = promiseReplyInfoHash;
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
@@ -136,6 +146,11 @@ describe('Injected Transactions', () => {
       const promise = new InjectedTxPromise(PROMISE, api.eth);
 
       expect(promise.hash).toBe(injectedPromiseHash);
+    });
+
+    test('should create a correct reply hash', () => {
+      const promise = new InjectedTxPromise(PROMISE, api.eth);
+      expect(promise.replyHash).toBe(injectedPromiseReplyInfoHash);
     });
 
     test('should create correct promise signature', async () => {
@@ -246,10 +261,10 @@ describe('Injected Transactions', () => {
   describe('transactions', () => {
     let unwatch: () => void;
 
-    let currentStateHash: Hex;
-    let newStateHash: Hex;
+    let currentStateHash: Hash;
+    let newStateHash: Hash;
 
-    let messageId: Hex;
+    let messageId: Hash;
 
     let testTx: InjectedTx;
 
@@ -312,6 +327,14 @@ describe('Injected Transactions', () => {
       expect(tx.recipient).not.toBeNull();
 
       messageId = tx.messageId;
+      injectedTxs.push({
+        id: tx.messageId,
+        referenceBlock: tx.referenceBlock!,
+        payload,
+        destination: programId,
+        value: 0,
+        salt: tx.salt,
+      });
 
       expect(result).toBe('Accept');
     });
@@ -354,6 +377,15 @@ describe('Injected Transactions', () => {
       const tx = await api.createInjectedTransaction(injected);
 
       expect(tx.recipient).toBeNull();
+
+      injectedTxs.push({
+        id: tx.messageId,
+        referenceBlock: tx.referenceBlock!,
+        payload,
+        destination: programId,
+        value: 0,
+        salt: tx.salt,
+      });
 
       const result = await tx.sendAndWaitForPromise();
 
@@ -405,6 +437,70 @@ describe('Injected Transactions', () => {
 
       await expect(tx.sendAndWaitForPromise()).rejects.toThrow(
         'RpcError(-32602): Invalid params :: Injected transactions with non-zero value are not supported',
+      );
+    });
+  });
+
+  describe('queries', () => {
+    const assertTx = (
+      tx: Awaited<ReturnType<typeof api.query.injected.getTransaction>>,
+      itx: (typeof injectedTxs)[0],
+    ) => {
+      expect(tx).toHaveProperty('data');
+      expect(tx).toHaveProperty('signature');
+      expect(tx).toHaveProperty('address');
+      expect(tx.data).toHaveProperty('destination', itx.destination);
+      expect(tx.data).toHaveProperty('payload', itx.payload);
+      expect(tx.data).toHaveProperty('value', itx.value);
+      expect(tx.data).toHaveProperty('referenceBlock', itx.referenceBlock);
+      expect(tx.data).toHaveProperty('salt', itx.salt);
+    };
+
+    test('should get injected transaction by id', async () => {
+      expect(injectedTxs).toHaveLength(2);
+      const itx = injectedTxs[0];
+      const tx = await api.query.injected.getTransaction(itx.id);
+
+      assertTx(tx, itx);
+    });
+
+    test('should request non-existing transaction and throw not found error', async () => {
+      const nonExistingId = `0x${'00'.repeat(32)}` as Hash;
+
+      await expect(api.query.injected.getTransaction(nonExistingId)).rejects.toThrow(
+        `Transaction with id ${nonExistingId} not found`,
+      );
+    });
+
+    test('should request multiple transactions by ids', async () => {
+      expect(injectedTxs).toHaveLength(2);
+
+      const txs = await api.query.injected.getTransactions(injectedTxs.map((i) => i.id));
+
+      expect(txs).toHaveLength(2);
+      txs.forEach((tx, i) => {
+        assertTx(tx!, injectedTxs[i]);
+      });
+    });
+
+    test('should request multiple transaction with some non-existing ids and get null for them', async () => {
+      const nonExistingId = `0x${'00'.repeat(32)}` as Hash;
+
+      expect(injectedTxs).toHaveLength(2);
+
+      const txs = await api.query.injected.getTransactions([injectedTxs[0].id, nonExistingId, injectedTxs[1].id]);
+
+      expect(txs).toHaveLength(3);
+      expect(txs[0]).not.toBeNull();
+      expect(txs[1]).toBeNull();
+      expect(txs[2]).not.toBeNull();
+    });
+
+    test('should request more than 100 transactions and get error', async () => {
+      const ids = Array.from({ length: 101 }, (_, i) => `0x${i.toString(16).padStart(64, '0')}` as Hash);
+
+      await expect(api.query.injected.getTransactions(ids)).rejects.toThrow(
+        'RpcError(-32602): Invalid params :: Too many transaction ids requested. Maximum is 100.',
       );
     });
   });

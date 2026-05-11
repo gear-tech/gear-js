@@ -43,7 +43,6 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        include: ['src/**/*.ts'],
       }),
     ],
     external: externalPackages,
@@ -67,7 +66,6 @@ export default [
       typescript({
         outDir: 'lib/cjs',
         declaration: false,
-        include: ['src/**/*.ts'],
       }),
     ],
     external: externalPackages,
