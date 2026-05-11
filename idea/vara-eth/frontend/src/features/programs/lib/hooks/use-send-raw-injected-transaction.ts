@@ -13,7 +13,7 @@ const useSendRawInjectedTransaction = (programId: Hex) => {
   const addMyActivity = useAddMyActivity();
 
   const sendRawInjectedTransaction = async ({ payload }: SendRawMessageParams) => {
-    if (!api) return;
+    if (!api) throw new Error('API is not initialized');
 
     const tx = await api.createInjectedTransaction({
       destination: programId,

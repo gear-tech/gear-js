@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 import { isHex } from 'viem';
+
+import { useApi, useMirrorContract } from '@/app/api';
 import { SplitButton, Tabs, UploadIdlButton } from '@/components';
 import { Input as UIInput } from '@/components/form/input';
 import { ProgramMessagesTable } from '@/features/messages';
@@ -74,6 +76,12 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
 
   const sendRawInjectedTx = useSendRawInjectedTransaction(programId);
   const sendRawMessage = useSendRawProgramMessage(programId);
+
+  const { data: api, isLoading: isApiLoading } = useApi();
+  const mirrorContract = useMirrorContract(programId);
+
+  const isRawServiceReady = writeMode === WRITE_MODE_OFFCHAIN ? !!api : !!mirrorContract;
+  const isRawServiceLoading = writeMode === WRITE_MODE_OFFCHAIN && isApiLoading;
 
   const initProgram = useInitProgram(programId, sails);
 
@@ -211,7 +219,8 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
         className={styles.rawPayloadButton}
         selectedValue={writeMode}
         options={writeModeOptions}
-        isLoading={isRawMessageSending}
+        isLoading={isRawMessageSending || isRawServiceLoading}
+        disabled={!isRawServiceReady && !isRawServiceLoading}
         primaryButtonProps={{ onClick: handleRawPayloadSubmit }}
         onOptionClick={setWriteModePreference}>
         Send bytes message

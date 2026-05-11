@@ -13,7 +13,7 @@ const useSendRawProgramMessage = (programId: Hex) => {
   const addMyActivity = useAddMyActivity();
 
   const sendRawMessage = async ({ payload }: SendRawMessageParams) => {
-    if (!mirrorContract) return;
+    if (!mirrorContract) throw new Error('Mirror contract is not initialized');
 
     const tx = await mirrorContract.sendMessage(payload);
     const response = await tx.send();
