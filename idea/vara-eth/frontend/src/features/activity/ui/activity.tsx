@@ -181,8 +181,10 @@ const getUserActivityKey = (item: MyActivity & { timestamp: number; blockHash: s
   const participantPart = 'to' in item && item.to ? item.to : 'from' in item ? item.from : '';
   const targetPart = 'programId' in item ? item.programId : '';
   const valuePart = 'value' in item ? item.value : '';
+  const codeIdPart = 'codeId' in item && item.codeId ? item.codeId : '';
+  const errorPart = 'error' in item && item.error ? item.error : '';
 
-  return `${item.timestamp}-${item.type}-${item.blockHash}-${hashPart}-${participantPart}-${targetPart}-${valuePart}`;
+  return `${item.timestamp}-${item.type}-${item.blockHash}-${hashPart}-${participantPart}-${targetPart}-${valuePart}-${codeIdPart}-${errorPart}`;
 };
 
 const isActivityError = (item: MyActivity) => {
