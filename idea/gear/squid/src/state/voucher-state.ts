@@ -85,6 +85,7 @@ export class VoucherState {
     if (vouchersToQuery.length > 0) {
       const vouchers = await this._ctx.store.find(Voucher, { where: { id: In(vouchersToQuery) } });
       for (const voucher of vouchers) {
+        voucher.balance = BigInt(voucher.balance);
         this._vouchers.set(voucher.id, voucher);
       }
     }
