@@ -86,9 +86,6 @@
     "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
     "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
   },
-  "resolutions": {
-    "@wagmi/connectors": "8.0.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
