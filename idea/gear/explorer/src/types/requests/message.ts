@@ -15,7 +15,10 @@ export class ParamMsgFromProgram extends ParamMsgToProgram {}
 export class ParamGetMsgsToProgram extends ParamPagination {
   readonly destination?: string;
   readonly source?: string;
-  @IsOneOf(Object.values(MessageEntryPoint), false)
+  @IsOneOf(
+    Object.keys(MessageEntryPoint).map((v) => v.toLowerCase()),
+    false,
+  )
   readonly entry?: MessageEntryPoint;
   readonly service?: string;
   readonly fn?: string;

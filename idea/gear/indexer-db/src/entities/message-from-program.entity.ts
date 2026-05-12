@@ -12,7 +12,6 @@ import { hexToBytea } from '../transformers.js';
 @Index(['destination', 'timestamp'])
 @Index(['source', 'timestamp'])
 @Index(['parentId'], { where: '"parent_id" IS NOT NULL' })
-@Index(['replyToMessageId'], { where: '"reply_to_msg_id" IS NOT NULL' })
 export class MessageFromProgram {
   constructor(props?: Partial<MessageFromProgram>) {
     Object.assign(this, props);

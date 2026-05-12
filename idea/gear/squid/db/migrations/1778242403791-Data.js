@@ -16,9 +16,6 @@ export default class Data1778242403791 {
       `CREATE TABLE "message_from_program" ("id" bytea NOT NULL, "is_sails_idl_v2" boolean NOT NULL DEFAULT false, "exit_code" integer, "expiration" integer, "read_reason" "public"."message_from_program_read_reason_enum", "value" bigint NOT NULL DEFAULT 0, "block_number" bigint NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "destination" bytea NOT NULL, "source" bytea NOT NULL, "parent_id" bytea, "block_hash" bytea, "reply_to_msg_id" bytea, "header" bytea, "route_idx" bytea, "payload" bytea, "service" character varying, "fn" character varying, "reply_code" character varying, CONSTRAINT "PK_3b63d6cbfc0d932d08089decbab" PRIMARY KEY ("id"))`,
     );
     await db.query(
-      `CREATE INDEX "IDX_1a5a1c6f2cbb2a2b37ce150dbd" ON "message_from_program" ("reply_to_msg_id") WHERE "reply_to_msg_id" IS NOT NULL`,
-    );
-    await db.query(
       `CREATE INDEX "IDX_efb03e97b43c2467d0a710f2e0" ON "message_from_program" ("parent_id") WHERE "parent_id" IS NOT NULL`,
     );
     await db.query(`CREATE INDEX "IDX_23b9bed872dd32fb59b75ae34b" ON "message_from_program" ("source", "timestamp") `);
