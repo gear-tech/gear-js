@@ -2,6 +2,7 @@
   "name": "@vara-eth/idea-indexer-db",
   "private": true,
   "version": "0.0.1",
+  "type": "module",
   "main": "lib/index.js",
   "types": "src/index.ts",
   "exports": {

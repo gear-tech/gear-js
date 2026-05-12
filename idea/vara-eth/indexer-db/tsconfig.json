@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "removeComments": true,
@@ -16,7 +16,7 @@
     "rootDir": "./src",
     "sourceMap": true,
     "declaration": true,
-    "useUnknownInCatchVariables": false,
+    "useUnknownInCatchVariables": false
   },
-  "include": ["./src/**/*"],
+  "include": ["./src"]
 }
