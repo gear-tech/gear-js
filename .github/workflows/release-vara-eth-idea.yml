@@ -14,6 +14,7 @@ on:
           - frontend
           - indexer
           - upload-code-service
+          - explorer
           - all
         required: true
       environment:
@@ -71,6 +72,7 @@ jobs:
       frontend: ${{ steps.should-build.outputs.frontend }}
       indexer: ${{ steps.should-build.outputs.indexer }}
       upload-code-service: ${{ steps.should-build.outputs.upload-code-service }}
+      explorer: ${{ steps.should-build.outputs.explorer }}
     steps:
       - uses: actions/checkout@v6
 
@@ -91,6 +93,17 @@ jobs:
           filters: |
             changed:
               - 'idea/vara-eth/indexer/**'
+              - 'idea/vara-eth/indexer-db/**'
+
+      - name: Check explorer changes
+        id: explorer
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/vara-eth/explorer/**'
+              - 'idea/vara-eth/indexer-db/**'
 
       - name: Check upload-code-service changes
         id: upload-code-service
@@ -122,42 +135,18 @@ jobs:
               echo "upload-code-service=true" >> "$GITHUB_OUTPUT"
             else
               echo "upload-code-service=false" >> "$GITHUB_OUTPUT"
+            if [[ "${{ github.event.inputs.service }}" == "explorer" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "explorer=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "explorer=false" >> "$GITHUB_OUTPUT"
             fi
           else
             # For push events, use the file change detection
             echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
             echo "indexer=${{ steps.indexer.outputs.changed }}" >> "$GITHUB_OUTPUT"
             echo "upload-code-service=${{ steps.upload-code-service.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "explorer=${{ steps.explorer.outputs.changed }}" >> "$GITHUB_OUTPUT"
           fi
-
-  build-indexer-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "vara-eth-idea-indexer" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/vara-eth/indexer/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-frontend-image:
     runs-on: ubuntu-latest
@@ -201,41 +190,63 @@ jobs:
             VITE_ROUTER_CONTRACT_ADDRESS_MAINNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_MAINNET }}
             VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
 
-  deploy-indexer:
-    needs: [build-indexer-image, set-env-tag]
+  build-indexer-image:
     runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
         with:
-          args: rollout restart deployment ${{ vars.INDEXER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-frontend:
-    needs: [build-frontend-image, set-env-tag]
+      - name: Build and push "vara-eth-idea-indexer" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/indexer/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
+
+  build-explorer-image:
     runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.explorer == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
         with:
-          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "vara-eth-idea-explorer" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/explorer/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-explorer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-upload-code-service-image:
     runs-on: ubuntu-latest
@@ -265,6 +276,60 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-upload-code-service:${{ needs.set-env-tag.outputs.environment }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-upload-code-service:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
+
+  deploy-indexer:
+    needs: [build-indexer-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.INDEXER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-explorer:
+    needs: [build-explorer-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.EXPLORER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-frontend:
+    needs: [build-frontend-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-upload-code-service:
     needs: [build-upload-code-service-image, set-env-tag]

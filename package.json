@@ -27,9 +27,11 @@
     "idea/gear/indexer-db",
     "idea/gear/meta-storage",
     "idea/gear/squid",
+    "idea/vara-eth/explorer",
     "idea/vara-eth/frontend",
     "idea/vara-eth/indexer",
     "idea/vara-eth/upload-code-service",
+    "idea/vara-eth/indexer-db",
     "tools/cli",
     "tools/txwrapper",
     "utils/frontend-configs",
@@ -56,8 +58,10 @@
     "build:gear-idea-backend": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-faucet --scope gear-idea-indexer-db --scope gear-idea-meta-storage --scope gear-idea-squid",
     "build:gear-idea-frontend": "lerna run build --scope gear-idea-frontend --scope @gear-js/frontend-configs --scope @gear-js/ui --scope @gear-js/vara-ui --scope @gear-js/react-hooks --scope @gear-js/wallet-connect --scope @gear-js/api",
     "build:varaeth-idea-frontend": "lerna run build --scope varaeth-idea-frontend --scope @gear-js/frontend-configs --scope @gear-js/api --scope @vara-eth/api --scope @gear-js/sails-payload-form",
-    "build:varaeth-idea-indexer": "lerna run build --scope varaeth-idea-indexer",
     "build:varaeth-idea-upload-code": "lerna run build --scope @vara-eth/idea-upload-code",
+    "build:varaeth-idea-indexer-db": "lerna run build --scope @vara-eth/idea-indexer-db",
+    "build:varaeth-idea-indexer": "lerna run build --scope @vara-eth/idea-indexer-db --scope @vara-eth/idea-indexer",
+    "build:varaeth-idea-explorer": "lerna run build --scope @vara-eth/idea-indexer-db --scope @vara-eth/idea-explorer",
     "build:ui": "lerna run build --scope @gear-js/ui --scope @gear-js/frontend-configs",
     "build:vara-ui": "lerna run build --scope @gear-js/vara-ui --scope @gear-js/frontend-configs",
     "build:hooks": "lerna run build --scope @gear-js/react-hooks --scope @gear-js/frontend-configs --scope @gear-js/api",
@@ -83,6 +87,9 @@
     "bump:gear-api": "node scripts/update-deps.mjs gear-api",
     "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
     "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
+  },
+  "resolutions": {
+    "@wagmi/connectors": "8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
@@ -115,6 +122,6 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.12"
   }
 }

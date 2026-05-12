@@ -5,6 +5,6 @@
     "removeComments": true,
     "target": "esnext",
     "strict": true,
-    "allowJs": true,
-  },
+    "allowJs": true
+  }
 }

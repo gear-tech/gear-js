@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": ["./src"],
+  "include": ["./src"]
 }
