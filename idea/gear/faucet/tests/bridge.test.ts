@@ -5,7 +5,7 @@ import './__mocks__/gear-js';
 import { Keyring } from '@polkadot/api';
 import request from 'supertest';
 import { FaucetType, RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
+import { FaucetApp } from '../src/app';
 import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
 
