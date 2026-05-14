@@ -1,4 +1,5 @@
-import { MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
+import type { DataCache } from 'gear-idea-common';
+import { cacheKey, MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
 
 import { Pagination } from '../decorators/index.js';
@@ -16,10 +17,14 @@ import { hexToBuffer, isHex } from '../utils.js';
 export class MessageService {
   private _repoTo: Repository<MessageToProgram>;
   private _repoFrom: Repository<MessageFromProgram>;
+  private readonly _genesis: string;
+  private readonly _dataCache: DataCache;
 
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource, genesis: string, dataCache: DataCache) {
     this._repoTo = dataSource.getRepository(MessageToProgram);
     this._repoFrom = dataSource.getRepository(MessageFromProgram);
+    this._genesis = genesis;
+    this._dataCache = dataCache;
   }
 
   @RequiredParams(['id'])
@@ -95,12 +100,14 @@ export class MessageService {
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
 
-    const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
+    const simpleDestQuery = destination && !source && !entry && !service && !fn && !from && !to && !query;
+    const getCount = simpleDestQuery
+      ? () => this._dataCache.getNumber(cacheKey.messagesToDestination(this._genesis, destination), () => qb.getCount())
+      : () => qb.getCount();
 
-    return {
-      result,
-      count,
-    };
+    const [result, count] = await Promise.all([qb.getMany(), getCount()]);
+
+    return { result, count };
   }
 
   @Pagination()
@@ -159,11 +166,14 @@ export class MessageService {
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
 
-    const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
+    const simpleSourceQuery =
+      source && !destination && !parentId && !isInMailbox && !service && !fn && !from && !to && !query;
+    const getCount = simpleSourceQuery
+      ? () => this._dataCache.getNumber(cacheKey.messagesFromSource(this._genesis, source), () => qb.getCount())
+      : () => qb.getCount();
 
-    return {
-      result,
-      count,
-    };
+    const [result, count] = await Promise.all([qb.getMany(), getCount()]);
+
+    return { result, count };
   }
 }

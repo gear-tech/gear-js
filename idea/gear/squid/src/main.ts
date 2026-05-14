@@ -1,6 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { type Store, TypeormDatabase } from '@subsquid/typeorm-store';
-import { createClient, type RedisClientType } from 'redis';
+import { DataCache } from 'gear-idea-common';
 
 import { config } from './config.js';
 import {
@@ -84,17 +84,10 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 };
 
 const main = async (api: GearApi) => {
-  const redisClient: RedisClientType = createClient({
-    username: config.redis.user,
-    password: config.redis.password,
-    socket: {
-      host: config.redis.host,
-      port: config.redis.port,
-    },
-  });
-  await redisClient.connect();
+  const dataCache = await DataCache.connect(config.redis);
+  if (!dataCache.connected) throw new Error('Redis connection failed');
 
-  batchState = new BatchState(redisClient, api.genesisHash.toHex());
+  batchState = new BatchState(dataCache, api.genesisHash.toHex());
   api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };

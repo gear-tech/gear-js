@@ -1,12 +1,14 @@
 import type { HexString } from '@gear-js/api';
 import { hexToU8a } from '@polkadot/util';
 import type { Store } from '@subsquid/typeorm-store';
-import type { RedisClientType } from 'redis';
+import type { DataCache } from 'gear-idea-common';
+import { cacheKey } from 'gear-idea-indexer-db';
 import { getFnNamePrefix, getServiceNamePrefix, ZERO_ADDRESS } from 'sails-js';
 import { SailsMessageHeader } from 'sails-js/parser';
 import { In } from 'typeorm';
 
 import type { MessageStatus } from '../common/index.js';
+
 import { Event, MessageFromProgram, type MessageReadReason, MessageToProgram } from '../model/index.js';
 import type { ProcessorContext } from '../processor.js';
 import { findChildMessageId } from '../util.js';
@@ -48,11 +50,11 @@ export class MessageState {
   private _removedParentIds: Set<string>;
   private _readReasons: Map<string, MessageReadReason>;
   private _ctx: ProcessorContext<Store>;
-  private readonly _redis: RedisClientType;
+  private readonly _cache: DataCache;
   private readonly _genesisHash: string;
 
-  constructor(redis: RedisClientType, genesisHash: string) {
-    this._redis = redis;
+  constructor(cache: DataCache, genesisHash: string) {
+    this._cache = cache;
     this._genesisHash = genesisHash;
     this._messagesFromProgram = new Map();
     this._messagesToProgram = new Map();
@@ -72,7 +74,7 @@ export class MessageState {
     this._updatedParentIds.clear();
     this._removedParentIds.clear();
 
-    const temp = Object.entries(await this._redis.hGetAll(this._genesisHash));
+    const temp = Object.entries(await this._cache.hGetAll(this._genesisHash));
     this._cachedMessages = {};
     temp.forEach(([key, value]) => {
       this._cachedMessages[key] = Number(value);
@@ -100,14 +102,40 @@ export class MessageState {
 
   async persistRedis() {
     if (this._removedParentIds.size > 0) {
-      await this._redis.hDel(this._genesisHash, Array.from(this._removedParentIds));
+      await this._cache.hDel(this._genesisHash, Array.from(this._removedParentIds));
     }
     if (this._updatedParentIds.size > 0) {
       const updates = Object.fromEntries(
         Array.from(this._updatedParentIds).map((id) => [id, this._cachedMessages[id]]),
       );
-      await this._redis.hSet(this._genesisHash, updates);
+      await this._cache.hSet(this._genesisHash, updates);
     }
+    await this._incrementCounts();
+  }
+
+  private async _incrementCounts() {
+    const fromSource = new Map<string, number>();
+    const toDest = new Map<string, number>();
+    const eventSource = new Map<string, number>();
+
+    for (const msg of this._messagesFromProgram.values()) {
+      fromSource.set(msg.source, (fromSource.get(msg.source) ?? 0) + 1);
+    }
+    for (const msg of this._messagesToProgram.values()) {
+      toDest.set(msg.destination, (toDest.get(msg.destination) ?? 0) + 1);
+    }
+    for (const event of this._events.values()) {
+      eventSource.set(event.source, (eventSource.get(event.source) ?? 0) + 1);
+    }
+
+    const g = this._genesisHash;
+    const entries = [
+      ...Array.from(fromSource, ([addr, n]) => [cacheKey.messagesFromSource(g, addr), n] as [string, number]),
+      ...Array.from(toDest, ([addr, n]) => [cacheKey.messagesToDestination(g, addr), n] as [string, number]),
+      ...Array.from(eventSource, ([addr, n]) => [cacheKey.eventsSource(g, addr), n] as [string, number]),
+    ];
+
+    await this._cache.incrementManyIfExists(entries);
   }
 
   addMsgToProgram(msg: MessageToProgram) {

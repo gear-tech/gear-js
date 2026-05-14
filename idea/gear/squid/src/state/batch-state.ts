@@ -2,7 +2,8 @@ import { Metadata, TypeRegistry } from '@polkadot/types';
 import type { SiLookupTypeId } from '@polkadot/types/interfaces';
 import { xxhashAsHex } from '@polkadot/util-crypto';
 import type { Store } from '@subsquid/typeorm-store';
-import type { RedisClientType } from 'redis';
+import type { DataCache } from 'gear-idea-common';
+import { cacheKey } from 'gear-idea-indexer-db';
 import { In } from 'typeorm';
 
 import {
@@ -24,6 +25,7 @@ const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2)
 export class BatchState {
   private _programs: Map<string, Program>;
   private _newPrograms: Set<string>;
+  private _changedProgramIds: Set<string>;
   private _codes: Map<string, Code>;
   private _programStatusUpdates: Map<string, { status: ProgramStatus; expiration?: string }>;
   private _codeStatusUpdates: Map<string, CodeStatus>;
@@ -32,16 +34,21 @@ export class BatchState {
   private _registry: TypeRegistry;
   private _specVersion: number;
   private _programStorageTy: string;
+  private readonly _cache: DataCache;
+  private readonly _genesisHash: string;
   public readonly messages: MessageState;
   public readonly vouchers: VoucherState;
 
-  constructor(redis: RedisClientType, genesisHash: string) {
+  constructor(cache: DataCache, genesisHash: string) {
+    this._cache = cache;
+    this._genesisHash = genesisHash;
     this._programs = new Map();
     this._codes = new Map();
     this._newPrograms = new Set();
+    this._changedProgramIds = new Set();
     this._programStatusUpdates = new Map();
     this._codeStatusUpdates = new Map();
-    this.messages = new MessageState(redis, genesisHash);
+    this.messages = new MessageState(cache, genesisHash);
     this.vouchers = new VoucherState();
   }
 
@@ -50,6 +57,7 @@ export class BatchState {
     this._programs.clear();
     this._codes.clear();
     this._newPrograms.clear();
+    this._changedProgramIds.clear();
     this._programStatusUpdates.clear();
     this._codeStatusUpdates.clear();
 
@@ -95,6 +103,7 @@ export class BatchState {
       }
 
       await this.messages.persistRedis();
+      await this._invalidatePrograms();
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
       throw error;
@@ -107,6 +116,7 @@ export class BatchState {
     this._ctx.log.debug({ id: program.id, codeId: program.codeId, owner: program.owner }, 'addProgram');
     this._programs.set(program.id, program);
     this._newPrograms.add(program.id);
+    this._changedProgramIds.add(program.id);
   }
 
   addCode(code: Code) {
@@ -147,6 +157,7 @@ export class BatchState {
   setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
     this._ctx.log.debug({ id, status, expiration }, 'setProgramStatus');
     this._programStatusUpdates.set(id, { status, expiration });
+    this._changedProgramIds.add(id);
   }
 
   setCodeStatus(id: string, status: CodeStatus) {
@@ -231,6 +242,17 @@ export class BatchState {
     for (const [id, status] of this._codeStatusUpdates) {
       const code = this._codes.get(id);
       if (code) code.status = status;
+    }
+  }
+
+  private async _invalidatePrograms() {
+    if (this._changedProgramIds.size === 0) return;
+
+    const g = this._genesisHash;
+    await this._cache.increment(cacheKey.programsVersion(g));
+
+    for (const id of this._changedProgramIds) {
+      this._cache.invalidate(cacheKey.programData(g, id)).catch(() => {});
     }
   }
 
