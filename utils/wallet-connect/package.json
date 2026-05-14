@@ -29,7 +29,7 @@
     "react-dom": "^19"
   },
   "dependencies": {
-    "@base-ui-components/react": "1.0.0-beta.6",
+    "@base-ui-components/react": "1.0.0-rc.0",
     "@gear-js/ui": "*",
     "@gear-js/vara-ui": "*",
     "@polkadot/react-identicon": "3.16.7",
