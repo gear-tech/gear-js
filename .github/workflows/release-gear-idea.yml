@@ -2,13 +2,14 @@ name: 'Gear Idea Release'
 
 on:
   push:
-    branches: ['main', 'stable']
+    branches: ['main', 'prod/gear-idea']
     paths:
-      - idea/gear/meta-storage/package.json
-      - idea/gear/faucet/package.json
-      - idea/gear/frontend/package.json
-      - idea/gear/squid/package.json
-      - idea/gear/explorer/package.json
+      - idea/gear/frontend/**
+      - idea/gear/faucet/**
+      - idea/gear/meta-storage/**
+      - idea/gear/squid/**
+      - idea/gear/explorer/**
+      - idea/gear/indexer-db/**
   workflow_dispatch:
     inputs:
       service:
@@ -23,10 +24,17 @@ on:
           - all
           - backend
         required: true
+      environment:
+        type: choice
+        description: Environment to deploy
+        options:
+          - gear-idea-staging
+          - gear-idea-production
+        required: true
+        default: gear-idea-staging
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
@@ -36,55 +44,14 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
+permissions:
+  contents: read
+
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    outputs:
-      skip: ${{ steps.set_skip.outputs.skip }}
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 2
-
-      - name: Set skip=false on workflow_dispatch
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo "skip=false" >> $GITHUB_OUTPUT
-
-      - name: Get current version
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        id: cur_version
-        run: |
-          version=$(jq -r .version idea/gear/common/package.json)
-          echo "Current version: $version"
-          echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Get previous version
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        id: prev_version
-        run: |
-          version=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)
-          echo "Previous version: $version"
-          echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Compare versions and set SKIP env
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        id: set_skip
-        run: |
-          if [[ "${{ steps.cur_version.outputs.version }}" != "${{ steps.prev_version.outputs.version }}" ]]; then
-            echo "skip=false" >> $GITHUB_OUTPUT
-          else
-            echo "skip=true" >> $GITHUB_OUTPUT
-          fi
-
   set-env-tag:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.get_env.outputs.environment }}
-    needs: [check-version]
-    if: ${{ needs.check-version.outputs.skip != 'true' }}
     permissions:
       contents: read
       packages: write
@@ -95,15 +62,119 @@ jobs:
       - name: Get environment
         id: get_env
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
-            echo "environment=production" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           else
-            echo "environment=staging" >> $GITHUB_OUTPUT
+            if [[ "${{ github.ref }}" == "refs/heads/prod/gear-idea" ]]; then
+              echo "environment=gear-idea-production" >> $GITHUB_OUTPUT
+            else
+              echo "environment=gear-idea-staging" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.should-build.outputs.frontend }}
+      faucet: ${{ steps.should-build.outputs.faucet }}
+      meta-storage: ${{ steps.should-build.outputs.meta-storage }}
+      squid: ${{ steps.should-build.outputs.squid }}
+      explorer: ${{ steps.should-build.outputs.explorer }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check frontend changes
+        id: frontend
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/gear/frontend/**'
+
+      - name: Check faucet changes
+        id: faucet
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/gear/faucet/**'
+
+      - name: Check meta-storage changes
+        id: meta_storage
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/gear/meta-storage/**'
+
+      - name: Check squid changes
+        id: squid
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/gear/squid/**'
+              - 'idea/gear/indexer-db/**'
+
+      - name: Check explorer changes
+        id: explorer
+        uses: dorny/paths-filter@v4
+        with:
+          base: ${{ github.event.before }}
+          filters: |
+            changed:
+              - 'idea/gear/explorer/**'
+              - 'idea/gear/indexer-db/**'
+
+      - name: Determine what should be built
+        id: should-build
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "frontend=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "frontend=false" >> "$GITHUB_OUTPUT"
+            fi
+
+            if [[ "${{ github.event.inputs.service }}" == "faucet" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
+              echo "faucet=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "faucet=false" >> "$GITHUB_OUTPUT"
+            fi
+
+            if [[ "${{ github.event.inputs.service }}" == "meta-storage" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
+              echo "meta-storage=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "meta-storage=false" >> "$GITHUB_OUTPUT"
+            fi
+
+            if [[ "${{ github.event.inputs.service }}" == "squid" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
+              echo "squid=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "squid=false" >> "$GITHUB_OUTPUT"
+            fi
+
+            if [[ "${{ github.event.inputs.service }}" == "explorer" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
+              echo "explorer=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "explorer=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "faucet=${{ steps.faucet.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "meta-storage=${{ steps.meta_storage.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "squid=${{ steps.squid.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "explorer=${{ steps.explorer.outputs.changed }}" >> "$GITHUB_OUTPUT"
           fi
 
   build-frontend-image:
     runs-on: ubuntu-latest
-    needs: [set-env-tag]
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.frontend == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -113,16 +184,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'frontend,all'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -130,7 +192,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-frontend" Docker image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/frontend/Dockerfile
@@ -155,7 +216,8 @@ jobs:
 
   build-faucet-image:
     runs-on: ubuntu-latest
-    needs: [set-env-tag]
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.faucet == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -165,16 +227,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'faucet,all,backend'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -182,7 +235,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-faucet" Docker image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/faucet/Dockerfile
@@ -193,7 +245,8 @@ jobs:
 
   build-meta-storage-image:
     runs-on: ubuntu-latest
-    needs: [set-env-tag]
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.meta-storage == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -203,16 +256,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'meta-storage,all,backend'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -220,7 +264,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-meta-storage" image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/meta-storage/Dockerfile
@@ -231,7 +274,8 @@ jobs:
 
   build-squid-image:
     runs-on: ubuntu-latest
-    needs: [set-env-tag]
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.squid == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -241,16 +285,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'squid,all,backend'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -258,7 +293,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-squid" image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/squid/Dockerfile
@@ -269,7 +303,8 @@ jobs:
 
   build-explorer-image:
     runs-on: ubuntu-latest
-    needs: [set-env-tag]
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.explorer == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -279,16 +314,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'explorer,all,backend'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -296,7 +322,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-explorer" image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/explorer/Dockerfile
@@ -305,17 +330,10 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
-  deploy-to-k8s:
-    needs:
-      [
-        set-env-tag,
-        build-frontend-image,
-        build-faucet-image,
-        build-meta-storage-image,
-        build-squid-image,
-        build-explorer-image,
-      ]
+  deploy-frontend:
+    needs: [build-frontend-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
 
     steps:
       - name: Configure AWS credentials
@@ -325,34 +343,79 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get deployment variables
-        id: deployment_vars
-        run: |
-          if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
-            echo "namespace=prod-idea" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
-          else
-            echo "namespace=dev-1" >> $GITHUB_OUTPUT
-            if [ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.service }}" == "all" ]; then
-              echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "backend" ]; then
-              echo "deployments=squid-testnet-v2 explorer meta-storage faucet" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "frontend" ]; then
-              echo "deployments=frontend-nginx" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "faucet" ]; then
-              echo "deployments=faucet" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "meta-storage" ]; then
-              echo "deployments=meta-storage" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "explorer" ]; then
-              echo "deployments=explorer" >> $GITHUB_OUTPUT
-            elif [ "${{ github.event.inputs.service }}" == "squid" ]; then
-              echo "deployments=squid-testnet-v2" >> $GITHUB_OUTPUT
-            else
-              echo "deployments=" >> $GITHUB_OUTPUT
-            fi
-          fi
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-faucet:
+    needs: [build-faucet-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment ${{ steps.deployment_vars.outputs.deployments }} -n ${{ steps.deployment_vars.outputs.namespace }}
+          args: rollout restart deployment ${{ vars.FAUCET_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-meta-storage:
+    needs: [build-meta-storage-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.META_STORAGE_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-squid:
+    needs: [build-squid-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.SQUID_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+
+  deploy-explorer:
+    needs: [build-explorer-image, set-env-tag]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ vars.EXPLORER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
