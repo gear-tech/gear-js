@@ -12,7 +12,7 @@ import { Events } from './common';
 import { config } from './config';
 
 export const processor = new SubstrateBatchProcessor()
-  .setGateway(config.squid.gateway)
+  .setGateway({ url: config.squid.gateway, apiKey: config.squid.apiKey })
   .setRpcEndpoint({
     url: config.squid.rpc,
     rateLimit: config.squid.rate,
