@@ -1,9 +1,10 @@
 import { Voucher } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { RequiredParams } from '../decorators/required';
-import { VoucherNotFound } from '../errors';
-import type { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types';
+
+import { Pagination } from '../decorators/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { VoucherNotFound } from '../errors/index.js';
+import type { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types/index.js';
 
 export class VoucherService {
   private _repo: Repository<Voucher>;

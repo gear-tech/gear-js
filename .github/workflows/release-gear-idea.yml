@@ -200,10 +200,10 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
           build-args: |
-            VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
+            VITE_NODE_ADDRESS=${{ secrets.VITE_NODE_ADDRESS }}
+            VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.VITE_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_TURNSTILE_SITEKEY=${{ secrets.VITE_TURNSTILE_SITEKEY }}
-            VITE_NODES_API_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            VITE_NODES_API_URL=${{ secrets.VITE_NODES_API_URL }}
             VITE_FAUCET_API_URL=${{ secrets.VITE_FAUCET_API_URL }}
             VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}

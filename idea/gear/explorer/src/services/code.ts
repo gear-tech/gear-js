@@ -1,9 +1,10 @@
 import { Code } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { RequiredParams } from '../decorators/required';
-import { CodeNotFound } from '../errors';
-import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types';
+
+import { Pagination } from '../decorators/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { CodeNotFound } from '../errors/index.js';
+import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types/index.js';
 
 export class CodeService {
   private _repo: Repository<Code>;
