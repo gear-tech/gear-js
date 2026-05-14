@@ -1,6 +1,7 @@
 import { rateLimit } from 'express-rate-limit';
 import xxhash from 'xxhashjs';
-import config from '../../config';
+
+import config from '../../config.js';
 
 export const rateLimitMiddleware = rateLimit({
   windowMs: config.server.rateLimitMs,

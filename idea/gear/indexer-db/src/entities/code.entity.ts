@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-import type { CodeStatus, MetaType } from '../enums';
-import { BaseEntity } from './base.entity';
+import type { CodeStatus, MetaType } from '../enums/index.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Code extends BaseEntity {
