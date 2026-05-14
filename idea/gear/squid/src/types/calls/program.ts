@@ -1,7 +1,7 @@
 import type { HexString } from '@gear-js/api';
 
-import { Calls } from '../../common';
-import type { Call } from '../../processor';
+import { Calls } from '../../common/index.js';
+import type { Call } from '../../processor.js';
 
 export interface AUploadProgram {
   code: HexString;

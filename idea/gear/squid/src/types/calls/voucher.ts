@@ -1,6 +1,6 @@
-import type { Call } from '../../processor';
-import type { AUploadCode } from './code';
-import type { ASendMessage, ASendReply } from './message';
+import type { Call } from '../../processor.js';
+import type { AUploadCode } from './code.js';
+import type { ASendMessage, ASendReply } from './message.js';
 
 interface AVoucherSendMessage extends ASendMessage {
   __kind: 'SendMessage';
