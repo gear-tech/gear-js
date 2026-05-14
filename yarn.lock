@@ -4210,6 +4210,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@noble/hashes@npm:2.2.0"
+  checksum: 10c0/cad8630c504d6b9271984f685cd0af9101b40988fc2dfbe17ccdf068a9941f95cc5c9957d89e9ca4b7ca94c15cb35f93510c5d53a09fbcc83ee503b93d0a1034
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^4.0.0":
   version: 4.0.0
   resolution: "@npmcli/agent@npm:4.0.0"
@@ -8630,13 +8637,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tabby_ai/hijri-converter@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@tabby_ai/hijri-converter@npm:1.0.5"
-  checksum: 10c0/40044f463ff57855315c8925461942311460bb64e16706480dde98142f40bcd8e9925bb6fee401fd209397b5bb25368d1529c85b1e6c7e6216ea2085f6aaf61e
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.100.10":
   version: 5.100.10
   resolution: "@tanstack/query-core@npm:5.100.10"
@@ -9732,7 +9732,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@vara-eth/api@workspace:apis/vara-eth"
   dependencies:
-    "@noble/hashes": "npm:1.8.0"
+    "@noble/hashes": "npm:2.2.0"
     "@types/ws": "npm:8.18.1"
     kzg-wasm: "npm:1.0.0"
     viem: "npm:@vara-eth/viem@2.48.11"
@@ -12786,13 +12786,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns-jalali@npm:4.1.0-0":
-  version: 4.1.0-0
-  resolution: "date-fns-jalali@npm:4.1.0-0"
-  checksum: 10c0/f9ad98d9f7e8e5abe0d070dc806b0c8baded2b1208626c42e92cbd2605b5171f5714d6b79b20cc2666267d821699244c9d0b5e93274106cf57d6232da77596ed
-  languageName: node
-  linkType: hard
-
 "date-fns@npm:^4.1.0":
   version: 4.1.0
   resolution: "date-fns@npm:4.1.0"
@@ -15125,7 +15118,7 @@ __metadata:
     lodash.isstring: "npm:4.0.1"
     nuqs: "npm:2.8.9"
     react: "npm:19.2.6"
-    react-day-picker: "npm:9.14.0"
+    react-day-picker: "npm:10.0.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
     react-dom: "npm:19.2.6"
@@ -21303,17 +21296,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-day-picker@npm:9.14.0":
-  version: 9.14.0
-  resolution: "react-day-picker@npm:9.14.0"
+"react-day-picker@npm:10.0.0":
+  version: 10.0.0
+  resolution: "react-day-picker@npm:10.0.0"
   dependencies:
     "@date-fns/tz": "npm:^1.4.1"
-    "@tabby_ai/hijri-converter": "npm:1.0.5"
     date-fns: "npm:^4.1.0"
-    date-fns-jalali: "npm:4.1.0-0"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 10c0/5d26b2e8e28fb504c2ec577bda2ea26709ccab07555aada0674bd72ae38963de6f5cab135d936bb2fef935f97f73c6510657b15b936766e53d5c65811d13289a
+  checksum: 10c0/ea36192918fbdadb2fda043b1d68b493281e044ee481386a3156ba5a5380246eede7e8aba63e3d48255289cff2d0cfc84e7e336832033f324750c425f1800e8a
   languageName: node
   linkType: hard
 
