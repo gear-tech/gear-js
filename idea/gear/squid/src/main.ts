@@ -1,7 +1,8 @@
 import { GearApi } from '@gear-js/api';
 import { type Store, TypeormDatabase } from '@subsquid/typeorm-store';
 import { createClient, type RedisClientType } from 'redis';
-import { config } from './config';
+
+import { config } from './config.js';
 import {
   handleBalanceTransfer,
   handleCodeChanged,
@@ -14,9 +15,9 @@ import {
   handleVoucherIssued,
   handleVoucherRevoked,
   handleVoucherUpdated,
-} from './event.route';
-import { type ProcessorContext, processor } from './processor';
-import { TempState } from './temp-state';
+} from './event.route.js';
+import { type ProcessorContext, processor } from './processor.js';
+import { TempState } from './temp-state.js';
 import {
   isBalanceTransfer,
   isCodeChanged,
@@ -29,7 +30,7 @@ import {
   isVoucherIssued,
   isVoucherRevoked,
   isVoucherUpdated,
-} from './types';
+} from './types/index.js';
 
 let tempState: TempState;
 
