@@ -18,7 +18,7 @@
     "@vara-eth/api": "workspace:*",
     "@vara-eth/idea-indexer-db": "workspace:*",
     "dotenv": "^17.4.2",
-    "typeorm": "0.3.28",
+    "typeorm": "0.3.29",
     "viem": "npm:@vara-eth/viem@2.48.11",
     "xxhash-addon": "^2.0.3"
   }
