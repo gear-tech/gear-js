@@ -75,7 +75,7 @@ export class FaucetApp {
   }
 }
 
-if (require.main === module) {
+if (process.argv[1] === import.meta.filename) {
   const app = new FaucetApp(
     config.bridge.erc20Contracts.length > 0,
     !!config.varaTestnet.genesis,
