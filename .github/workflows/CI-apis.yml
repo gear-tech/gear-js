@@ -62,6 +62,8 @@ jobs:
           filters: |
             gear-api:
               - 'apis/gear/**'
+              - 'Cargo.toml'
+              - 'Cargo.lock'
             vara-eth-api:
               - 'apis/vara-eth/**'
 

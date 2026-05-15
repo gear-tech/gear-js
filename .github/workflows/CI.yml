@@ -8,8 +8,8 @@ on:
     types: [opened, synchronize, reopened, labeled]
     branches: [main]
     paths:
-      - '!idea/**'
-      - '!apis/**'
+      - 'utils/**'
+      - 'tools/**'
   workflow_dispatch:
 
 env:
