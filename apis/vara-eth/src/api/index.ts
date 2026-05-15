@@ -12,3 +12,18 @@ export {
   type SendPath,
 } from './programs/index.js';
 export { estimateFee, type FeeEstimate, FeesNamespace, type WalletOp } from './fees/index.js';
+export {
+  type EventMeta,
+  type ProgramEvent,
+  type RouterEvent,
+  type StreamedBlockHeader,
+  type StreamHandlers,
+  StreamNamespace,
+  type Unsubscribe,
+  watchBlocks,
+  type WatchBlocksOptions,
+  watchProgramEvents,
+  type WatchProgramEventsOptions,
+  watchRouterEvents,
+  type WatchRouterEventsOptions,
+} from './stream/index.js';

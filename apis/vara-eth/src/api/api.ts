@@ -5,6 +5,7 @@ import { FeesNamespace } from './fees/index.js';
 import { InjectedTx } from './injected/index.js';
 import { ProgramsNamespace } from './programs/index.js';
 import { type Query, query } from './query/index.js';
+import { StreamNamespace } from './stream/index.js';
 
 /**
  * Builds a Proxy that intercepts every property access and throws a clear
@@ -44,6 +45,11 @@ export class VaraEthApi {
    * Available only when an {@link EthereumClient} is wired in.
    */
   public readonly fees!: FeesNamespace;
+  /**
+   * Typed event streams over Router and Mirror contracts, plus block headers.
+   * Available only when an {@link EthereumClient} is wired in.
+   */
+  public readonly stream!: StreamNamespace;
 
   constructor(
     provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
@@ -62,11 +68,13 @@ export class VaraEthApi {
       Object.assign(this, {
         programs: new ProgramsNamespace(this._ethClient, (tx) => this.createInjectedTransaction(tx)),
         fees: new FeesNamespace(this._ethClient),
+        stream: new StreamNamespace(this._ethClient),
       });
     } else {
       Object.assign(this, {
         programs: makeNoEthClientProxy('programs'),
         fees: makeNoEthClientProxy('fees'),
+        stream: makeNoEthClientProxy('stream'),
       });
     }
   }

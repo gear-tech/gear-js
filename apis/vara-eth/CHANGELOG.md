@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.5.0-rc.0] — wallet-CLI primitives (Phase 0 + Phase 1)
+## [0.5.0-rc.0] — wallet-CLI primitives (Phase 0 + Phase 1 + Phase 2)
 
-### Added
+### Added — Phase 2 (event streams)
+- **`api.stream` namespace** — typed event subscriptions wrapping viem's `watchContractEvent` / `watchBlocks`. Each method returns an `Unsubscribe` function and accepts `{ onEvent, onReconnect?, onError? }` handlers.
+  - `api.stream.programEvents(mirror, handlers, opts?)` — emits every Mirror event as a discriminated union (`ProgramEvent`): `Message`, `MessageQueueingRequested`, `MessageCallFailed`, `Reply`, `ReplyQueueingRequested`, `ReplyCallFailed`, `ReplyTransferFailed`, `StateChanged`, `ValueClaimed`, `ValueClaimingRequested`, `ValueClaimFailed`, `ExecutableBalanceTopUpRequested`, `OwnedBalanceTopUpRequested`, `TransferLockedValueToInheritorFailed`. Every event carries `EventMeta` (blockNumber, blockHash, txHash, txIndex, logIndex).
+  - `api.stream.routerEvents(handlers, opts?)` — emits every Router event as a discriminated union (`RouterEvent`): `AnnouncesCommitted`, `BatchCommitted`, `CodeGotValidated`, `CodeValidationRequested`, `ComputationSettingsChanged`, `Initialized`, `OwnershipTransferred`, `Paused`/`Unpaused`, `ProgramCreated`, `StorageSlotChanged`, `Upgraded`, `ValidatorsCommittedForEra`.
+  - `api.stream.blocks(handlers, opts?)` — emits new block headers (`StreamedBlockHeader`: number/hash/parentHash/timestamp/baseFeePerGas). `includePending: true` follows pending blocks; pending blocks with `number === null` are filtered out.
+  - Standalone exports for non-namespace callers: `watchProgramEvents`, `watchRouterEvents`, `watchBlocks`.
+
+### Added — Phase 0 + Phase 1 (originally shipped)
 - **High-level helpers** for the common wallet flows:
   - `api.programs.deploy(code, opts)` — one call covers WVARA permit signing, `requestCodeValidation`, `CodeGotValidated` wait, and the appropriate `createProgram*` variant (incl. optional `salt` / `abiInterface` / `executableBalance`).
   - `api.programs.sendAndWait(mirror, payload, opts)` — supports both the on-chain `Mirror.sendMessage` path and the `injected_sendTransactionAndWatch` path; returns a uniform `{messageId, reply, txHash, validator?}` shape with `code` parsed as `ReplyCode` regardless of rail.
