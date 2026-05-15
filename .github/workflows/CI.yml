@@ -8,8 +8,8 @@ on:
     types: [opened, synchronize, reopened, labeled]
     branches: [main]
     paths:
-      - 'utils/**'
-      - 'tools/**'
+      - "utils/**"
+      - "tools/**"
   workflow_dispatch:
 
 env:
