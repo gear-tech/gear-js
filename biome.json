@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/dist-temp", "!**/.yarn", "!**/node_modules"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/dist-temp",
+      "!**/.yarn",
+      "!**/node_modules",
+      "!apis/vara-eth/solidity_lib"
+    ]
   },
   "formatter": {
     "enabled": true,
