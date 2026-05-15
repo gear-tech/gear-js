@@ -24,7 +24,7 @@
     "dev": "npx ts-node-dev src/main.ts",
     "start": "node dist/main.js",
     "clean": "echo \"clean gear-idea-explorer\" && rm -rf dist",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "npx vitest run",
+    "test:watch": "npx vitest"
   }
 }
