@@ -4,9 +4,8 @@ import { encodeFunctionData } from 'viem';
 import { IMIRROR_ABI } from '../../eth/abi/IMirror.js';
 import { IROUTER_ABI } from '../../eth/abi/IRouter.js';
 import type { EthereumClient } from '../../eth/index.js';
+import { ZERO_ADDRESS, ZERO_BYTES32 } from '../../util/constants.js';
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as Address;
-const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex;
 // Bounded gas for the blob-bearing requestCodeValidation tx, matching router.contract.ts.
 const CODE_VALIDATION_GAS_FLOOR = 100_000n;
 
@@ -44,14 +43,14 @@ export interface FeeEstimate {
  */
 export async function estimateFee(ethClient: EthereumClient, op: WalletOp): Promise<FeeEstimate> {
   const pc = ethClient.publicClient;
-  const block = await pc.getBlock({ blockTag: 'latest' });
-  const baseFee = block.baseFeePerGas ?? 0n;
 
   if (op.type === 'uploadCode') {
-    const [baseValidationFee, extraFee] = await Promise.all([
+    const [block, baseValidationFee, extraFee] = await Promise.all([
+      pc.getBlock({ blockTag: 'latest' }),
       ethClient.router.requestCodeValidationBaseFee(),
       ethClient.router.requestCodeValidationExtraFee(),
     ]);
+    const baseFee = block.baseFeePerGas ?? 0n;
     return {
       gas: CODE_VALIDATION_GAS_FLOOR,
       ethCostWei: CODE_VALIDATION_GAS_FLOOR * baseFee,
@@ -89,7 +88,7 @@ export async function estimateFee(ethClient: EthereumClient, op: WalletOp): Prom
       data = encodeFunctionData({
         abi: IROUTER_ABI,
         functionName: 'createProgram',
-        args: [op.codeId, ZERO_BYTES32, ZERO_ADDRESS],
+        args: [op.codeId, ZERO_BYTES32 as Hex, ZERO_ADDRESS as Address],
       });
       break;
     }
@@ -99,6 +98,10 @@ export async function estimateFee(ethClient: EthereumClient, op: WalletOp): Prom
     }
   }
 
-  const gas = await pc.estimateGas({ account, to, data, value });
+  const [block, gas] = await Promise.all([
+    pc.getBlock({ blockTag: 'latest' }),
+    pc.estimateGas({ account, to, data, value }),
+  ]);
+  const baseFee = block.baseFeePerGas ?? 0n;
   return { gas, ethCostWei: gas * baseFee };
 }

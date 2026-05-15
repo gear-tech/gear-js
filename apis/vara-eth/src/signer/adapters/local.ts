@@ -1,8 +1,8 @@
-import type { Address, Chain, Hash, Hex, PublicClient, TransactionRequest, Transport } from 'viem';
+import type { Chain, Hex, PublicClient, Transport } from 'viem';
 import { createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import type { ITransactionSigner, SignTypedDataParams } from '../../types/signer.js';
+import type { ITransactionSigner } from '../../types/signer.js';
 import { WalletClientAdapter } from './wallet-client.js';
 
 /**
@@ -60,6 +60,3 @@ export function privateKeyToLocalSigner(privateKey: Hex, publicClient: PublicCli
 export function isLocalSigner(signer: ITransactionSigner): signer is LocalSigner {
   return signer instanceof LocalSigner;
 }
-
-// Re-export the parameter types for downstream callers building wrappers.
-export type { Address, Hash, Hex, SignTypedDataParams, TransactionRequest };

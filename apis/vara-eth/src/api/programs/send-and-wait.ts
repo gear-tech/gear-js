@@ -4,8 +4,7 @@ import type { EthereumClient } from '../../eth/index.js';
 import { getMirrorClient } from '../../eth/index.js';
 import { ReplyCode } from '../../errors/index.js';
 import { PromiseSignatureInvalidError, PromiseTimeoutError } from '../../errors/vara-eth-error.js';
-import type { IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../../types/index.js';
-import { InjectedTx } from '../injected/tx.js';
+import type { CreateInjectedTransaction } from './index.js';
 
 /**
  * Path selector for {@link sendAndWaitForReply}.
@@ -62,16 +61,9 @@ const DEFAULT_ETH_TIMEOUT_MS = 120_000;
  * One-call helper: submit a message to a program and wait for its reply.
  * Supports both the on-chain Mirror.sendMessage path and the off-chain
  * injected-tx path. The choice belongs to the caller via {@link SendAndWaitOptions.via}.
- *
- * @param provider - JSON-RPC provider for the Vara.Eth node (needed for injected path)
- * @param ethClient - EthereumClient with a signer attached
- * @param mirror - Address of the target program's Mirror contract
- * @param payload - Hex-encoded message payload
- * @param options - See {@link SendAndWaitOptions}
- * @returns {@link ReplyResult} once the reply arrives or rejects on timeout.
  */
 export async function sendAndWaitForReply(
-  provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
+  createInjectedTransaction: CreateInjectedTransaction,
   ethClient: EthereumClient,
   mirror: Address,
   payload: Hex,
@@ -82,7 +74,7 @@ export async function sendAndWaitForReply(
   if (path === 'eth') {
     return sendViaEth(ethClient, mirror, payload, options);
   }
-  return sendViaInjected(provider, ethClient, mirror, payload, options);
+  return sendViaInjected(createInjectedTransaction, mirror, payload, options);
 }
 
 async function sendViaEth(
@@ -110,7 +102,6 @@ async function sendViaEth(
     reply: {
       payload: reply.payload,
       value: reply.value,
-      // Both rails should expose the same parsed ReplyCode object.
       code: ReplyCode.fromBytes(reply.replyCode as Hex),
     },
     txHash: txHashHex,
@@ -118,8 +109,7 @@ async function sendViaEth(
 }
 
 async function sendViaInjected(
-  provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
-  ethClient: EthereumClient,
+  createInjectedTransaction: CreateInjectedTransaction,
   mirror: Address,
   payload: Hex,
   options: SendAndWaitOptions,
@@ -127,7 +117,7 @@ async function sendViaInjected(
   const timeoutMs = options.timeoutMs ?? DEFAULT_INJECTED_TIMEOUT_MS;
   const validate = options.validateSignature ?? true;
 
-  const injectedTx = new InjectedTx(provider, ethClient, {
+  const injectedTx = await createInjectedTransaction({
     destination: mirror,
     payload,
     value: options.value ?? 0n,
@@ -135,10 +125,6 @@ async function sendViaInjected(
     salt: options.salt,
     recipient: options.recipient,
   });
-
-  if (!injectedTx.referenceBlock) {
-    await injectedTx.setReferenceBlock();
-  }
 
   const promise = await withTimeout(
     injectedTx.sendAndWaitForPromise(),
@@ -150,10 +136,7 @@ async function sendViaInjected(
     try {
       await promise.validateSignature();
     } catch (cause) {
-      throw new PromiseSignatureInvalidError(
-        (promise as { validatorAddress?: Address }).validatorAddress ?? ('0x0' as Address),
-        cause,
-      );
+      throw new PromiseSignatureInvalidError(undefined, cause);
     }
   }
 

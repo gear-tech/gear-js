@@ -1,7 +1,8 @@
 import type { Address, Hex } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
-import type { IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../../types/index.js';
+import type { InjectedTx } from '../injected/tx.js';
+import type { IInjectedTransaction } from '../../types/index.js';
 import { deployProgram, type DeployProgramOptions, type DeployProgramResult } from './deploy.js';
 import { sendAndWaitForReply, type ReplyResult, type SendAndWaitOptions } from './send-and-wait.js';
 
@@ -11,6 +12,14 @@ export { deployProgram } from './deploy.js';
 export { sendAndWaitForReply } from './send-and-wait.js';
 
 /**
+ * Function shape required from {@link VaraEthApi.createInjectedTransaction}.
+ * Decoupling via a callback keeps `ProgramsNamespace` free of a back-reference
+ * to the full `VaraEthApi` instance (which would create a construction-order
+ * cycle).
+ */
+export type CreateInjectedTransaction = (tx: IInjectedTransaction) => Promise<InjectedTx>;
+
+/**
  * Convenience namespace attached to {@link VaraEthApi} as `api.programs`.
  *
  * Wraps the multi-step ceremonies (code upload → validation wait → deploy;
@@ -18,24 +27,17 @@ export { sendAndWaitForReply } from './send-and-wait.js';
  */
 export class ProgramsNamespace {
   constructor(
-    private readonly _provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
     private readonly _ethClient: EthereumClient,
+    private readonly _createInjectedTransaction: CreateInjectedTransaction,
   ) {}
 
-  /**
-   * Upload a WASM, wait for validator approval, and deploy a program from it.
-   * See {@link deployProgram} for details.
-   */
+  /** See {@link deployProgram}. */
   deploy(code: Uint8Array, options: DeployProgramOptions = {}): Promise<DeployProgramResult> {
     return deployProgram(this._ethClient, code, options);
   }
 
-  /**
-   * Send a message to a program and wait for its reply. Supports both the
-   * on-chain `Mirror.sendMessage` path and the off-chain injected-tx path
-   * via the `options.via` selector. See {@link sendAndWaitForReply}.
-   */
+  /** See {@link sendAndWaitForReply}. */
   sendAndWait(mirror: Address, payload: Hex, options: SendAndWaitOptions = {}): Promise<ReplyResult> {
-    return sendAndWaitForReply(this._provider, this._ethClient, mirror, payload, options);
+    return sendAndWaitForReply(this._createInjectedTransaction, this._ethClient, mirror, payload, options);
   }
 }

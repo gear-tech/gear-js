@@ -6,6 +6,28 @@ import { InjectedTx } from './injected/index.js';
 import { ProgramsNamespace } from './programs/index.js';
 import { type Query, query } from './query/index.js';
 
+/**
+ * Builds a Proxy that intercepts every property access and throws a clear
+ * error. Used for `api.programs` / `api.fees` when no EthereumClient is wired
+ * in. Access fails at call time with a self-explanatory message rather than
+ * a `TypeError: undefined is not a function`.
+ */
+function noEthClientStub(namespace: string): never {
+  // Returned via Proxy; TS sees `never` since every access throws.
+  throw new Error(
+    `api.${namespace} is unavailable: no EthereumClient was wired in. Use createVaraEthApi(...) to construct.`,
+  );
+}
+
+function makeNoEthClientProxy(namespace: string): never {
+  return new Proxy(
+    {},
+    {
+      get: (_t, prop) => () => noEthClientStub(`${namespace}.${String(prop)}`),
+    },
+  ) as never;
+}
+
 export class VaraEthApi {
   private _provider: IVaraEthProvider | IVaraEthValidatorPoolProvider;
   public readonly query!: Query;
@@ -36,26 +58,16 @@ export class VaraEthApi {
 
     this._setProps = undefined;
 
-    // Eth-aware namespaces attach directly since they need EthereumClient,
-    // not just the JSON-RPC provider that the `_setProps` factory wires up.
     if (this._ethClient) {
       Object.assign(this, {
-        programs: new ProgramsNamespace(this._provider, this._ethClient),
+        programs: new ProgramsNamespace(this._ethClient, (tx) => this.createInjectedTransaction(tx)),
         fees: new FeesNamespace(this._ethClient),
       });
     } else {
-      const stub = (name: string) =>
-        new Proxy(
-          {},
-          {
-            get: (_t, prop) => () => {
-              throw new Error(
-                `api.${name}.${String(prop)} is unavailable: no EthereumClient was wired in. Construct via createVaraEthApi(...).`,
-              );
-            },
-          },
-        );
-      Object.assign(this, { programs: stub('programs'), fees: stub('fees') });
+      Object.assign(this, {
+        programs: makeNoEthClientProxy('programs'),
+        fees: makeNoEthClientProxy('fees'),
+      });
     }
   }
 

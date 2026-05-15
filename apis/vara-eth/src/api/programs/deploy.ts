@@ -2,13 +2,6 @@ import type { Address, Hex, TransactionReceipt } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
 
-/**
- * Options for {@link deployProgram}.
- *
- * The lib stays adapter-shaped: the EthereumClient must already have a signer
- * attached (set via the factory or {@link EthereumClient.setSigner}). This helper
- * does NOT take a signer override to avoid mutating EthereumClient state mid-call.
- */
 export interface DeployProgramOptions {
   /** Deterministic salt for the Mirror address. Random 32-byte hex if omitted. */
   salt?: Hex;
@@ -33,9 +26,6 @@ export interface DeployProgramOptions {
   permitDeadline?: bigint;
 }
 
-/**
- * Result of {@link deployProgram}.
- */
 export interface DeployProgramResult {
   /** blake2b-256 of the WASM bytecode. */
   codeId: Hex;
@@ -47,25 +37,23 @@ export interface DeployProgramResult {
   deploymentReceipt: TransactionReceipt;
 }
 
-const DEFAULT_PERMIT_WINDOW_SECONDS = 300n; // 5 minutes
+const DEFAULT_PERMIT_WINDOW_SECONDS = 300n;
 
 /**
  * One-call helper that uploads a WASM, waits for validator approval, and
  * deploys a program from it. Replaces the multi-step ceremony of:
  *
- * 1. Quote `requestCodeValidationBaseFee + requestCodeValidationExtraFee`
- * 2. Sign a WVARA EIP-2612 permit for that fee
- * 3. Call `router.requestCodeValidation(code, deadline, permitSig)`
- * 4. Wait for the `CodeGotValidated` event
- * 5. (Optionally) sign a second WVARA permit for executable balance
- * 6. Configure and build `createProgramBuilder(codeId)`
- * 7. Wait for the `ProgramCreated` event
+ *   quote fee → sign WVARA permit → requestCodeValidation → wait for
+ *   CodeGotValidated → (optional) sign executable-balance permit → build →
+ *   wait for ProgramCreated.
  *
- * @param ethClient - The EthereumClient to use for contract calls
- * @param code - WASM bytecode to upload
- * @param options - {@link DeployProgramOptions}
- * @returns {@link DeployProgramResult} after both transactions have been mined and
- *   the validator has approved the code.
+ * The optional executable-balance permit is signed in parallel with the
+ * CodeGotValidated wait, hiding the local-signing round-trip behind chain
+ * latency.
+ *
+ * The EthereumClient must already have a signer attached (set via the factory
+ * or {@link EthereumClient.setSigner}). This helper does NOT take a signer
+ * override to avoid mutating EthereumClient state mid-call.
  */
 export async function deployProgram(
   ethClient: EthereumClient,
@@ -78,43 +66,35 @@ export async function deployProgram(
   const now = BigInt(Math.floor(Date.now() / 1000));
   const deadline = options.permitDeadline ?? now + DEFAULT_PERMIT_WINDOW_SECONDS;
 
-  // --- Step 1: quote + sign WVARA permit for the code-validation fee
+  const signPermit = (amount: bigint) => wvara.prepareAndSignPermitData(router.address, amount, deadline);
+
   const [baseFee, extraFee] = await Promise.all([
     router.requestCodeValidationBaseFee(),
     router.requestCodeValidationExtraFee(),
   ]);
   const codeFee = baseFee + extraFee;
 
-  const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(
-    router.address,
-    codeFee,
-    deadline,
-  );
+  const { signature: codePermitSig } = await signPermit(codeFee);
 
-  // --- Step 2: requestCodeValidation + wait for CodeGotValidated
   const codeTx = await router.requestCodeValidation(code, deadline, codePermitSig);
   const codeValidationReceipt = await codeTx.sendAndWaitForReceipt();
-  await codeTx.waitForCodeGotValidated();
+
+  // Overlap the executable-balance permit signing with the validator's
+  // CodeGotValidated wait — both are independent and the wait dominates.
+  const executableBalanceAmount = options.executableBalance ?? 0n;
+  const [executableBalancePermit] = await Promise.all([
+    executableBalanceAmount > 0n
+      ? signPermit(executableBalanceAmount).then(({ signature }) => ({
+          amount: executableBalanceAmount,
+          deadline,
+          signature,
+        }))
+      : Promise.resolve(undefined),
+    codeTx.waitForCodeGotValidated(),
+  ]);
+
   const { codeId } = codeTx;
 
-  // --- Step 3: (optional) sign executable-balance permit
-  let executableBalancePermit:
-    | { amount: bigint; deadline: bigint; signature: Hex }
-    | undefined;
-  if (options.executableBalance !== undefined && options.executableBalance > 0n) {
-    const { signature } = await wvara.prepareAndSignPermitData(
-      router.address,
-      options.executableBalance,
-      deadline,
-    );
-    executableBalancePermit = {
-      amount: options.executableBalance,
-      deadline,
-      signature,
-    };
-  }
-
-  // --- Step 4: build + send createProgram* tx
   let builder = router.createProgramBuilder(codeId);
   if (options.salt) builder = builder.withSalt(options.salt);
   if (options.overrideInitializer) builder = builder.withOverrideInitializer(options.overrideInitializer);
