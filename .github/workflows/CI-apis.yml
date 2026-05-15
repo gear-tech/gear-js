@@ -55,7 +55,7 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v6
 
-      - name: 'Check if gear-api files changed'
+      - name: 'Detect changes'
         id: changes
         uses: dorny/paths-filter@v4
         with:
@@ -73,8 +73,8 @@ jobs:
               [[ "$INPUT" == "gear-api" ]] && echo "gear-api=true" >> "$GITHUB_OUTPUT" || echo "gear-api=false" >> "$GITHUB_OUTPUT"
               [[ "$INPUT" == "vara-eth-api" ]] && echo "vara-eth-api=true" >> "$GITHUB_OUTPUT" || echo "vara-eth-api=false" >> "$GITHUB_OUTPUT"
             else
-              echo "gear-api=${{ needs.changes.outputs.gear-api }}" >> "$GITHUB_OUTPUT"
-              echo "vara-eth-api=${{ needs.changes.outputs.vara-eth-api }}" >> "$GITHUB_OUTPUT"
+              echo "gear-api=${{ steps.changes.outputs.gear-api }}" >> "$GITHUB_OUTPUT"
+              echo "vara-eth-api=${{ steps.changes.outputs.vara-eth-api }}" >> "$GITHUB_OUTPUT"
             fi
 
   build-gear-api:
