@@ -10,7 +10,6 @@
       "**",
       "!**/dist",
       "!**/dist-temp",
-      "!**/lib",
       "!**/.yarn",
       "!**/node_modules",
       "!utils/bundled-metadata/src/data.ts"
