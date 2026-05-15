@@ -7,12 +7,43 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
     branches: [main]
+    paths:
+      - '!idea/**'
+      - '!apis/**'
   workflow_dispatch:
 
 env:
   BINARYEN_VERSION: version_111
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      utils-ui: ${{ steps.changes.outputs.utils }}
+      utils: ${{ steps.changes.outputs.utils }}
+      tools: ${{ steps.changes.outputs.tools }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            utils:
+              - 'utils/frontend-configs'
+              - 'utils/gear-hooks'
+              - 'utils/gear-ui'
+              - 'utils/sails-payload-form'
+              - 'utils/vara-ui'
+              - 'utils/wallet-connect'
+            tools:
+              - 'tools/**'
+            utils:
+              - 'utils/util'
+              - 'utils/logger'
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -33,8 +64,10 @@ jobs:
       - name: 'Run linter'
         run: yarn lint
 
-  build:
+  build-ui-utils:
     runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ steps.changes.outputs.utils-ui == 'true' }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -46,15 +79,32 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
+          cache: yarn
 
       - name: 'Install dependencies'
         run: yarn install
 
-      - name: 'Build all packages'
-        run: yarn build
+      - name: 'Build frontend-configs'
+        run: yarn build:frontend-configs
+
+      - name: 'Build gear-hooks'
+        run: yarn build:hooks
+
+      - name: 'Build gear-ui'
+        run: yarn build:ui
+
+      - name: 'Build sails-payload-form'
+        run: yarn build:sails-payload-form
+
+      - name: 'Build vara-ui'
+        run: yarn build:vara-ui
+
+      - name: 'Build wallet-connect'
+        run: yarn build:wallet-connect
 
   test-ui:
     runs-on: ubuntu-latest
+    needs: [build-ui-utils]
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -76,8 +126,32 @@ jobs:
       - name: 'gear-ui: Run tests'
         run: yarn test:ui
 
+  build-tools:
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ steps.changes.outputs.tools == 'true' }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build'
+        run: yarn build:tools
+
   test-txwrapper:
     runs-on: ubuntu-latest
+    needs: [build-tools]
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -98,6 +172,7 @@ jobs:
 
   test-util:
     runs-on: ubuntu-22.04
+    needs: [build-tools]
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:

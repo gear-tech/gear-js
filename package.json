@@ -62,6 +62,7 @@
     "build:varaeth-idea-indexer": "lerna run build --scope @vara-eth/idea-indexer-db --scope @vara-eth/idea-indexer",
     "build:varaeth-idea-explorer": "lerna run build --scope @vara-eth/idea-indexer-db --scope @vara-eth/idea-explorer",
     "build:ui": "lerna run build --scope @gear-js/ui --scope @gear-js/frontend-configs",
+    "build:sails-payload-form": "lerna run build --scope @gear-js/sails-payload-form",
     "build:vara-ui": "lerna run build --scope @gear-js/vara-ui --scope @gear-js/frontend-configs",
     "build:hooks": "lerna run build --scope @gear-js/react-hooks --scope @gear-js/frontend-configs --scope @gear-js/api",
     "build:wallet-connect": "lerna run build --scope @gear-js/wallet-connect --scope @gear-js/frontend-configs --scope @gear-js/react-hooks --scope @gear-js/ui --scope @gear-js/vara-ui",
