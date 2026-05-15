@@ -12,9 +12,9 @@
     }
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "yarn run -T rollup -c",
     "clean": "rm -rf lib",
-    "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)"
+    "test": "yarn build && yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)"
   },
   "devDependencies": {
     "jest": "30.3.0"

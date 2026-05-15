@@ -25,7 +25,7 @@ const KEY_RE = /^0x[0-9a-fA-F]+-\d+$/;
 const log = (msg) => console.log(`[bundled-metadata] ${msg}`);
 const withT = (p, label) => withTimeout(p, label, TIMEOUT_MS);
 
-async function fetchOne({ name, rpc }) {
+async function fetchOne({ name, rpc, expectedGenesis }) {
   log(`${name}: connecting to ${rpc}`);
   const provider = new WsProvider(rpc, false);
   let api;
@@ -33,20 +33,30 @@ async function fetchOne({ name, rpc }) {
     await withT(provider.connect(), `${name} connect`);
     api = await withT(ApiPromise.create({ provider, noInitWarn: true }), `${name} ApiPromise.create`);
 
-    // Pin runtime version + metadata to one finalized block hash so a runtime
-    // upgrade between RPC calls can't produce a mismatched (key, hex) pair.
+    // Pin runtime version + metadata to ONE finalized block hash. ApiPromise.create
+    // loads metadata at connect time, which can be a different block than headHash
+    // — during a runtime upgrade that produces a mismatched (key, hex) pair. Fetch
+    // both runtimeVersion and metadata against the same headHash to guarantee the
+    // pair is consistent.
     const headHash = await withT(api.rpc.chain.getFinalizedHead(), `${name} getFinalizedHead`);
     const runtimeVersion = await withT(api.rpc.state.getRuntimeVersion(headHash), `${name} getRuntimeVersion`);
+    const metadataAtHead = await withT(api.rpc.state.getMetadata(headHash), `${name} getMetadata`);
 
-    // ApiPromise.create already loaded metadata at connect time. Reuse it
-    // instead of re-fetching via state.getMetadata — same blob, no extra RPC.
-    const hex = api.runtimeMetadata.toHex();
+    const hex = metadataAtHead.toHex();
     const genesisHash = api.genesisHash.toHex();
     const specVersion = runtimeVersion.specVersion.toNumber();
     const key = `${genesisHash}-${specVersion}`;
 
     if (!HEX_RE.test(hex)) throw new Error(`${name}: metadata is not strict hex`);
     if (!KEY_RE.test(key)) throw new Error(`${name}: invalid key shape "${key}"`);
+
+    // Guard against DNS hijack / RPC compromise: if the target declares an
+    // expectedGenesis, assert the live chain matches. A wrong genesis would
+    // otherwise ship under an attacker's key (never matches real clients, but
+    // the bundle stays corrupt until next refresh).
+    if (expectedGenesis && genesisHash !== expectedGenesis) {
+      throw new Error(`${name}: genesisHash mismatch — got ${genesisHash}, expected ${expectedGenesis}`);
+    }
 
     log(`${name}: ok (key=${key}, ${hex.length} hex chars)`);
     return { name, key, hex };

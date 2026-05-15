@@ -13,10 +13,25 @@ const isBundledEndpoint = (endpoint: string | null | undefined) => endpoint == n
 
 const USE_BUNDLED = import.meta.env.VITE_BUNDLED_METADATA !== 'false' && isBundledEndpoint(INITIAL_ENDPOINT);
 
+// Cap the chunk-fetch wait so a stalled CDN edge / proxy / flaky mobile network
+// can't strand the app on a blank render. A healthy connection delivers the
+// ~1.2 MB chunk in well under 1 s; 3 s is generous before we fall through to
+// the RPC-fetch path.
+const CHUNK_TIMEOUT_MS = 3000;
+
+const withTimeout = <T,>(p: Promise<T>, ms: number) =>
+  Promise.race([
+    p,
+    new Promise<T>((_, rej) => setTimeout(() => rej(new Error('bundled-metadata chunk timed out')), ms)),
+  ]);
+
 // Eager-preload at module top so Vite emits a separate chunk and the network fetch
 // starts at JS parse time — racing the WS handshake instead of blocking after it.
 const metadataPromise: Promise<BundledMetadata | undefined> = USE_BUNDLED
-  ? import('@gear-js/bundled-metadata').then((m) => m.BUNDLED_METADATA)
+  ? withTimeout(
+      import('@gear-js/bundled-metadata').then((m) => m.BUNDLED_METADATA),
+      CHUNK_TIMEOUT_MS,
+    )
   : Promise.resolve(undefined);
 
 const ApiProvider = ({ children }: ProviderProps) => {

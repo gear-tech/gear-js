@@ -88,7 +88,7 @@ const main = async (api: GearApi) => {
   await redisClient.connect();
 
   tempState = new TempState(redisClient, api.genesisHash.toHex());
-  api.disconnect();
+  await api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };
 

@@ -6,6 +6,8 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 
 import type { ProviderProps } from '../types';
 
+// Structurally identical to the type exported by @gear-js/bundled-metadata. Kept
+// inline so the hook doesn't take a runtime dep on a data package just for a type.
 type BundledMetadata = Record<`0x${string}-${number}`, `0x${string}`>;
 
 type CommonProviderArgs = {
@@ -62,6 +64,15 @@ const mark = (name: string) => {
 const measure = (name: string, startMark: string, endMark: string) => {
   if (hasPerf) performance.measure(name, startMark, endMark);
 };
+// Drop the per-session marks once the measure is recorded so long-running tabs
+// don't accumulate entries across switchNetwork churn.
+const clearSession = (...names: string[]) => {
+  if (!hasPerf) return;
+  for (const n of names) {
+    performance.clearMarks(n);
+    performance.clearMeasures(n);
+  }
+};
 
 function ApiProvider({ initialArgs, children }: Props) {
   const [api, setApi] = useState<GearApi>();
@@ -104,9 +115,11 @@ function ApiProvider({ initialArgs, children }: Props) {
         if (providerRef.current !== provider) return;
         mark(markReady);
         measure(measureName, markConnected, markReady);
+        clearSession(markConnectStart, markConnected, markReady, measureName);
         setApi(created);
       } catch (error) {
         if (providerRef.current !== provider) return;
+        clearSession(markConnectStart, markConnected, markReady, measureName);
         setApi(undefined);
         console.error('GearApi.create failed', error);
       }
