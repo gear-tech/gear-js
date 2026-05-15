@@ -6,8 +6,7 @@
   "devDependencies": {
     "@types/express": "5.0.6",
     "@types/supertest": "^7.2.0",
-    "supertest": "^7.2.2",
-    "vitest": "^4.1.2"
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "@gear-js/api": "0.45.0",
