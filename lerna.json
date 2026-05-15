@@ -17,6 +17,7 @@
     "idea/gear/squid",
     "tools/cli",
     "tools/txwrapper",
+    "utils/bundled-metadata",
     "utils/frontend-configs",
     "utils/gear-hooks",
     "utils/gear-ui",

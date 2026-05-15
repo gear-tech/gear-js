@@ -65,19 +65,25 @@ async function fetchOne({ name, rpc, expectedGenesis }) {
   }
 }
 
-async function validateBundle(map, validateTarget) {
-  // Reconstruct a real ApiPromise with the generated map and confirm decoding works.
-  // Catches the matching-key-bad-blob case that stale-key fallback can't catch.
-  log(`validating: reconstructing ApiPromise from generated map against ${validateTarget.rpc}`);
-  const provider = new WsProvider(validateTarget.rpc, false);
+async function validateEntry(entry, target) {
+  // Reconstruct a real ApiPromise against the entry's own RPC, using a SINGLE-ENTRY
+  // map (key→hex from the fetch step), so polkadot-js is forced to consume this
+  // entry rather than refetching from chain. Catches the matching-key-bad-blob
+  // case that stale-key fallback can't catch — for every target, not just one.
+  const singleEntryMap = { [entry.key]: entry.hex };
+  log(`validating ${target.name}: reconstructing ApiPromise from {${entry.key}} against ${target.rpc}`);
+  const provider = new WsProvider(target.rpc, false);
   let api;
   try {
-    await withT(provider.connect(), `validate connect`);
-    api = await withT(ApiPromise.create({ provider, metadata: map, noInitWarn: true }), `validate ApiPromise.create`);
+    await withT(provider.connect(), `${target.name} validate connect`);
+    api = await withT(
+      ApiPromise.create({ provider, metadata: singleEntryMap, noInitWarn: true }),
+      `${target.name} validate ApiPromise.create`,
+    );
     const dest = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
     const hex = api.tx.balances.transferAllowDeath(dest, 1n).toHex();
-    if (!hex.startsWith('0x')) throw new Error('validate: extrinsic hex did not start with 0x');
-    log(`validating: ok (extrinsic decoded, ${hex.length} hex chars)`);
+    if (!hex.startsWith('0x')) throw new Error(`${target.name} validate: extrinsic hex did not start with 0x`);
+    log(`validating ${target.name}: ok (extrinsic decoded, ${hex.length} hex chars)`);
   } finally {
     await safeDisconnect(api, provider);
   }
@@ -98,8 +104,11 @@ async function main() {
 
   const map = Object.fromEntries(entries.map((e) => [e.key, e.hex]));
 
-  const validateTarget = cfg.targets.find((t) => t.name === cfg.validateAgainst) ?? cfg.targets[0];
-  await validateBundle(map, validateTarget);
+  // Validate every (entry, target) pair so corruption in a non-primary target
+  // (e.g. testnet) blocks the bundle write instead of silently shipping.
+  for (let i = 0; i < entries.length; i++) {
+    await validateEntry(entries[i], cfg.targets[i]);
+  }
 
   const body = entries.map((e) => `  '${e.key}': '${e.hex}',`).join('\n');
   const inner = `export const BUNDLED_METADATA: Record<\`0x\${string}-\${number}\`, \`0x\${string}\`> = {\n${body}\n};\n`;

@@ -11,6 +11,5 @@
       "expectedGenesis": "0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6"
     }
   ],
-  "outputs": ["utils/bundled-metadata/src/data.ts"],
-  "validateAgainst": "vara-mainnet"
+  "outputs": ["utils/bundled-metadata/src/data.ts"]
 }
