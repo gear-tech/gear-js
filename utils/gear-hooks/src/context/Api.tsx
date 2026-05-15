@@ -1,6 +1,7 @@
 import { GearApi } from '@gear-js/api';
 import { ScProvider, WsProvider } from '@polkadot/api';
 import * as Sc from '@substrate/connect';
+import { nanoid } from 'nanoid/non-secure';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ProviderProps } from '../types';
@@ -54,12 +55,12 @@ const initialValue = {
 const ApiContext = createContext<Value>(initialValue);
 const { Provider } = ApiContext;
 
-let sessionCounter = 0;
-const nextSessionId = () => `${Date.now().toString(36)}-${(sessionCounter++).toString(36)}`;
-
 const hasPerf = typeof performance !== 'undefined';
 const mark = (name: string) => {
   if (hasPerf) performance.mark(name);
+};
+const measure = (name: string, startMark: string, endMark: string) => {
+  if (hasPerf) performance.measure(name, startMark, endMark);
 };
 
 function ApiProvider({ initialArgs, children }: Props) {
@@ -86,7 +87,7 @@ function ApiProvider({ initialArgs, children }: Props) {
 
     providerRef.current = provider;
 
-    const sessionId = nextSessionId();
+    const sessionId = nanoid(8);
     const markConnectStart = `gear-api:provider-connect-start:${sessionId}`;
     const markConnected = `gear-api:provider-connected:${sessionId}`;
     const markReady = `gear-api:ready:${sessionId}`;
@@ -101,10 +102,8 @@ function ApiProvider({ initialArgs, children }: Props) {
         // awaiting GearApi.create, the active provider has moved on. Drop
         // this result instead of overwriting the newer session's state.
         if (providerRef.current !== provider) return;
-        if (hasPerf) {
-          performance.mark(markReady);
-          performance.measure(measureName, markConnected, markReady);
-        }
+        mark(markReady);
+        measure(measureName, markConnected, markReady);
         setApi(created);
       } catch (error) {
         if (providerRef.current !== provider) return;
@@ -133,4 +132,5 @@ function ApiProvider({ initialArgs, children }: Props) {
 
 const useApi = () => useContext(ApiContext);
 
+export type { BundledMetadata };
 export { ApiProvider, useApi };

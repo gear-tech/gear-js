@@ -19,7 +19,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
-import { safeDisconnect } from './common.mjs';
+import { safeDisconnect, withTimeout } from './common.mjs';
 
 const RPC = process.env.RPC ?? 'wss://rpc.vara.network';
 const SKIP_NETWORK = process.env.SKIP_NETWORK === '1';
@@ -79,28 +79,15 @@ test('generated-blob reconstruction: ApiPromise.create({ metadata }) decodes a k
   }
 });
 
-test('script timeout: Promise.race + clearTimeout cleans up cleanly', { timeout: 5_000 }, async () => {
-  // Mirrors the withTimeout() helper in fetch-bundled-metadata.mjs without
-  // requiring a mock WS server. Asserts: rejects with the labelled error,
-  // and does not leak the timer past the await boundary.
+test('script timeout: withTimeout rejects on hang and clears its timer on success', { timeout: 5_000 }, async () => {
   const TIMEOUT_MS = 200;
 
-  function withTimeout(promise, label) {
-    let timer;
-    const timeout = new Promise((_, rej) => {
-      timer = setTimeout(() => rej(new Error(`${label}: timed out after ${TIMEOUT_MS}ms`)), TIMEOUT_MS);
-    });
-    return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-  }
-
-  // Hung promise that never resolves.
   const hung = new Promise(() => {});
   const start = Date.now();
-  await assert.rejects(withTimeout(hung, 'hung-test'), /timed out after 200ms/);
+  await assert.rejects(withTimeout(hung, 'hung-test', TIMEOUT_MS), /timed out after 200ms/);
   const elapsed = Date.now() - start;
   assert.ok(elapsed >= 200 && elapsed < 1_000, `expected ~200ms, got ${elapsed}ms`);
 
-  // Promise that resolves before timeout — clearTimeout must prevent the timer firing.
-  const fast = withTimeout(Promise.resolve('ok'), 'fast');
-  assert.equal(await fast, 'ok');
+  // Resolves before timeout — clearTimeout must prevent the timer firing.
+  assert.equal(await withTimeout(Promise.resolve('ok'), 'fast', TIMEOUT_MS), 'ok');
 });

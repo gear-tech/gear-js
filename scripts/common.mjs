@@ -9,3 +9,11 @@ export async function safeDisconnect(...resources) {
     } catch {}
   }
 }
+
+export function withTimeout(promise, label, timeoutMs) {
+  let timer;
+  const timeout = new Promise((_, rej) => {
+    timer = setTimeout(() => rej(new Error(`${label}: timed out after ${timeoutMs}ms`)), timeoutMs);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}

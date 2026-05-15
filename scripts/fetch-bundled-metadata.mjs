@@ -16,34 +16,27 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
-import { ROOT_DIR, safeDisconnect } from './common.mjs';
+import { ROOT_DIR, safeDisconnect, withTimeout } from './common.mjs';
 
 const TIMEOUT_MS = 30_000;
 const HEX_RE = /^0x[0-9a-fA-F]+$/;
 const KEY_RE = /^0x[0-9a-fA-F]+-\d+$/;
 
 const log = (msg) => console.log(`[bundled-metadata] ${msg}`);
-
-function withTimeout(promise, label) {
-  let timer;
-  const timeout = new Promise((_, rej) => {
-    timer = setTimeout(() => rej(new Error(`${label}: timed out after ${TIMEOUT_MS}ms`)), TIMEOUT_MS);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-}
+const withT = (p, label) => withTimeout(p, label, TIMEOUT_MS);
 
 async function fetchOne({ name, rpc }) {
   log(`${name}: connecting to ${rpc}`);
   const provider = new WsProvider(rpc, false);
   let api;
   try {
-    await withTimeout(provider.connect(), `${name} connect`);
-    api = await withTimeout(ApiPromise.create({ provider, noInitWarn: true }), `${name} ApiPromise.create`);
+    await withT(provider.connect(), `${name} connect`);
+    api = await withT(ApiPromise.create({ provider, noInitWarn: true }), `${name} ApiPromise.create`);
 
     // Pin runtime version + metadata to one finalized block hash so a runtime
     // upgrade between RPC calls can't produce a mismatched (key, hex) pair.
-    const headHash = await withTimeout(api.rpc.chain.getFinalizedHead(), `${name} getFinalizedHead`);
-    const runtimeVersion = await withTimeout(api.rpc.state.getRuntimeVersion(headHash), `${name} getRuntimeVersion`);
+    const headHash = await withT(api.rpc.chain.getFinalizedHead(), `${name} getFinalizedHead`);
+    const runtimeVersion = await withT(api.rpc.state.getRuntimeVersion(headHash), `${name} getRuntimeVersion`);
 
     // ApiPromise.create already loaded metadata at connect time. Reuse it
     // instead of re-fetching via state.getMetadata — same blob, no extra RPC.
@@ -69,11 +62,8 @@ async function validateBundle(map, validateTarget) {
   const provider = new WsProvider(validateTarget.rpc, false);
   let api;
   try {
-    await withTimeout(provider.connect(), `validate connect`);
-    api = await withTimeout(
-      ApiPromise.create({ provider, metadata: map, noInitWarn: true }),
-      `validate ApiPromise.create`,
-    );
+    await withT(provider.connect(), `validate connect`);
+    api = await withT(ApiPromise.create({ provider, metadata: map, noInitWarn: true }), `validate ApiPromise.create`);
     const dest = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
     const hex = api.tx.balances.transferAllowDeath(dest, 1n).toHex();
     if (!hex.startsWith('0x')) throw new Error('validate: extrinsic hex did not start with 0x');

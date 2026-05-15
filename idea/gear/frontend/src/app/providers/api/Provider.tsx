@@ -1,9 +1,8 @@
-import { ApiProvider as GearApiProvider, type ProviderProps } from '@gear-js/react-hooks';
+import { type BundledMetadata, ApiProvider as GearApiProvider, type ProviderProps } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { INITIAL_ENDPOINT } from '@/features/api';
 
-type BundledMetadata = Record<`0x${string}-${number}`, `0x${string}`>;
 type LoadState = { loaded: boolean; metadata?: BundledMetadata };
 
 // Only preload bundled metadata for endpoints we ship a bundle for. Custom/dev RPCs
