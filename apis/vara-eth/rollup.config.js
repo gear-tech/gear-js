@@ -1,4 +1,4 @@
-import { rmSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -8,6 +8,23 @@ function cleanOldBuild() {
     name: 'clean-old-build',
     buildStart() {
       rmSync('./lib', { recursive: true, force: true });
+    },
+  };
+}
+
+// Required because the root package.json declares `"type": "module"`, which
+// makes Node treat every `.js` under the package as ESM by default — including
+// the `require()`-based files emitted into `lib/cjs/`. The nested package.json
+// scopes the CJS subtree back to commonjs so CommonJS consumers (tsconfig
+// module: "CommonJS") can `require('@vara-eth/api')` successfully.
+function writeCjsPackageJson() {
+  return {
+    name: 'write-cjs-package-json',
+    writeBundle(options) {
+      if (options.dir && options.dir.includes('cjs')) {
+        mkdirSync(options.dir, { recursive: true });
+        writeFileSync(`${options.dir}/package.json`, JSON.stringify({ type: 'commonjs' }, null, 2) + '\n');
+      }
     },
   };
 }
@@ -67,6 +84,7 @@ export default [
         outDir: 'lib/cjs',
         declaration: false,
       }),
+      writeCjsPackageJson(),
     ],
     external: externalPackages,
   },

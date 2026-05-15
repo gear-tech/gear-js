@@ -3,4 +3,5 @@ export * from './errors/index.js';
 export * from './eth/index.js';
 export * from './programs/index.js';
 export * from './provider/index.js';
+export * from './signer/index.js';
 export * from './types/index.js';
