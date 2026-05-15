@@ -4,6 +4,7 @@ import { routes } from '@/shared/config';
 
 import { Code } from './code';
 import { Codes } from './codes';
+import { CreateProgram } from './create-program';
 import { Home } from './home';
 import { Message } from './message';
 import { NotFound } from './not-found';
@@ -18,6 +19,7 @@ const Routing = () => {
       <Route path={routes.programs} element={<Programs />} />
       <Route path={routes.program} element={<Program />} />
       <Route path={routes.codes} element={<Codes />} />
+      <Route path={routes.createProgram} element={<CreateProgram />} />
       <Route path={routes.code} element={<Code />} />
       <Route path={routes.message} element={<Message />} />
       <Route path={routes.user} element={<User />} />

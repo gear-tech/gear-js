@@ -91,6 +91,7 @@ The library uses two signer interfaces to express the exact capabilities require
 // For message signing only (injected transactions, Metamask Snap adapters)
 interface IMessageSigner {
   signMessage(message: Uint8Array | string): Promise<Hash>;
+  signTypedData(params: SignTypedDataParams): Promise<Signature>; // required for EIP-712 permit flows
   getAddress(): Promise<Address>;
 }
 
@@ -204,8 +205,18 @@ Interface for interacting with the Router contract - the main entry point for co
 // Access via api.eth (recommended)
 const router = api.eth.router;
 
-await router.createProgram(codeId); // Create program from validated code
-await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
+// Create program from validated code (builder selects the right on-chain method automatically)
+router.createProgramBuilder(codeId).build();
+router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build(); // with Solidity ABI
+
+// Permit-based code validation (no prior approve needed)
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature: permitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+const tx = await router.requestCodeValidation(code, deadline, permitSig);
+
+// On-behalf validation (requester and fee payer can be different signers)
+const { codeId, blobHashes, signature: reqSig } = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline);
+const tx2 = await router.requestCodeValidationOnBehalf(requester, code, blobHashes, deadline, reqSig, permitSig);
 ```
 
 ### MirrorClient
@@ -235,6 +246,11 @@ const wvara = api.eth.wvara;
 await wvara.approve(spender, amount); // Approve spending
 await wvara.balanceOf(address); // Check balance
 await wvara.allowance(owner, spender); // Check allowance
+
+// EIP-2612 permit — approve without a separate transaction
+const deadline = BigInt(Date.now() + 60_000);
+const { owner, signature } = await wvara.prepareAndSignPermitData(spender, amount, deadline);
+await wvara.permit(owner, spender, amount, deadline, signature);
 ```
 
 ## Uploading Program Code
@@ -276,22 +292,66 @@ The CLI will submit code via EIP-4844 blob transactions, request validation, and
 
 ```typescript
 const codeId = '0x...'; // From CLI output
-const tx = await api.eth.router.createProgram(codeId);
+const tx = api.eth.router.createProgramBuilder(codeId).build();
+```
+
+### Uploading Programmatically
+
+You can also upload and validate code directly via the `RouterClient` API, without the CLI. The fee is charged in WVARA using an EIP-2612 permit — no prior `approve` call is needed.
+
+#### KZG initialization
+
+Code upload relies on the `kzg-wasm` WASM library, which is memory-intensive. To avoid loading it eagerly at module import time, call `initKzgLoading` once at application startup. This starts KZG initialization in the background so it is ready by the time you upload code, without consuming memory in applications that never use this feature.
+
+```typescript
+import { initKzgLoading } from '@vara-eth/api/util';
+
+// Call once at startup, before any code upload operations
+initKzgLoading();
+```
+
+If you skip this call, KZG loading begins lazily the first time a code upload is triggered — slightly increasing the latency of that first upload.
+
+```typescript
+import { readFileSync } from 'node:fs';
+
+const code = readFileSync('path/to/program.opt.wasm');
+const router = api.eth.router;
+const wvara = api.eth.wvara;
+
+const fee = (await router.requestCodeValidationBaseFee()) + (await router.requestCodeValidationExtraFee());
+const deadline = BigInt(Date.now() + 60_000);
+
+// Sign a WVARA permit to cover the fee
+const { signature: wvaraPermitSig } = await wvara.prepareAndSignPermitData(router.address, fee, deadline);
+
+// Submit the code as an EIP-7594 blob transaction
+const tx = await router.requestCodeValidation(code, deadline, wvaraPermitSig);
+const { codeId } = tx;
+
+// Wait for validators to confirm the code
+await tx.waitForCodeGotValidated();
+
+// Now create a program from the validated code
+const createTx = router.createProgramBuilder(codeId).build();
 ```
 
 ## Ethereum Side Operations
 
 ### 1. Program Creation
 
-Create programs from validated code:
+Create programs from validated code using the fluent `CreateProgramBuilder`. Call
+`createProgramBuilder(codeId)`, chain any optional configuration methods, then call
+`build()` to obtain a transaction manager. The builder automatically selects the
+correct on-chain function based on which options are set.
 
 > **Note**: Code must be uploaded and validated before creating programs. Use the [Vara.Eth CLI](https://github.com/gear-tech/gear/tree/master/ethexe/cli) to upload and validate WASM code. The CLI will provide you with a `codeId` after successful validation.
 
 ```typescript
-// Create program from validated code
 const codeId = '0x...'; // Code ID from vara-eth CLI
 
-const tx = await api.eth.router.createProgram(codeId);
+// Basic — create a program from validated code
+const tx = router.createProgramBuilder(codeId).build();
 await tx.sendAndWaitForReceipt();
 
 // Get the program ID
@@ -302,22 +362,56 @@ console.log('Program created:', programId);
 const mirror = getMirrorClient({ address: programId, signer, publicClient });
 ```
 
-#### Creating Program with Solidity ABI Interface
+#### With a Solidity ABI Interface (Etherscan-compatible)
 
 ```typescript
-const codeId = '0x...'; // Code ID from vara-eth CLI
-
-// Deploy Solidity ABI contract
-const deployHash = await walletClient.deployContract({
-  abi: counterAbi,
-  bytecode: counterBytecode,
-});
-
+// Deploy Solidity ABI contract first
+const deployHash = await walletClient.deployContract({ abi: counterAbi, bytecode: counterBytecode });
 const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
 const abiAddress = receipt.contractAddress;
 
-// Create program with ABI interface
-const tx = await api.eth.router.createProgramWithAbiInterface(codeId, abiAddress);
+// Create program with ABI interface attached
+const tx = router.createProgramBuilder(codeId).withAbiInterface(abiAddress).build();
+await tx.sendAndWaitForReceipt();
+```
+
+#### With an Initial WVARA Executable Balance
+
+```typescript
+const amount = 100n;
+const deadline = BigInt(Date.now() + 60_000);
+const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+
+// No prior approve needed — permit signature covers the transfer
+const tx = router.createProgramBuilder(codeId)
+  .withExecutableBalance(amount, deadline, signature)
+  .build();
+await tx.sendAndWaitForReceipt();
+```
+
+#### With Both ABI Interface and Executable Balance
+
+```typescript
+const amount = 100n;
+const deadline = BigInt(Date.now() + 60_000);
+const { signature } = await wvara.prepareAndSignPermitData(router.address, amount, deadline);
+
+const tx = router.createProgramBuilder(codeId)
+  .withAbiInterface(abiAddress)
+  .withExecutableBalance(amount, deadline, signature)
+  .build();
+await tx.sendAndWaitForReceipt();
+const programId = await tx.getProgramId();
+```
+
+#### With a Deterministic Address
+
+```typescript
+// Providing the same salt always produces the same program address
+const tx = router.createProgramBuilder(codeId)
+  .withSalt('0x' + '00'.repeat(32))
+  .withOverrideInitializer(initializerAddress) // optional
+  .build();
 await tx.sendAndWaitForReceipt();
 ```
 
@@ -399,7 +493,7 @@ const nonce = await mirror.nonce();
 Contract write methods return a `TxManager` instance that handles transaction lifecycle:
 
 ```typescript
-const tx = await api.eth.router.createProgram(codeId);
+const tx = api.eth.router.createProgramBuilder(codeId).build();
 
 // Send transaction and get response
 const response = await tx.send();
@@ -431,7 +525,7 @@ const programId = await tx.getProgramId(); // Available on createProgram transac
 
 Each transaction type can have specific helper methods:
 
-- `createProgram`: `getProgramId()` - extracts program ID from event
+- `createProgramBuilder(...).build()`: `getProgramId()` - extracts program ID from event
 - `requestCodeValidation`: `waitForCodeGotValidated()` - waits for validation completion
 - `approve`: `getApprovalLog()` - gets approval event data
 - `sendMessage`: `getMessage()`, `setupReplyListener()` - message handling

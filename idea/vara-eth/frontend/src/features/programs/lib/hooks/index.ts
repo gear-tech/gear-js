@@ -1,4 +1,4 @@
-export { useCreateProgram } from './use-create-program';
+export { type CreateProgramParams, useCreateProgram } from './use-create-program';
 export { useInitProgram } from './use-init-program';
 export { useReadContractState } from './use-read-contract-state';
 export { useReadProgramMessage } from './use-read-program-message';

@@ -2,7 +2,7 @@ import * as crypto from 'node:crypto';
 import { logger } from 'gear-idea-common';
 import { createClient, type RedisClientType } from 'redis';
 
-import { config } from '../config';
+import { config } from '../config.js';
 
 export let isRedisConnected = false;
 let isLoggedRedisError = false;

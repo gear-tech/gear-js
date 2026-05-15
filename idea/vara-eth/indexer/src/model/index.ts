@@ -1,1 +1,1 @@
-export * from './entities/index.js';
+export * from '@vara-eth/idea-indexer-db';

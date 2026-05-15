@@ -23,6 +23,7 @@ temp/
 idea/gear/squid/lib/
 idea/gear/indexer-db/lib/
 idea/vara-eth/indexer/lib/
+idea/vara-eth/indexer-db/lib/
 .spec.json
 
 # apis
@@ -34,13 +35,10 @@ utils/util/lib/
 .binpath
 target/
 
-
-
 .nx/cache
 .nx/workspace-data
 
 artifacts/
-
 
 # Compiler files
 apis/vara-eth/cache/
@@ -48,3 +46,5 @@ apis/vara-eth/out/
 
 # Ignores development broadcast logs
 apis/vara-eth/broadcast
+
+*.tsbuildinfo

@@ -6,7 +6,8 @@ import type { Store } from '@subsquid/typeorm-store';
 import type { RedisClientType } from 'redis';
 import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
 import { In } from 'typeorm';
-import type { MessageStatus } from './common';
+
+import type { MessageStatus } from './common/index.js';
 import {
   Code,
   type CodeStatus,
@@ -17,9 +18,9 @@ import {
   Program,
   type ProgramStatus,
   Voucher,
-} from './model';
-import type { Block, ProcessorContext } from './processor';
-import { findChildMessageId, SPEC_VERSION } from './util';
+} from './model/index.js';
+import type { Block, ProcessorContext } from './processor.js';
+import { findChildMessageId, SPEC_VERSION } from './util.js';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
 const programStorageMethod = xxhashAsHex('ProgramStorage', 128);

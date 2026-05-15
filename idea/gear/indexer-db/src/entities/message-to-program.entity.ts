@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-import type { MessageEntryPoint } from '../enums';
-import { BaseEntity } from './base.entity';
+import type { MessageEntryPoint } from '../enums/index.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity({ name: 'message_to_program' })
 export class MessageToProgram extends BaseEntity {

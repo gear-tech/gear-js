@@ -1,3 +1,4 @@
+import { blake2b } from '@noble/hashes/blake2';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hash, Hex } from 'viem';
 import { bytesToHex, concatBytes, hexToBytes, recoverMessageAddress } from 'viem';
@@ -90,11 +91,23 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
   }
 
   private get _dataU8a(): Uint8Array {
-    return concatBytes([this._txHashU8a, this._payloadU8a, this._codeU8a, this._valueU8a]);
+    return concatBytes([this._txHashU8a, this._replyHashU8a]);
+  }
+
+  private get _replyDataU8a(): Uint8Array {
+    return concatBytes([this._payloadU8a, this._valueU8a, this._codeU8a]);
+  }
+
+  private get _replyHashU8a(): Uint8Array {
+    return blake2b(this._replyDataU8a, { dkLen: 32 });
+  }
+
+  public get replyHash(): Hash {
+    return bytesToHex(this._replyHashU8a);
   }
 
   /**
-   * Computes the keccak256 hash of the promise data (txHash + payload + code + value)
+   * Computes the keccak256 hash of the promise data (txHash + replyInfoHash)
    * @returns The hash used for signature verification
    */
   public get hash(): Hash {

@@ -3,7 +3,7 @@ import { signatureVerify } from '@polkadot/util-crypto';
 import type { NextFunction, Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
-import type { ChallengeService } from '../../services/challenge';
+import type { ChallengeService } from '../../services/challenge.js';
 
 const logger = createLogger('signature-auth');
 

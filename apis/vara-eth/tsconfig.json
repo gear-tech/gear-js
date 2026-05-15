@@ -4,7 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM"],
-    "baseUrl": "./src",
+    "rootDir": "./src",
     "outDir": "./lib",
     "allowJs": true,
     "declaration": true,

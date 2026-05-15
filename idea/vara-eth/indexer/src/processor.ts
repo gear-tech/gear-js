@@ -12,7 +12,7 @@ import type { Store } from '@subsquid/typeorm-store';
 import { config } from './config.js';
 
 export const processor = new EvmBatchProcessor()
-  .setGateway(config.archiveUrl)
+  .setGateway({ url: config.archiveUrl, apiKey: config.apiKey })
   .setRpcEndpoint({
     url: config.rpcUrl,
     rateLimit: config.rateLimit,

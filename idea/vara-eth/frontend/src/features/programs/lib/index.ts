@@ -1,3 +1,4 @@
+export type { CreateProgramParams } from './hooks';
 export {
   useCreateProgram,
   useInitProgram,
@@ -7,4 +8,4 @@ export {
   useSendProgramMessage,
   useWatchProgramStateChange,
 } from './hooks';
-export { useGetAllProgramsQuery, useGetProgramByIdQuery } from './queries';
+export { getAllProgramsQueryOptions, useGetAllProgramsQuery, useGetProgramByIdQuery } from './queries';

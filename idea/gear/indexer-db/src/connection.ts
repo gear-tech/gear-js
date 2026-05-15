@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
-import { Code, Event, MessageFromProgram, MessageToProgram, Program, Voucher } from './entities';
+
+import { Code, Event, MessageFromProgram, MessageToProgram, Program, Voucher } from './entities/index.js';
 
 export interface DbConfig {
   host: string;

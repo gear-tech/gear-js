@@ -1,0 +1,43 @@
+.container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  border: 1px solid rgba(41, 41, 41, 1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+.card {
+  padding: 24px;
+  max-width: 36rem;
+}
+
+.title {
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionNested {
+  padding-left: 16px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

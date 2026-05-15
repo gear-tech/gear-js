@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import { ProgramStatus } from '../enums';
 
-import { BaseEntity } from './base.entity';
+import { ProgramStatus } from '../enums/index.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Program extends BaseEntity {

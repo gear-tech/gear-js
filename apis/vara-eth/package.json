@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
     "test": "npx jest --runInBand",
     "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
     "test:no-setup": "npx jest",
+    "test:unit": "npx jest --config jest.unit.config.ts",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
@@ -35,10 +36,20 @@
       "import": "./lib/signer/index.js",
       "require": "./lib/signer/index.cjs"
     },
+    "./eth/contracts": {
+      "types": "./lib/eth/contracts/index.d.ts",
+      "import": "./lib/eth/contracts/index.js",
+      "require": "./lib/eth/contracts/index.cjs"
+    },
     "./eth/router": {
-      "types": "./lib/eth/router.d.ts",
-      "import": "./lib/eth/router.js",
-      "require": "./lib/eth/router.cjs"
+      "types": "./lib/eth/contracts/router.contract.d.ts",
+      "import": "./lib/eth/contracts/router.contract.js",
+      "require": "./lib/eth/contracts/router.contract.cjs"
+    },
+    "./util": {
+      "types": "./lib/util/index.d.ts",
+      "import": "./lib/util/index.js",
+      "require": "./lib/util/index.cjs"
     }
   },
   "peerDependencies": {
@@ -48,8 +59,8 @@
   "devDependencies": {
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "npm:@vara-eth/viem@2.47.7-1",
-    "ws": "8.18.3"
+    "viem": "npm:@vara-eth/viem@2.48.11",
+    "ws": "8.20.0"
   },
   "files": [
     "lib"

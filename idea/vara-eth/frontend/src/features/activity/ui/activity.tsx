@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { type MyActivity, myActivityAtom, TransactionTypes } from '@/app/store';
+import { activityPanelOpenAtom, type MyActivity, myActivityAtom, TransactionTypes } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, ExpandableItem, Tabs } from '@/components';
 import { formatDate } from '@/shared/utils';
@@ -19,7 +19,7 @@ const NEW_ITEM_HIGHLIGHT_DURATION = 1800;
 type HighlightType = 'success' | 'error';
 
 const Activity = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useAtom(activityPanelOpenAtom);
   const [tabIndex, setTabIndex] = useState(0);
   const [highlightedItems, setHighlightedItems] = useState<Record<string, HighlightType>>({});
   const seenItemsRef = useRef(new Set<string>());
@@ -181,12 +181,14 @@ const getUserActivityKey = (item: MyActivity & { timestamp: number; blockHash: s
   const participantPart = 'to' in item && item.to ? item.to : 'from' in item ? item.from : '';
   const targetPart = 'programId' in item ? item.programId : '';
   const valuePart = 'value' in item ? item.value : '';
+  const codeIdPart = 'codeId' in item && item.codeId ? item.codeId : '';
+  const errorPart = 'error' in item && item.error ? item.error : '';
 
-  return `${item.timestamp}-${item.type}-${item.blockHash}-${hashPart}-${participantPart}-${targetPart}-${valuePart}`;
+  return `${item.timestamp}-${item.type}-${item.blockHash}-${hashPart}-${participantPart}-${targetPart}-${valuePart}-${codeIdPart}-${errorPart}`;
 };
 
 const isActivityError = (item: MyActivity) => {
-  if ('error' in item && Boolean(item.error)) return true;
+  if ('error' in item && item.error) return true;
   if ('resultStatus' in item && item.resultStatus === 'error') return true;
   if ('replyCode' in item && typeof item.replyCode === 'string') {
     const normalizedReplyCode = item.replyCode.toLowerCase();
