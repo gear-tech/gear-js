@@ -1,4 +1,5 @@
-import { type BundledMetadata, ApiProvider as GearApiProvider, type ProviderProps } from '@gear-js/react-hooks';
+import type { BundledMetadata } from '@gear-js/bundled-metadata';
+import { ApiProvider as GearApiProvider, type ProviderProps } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { INITIAL_ENDPOINT } from '@/features/api';
@@ -15,7 +16,7 @@ const USE_BUNDLED = import.meta.env.VITE_BUNDLED_METADATA !== 'false' && isBundl
 // Eager-preload at module top so Vite emits a separate chunk and the network fetch
 // starts at JS parse time — racing the WS handshake instead of blocking after it.
 const metadataPromise: Promise<BundledMetadata | undefined> = USE_BUNDLED
-  ? import('@/shared/config/bundled-metadata').then((m) => m.BUNDLED_METADATA)
+  ? import('@gear-js/bundled-metadata').then((m) => m.BUNDLED_METADATA)
   : Promise.resolve(undefined);
 
 const ApiProvider = ({ children }: ProviderProps) => {
