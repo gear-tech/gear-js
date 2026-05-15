@@ -34,7 +34,7 @@ jobs:
         run: yarn install
 
       - name: 'Run linter'
-        run: yarn lint:idea
+        run: yarn check:idea
 
   changes:
     runs-on: ubuntu-latest
@@ -105,13 +105,13 @@ jobs:
         run: yarn install
 
       - name: 'Build frontend'
-        run: yarn build:vara-eth-idea-frontend
+        run: yarn build:varaeth-idea-frontend
 
       - name: 'Build indexer'
-        run: yarn build:vara-eth-idea-indexer
+        run: yarn build:varaeth-idea-indexer
 
       - name: 'Build explorer'
-        run: yarn build:vara-eth-idea-explorer
+        run: yarn build:varaeth-idea-explorer
 
   test-gear-idea-backend:
     runs-on: ubuntu-latest
