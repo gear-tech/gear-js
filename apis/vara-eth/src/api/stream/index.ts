@@ -19,7 +19,9 @@ export type {
   StreamedBlockHeader,
   StreamHandlers,
   Unsubscribe,
+  WatchEventsOptions,
 } from './types.js';
+export { buildEventMeta } from './types.js';
 export type { WatchBlocksOptions } from './blocks.js';
 export type { WatchProgramEventsOptions } from './program-events.js';
 export type { WatchRouterEventsOptions } from './router-events.js';

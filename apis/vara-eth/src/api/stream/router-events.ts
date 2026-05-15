@@ -1,35 +1,16 @@
 import type { Address, Hex, Log, PublicClient } from 'viem';
 
 import { IROUTER_ABI } from '../../eth/abi/IRouter.js';
-import type { EventMeta, RouterEvent, StreamHandlers, Unsubscribe } from './types.js';
+import { buildEventMeta, type RouterEvent, type StreamHandlers, type Unsubscribe, type WatchEventsOptions } from './types.js';
 
-/**
- * Options accepted by {@link watchRouterEvents}.
- */
-export interface WatchRouterEventsOptions {
-  /** Optional block number to start streaming from (back-fills historical logs). */
-  fromBlock?: bigint;
-}
-
-function buildMeta(log: Log): EventMeta | null {
-  if (log.blockNumber === null || log.blockHash === null || log.transactionHash === null) return null;
-  if (log.transactionIndex === null || log.logIndex === null) return null;
-  return {
-    blockNumber: log.blockNumber,
-    blockHash: log.blockHash,
-    txHash: log.transactionHash,
-    txIndex: log.transactionIndex,
-    logIndex: log.logIndex,
-  };
-}
+export type WatchRouterEventsOptions = WatchEventsOptions;
 
 function decodeRouterLog(log: Log): RouterEvent | null {
-  const meta = buildMeta(log);
-  if (meta === null) return null;
-
   const eventName = (log as { eventName?: string }).eventName;
-  const args = (log as { args?: Record<string, unknown> }).args ?? {};
   if (!eventName) return null;
+  const meta = buildEventMeta(log);
+  if (meta === null) return null;
+  const args = (log as { args?: Record<string, unknown> }).args ?? {};
 
   switch (eventName) {
     case 'AnnouncesCommitted':

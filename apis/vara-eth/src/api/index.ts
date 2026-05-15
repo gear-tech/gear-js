@@ -13,6 +13,7 @@ export {
 } from './programs/index.js';
 export { estimateFee, type FeeEstimate, FeesNamespace, type WalletOp } from './fees/index.js';
 export {
+  buildEventMeta,
   type EventMeta,
   type ProgramEvent,
   type RouterEvent,
@@ -22,6 +23,7 @@ export {
   type Unsubscribe,
   watchBlocks,
   type WatchBlocksOptions,
+  type WatchEventsOptions,
   watchProgramEvents,
   type WatchProgramEventsOptions,
   watchRouterEvents,

@@ -1,20 +1,18 @@
-import type { Address, Hex } from 'viem';
+import type { Address, Hex, Log } from 'viem';
 
 /**
  * Callbacks supplied to a `api.stream.*` subscription.
  *
  * - `onEvent` fires for each decoded event log.
- * - `onReconnect` (optional) fires when the underlying WebSocket provider
- *   transitions from `disconnected` → `connected`. It does NOT fire on the
- *   initial connection. Best-effort signal: viem's `watchContractEvent` manages
- *   its own polling/subscription internally, so this hook reflects provider
- *   health and may not exactly match viem's stream health.
  * - `onError` (optional) surfaces transport or decode errors. If omitted, errors
  *   are silently swallowed by viem.
+ *
+ * Reconnection is handled transparently by viem — no explicit `onReconnect`
+ * hook is exposed because viem's `watchContractEvent` manages its own
+ * polling/subscription internally and consumers don't need to re-subscribe.
  */
 export interface StreamHandlers<TEvent> {
   onEvent: (event: TEvent) => void;
-  onReconnect?: () => void;
   onError?: (error: Error) => void;
 }
 
@@ -33,6 +31,29 @@ export interface EventMeta {
   txHash: Hex;
   txIndex: number;
   logIndex: number;
+}
+
+/**
+ * Lift the on-chain metadata fields off a viem log. Returns `null` if any
+ * load-bearing field is null (e.g. pending logs that haven't landed in a block
+ * yet) — callers should drop those logs rather than emit half-filled events.
+ */
+export function buildEventMeta(log: Log): EventMeta | null {
+  if (log.blockNumber === null || log.blockHash === null || log.transactionHash === null) return null;
+  if (log.transactionIndex === null || log.logIndex === null) return null;
+  return {
+    blockNumber: log.blockNumber,
+    blockHash: log.blockHash,
+    txHash: log.transactionHash,
+    txIndex: log.transactionIndex,
+    logIndex: log.logIndex,
+  };
+}
+
+/** Options accepted by `watchProgramEvents` / `watchRouterEvents`. */
+export interface WatchEventsOptions {
+  /** Optional block number to start streaming from (back-fills historical logs). */
+  fromBlock?: bigint;
 }
 
 // -----------------------------------------------------------------------------
