@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0-rc.0] — wallet-CLI primitives (Phase 0 + Phase 1)
+
+### Added
+- **High-level helpers** for the common wallet flows:
+  - `api.programs.deploy(code, opts)` — one call covers WVARA permit signing, `requestCodeValidation`, `CodeGotValidated` wait, and the appropriate `createProgram*` variant (incl. optional `salt` / `abiInterface` / `executableBalance`).
+  - `api.programs.sendAndWait(mirror, payload, opts)` — supports both the on-chain `Mirror.sendMessage` path and the `injected_sendTransactionAndWatch` path; returns a uniform `{messageId, reply, txHash, validator?}` shape with `code` parsed as `ReplyCode` regardless of rail.
+  - `api.fees.estimate(op)` — viem-backed gas estimate plus WVARA fee for code uploads.
+- **Typed error taxonomy** at public API boundaries (`src/errors/vara-eth-error.ts`): `VaraEthError` base class + named subclasses (`ViemForkRequiredError`, `InjectedTxStaleError`, `PromiseTimeoutError`, `PromiseSignatureInvalidError`, `PermitExpiredError`, `BlobUnderpricedError`, `MessageRevertedError`, `NoSailsIdlError`, `RpcConnectionError`, `ChainIdMismatchError`). Wallet-only errors (`WalletLockedError`, `KeystoreDecryptError`) remain in consumer code by design — the lib stays adapter-shaped.
+- **`LocalSigner`** (`src/signer/adapters/local.ts`) + `privateKeyToLocalSigner(privateKey, publicClient)` — self-contained `ITransactionSigner` backed by a raw secp256k1 key in process memory, for scripts/CLI/agent flows.
+- **Sails IDL extractor** (`extractSailsIdl(wasm)` / `extractSailsIdlOrThrow(wasm)`) — pure-function WASM custom-section parser; tolerates both `sails_idl` and `sails-idl` naming.
+- **Viem-fork runtime check** (`assertViemFork()`) — invoked at the entry of `RouterClient.requestCodeValidation*` paths so consumers of read-only contract calls never pay the cost. Throws `ViemForkRequiredError` with remediation message when upstream viem is installed instead of `@vara-eth/viem`.
+- **Phase 0 dev script** at `scripts/poc-wallet.ts` (run with `yarn poc:ethexe`) — end-to-end smoke against a local `ethexe run --dev` devnet: upload → create → send-injected → wait promise → print reply. Backed by `yarn typecheck:poc` (CI-friendly typecheck without needing a devnet).
+
+### Tests
+- Unit tests for the IDL extractor (`test/unit/idl-extract.test.ts`) — happy path, alt naming, missing section, truncated WASM, non-WASM bytes.
+- **JS-side signing golden fixture** (`test/unit/injected-signing.fixture.test.ts`, P0c gate) — pins the preimage byte layout, keccak256 hash, blake2b messageId, and deterministic ECDSA signature against known inputs. Locks `InjectedTx` byte layout against silent drift from the Rust verifier in `ethexe/common/src/injected.rs`. A full cross-impl gate via Rust subprocess is tracked as follow-up work.
+
+### Fixed
+- Pre-existing TS warning on `feeHistory.baseFeePerBlobGas` in `router.contract.ts` (the `@vara-eth/viem` fork populates this field but upstream viem types do not declare it; narrowed via `unknown` cast).
+
 ## [0.4.0]
 
 ### Added

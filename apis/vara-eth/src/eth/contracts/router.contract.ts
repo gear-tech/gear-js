@@ -12,6 +12,7 @@ import {
 import { decodeContractError } from '../../util/error.js';
 import { generateCodeHash } from '../../util/hash.js';
 import { getRVSComponents } from '../../util/signature.js';
+import { assertViemFork } from '../../util/viem-fork.js';
 import { IROUTER_ABI, type IRouterContract } from '../abi/IRouter.js';
 import { IWRAPPEDVARA_ABI } from '../abi/IWrappedVara.js';
 import { CodeState, type CodeValidationHelpers } from '../interfaces/router.js';
@@ -262,6 +263,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   }
 
   private async _createRequestCodeValidationTxManager(data: Hex, code: Uint8Array, codeId: Hash) {
+    assertViemFork();
     const signer = this._ensureSigner();
 
     const blobs = simpleSidecarEncode(code);
@@ -272,7 +274,10 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
       blockTag: 'latest',
     });
 
-    const baseFeePerBlobGas = (feeHistory.baseFeePerBlobGas ?? []).at(-1);
+    // viem's GetFeeHistoryReturnType doesn't declare baseFeePerBlobGas, but the
+    // @vara-eth/viem fork populates it on EIP-7594 chains. Cast via unknown.
+    const feeHistoryWithBlob = feeHistory as unknown as { baseFeePerBlobGas?: bigint[] };
+    const baseFeePerBlobGas = (feeHistoryWithBlob.baseFeePerBlobGas ?? []).at(-1);
     if (!baseFeePerBlobGas) {
       throw new Error('Failed to get baseFeePerBlobGas');
     }
@@ -386,6 +391,7 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
   }
 
   async prepareAndSignRequestCodeValidationPermitData(code: Uint8Array, deadline: bigint) {
+    assertViemFork();
     const signer = this._ensureSigner();
     const requester = await signer.getAddress();
 
