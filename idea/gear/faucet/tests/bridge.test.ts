@@ -1,10 +1,9 @@
 import { Keyring } from '@polkadot/api';
 import request from 'supertest';
-
-import { FaucetType, RequestStatus } from '../src/database/index.js';
-import { FaucetApp } from '../src/main.js';
-import { hash } from '../src/services/db/last-seen.js';
-import { repos } from './__mocks__/db.js';
+import { FaucetType, RequestStatus } from '../src/database';
+import { FaucetApp } from '../src/app';
+import { hash } from '../src/services/db/last-seen';
+import { repos } from './__mocks__/db';
 
 const ETH_USER_ADDRESS = '0x0000000000000000000000000000000000000001';
 const ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000002';

@@ -6,8 +6,11 @@ import config from '../config.js';
 import type { ChallengeService, RequestService } from '../services/index.js';
 import { BaseRouter } from './base.js';
 import { handleVaraTestnetRequest } from './handlers.js';
-import { agentChallengeRateLimitMiddleware, agentRateLimitMiddleware } from './middleware/agent-rate-limiter.js';
-import { createSignatureAuthMiddleware } from './middleware/signature-auth.js';
+import {
+  agentChallengeRateLimitMiddleware,
+  agentRateLimitMiddleware,
+  createSignatureAuthMiddleware,
+} from './middleware/index.js';
 
 const logger = createLogger('agent-router');
 

@@ -1,4 +1,5 @@
 import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+
 import { SailsIdl } from './sails.entity.js';
 
 @Entity()

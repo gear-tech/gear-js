@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+
 import { Code } from './code.entity.js';
 
 @Entity()

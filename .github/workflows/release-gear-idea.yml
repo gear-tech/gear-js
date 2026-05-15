@@ -2,7 +2,7 @@ name: 'Gear Idea Release'
 
 on:
   push:
-    branches: ['main', 'stable']
+    branches: ['main', 'prod/gear-idea']
     paths:
       - idea/gear/**
   workflow_dispatch:
@@ -19,10 +19,17 @@ on:
           - all
           - backend
         required: true
+      environment:
+        type: choice
+        description: Environment to deploy
+        options:
+          - gear-idea-staging
+          - gear-idea-production
+        required: true
+        default: gear-idea-staging
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
@@ -31,6 +38,9 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+permissions:
+  contents: read
 
 jobs:
   set-env-tag:
@@ -43,10 +53,14 @@ jobs:
       - name: Get environment
         id: get_env
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
-            echo "environment=production" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           else
-            echo "environment=staging" >> $GITHUB_OUTPUT
+            if [[ "${{ github.ref }}" == "refs/heads/prod/gear-idea" ]]; then
+              echo "environment=gear-idea-production" >> $GITHUB_OUTPUT
+            else
+              echo "environment=gear-idea-staging" >> $GITHUB_OUTPUT
+            fi
           fi
 
   check-changes:
@@ -58,7 +72,8 @@ jobs:
       squid: ${{ steps.should-build.outputs.squid }}
       explorer: ${{ steps.should-build.outputs.explorer }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Detect file changes
         id: changes
@@ -137,10 +152,10 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
           build-args: |
-            VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
+            VITE_NODE_ADDRESS=${{ secrets.VITE_NODE_ADDRESS }}
+            VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.VITE_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_TURNSTILE_SITEKEY=${{ secrets.VITE_TURNSTILE_SITEKEY }}
-            VITE_NODES_API_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            VITE_NODES_API_URL=${{ secrets.VITE_NODES_API_URL }}
             VITE_FAUCET_API_URL=${{ secrets.VITE_FAUCET_API_URL }}
             VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
@@ -183,7 +198,7 @@ jobs:
   build-meta-storage-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs['meta-storage'] == 'true' }}
+    if: ${{ needs.check-changes.outputs.meta-storage == 'true' }}
     environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
@@ -268,8 +283,10 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   deploy-frontend:
-    needs: [set-env-tag, build-frontend-image]
+    needs: [build-frontend-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -281,11 +298,13 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment frontend-nginx -n ${{ needs.set-env-tag.outputs.environment == 'production' && 'prod-idea' || 'dev-1' }}
+          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-faucet:
-    needs: [set-env-tag, build-faucet-image]
+    needs: [build-faucet-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -297,11 +316,13 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment faucet -n ${{ needs.set-env-tag.outputs.environment == 'production' && 'prod-idea' || 'dev-1' }}
+          args: rollout restart deployment ${{ vars.FAUCET_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-meta-storage:
-    needs: [set-env-tag, build-meta-storage-image]
+    needs: [build-meta-storage-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -313,11 +334,13 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment ${{ needs.set-env-tag.outputs.environment == 'production' && 'meta-storage-main' || 'meta-storage' }} -n ${{ needs.set-env-tag.outputs.environment == 'production' && 'prod-idea' || 'dev-1' }}
+          args: rollout restart deployment ${{ vars.META_STORAGE_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-squid:
-    needs: [set-env-tag, build-squid-image]
+    needs: [build-squid-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -326,25 +349,16 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get deployment targets
-        id: targets
-        run: |
-          if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2" >> $GITHUB_OUTPUT
-            echo "namespace=prod-idea" >> $GITHUB_OUTPUT
-          else
-            echo "deployments=squid-testnet-v2" >> $GITHUB_OUTPUT
-            echo "namespace=dev-1" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment ${{ steps.targets.outputs.deployments }} -n ${{ steps.targets.outputs.namespace }}
+          args: rollout restart deployment ${{ vars.SQUID_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
 
   deploy-explorer:
-    needs: [set-env-tag, build-explorer-image]
+    needs: [build-explorer-image, set-env-tag]
     runs-on: ubuntu-latest
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -356,4 +370,4 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment explorer -n ${{ needs.set-env-tag.outputs.environment == 'production' && 'prod-idea' || 'dev-1' }}
+          args: rollout restart deployment ${{ vars.EXPLORER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}

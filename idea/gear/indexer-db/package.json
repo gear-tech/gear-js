@@ -4,7 +4,7 @@
   "type": "module",
   "version": "1.4.26",
   "dependencies": {
-    "typeorm": "0.3.28"
+    "typeorm": "0.3.29"
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",

@@ -4,7 +4,7 @@ import { createDbConnection, type DbConfig } from 'gear-idea-indexer-db';
 
 import { config } from './config.js';
 import { initCache } from './middlewares/caching.js';
-import { retryMethodsJob } from './middlewares/retry.js';
+import { initRetry, retryMethodsJob } from './middlewares/retry.js';
 import { HybridApiServer } from './server.js';
 import { AllInOneService } from './services/all-in-one.js';
 
@@ -13,6 +13,7 @@ const main = async () => {
 
   const dataCache = await DataCache.connect(config.redis);
   initCache(dataCache);
+  initRetry(dataCache);
 
   const services = new Map<string, AllInOneService>();
 

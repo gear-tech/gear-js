@@ -38,7 +38,6 @@ import type {
   EVoucherRevoked,
   EVoucherUpdated,
 } from './types/events/voucher.js';
-
 import {
   type ECodeChanged,
   type EMessageQueuedEvent,

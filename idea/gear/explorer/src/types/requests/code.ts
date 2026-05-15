@@ -13,7 +13,7 @@ export class ParamGetCode extends ParamGenesis {
 export class ParamGetCodes extends ParamPagination {
   readonly uploadedBy?: string;
   readonly name?: string;
-  @IsOneOf(Object.values(CodeStatus), false)
+  @IsOneOf(Object.keys(CodeStatus), false) // TODO: check if transformation is needed
   readonly status?: CodeStatus | CodeStatus[];
   readonly query?: string;
 }
