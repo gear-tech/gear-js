@@ -1,0 +1,25 @@
+{
+  "name": "@gear-js/bundled-metadata",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pre-fetched Vara runtime metadata keyed by (genesisHash, specVersion). Pass to GearApi.create / ApiPromise.create to skip state_getMetadata on cold start.",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf lib",
+    "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)"
+  },
+  "devDependencies": {
+    "jest": "30.3.0"
+  },
+  "files": [
+    "lib"
+  ]
+}

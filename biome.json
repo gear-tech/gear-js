@@ -10,9 +10,10 @@
       "**",
       "!**/dist",
       "!**/dist-temp",
+      "!**/lib",
       "!**/.yarn",
       "!**/node_modules",
-      "!idea/gear/frontend/src/shared/config/bundled-metadata.ts"
+      "!utils/bundled-metadata/src/data.ts"
     ]
   },
   "formatter": {

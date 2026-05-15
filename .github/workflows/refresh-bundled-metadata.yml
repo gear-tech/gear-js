@@ -45,4 +45,4 @@ jobs:
             `@polkadot/api` skips `state_getMetadata` on cold start —
             saves ~500 ms – 1.5 s on a public RPC.
           labels: chore, automated
-          add-paths: idea/gear/frontend/src/shared/config/bundled-metadata.ts
+          add-paths: utils/bundled-metadata/src/data.ts

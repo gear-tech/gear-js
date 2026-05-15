@@ -132,5 +132,4 @@ function ApiProvider({ initialArgs, children }: Props) {
 
 const useApi = () => useContext(ApiContext);
 
-export type { BundledMetadata };
 export { ApiProvider, useApi };

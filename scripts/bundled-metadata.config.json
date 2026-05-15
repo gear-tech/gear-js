@@ -3,6 +3,6 @@
     { "name": "vara-mainnet", "rpc": "wss://rpc.vara.network" },
     { "name": "vara-testnet", "rpc": "wss://testnet.vara.network" }
   ],
-  "outputs": ["idea/gear/frontend/src/shared/config/bundled-metadata.ts"],
+  "outputs": ["utils/bundled-metadata/src/data.ts"],
   "validateAgainst": "vara-mainnet"
 }

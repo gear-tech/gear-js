@@ -30,6 +30,7 @@ idea/vara-eth/indexer-db/lib/
 apis/gear/lib/
 apis/vara-eth/lib/
 utils/util/lib/
+utils/bundled-metadata/lib/
 
 # cargo
 .binpath
