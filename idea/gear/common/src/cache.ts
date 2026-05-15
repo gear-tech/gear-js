@@ -11,7 +11,10 @@ const INCRBY_IF_EXISTS = `
 `;
 
 export function hash(method: string, data: unknown): string {
-  return crypto.createHash('sha1').update(method + JSON.stringify(data)).digest('base64');
+  return crypto
+    .createHash('sha1')
+    .update(method + JSON.stringify(data))
+    .digest('base64');
 }
 
 export class DataCache {
@@ -29,7 +32,12 @@ export class DataCache {
     return this._redis!;
   }
 
-  static async connect(cfg: { user: string; password: string; host?: string; port?: string | number }): Promise<DataCache> {
+  static async connect(cfg: {
+    user: string;
+    password: string;
+    host?: string;
+    port?: string | number;
+  }): Promise<DataCache> {
     if (!cfg.host) return new DataCache(null);
     const url = `redis://${cfg.user}:${cfg.password}@${cfg.host}:${cfg.port}`;
     const client = createClient({ url }) as RedisClientType;
@@ -106,10 +114,7 @@ export class DataCache {
   async getVersioned<T>(dataKey: string, versionKey: string, fallback: () => Promise<T>): Promise<T> {
     if (!this._redis) return fallback();
 
-    const [cached, currentVersion] = await Promise.all([
-      this._redis.get(dataKey),
-      this._redis.get(versionKey),
-    ]);
+    const [cached, currentVersion] = await Promise.all([this._redis.get(dataKey), this._redis.get(versionKey)]);
 
     if (cached !== null) {
       const wrapper = JSON.parse(cached as string) as { v: string; data: T };

@@ -7,6 +7,6 @@
     "moduleResolution": "bundler",
     "module": "ESNext",
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
-  },
+    "strict": false
+  }
 }

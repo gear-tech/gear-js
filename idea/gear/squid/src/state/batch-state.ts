@@ -6,12 +6,7 @@ import type { DataCache } from 'gear-idea-common';
 import { cacheKey } from 'gear-idea-indexer-db';
 import { In } from 'typeorm';
 
-import {
-  Code,
-  type CodeStatus,
-  Program,
-  type ProgramStatus,
-} from '../model/index.js';
+import { Code, type CodeStatus, Program, type ProgramStatus } from '../model/index.js';
 import type { Block, ProcessorContext } from '../processor.js';
 import { SPEC_VERSION } from '../util.js';
 import { MessageState } from './message-state.js';
@@ -255,7 +250,6 @@ export class BatchState {
       this._cache.invalidate(cacheKey.programData(g, id)).catch(() => {});
     }
   }
-
 }
 
 const getAllNeccesaryTypes = (metadata: Metadata, tyindex: SiLookupTypeId | number): Record<string, string> => {

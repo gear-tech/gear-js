@@ -1,7 +1,7 @@
 import { Keyring } from '@polkadot/api';
 import request from 'supertest';
-import { FaucetType, RequestStatus } from '../src/database';
 import { FaucetApp } from '../src/app';
+import { FaucetType, RequestStatus } from '../src/database';
 import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
 
