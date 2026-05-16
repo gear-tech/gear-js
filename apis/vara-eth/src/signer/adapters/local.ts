@@ -1,5 +1,5 @@
-import type { Chain, Hex, PublicClient, Transport } from 'viem';
-import { createWalletClient } from 'viem';
+import type { Chain, Hex, PublicClient } from 'viem';
+import { createWalletClient, custom } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import type { ITransactionSigner } from '../../types/signer.js';
@@ -25,7 +25,10 @@ export class LocalSigner extends WalletClientAdapter {
    */
   constructor(privateKey: Hex, publicClient: PublicClient) {
     const account = privateKeyToAccount(privateKey);
-    const transport: Transport = publicClient.transport as unknown as Transport;
+    // `publicClient.transport` is the constructed transport (the result of
+    // `http()` / `webSocket()`), not the factory `createWalletClient` expects.
+    // Wrap the client's EIP-1193 request method into a fresh transport factory.
+    const transport = custom({ request: publicClient.request });
     const chain = publicClient.chain as Chain | undefined;
     const walletClient = createWalletClient({ account, transport, chain });
     super(walletClient);

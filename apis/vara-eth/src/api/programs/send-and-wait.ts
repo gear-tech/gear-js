@@ -92,6 +92,9 @@ async function sendViaEth(
   });
 
   const tx = await mirrorClient.sendMessage(payload, options.value);
+  // `setupReplyListener` calls `getReceipt` internally, which throws if the tx
+  // hasn't been broadcast yet. Submit explicitly before wiring the listener.
+  await tx.send();
   const { txHash, message, waitForReply } = await tx.setupReplyListener();
   const txHashHex = txHash as Hex;
 

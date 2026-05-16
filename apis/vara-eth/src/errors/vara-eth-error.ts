@@ -12,6 +12,7 @@ export const VaraEthErrorCode = {
   PromiseSigInvalid: 'PROMISE_SIG_INVALID',
   PermitExpired: 'PERMIT_EXPIRED',
   BlobUnderpriced: 'BLOB_UNDERPRICED',
+  CodeValidationTimeout: 'CODE_VALIDATION_TIMEOUT',
   NoSailsIdl: 'NO_SAILS_IDL',
   RpcConnectionFailed: 'RPC_CONNECTION_FAILED',
   ChainIdMismatch: 'CHAIN_ID_MISMATCH',
@@ -102,6 +103,28 @@ export class BlobUnderpricedError extends VaraEthError {
       `Blob tx underpriced: maxFeePerBlobGas=${maxFeePerBlobGas} < baseFeePerBlobGas=${baseFeePerBlobGas}. Bump multiplier and retry.`,
       { cause },
     );
+  }
+}
+
+/**
+ * `requestCodeValidation` was committed but `CodeGotValidated` did not fire
+ * within the caller's timeout. The caller still owes a `createProgram*`
+ * call; resume by feeding `codeId` into the builder API directly.
+ */
+export class CodeValidationTimeoutError extends VaraEthError {
+  public readonly codeId: Hex;
+  public readonly txHash: Hash;
+  public readonly timeoutMs: number;
+
+  constructor(codeId: Hex, txHash: Hash, timeoutMs: number, cause?: unknown) {
+    super(
+      VaraEthErrorCode.CodeValidationTimeout,
+      `CodeGotValidated for ${codeId} (tx ${txHash}) did not fire within ${timeoutMs}ms. The code-validation tx is on-chain; resume the deploy by calling router.createProgramBuilder(codeId).build() once validators commit.`,
+      { cause },
+    );
+    this.codeId = codeId;
+    this.txHash = txHash;
+    this.timeoutMs = timeoutMs;
   }
 }
 

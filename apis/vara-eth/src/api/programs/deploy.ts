@@ -1,5 +1,6 @@
 import type { Address, Hex, TransactionReceipt } from 'viem';
 
+import { CodeValidationTimeoutError } from '../../errors/vara-eth-error.js';
 import type { EthereumClient } from '../../eth/index.js';
 
 export interface DeployProgramOptions {
@@ -19,11 +20,23 @@ export interface DeployProgramOptions {
    */
   executableBalance?: bigint;
   /**
-   * EIP-2612 permit deadline override (Unix seconds). Defaults to `now + 5 min`.
-   * Applied to both the code-validation fee permit and (if used) the executable
-   * balance permit.
+   * EIP-2612 permit deadline override (Unix seconds) for the code-validation
+   * fee permit. Defaults to `now + 5 min` at the start of the ceremony.
+   *
+   * The executable-balance permit (if used) is signed AFTER `CodeGotValidated`
+   * resolves with a fresh `now`-based deadline — sharing a single deadline
+   * across both permits would cause `createProgramWithExecutableBalance` to
+   * revert when the validator wait exceeds 5 minutes.
    */
   permitDeadline?: bigint;
+  /**
+   * How long to wait for `CodeGotValidated` after the code-validation tx
+   * commits. Defaults to 120s. On timeout, throws {@link CodeValidationTimeoutError}
+   * carrying `codeId` + `txHash` so callers can resume the deploy by calling
+   * `router.createProgramBuilder(codeId).build()` once validators commit
+   * out-of-band.
+   */
+  codeValidationTimeoutMs?: number;
 }
 
 export interface DeployProgramResult {
@@ -38,6 +51,7 @@ export interface DeployProgramResult {
 }
 
 const DEFAULT_PERMIT_WINDOW_SECONDS = 300n;
+const DEFAULT_CODE_VALIDATION_TIMEOUT_MS = 120_000;
 
 /**
  * One-call helper that uploads a WASM, waits for validator approval, and
@@ -63,10 +77,9 @@ export async function deployProgram(
   const router = ethClient.router;
   const wvara = ethClient.wvara;
 
-  const now = BigInt(Math.floor(Date.now() / 1000));
-  const deadline = options.permitDeadline ?? now + DEFAULT_PERMIT_WINDOW_SECONDS;
-
-  const signPermit = (amount: bigint) => wvara.prepareAndSignPermitData(router.address, amount, deadline);
+  const codeFeeDeadline =
+    options.permitDeadline ?? BigInt(Math.floor(Date.now() / 1000)) + DEFAULT_PERMIT_WINDOW_SECONDS;
+  const timeoutMs = options.codeValidationTimeoutMs ?? DEFAULT_CODE_VALIDATION_TIMEOUT_MS;
 
   const [baseFee, extraFee] = await Promise.all([
     router.requestCodeValidationBaseFee(),
@@ -74,26 +87,47 @@ export async function deployProgram(
   ]);
   const codeFee = baseFee + extraFee;
 
-  const { signature: codePermitSig } = await signPermit(codeFee);
+  const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(
+    router.address,
+    codeFee,
+    codeFeeDeadline,
+  );
 
-  const codeTx = await router.requestCodeValidation(code, deadline, codePermitSig);
+  const codeTx = await router.requestCodeValidation(code, codeFeeDeadline, codePermitSig);
   const codeValidationReceipt = await codeTx.sendAndWaitForReceipt();
-
-  // Overlap the executable-balance permit signing with the validator's
-  // CodeGotValidated wait — both are independent and the wait dominates.
-  const executableBalanceAmount = options.executableBalance ?? 0n;
-  const [executableBalancePermit] = await Promise.all([
-    executableBalanceAmount > 0n
-      ? signPermit(executableBalanceAmount).then(({ signature }) => ({
-          amount: executableBalanceAmount,
-          deadline,
-          signature,
-        }))
-      : Promise.resolve(undefined),
-    codeTx.waitForCodeGotValidated(),
-  ]);
-
   const { codeId } = codeTx;
+
+  // Bounded wait on `CodeGotValidated`. On timeout the caller is left holding
+  // an on-chain code-validation tx; the typed error carries `codeId` + `txHash`
+  // so they can resume by calling `router.createProgramBuilder(codeId).build()`
+  // once validators commit out-of-band.
+  await waitForCodeValidationWithTimeout(
+    codeTx.waitForCodeGotValidated(),
+    timeoutMs,
+    codeId,
+    codeValidationReceipt.transactionHash,
+  );
+
+  // Sign the executable-balance permit AFTER the validator wait resolves, with
+  // a fresh `now`-based deadline. Signing it earlier (in parallel with the
+  // wait) shares one deadline across both permits and causes
+  // `createProgramWithExecutableBalance` to revert when the wait exceeds 5 min.
+  const executableBalanceAmount = options.executableBalance ?? 0n;
+  let executableBalancePermit: { amount: bigint; deadline: bigint; signature: Hex } | undefined;
+  if (executableBalanceAmount > 0n) {
+    const execDeadline =
+      options.permitDeadline ?? BigInt(Math.floor(Date.now() / 1000)) + DEFAULT_PERMIT_WINDOW_SECONDS;
+    const { signature } = await wvara.prepareAndSignPermitData(
+      router.address,
+      executableBalanceAmount,
+      execDeadline,
+    );
+    executableBalancePermit = {
+      amount: executableBalanceAmount,
+      deadline: execDeadline,
+      signature,
+    };
+  }
 
   let builder = router.createProgramBuilder(codeId);
   if (options.salt) builder = builder.withSalt(options.salt);
@@ -117,4 +151,41 @@ export async function deployProgram(
     codeValidationReceipt,
     deploymentReceipt,
   };
+}
+
+/**
+ * Races the `CodeGotValidated` promise against a timeout, throwing
+ * {@link CodeValidationTimeoutError} on expiry. Built on `Promise.race` so the
+ * underlying viem `watchContractEvent` subscription keeps running until the
+ * surrounding scope tears it down.
+ *
+ * Exported for unit testing only — public callers should not depend on this.
+ * @internal
+ */
+export async function _waitForCodeValidationWithTimeoutForTests(
+  waiter: Promise<boolean>,
+  timeoutMs: number,
+  codeId: Hex,
+  txHash: Hex,
+): Promise<void> {
+  return waitForCodeValidationWithTimeout(waiter, timeoutMs, codeId, txHash);
+}
+
+async function waitForCodeValidationWithTimeout(
+  waiter: Promise<boolean>,
+  timeoutMs: number,
+  codeId: Hex,
+  txHash: Hex,
+): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        reject(new CodeValidationTimeoutError(codeId, txHash, timeoutMs));
+      }, timeoutMs);
+    });
+    await Promise.race([waiter, timeoutPromise]);
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
 }
