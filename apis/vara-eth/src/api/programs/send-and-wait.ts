@@ -4,6 +4,7 @@ import type { EthereumClient } from '../../eth/index.js';
 import { getMirrorClient } from '../../eth/index.js';
 import { ReplyCode } from '../../errors/index.js';
 import { PromiseSignatureInvalidError, PromiseTimeoutError } from '../../errors/vara-eth-error.js';
+import { withTimeout } from '../../util/promise.js';
 import type { CreateInjectedTransaction } from './index.js';
 
 /**
@@ -98,7 +99,11 @@ async function sendViaEth(
   const { txHash, message, waitForReply } = await tx.setupReplyListener();
   const txHashHex = txHash as Hex;
 
-  const reply = await withTimeout(waitForReply(), timeoutMs, txHashHex);
+  const reply = await withTimeout(
+    waitForReply(),
+    timeoutMs,
+    () => new PromiseTimeoutError(txHashHex, timeoutMs),
+  );
 
   return {
     messageId: message.id as Hex,
@@ -132,7 +137,7 @@ async function sendViaInjected(
   const promise = await withTimeout(
     injectedTx.sendAndWaitForPromise(),
     timeoutMs,
-    injectedTx.messageId,
+    () => new PromiseTimeoutError(injectedTx.messageId, timeoutMs),
   );
 
   if (validate) {
@@ -155,16 +160,3 @@ async function sendViaInjected(
   };
 }
 
-async function withTimeout<T>(promise: Promise<T>, ms: number, txHash: Hex): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    return await Promise.race([
-      promise,
-      new Promise<T>((_, reject) => {
-        timer = setTimeout(() => reject(new PromiseTimeoutError(txHash, ms)), ms);
-      }),
-    ]);
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
-}

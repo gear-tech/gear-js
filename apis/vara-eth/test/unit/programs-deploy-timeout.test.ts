@@ -3,29 +3,32 @@
  * {@link CodeValidationTimeoutError} (not hang forever) when
  * `waitForCodeGotValidated` never fires within `codeValidationTimeoutMs`.
  *
- * Strategy: exercise the timeout helper directly. The helper races the
- * `CodeGotValidated` promise against a setTimeout — the easiest test surface
- * is the racing primitive itself, not the full deploy ceremony.
+ * Strategy: exercise the shared `withTimeout` primitive with the same error
+ * factory `deployProgram` uses. Mirrors the production call shape without
+ * spinning up the full deploy ceremony.
  */
 
 import type { Hex } from 'viem';
 
-import { _waitForCodeValidationWithTimeoutForTests } from '../../src/api/programs/deploy.js';
 import { CodeValidationTimeoutError, VaraEthErrorCode } from '../../src/errors/vara-eth-error.js';
+import { withTimeout } from '../../src/util/promise.js';
 
 const CODE_ID = ('0x' + 'ab'.repeat(32)) as Hex;
 const TX_HASH = ('0x' + 'cd'.repeat(32)) as Hex;
 
-describe('waitForCodeValidationWithTimeout (Fix 2.1)', () => {
+const makeCodeValidationError = (timeoutMs: number) =>
+  new CodeValidationTimeoutError(CODE_ID, TX_HASH, timeoutMs);
+
+describe('withTimeout wired with CodeValidationTimeoutError (Fix 2.1)', () => {
   it('throws CodeValidationTimeoutError carrying codeId + txHash on timeout', async () => {
     const neverResolves = new Promise<boolean>(() => {});
 
-    await expect(
-      _waitForCodeValidationWithTimeoutForTests(neverResolves, 25, CODE_ID, TX_HASH),
-    ).rejects.toThrow(CodeValidationTimeoutError);
+    await expect(withTimeout(neverResolves, 25, () => makeCodeValidationError(25))).rejects.toThrow(
+      CodeValidationTimeoutError,
+    );
 
     try {
-      await _waitForCodeValidationWithTimeoutForTests(neverResolves, 25, CODE_ID, TX_HASH);
+      await withTimeout(neverResolves, 25, () => makeCodeValidationError(25));
       fail('expected throw');
     } catch (err) {
       expect(err).toBeInstanceOf(CodeValidationTimeoutError);
@@ -38,10 +41,9 @@ describe('waitForCodeValidationWithTimeout (Fix 2.1)', () => {
   });
 
   it('resolves normally when the waiter beats the timeout', async () => {
-    const fast = Promise.resolve(true);
     await expect(
-      _waitForCodeValidationWithTimeoutForTests(fast, 5000, CODE_ID, TX_HASH),
-    ).resolves.toBeUndefined();
+      withTimeout(Promise.resolve(true), 5000, () => makeCodeValidationError(5000)),
+    ).resolves.toBe(true);
   });
 
   it('does not leave a dangling timer after a successful resolve', async () => {
@@ -50,7 +52,7 @@ describe('waitForCodeValidationWithTimeout (Fix 2.1)', () => {
     // detector would flag the timer.
     const clearSpy = jest.spyOn(global, 'clearTimeout');
     try {
-      await _waitForCodeValidationWithTimeoutForTests(Promise.resolve(true), 5000, CODE_ID, TX_HASH);
+      await withTimeout(Promise.resolve(true), 5000, () => makeCodeValidationError(5000));
       expect(clearSpy).toHaveBeenCalled();
     } finally {
       clearSpy.mockRestore();

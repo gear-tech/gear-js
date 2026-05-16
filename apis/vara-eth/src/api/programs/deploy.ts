@@ -2,6 +2,7 @@ import type { Address, Hex, TransactionReceipt } from 'viem';
 
 import { CodeValidationTimeoutError } from '../../errors/vara-eth-error.js';
 import type { EthereumClient } from '../../eth/index.js';
+import { withTimeout } from '../../util/promise.js';
 
 export interface DeployProgramOptions {
   /** Deterministic salt for the Mirror address. Random 32-byte hex if omitted. */
@@ -20,13 +21,14 @@ export interface DeployProgramOptions {
    */
   executableBalance?: bigint;
   /**
-   * EIP-2612 permit deadline override (Unix seconds) for the code-validation
-   * fee permit. Defaults to `now + 5 min` at the start of the ceremony.
-   *
-   * The executable-balance permit (if used) is signed AFTER `CodeGotValidated`
-   * resolves with a fresh `now`-based deadline — sharing a single deadline
-   * across both permits would cause `createProgramWithExecutableBalance` to
-   * revert when the validator wait exceeds 5 minutes.
+   * EIP-2612 permit deadline override (Unix seconds) used for BOTH the
+   * code-validation fee permit and (if `executableBalance > 0`) the
+   * executable-balance permit. Each permit is signed independently — the
+   * code-fee permit at the start of the ceremony, the executable-balance
+   * permit AFTER `CodeGotValidated` resolves — and each defaults to
+   * `now + 5 min` if this override is omitted. Sharing one ABSOLUTE deadline
+   * across both is only safe when the validator wait is short enough that
+   * the executable-balance permit hasn't expired by the time `build()` runs.
    */
   permitDeadline?: bigint;
   /**
@@ -101,11 +103,10 @@ export async function deployProgram(
   // an on-chain code-validation tx; the typed error carries `codeId` + `txHash`
   // so they can resume by calling `router.createProgramBuilder(codeId).build()`
   // once validators commit out-of-band.
-  await waitForCodeValidationWithTimeout(
+  await withTimeout(
     codeTx.waitForCodeGotValidated(),
     timeoutMs,
-    codeId,
-    codeValidationReceipt.transactionHash,
+    () => new CodeValidationTimeoutError(codeId, codeValidationReceipt.transactionHash, timeoutMs),
   );
 
   // Sign the executable-balance permit AFTER the validator wait resolves, with
@@ -151,41 +152,4 @@ export async function deployProgram(
     codeValidationReceipt,
     deploymentReceipt,
   };
-}
-
-/**
- * Races the `CodeGotValidated` promise against a timeout, throwing
- * {@link CodeValidationTimeoutError} on expiry. Built on `Promise.race` so the
- * underlying viem `watchContractEvent` subscription keeps running until the
- * surrounding scope tears it down.
- *
- * Exported for unit testing only — public callers should not depend on this.
- * @internal
- */
-export async function _waitForCodeValidationWithTimeoutForTests(
-  waiter: Promise<boolean>,
-  timeoutMs: number,
-  codeId: Hex,
-  txHash: Hex,
-): Promise<void> {
-  return waitForCodeValidationWithTimeout(waiter, timeoutMs, codeId, txHash);
-}
-
-async function waitForCodeValidationWithTimeout(
-  waiter: Promise<boolean>,
-  timeoutMs: number,
-  codeId: Hex,
-  txHash: Hex,
-): Promise<void> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timer = setTimeout(() => {
-        reject(new CodeValidationTimeoutError(codeId, txHash, timeoutMs));
-      }, timeoutMs);
-    });
-    await Promise.race([waiter, timeoutPromise]);
-  } finally {
-    if (timer !== undefined) clearTimeout(timer);
-  }
 }

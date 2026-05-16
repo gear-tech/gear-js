@@ -16,7 +16,7 @@ interface CallLog {
   setupReplyListenerCalledBeforeSend: boolean;
 }
 
-function makeMockEthClient(log: CallLog) {
+function makeMockEthClient() {
   return {
     publicClient: {} as never,
     signer: { getAddress: async () => '0xabc' as Address },
@@ -77,7 +77,7 @@ describe('sendAndWaitForReply (Fix 1.1)', () => {
     const log: CallLog = { sendCalled: false, setupReplyListenerCalledBeforeSend: false };
     mirrorMock.__setCallLog(log);
 
-    const ethClient = makeMockEthClient(log);
+    const ethClient = makeMockEthClient();
     // Dummy createInjectedTransaction — not exercised on `via: 'eth'`.
     const createInjectedTransaction = (() => {
       throw new Error('not reachable on via=eth');

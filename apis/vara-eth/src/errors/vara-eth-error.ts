@@ -108,8 +108,11 @@ export class BlobUnderpricedError extends VaraEthError {
 
 /**
  * `requestCodeValidation` was committed but `CodeGotValidated` did not fire
- * within the caller's timeout. The caller still owes a `createProgram*`
- * call; resume by feeding `codeId` into the builder API directly.
+ * within the caller's timeout. The code-validation tx is on-chain; resume the
+ * deploy by calling `router.createProgramBuilder(codeId).build()` (with a
+ * fresh executable-balance permit if needed) once validators commit
+ * out-of-band. The `codeId`, `txHash`, and `timeoutMs` fields carry everything
+ * the caller needs to do that resume.
  */
 export class CodeValidationTimeoutError extends VaraEthError {
   public readonly codeId: Hex;
@@ -119,7 +122,7 @@ export class CodeValidationTimeoutError extends VaraEthError {
   constructor(codeId: Hex, txHash: Hash, timeoutMs: number, cause?: unknown) {
     super(
       VaraEthErrorCode.CodeValidationTimeout,
-      `CodeGotValidated for ${codeId} (tx ${txHash}) did not fire within ${timeoutMs}ms. The code-validation tx is on-chain; resume the deploy by calling router.createProgramBuilder(codeId).build() once validators commit.`,
+      `CodeGotValidated for ${codeId} (tx ${txHash}) did not fire within ${timeoutMs}ms.`,
       { cause },
     );
     this.codeId = codeId;

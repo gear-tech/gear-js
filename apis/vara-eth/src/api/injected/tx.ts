@@ -153,21 +153,24 @@ export class InjectedTx {
   public async setReferenceBlock(blockHash?: Hash) {
     if (blockHash) {
       // Reject reference blocks outside the 32-block validity window before
-      // signing. Without this pre-check, the validator-side rejection surfaces
-      // as an opaque RPC error far from the call site. Transient RPC failures
-      // during the lookup fall through silently — let downstream signing see
-      // the real cause rather than masking it.
+      // signing. Without this pre-check, validator-side rejection surfaces as
+      // an opaque RPC error far from the call site. Fetch supplied-block and
+      // head-number in parallel — saves an RTT on the success (in-window) path.
+      // Transient RPC failures fall through silently so downstream signing can
+      // surface the real cause; programmer errors (TypeError/RangeError) are
+      // re-thrown so bugs in this path aren't masked.
       try {
-        const block = await this._ethClient.publicClient.getBlock({ blockHash });
-        if (block.number !== null) {
-          const headNumber = await this._ethClient.getBlockNumber();
-          if (headNumber - Number(block.number) > REFERENCE_BLOCK_WINDOW) {
-            const headBlock = await this._ethClient.getBlock(headNumber);
-            throw new InjectedTxStaleError(blockHash as Hex, headBlock.hash as Hex);
-          }
+        const [block, headNumber] = await Promise.all([
+          this._ethClient.publicClient.getBlock({ blockHash }),
+          this._ethClient.getBlockNumber(),
+        ]);
+        if (block.number !== null && headNumber - Number(block.number) > REFERENCE_BLOCK_WINDOW) {
+          const headBlock = await this._ethClient.getBlock(headNumber);
+          throw new InjectedTxStaleError(blockHash as Hex, headBlock.hash as Hex);
         }
       } catch (err) {
         if (err instanceof InjectedTxStaleError) throw err;
+        if (err instanceof TypeError || err instanceof RangeError) throw err;
         // Transient RPC failure — proceed and let signing/submission surface it.
       }
       this._referenceBlock = blockHash;
