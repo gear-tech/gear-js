@@ -19,11 +19,13 @@ const USE_BUNDLED = import.meta.env.VITE_BUNDLED_METADATA !== 'false' && isBundl
 // the RPC-fetch path.
 const CHUNK_TIMEOUT_MS = 3000;
 
-const withTimeout = <T,>(p: Promise<T>, ms: number) =>
-  Promise.race([
-    p,
-    new Promise<T>((_, rej) => setTimeout(() => rej(new Error('bundled-metadata chunk timed out')), ms)),
-  ]);
+const withTimeout = <T,>(p: Promise<T>, ms: number) => {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<T>((_, rej) => {
+    timer = setTimeout(() => rej(new Error('bundled-metadata chunk timed out')), ms);
+  });
+  return Promise.race([p, timeout]).finally(() => clearTimeout(timer));
+};
 
 // Eager-preload at module top so Vite emits a separate chunk and the network fetch
 // starts at JS parse time — racing the WS handshake instead of blocking after it.
