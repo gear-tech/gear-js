@@ -50,6 +50,21 @@ export function buildEventMeta(log: Log): EventMeta | null {
   };
 }
 
+/**
+ * Shared decoder preamble for `decodeProgramLog` / `decodeRouterLog`. Returns
+ * `null` if the log has no `eventName` (unknown / non-matching log) OR if any
+ * load-bearing meta field is null (pending log). Checks `eventName` BEFORE
+ * `buildEventMeta` so unknown logs short-circuit without paying the metadata
+ * assembly cost.
+ */
+export function decodeEventHeader(log: Log): { eventName: string; meta: EventMeta } | null {
+  const eventName = (log as { eventName?: string }).eventName;
+  if (!eventName) return null;
+  const meta = buildEventMeta(log);
+  if (meta === null) return null;
+  return { eventName, meta };
+}
+
 /** Options accepted by `watchProgramEvents` / `watchRouterEvents`. */
 export interface WatchEventsOptions {
   /** Optional block number to start streaming from (back-fills historical logs). */

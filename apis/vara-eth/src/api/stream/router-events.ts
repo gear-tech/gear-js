@@ -1,15 +1,14 @@
 import type { Address, Hex, Log, PublicClient } from 'viem';
 
 import { IROUTER_ABI } from '../../eth/abi/IRouter.js';
-import { buildEventMeta, type RouterEvent, type StreamHandlers, type Unsubscribe, type WatchEventsOptions } from './types.js';
+import { decodeEventHeader, type RouterEvent, type StreamHandlers, type Unsubscribe, type WatchEventsOptions } from './types.js';
 
 export type WatchRouterEventsOptions = WatchEventsOptions;
 
 function decodeRouterLog(log: Log): RouterEvent | null {
-  const eventName = (log as { eventName?: string }).eventName;
-  if (!eventName) return null;
-  const meta = buildEventMeta(log);
-  if (meta === null) return null;
+  const header = decodeEventHeader(log);
+  if (header === null) return null;
+  const { eventName, meta } = header;
   const args = (log as { args?: Record<string, unknown> }).args ?? {};
 
   switch (eventName) {

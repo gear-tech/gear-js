@@ -63,9 +63,10 @@ const DEFAULT_CODE_VALIDATION_TIMEOUT_MS = 120_000;
  *   CodeGotValidated → (optional) sign executable-balance permit → build →
  *   wait for ProgramCreated.
  *
- * The optional executable-balance permit is signed in parallel with the
- * CodeGotValidated wait, hiding the local-signing round-trip behind chain
- * latency.
+ * The executable-balance permit is signed AFTER `CodeGotValidated` resolves
+ * (not in parallel with the wait) so its deadline reflects a fresh `now` —
+ * otherwise a long validator wait can expire the permit before `build()`
+ * runs, silently reverting `createProgramWithExecutableBalance`.
  *
  * The EthereumClient must already have a signer attached (set via the factory
  * or {@link EthereumClient.setSigner}). This helper does NOT take a signer
@@ -79,16 +80,18 @@ export async function deployProgram(
   const router = ethClient.router;
   const wvara = ethClient.wvara;
 
-  const codeFeeDeadline =
+  // Compute permit deadlines lazily so each signature gets a fresh `now` —
+  // the executable-balance permit is signed AFTER the validator wait and
+  // would otherwise share a stale deadline with the code-fee permit.
+  const makePermitDeadline = () =>
     options.permitDeadline ?? BigInt(Math.floor(Date.now() / 1000)) + DEFAULT_PERMIT_WINDOW_SECONDS;
+
+  const codeFeeDeadline = makePermitDeadline();
   const timeoutMs = options.codeValidationTimeoutMs ?? DEFAULT_CODE_VALIDATION_TIMEOUT_MS;
 
-  // `requestCodeValidation` (direct) charges only `baseFee`. The
-  // `requestCodeValidationOnBehalf` variant is the one that adds `extraFee`,
-  // and this helper doesn't use it. Over-permitting would leak an unused
-  // allowance to the router. See ethexe/contracts/src/Router.sol → the direct
-  // function transfers `baseFee` only; the on-behalf function transfers
-  // `baseFee + extraFee`.
+  // `requestCodeValidation` (direct) charges only `baseFee`; `extraFee` applies
+  // to `requestCodeValidationOnBehalf` (Router.sol). Over-permitting would
+  // leak unused WVARA allowance to the router.
   const codeFee = await router.requestCodeValidationBaseFee();
 
   const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(
@@ -111,15 +114,14 @@ export async function deployProgram(
     () => new CodeValidationTimeoutError(codeId, codeValidationReceipt.transactionHash, timeoutMs),
   );
 
-  // Sign the executable-balance permit AFTER the validator wait resolves, with
-  // a fresh `now`-based deadline. Signing it earlier (in parallel with the
-  // wait) shares one deadline across both permits and causes
+  // Sign the executable-balance permit AFTER the validator wait resolves with
+  // a fresh `now`-based deadline (see `makePermitDeadline` above). Signing
+  // earlier shares one deadline across both permits and causes
   // `createProgramWithExecutableBalance` to revert when the wait exceeds 5 min.
   const executableBalanceAmount = options.executableBalance ?? 0n;
   let executableBalancePermit: { amount: bigint; deadline: bigint; signature: Hex } | undefined;
   if (executableBalanceAmount > 0n) {
-    const execDeadline =
-      options.permitDeadline ?? BigInt(Math.floor(Date.now() / 1000)) + DEFAULT_PERMIT_WINDOW_SECONDS;
+    const execDeadline = makePermitDeadline();
     const { signature } = await wvara.prepareAndSignPermitData(
       router.address,
       executableBalanceAmount,

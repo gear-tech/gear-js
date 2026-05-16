@@ -50,10 +50,10 @@ export class ViemForkRequiredError extends VaraEthError {
 }
 
 export class InjectedTxStaleError extends VaraEthError {
-  constructor(referenceBlock: Hex, currentBlock: Hex, cause?: unknown) {
+  constructor(referenceBlock: Hex, currentBlockNumber: bigint, cause?: unknown) {
     super(
       VaraEthErrorCode.InjectedTxStale,
-      `Injected tx reference_block ${referenceBlock} is outside the 32-block validity window (current block: ${currentBlock}).`,
+      `Injected tx reference_block ${referenceBlock} is outside the 32-block validity window (current block number: ${currentBlockNumber}).`,
       { cause },
     );
   }

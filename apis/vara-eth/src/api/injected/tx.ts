@@ -165,8 +165,7 @@ export class InjectedTx {
           this._ethClient.getBlockNumber(),
         ]);
         if (block.number !== null && headNumber - Number(block.number) > REFERENCE_BLOCK_WINDOW) {
-          const headBlock = await this._ethClient.getBlock(headNumber);
-          throw new InjectedTxStaleError(blockHash as Hex, headBlock.hash as Hex);
+          throw new InjectedTxStaleError(blockHash as Hex, BigInt(headNumber));
         }
       } catch (err) {
         if (err instanceof InjectedTxStaleError) throw err;
