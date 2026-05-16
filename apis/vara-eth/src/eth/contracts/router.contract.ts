@@ -327,8 +327,12 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
 
   /**
    * Requests code validation by submitting the code as a blob in the transaction.
-   * Charges `requestCodeValidationBaseFee + requestCodeValidationExtraFee` in WVARA via an
-   * EIP-2612 permit, so no prior `approve` call is needed.
+   * Charges `requestCodeValidationBaseFee` in WVARA via an EIP-2612 permit,
+   * so no prior `approve` call is needed.
+   *
+   * Note: `requestCodeValidationExtraFee` is NOT charged by this variant — it
+   * applies only to {@link requestCodeValidationOnBehalf}, which transfers
+   * `base + extra` to cover the gasless meta-tx surcharge.
    *
    * @param code - The WASM bytecode to be validated
    * @param deadline - Expiry timestamp for the WVARA permit signature

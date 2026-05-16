@@ -72,7 +72,27 @@ jest.mock('../../src/eth/contracts/mirror.contract.js', () => {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mirrorMock = require('../../src/eth/contracts/mirror.contract.js');
 
-describe('sendAndWaitForReply (Fix 1.1)', () => {
+describe('sendAndWaitForReply (Fix 1.1 + ethexe-alignment value reject)', () => {
+  it('rejects non-zero value on via=injected before signing (ethexe-rpc relay rejects it server-side)', async () => {
+    const log: CallLog = { sendCalled: false, setupReplyListenerCalledBeforeSend: false };
+    mirrorMock.__setCallLog(log);
+
+    const ethClient = makeMockEthClient();
+    const createInjectedTransaction = jest.fn();
+
+    await expect(
+      sendAndWaitForReply(
+        createInjectedTransaction as never,
+        ethClient,
+        ('0x' + '11'.repeat(20)) as Address,
+        '0xfeed' as Hex,
+        { via: 'injected', value: 1n },
+      ),
+    ).rejects.toThrow(/value` must be 0 on the injected path/);
+
+    expect(createInjectedTransaction).not.toHaveBeenCalled();
+  });
+
   it('calls tx.send() before tx.setupReplyListener() on the via=eth path', async () => {
     const log: CallLog = { sendCalled: false, setupReplyListenerCalledBeforeSend: false };
     mirrorMock.__setCallLog(log);

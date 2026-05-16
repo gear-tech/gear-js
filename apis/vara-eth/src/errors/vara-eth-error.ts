@@ -86,6 +86,18 @@ export class PromiseSignatureInvalidError extends VaraEthError {
   }
 }
 
+/**
+ * EIP-2612 permit signature was rejected because the deadline elapsed before
+ * inclusion. Note: ethexe's Router wraps `WVARA.permit()` in `try {} catch {}`
+ * (see `Router.sol` `requestCodeValidation`), so an on-chain expired-permit
+ * call does NOT revert at the permit step — it falls through to
+ * `transferFrom`, which only reverts if the user has no standing allowance.
+ * This typed error is therefore most useful on:
+ *  - first-time deploys (no prior approval), where transferFrom revert is the
+ *    real signal,
+ *  - client-side pre-checks (sign-time `now > deadline`),
+ *  - other permit-only flows the lib may add later.
+ */
 export class PermitExpiredError extends VaraEthError {
   constructor(deadline: bigint, now: bigint, cause?: unknown) {
     super(

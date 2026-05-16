@@ -45,16 +45,20 @@ export async function estimateFee(ethClient: EthereumClient, op: WalletOp): Prom
   const pc = ethClient.publicClient;
 
   if (op.type === 'uploadCode') {
-    const [block, baseValidationFee, extraFee] = await Promise.all([
+    // Estimates the direct `requestCodeValidation` variant (used by
+    // `programs.deploy`). The on-behalf variant adds
+    // `requestCodeValidationExtraFee`; callers that use it should add the
+    // extra themselves, or this helper can grow an `onBehalf?: boolean` flag
+    // if a second consumer needs it.
+    const [block, baseValidationFee] = await Promise.all([
       pc.getBlock({ blockTag: 'latest' }),
       ethClient.router.requestCodeValidationBaseFee(),
-      ethClient.router.requestCodeValidationExtraFee(),
     ]);
     const baseFee = block.baseFeePerGas ?? 0n;
     return {
       gas: CODE_VALIDATION_GAS_FLOOR,
       ethCostWei: CODE_VALIDATION_GAS_FLOOR * baseFee,
-      wvaraFee: baseValidationFee + extraFee,
+      wvaraFee: baseValidationFee,
     };
   }
 

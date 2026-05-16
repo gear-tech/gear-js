@@ -21,7 +21,12 @@ export type SendPath = 'eth' | 'injected';
 export interface SendAndWaitOptions {
   /** Which transport to use. Defaults to `'eth'` since it doesn't require validator routing. */
   via?: SendPath;
-  /** Value in wei (ETH path) or wei (injected — currently unused but part of the preimage). */
+  /**
+   * Value in wei. Honored only on `via: 'eth'`. The injected path REJECTS
+   * non-zero value at the ethexe-rpc layer (see relay.rs) — pass any non-zero
+   * value with `via: 'injected'` and this helper throws before signing.
+   * The field is still part of the preimage on the injected path (signed as 0).
+   */
   value?: bigint;
   /** Override the timeout for awaiting the reply. */
   timeoutMs?: number;
@@ -29,7 +34,13 @@ export interface SendAndWaitOptions {
   referenceBlock?: Hex;
   /** For `via: 'injected'`: explicit salt (defaults to random 32 bytes). */
   salt?: Hex;
-  /** For `via: 'injected'`: explicit validator recipient (defaults to broadcast / zero address). */
+  /**
+   * For `via: 'injected'`: explicit validator recipient. Defaults to the zero
+   * address, which the ethexe-rpc relay interprets as "auto-route to the
+   * next-slot producer" (see `relay.rs::route_transaction` →
+   * `calculate_next_producer`). Not gossip-broadcast — the server picks one
+   * validator deterministically from the slot calendar.
+   */
   recipient?: Address;
   /**
    * For `via: 'injected'`: validate the validator's signature on the promise reply.
@@ -125,10 +136,19 @@ async function sendViaInjected(
   const timeoutMs = options.timeoutMs ?? DEFAULT_INJECTED_TIMEOUT_MS;
   const validate = options.validateSignature ?? true;
 
+  if ((options.value ?? 0n) !== 0n) {
+    // Pre-validate before signing — the ethexe-rpc relay rejects non-zero
+    // value with a bad-request error (relay.rs:47-56). Failing client-side
+    // gives a clearer call-site signal than an opaque RPC error.
+    throw new Error(
+      'sendAndWaitForReply: `value` must be 0 on the injected path. Switch to `via: "eth"` to send value.',
+    );
+  }
+
   const injectedTx = await createInjectedTransaction({
     destination: mirror,
     payload,
-    value: options.value ?? 0n,
+    value: 0n,
     referenceBlock: options.referenceBlock,
     salt: options.salt,
     recipient: options.recipient,

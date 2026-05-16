@@ -83,11 +83,13 @@ export async function deployProgram(
     options.permitDeadline ?? BigInt(Math.floor(Date.now() / 1000)) + DEFAULT_PERMIT_WINDOW_SECONDS;
   const timeoutMs = options.codeValidationTimeoutMs ?? DEFAULT_CODE_VALIDATION_TIMEOUT_MS;
 
-  const [baseFee, extraFee] = await Promise.all([
-    router.requestCodeValidationBaseFee(),
-    router.requestCodeValidationExtraFee(),
-  ]);
-  const codeFee = baseFee + extraFee;
+  // `requestCodeValidation` (direct) charges only `baseFee`. The
+  // `requestCodeValidationOnBehalf` variant is the one that adds `extraFee`,
+  // and this helper doesn't use it. Over-permitting would leak an unused
+  // allowance to the router. See ethexe/contracts/src/Router.sol → the direct
+  // function transfers `baseFee` only; the on-behalf function transfers
+  // `baseFee + extraFee`.
+  const codeFee = await router.requestCodeValidationBaseFee();
 
   const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(
     router.address,
