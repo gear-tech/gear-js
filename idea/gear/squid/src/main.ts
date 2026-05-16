@@ -1,4 +1,5 @@
 import { GearApi } from '@gear-js/api';
+import { BUNDLED_METADATA } from '@gear-js/bundled-metadata';
 import { type Store, TypeormDatabase } from '@subsquid/typeorm-store';
 import { createClient, type RedisClientType } from 'redis';
 
@@ -87,11 +88,11 @@ const main = async (api: GearApi) => {
   await redisClient.connect();
 
   tempState = new TempState(redisClient, api.genesisHash.toHex());
-  api.disconnect();
+  await api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };
 
-GearApi.create({ providerAddress: config.squid.rpc })
+GearApi.create({ providerAddress: config.squid.rpc, metadata: BUNDLED_METADATA })
   .then(main)
   .catch((e) => {
     console.error(e);

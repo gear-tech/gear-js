@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/dist-temp", "!**/.yarn", "!**/node_modules"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/dist-temp",
+      "!**/.yarn",
+      "!**/node_modules",
+      "!utils/bundled-metadata/src/data.ts"
+    ]
   },
   "formatter": {
     "enabled": true,

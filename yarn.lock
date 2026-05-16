@@ -2361,6 +2361,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/bundled-metadata@npm:*, @gear-js/bundled-metadata@workspace:utils/bundled-metadata":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/bundled-metadata@workspace:utils/bundled-metadata"
+  dependencies:
+    jest: "npm:30.3.0"
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/cli@workspace:tools/cli":
   version: 0.0.0-use.local
   resolution: "@gear-js/cli@workspace:tools/cli"
@@ -15097,6 +15105,7 @@ __metadata:
   dependencies:
     "@base-ui/react": "npm:1.4.1"
     "@gear-js/api": "npm:0.45.0"
+    "@gear-js/bundled-metadata": "npm:*"
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/react-hooks": "npm:*"
     "@gear-js/sails-payload-form": "npm:*"
@@ -15176,6 +15185,7 @@ __metadata:
   resolution: "gear-idea-squid@workspace:idea/gear/squid"
   dependencies:
     "@gear-js/api": "npm:0.45.0"
+    "@gear-js/bundled-metadata": "npm:*"
     "@polkadot/api": "npm:16.5.6"
     "@subsquid/substrate-metadata-explorer": "npm:3.2.0"
     "@subsquid/substrate-processor": "npm:8.8.1"
@@ -15214,6 +15224,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.29.3"
     "@babel/preset-typescript": "npm:^7.28.5"
     "@biomejs/biome": "npm:^2.4.14"
+    "@polkadot/api": "npm:16.5.6"
     "@rollup/plugin-commonjs": "npm:^29.0.2"
     "@rollup/plugin-json": "npm:^6.1.0"
     "@rollup/plugin-node-resolve": "npm:^16.0.3"
