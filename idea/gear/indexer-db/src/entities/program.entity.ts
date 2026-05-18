@@ -2,6 +2,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { MetaType, ProgramStatus } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
+import type { Hex } from '../types.js';
 
 // Column order is tuned for PostgreSQL alignment.
 // id (bytea) ends at offset 33. status (int4) fills 33→36 (+3 pad), reaching 8-byte boundary at 40.
@@ -14,7 +15,7 @@ export class Program {
   }
 
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: string;
+  public id: Hex;
 
   // 33→(3pad)→36: int4 bridges to 8-byte boundary ──────────────────────────
 
@@ -32,13 +33,13 @@ export class Program {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', name: 'code_id', transformer: hexToBytea })
-  public codeId: string;
+  public codeId: Hex;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public owner?: string | null;
+  public owner?: Hex | null;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: string;
+  public blockHash: Hex;
 
   @Column({ nullable: true })
   public name: string | null;

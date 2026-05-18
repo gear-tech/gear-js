@@ -1,11 +1,13 @@
+import type { Hex } from 'gear-idea-indexer-db';
+
 import { Events, type MessageStatus } from '../../common/index.js';
 import type { Event } from '../../processor.js';
 import type { IReplyCode } from './reply-code.js';
 
 export interface AMessageQueued {
-  id: string;
-  source: string;
-  destination: string;
+  id: Hex;
+  source: Hex;
+  destination: Hex;
   entry: {
     __kind: string;
   };
@@ -19,13 +21,13 @@ export const isMessageQueued = (event: Event): event is EMessageQueuedEvent => e
 
 export interface AUserMessageSent {
   message: {
-    id: string;
-    source: string;
-    destination: string;
-    payload: string;
+    id: Hex;
+    source: Hex;
+    destination: Hex;
+    payload: Hex;
     value: string;
     details?: {
-      to: string;
+      to: Hex;
       code: IReplyCode;
     };
   };
@@ -38,8 +40,8 @@ export const isUserMessageSent = (event: Event): event is EUserMessageSent => ev
 
 export interface AMessagesDispatched {
   total: number;
-  statuses: [string, { __kind: MessageStatus }][];
-  stateChanges: string[];
+  statuses: [Hex, { __kind: MessageStatus }][];
+  stateChanges: Hex[];
 }
 
 export type EMessagesDispatched = { args: AMessagesDispatched } & Omit<Event, 'args'>;
@@ -48,7 +50,7 @@ export const isMessagesDispatched = (event: Event): event is EMessagesDispatched
   event.name === Events.MessagesDispatched;
 
 export interface AUserMEssageRead {
-  id: string;
+  id: Hex;
   reason: {
     __kind: 'System' | 'Runtime';
     value: { __kind: 'OutOfRent' | 'MessageClaimed' | 'MessageReplied' };

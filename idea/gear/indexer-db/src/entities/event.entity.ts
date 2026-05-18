@@ -1,6 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { hexToBytea } from '../transformers.js';
+import type { Hex } from '../types.js';
 
 @Entity()
 export class Event {
@@ -9,7 +10,7 @@ export class Event {
   }
 
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: string;
+  public id: Hex;
 
   // ── 8-byte fixed ──────────────────────────────────────────────────────────
 
@@ -23,16 +24,16 @@ export class Event {
 
   @Index()
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public source: string;
+  public source: Hex;
 
   @Column({ type: 'bytea', nullable: true, name: 'parent_id', transformer: hexToBytea })
-  public parentId: string | null;
+  public parentId: Hex | null;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: string;
+  public blockHash: Hex;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public payload: string | null;
+  public payload: Hex | null;
 
   @Column({ nullable: true })
   public service?: string | null;

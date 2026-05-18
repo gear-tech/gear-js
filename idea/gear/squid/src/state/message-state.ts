@@ -2,7 +2,7 @@ import type { HexString } from '@gear-js/api';
 import { hexToU8a } from '@polkadot/util';
 import type { Store } from '@subsquid/typeorm-store';
 import type { DataCache } from 'gear-idea-common';
-import { cacheKey } from 'gear-idea-indexer-db';
+import { cacheKey, type Hex } from 'gear-idea-indexer-db';
 import { getFnNamePrefix, getServiceNamePrefix, ZERO_ADDRESS } from 'sails-js';
 import { SailsMessageHeader } from 'sails-js/parser';
 import { In } from 'typeorm';
@@ -45,7 +45,7 @@ export class MessageState {
   private _messagesFromProgram: Map<string, MessageFromProgram>;
   private _messagesToProgram: Map<string, MessageToProgram>;
   private _events: Map<string, Event>;
-  private _cachedMessages: { [key: string]: number };
+  private _cachedMessages: { [key: Hex]: number };
   private _updatedParentIds: Set<string>;
   private _removedParentIds: Set<string>;
   private _readReasons: Map<string, MessageReadReason>;
@@ -84,9 +84,9 @@ export class MessageState {
   async save() {
     await this._updateReadReasons();
 
-    await this._ctx.store.save(Array.from(this._messagesFromProgram.values()));
-    await this._ctx.store.save(Array.from(this._messagesToProgram.values()));
-    await this._ctx.store.save(Array.from(this._events.values()));
+    if (this._messagesFromProgram.size > 0) await this._ctx.store.save(Array.from(this._messagesFromProgram.values()));
+    if (this._messagesToProgram.size > 0) await this._ctx.store.save(Array.from(this._messagesToProgram.values()));
+    if (this._events.size > 0) await this._ctx.store.save(Array.from(this._events.values()));
 
     if (this._messagesFromProgram.size || this._messagesToProgram.size || this._events.size) {
       this._ctx.log.info(
@@ -199,8 +199,8 @@ export class MessageState {
     }
   }
 
-  async getMessageId(childId: string) {
-    const finder = Object.entries(this._cachedMessages).map(([parentId, nonce]) => {
+  async getMessageId(childId: Hex): Promise<Hex | null> {
+    const finder = Object.entries(this._cachedMessages).map(([parentId, nonce]: [Hex, number]) => {
       return findChildMessageId(parentId, childId, Number(nonce));
     });
 
@@ -211,7 +211,7 @@ export class MessageState {
       .catch<null>(() => null);
   }
 
-  private _saveParentMsgId(parentId: string, nonce = 0) {
+  private _saveParentMsgId(parentId: Hex, nonce = 0): Hex {
     this._cachedMessages[parentId] = nonce;
     this._updatedParentIds.add(parentId);
     this._removedParentIds.delete(parentId);

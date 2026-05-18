@@ -2,6 +2,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { MessageEntryPoint } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
+import type { Hex } from '../types.js';
 
 // Column order is tuned for PostgreSQL alignment.
 // id (bytea) ends at offset 33.
@@ -16,7 +17,7 @@ export class MessageToProgram {
   }
 
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: string;
+  public id: Hex;
 
   // 33→34→35: two bools, then 35→(1pad)→36: int4 lands exactly at 40 ───────
 
@@ -43,25 +44,25 @@ export class MessageToProgram {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public destination: string;
+  public destination: Hex;
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public source: string;
+  public source: Hex;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: string;
+  public blockHash: Hex;
 
   @Column({ type: 'bytea', nullable: true, name: 'reply_to_msg_id', transformer: hexToBytea })
-  public replyToMessageId?: string | null;
+  public replyToMessageId?: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public header: string | null;
+  public header: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, name: 'route_idx', transformer: hexToBytea })
-  public routeIdx: string | null;
+  public routeIdx: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public payload: string | null;
+  public payload: Hex | null;
 
   @Column({ nullable: true })
   public service?: string | null;

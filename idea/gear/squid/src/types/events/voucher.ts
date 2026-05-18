@@ -1,11 +1,13 @@
+import type { Hex } from 'gear-idea-indexer-db';
+
 import { Events } from '../../common/index.js';
 import type { Event } from '../../processor.js';
 import type { CVoucherIssued, CVoucherUpdated } from '../calls/index.js';
 
 export interface AVoucherIssued {
-  owner: string;
-  spender: string;
-  voucherId: string;
+  owner: Hex;
+  spender: Hex;
+  voucherId: Hex;
 }
 
 export type EVoucherIssued = {
@@ -16,8 +18,8 @@ export type EVoucherIssued = {
 export const isVoucherIssued = (event: Event): event is EVoucherIssued => event.name === Events.VoucherIssued;
 
 export interface AVoucherUpdated {
-  spender: string;
-  voucherId: string;
+  spender: Hex;
+  voucherId: Hex;
 }
 
 export type EVoucherUpdated = {
@@ -33,8 +35,8 @@ export const isVoucherDeclined = (event: Event): event is EVoucherDeclined => ev
 export const isVoucherRevoked = (event: Event): event is EVoucherRevoked => event.name === Events.VoucherRevoked;
 
 export interface ABalanceTransfer {
-  from: string;
-  to: string;
+  from: Hex;
+  to: Hex;
   amount: string;
 }
 

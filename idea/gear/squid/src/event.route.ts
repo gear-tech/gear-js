@@ -11,6 +11,7 @@ import {
 import {
   Code,
   CodeStatus,
+  type Hex,
   MessageEntryPoint,
   MessageFromProgram,
   MessageReadReason,
@@ -54,7 +55,7 @@ export interface IHandleEventProps<E = Event> {
   event: E;
   common: {
     timestamp: Date;
-    blockHash: string;
+    blockHash: Hex;
     blockNumber: string;
     specVersion: number;
   };

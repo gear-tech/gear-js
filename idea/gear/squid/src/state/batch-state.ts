@@ -3,7 +3,7 @@ import type { SiLookupTypeId } from '@polkadot/types/interfaces';
 import { xxhashAsHex } from '@polkadot/util-crypto';
 import type { Store } from '@subsquid/typeorm-store';
 import type { DataCache } from 'gear-idea-common';
-import { cacheKey } from 'gear-idea-indexer-db';
+import { cacheKey, type Hex } from 'gear-idea-indexer-db';
 import { In } from 'typeorm';
 
 import { Code, type CodeStatus, Program, type ProgramStatus } from '../model/index.js';
@@ -82,10 +82,8 @@ export class BatchState {
       await this._applyProgramStatusUpdates();
       await this._applyCodeStatusUpdates();
 
-      await Promise.all([
-        this._ctx.store.save(Array.from(this._codes.values())),
-        this._ctx.store.save(Array.from(this._programs.values())),
-      ]);
+      await this._ctx.store.save(Array.from(this._codes.values()));
+      await this._ctx.store.save(Array.from(this._programs.values()));
 
       if (this._programs.size || this._codes.size) {
         this._ctx.log.info(
@@ -119,7 +117,7 @@ export class BatchState {
     this._codes.set(code.id, code);
   }
 
-  async getProgram(id: string): Promise<Program | null> {
+  async getProgram(id: Hex): Promise<Program | null> {
     if (this._programs.has(id)) {
       return this._programs.get(id) ?? null;
     }
@@ -132,7 +130,7 @@ export class BatchState {
     }
   }
 
-  async getCode(id: string): Promise<Code | null> {
+  async getCode(id: Hex): Promise<Code | null> {
     if (this._codes.has(id)) {
       return this._codes.get(id) ?? null;
     }
@@ -145,7 +143,7 @@ export class BatchState {
     }
   }
 
-  async isProgramIndexed(id: string): Promise<boolean> {
+  async isProgramIndexed(id: Hex): Promise<boolean> {
     return !!(await this.getProgram(id));
   }
 

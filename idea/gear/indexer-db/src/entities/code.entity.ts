@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { CodeStatus, MetaType } from '../enums/index.js';
-import { hexToBytea } from '../transformers.js';
+import { codeStatusTransformer, hexToBytea } from '../transformers.js';
+import type { Hex } from '../types.js';
 
 // Column order is tuned for PostgreSQL alignment.
 // id (bytea) ends at offset 33. status (int4) fills 33→36 (+3 pad), reaching 8-byte boundary at 40.
@@ -14,11 +15,11 @@ export class Code {
   }
 
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: string;
+  public id: Hex;
 
   // 33→(3pad)→36: int4 bridges to 8-byte boundary ──────────────────────────
 
-  @Column({ type: 'enum', enum: CodeStatus })
+  @Column({ type: 'enum', enum: CodeStatus, transformer: codeStatusTransformer })
   public status: CodeStatus;
 
   // 40→48→56: zero padding ──────────────────────────────────────────────────
@@ -37,7 +38,7 @@ export class Code {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', name: 'uploaded_by', nullable: true, transformer: hexToBytea })
-  public uploadedBy: string;
+  public uploadedBy: Hex;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
   public blockHash: string;

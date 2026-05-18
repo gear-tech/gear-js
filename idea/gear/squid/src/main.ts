@@ -1,6 +1,7 @@
 import { GearApi } from '@gear-js/api';
 import { type Store, TypeormDatabase } from '@subsquid/typeorm-store';
 import { DataCache } from 'gear-idea-common';
+import type { Hex } from 'gear-idea-indexer-db';
 
 import { config } from './config.js';
 import {
@@ -41,7 +42,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
   for (const block of ctx.blocks) {
     const common = {
       timestamp: new Date(block.header.timestamp!),
-      blockHash: block.header.hash,
+      blockHash: block.header.hash as Hex,
       blockNumber: block.header.height.toString(),
       specVersion: block.header._runtime.specVersion,
     };
