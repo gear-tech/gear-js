@@ -9,7 +9,7 @@
     "kysely": "^0.28.16",
     "kzg-wasm": "^1.0.0",
     "pg": "^8.20.0",
-    "viem": "npm:@vara-eth/viem@2.47.7-1"
+    "viem": "npm:@vara-eth/viem@2.48.11"
   },
   "devDependencies": {
     "@types/pg": "^8"
