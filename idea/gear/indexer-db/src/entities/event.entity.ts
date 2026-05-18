@@ -1,5 +1,6 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import { BaseEntity } from './base.entity';
+
+import { BaseEntity } from './base.entity.js';
 
 @Entity()
 export class Event extends BaseEntity {

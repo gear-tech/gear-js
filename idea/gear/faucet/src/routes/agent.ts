@@ -1,15 +1,16 @@
 import { decodeAddress } from '@gear-js/api';
 import type { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
-import config from '../config';
-import type { ChallengeService, RequestService } from '../services';
-import { BaseRouter } from './base';
-import { handleVaraTestnetRequest } from './handlers';
+
+import config from '../config.js';
+import type { ChallengeService, RequestService } from '../services/index.js';
+import { BaseRouter } from './base.js';
+import { handleVaraTestnetRequest } from './handlers.js';
 import {
   agentChallengeRateLimitMiddleware,
   agentRateLimitMiddleware,
   createSignatureAuthMiddleware,
-} from './middleware';
+} from './middleware/index.js';
 
 const logger = createLogger('agent-router');
 
