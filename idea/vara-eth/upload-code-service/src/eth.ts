@@ -1,3 +1,4 @@
+import { createLogger } from '@gear-js/logger';
 import { getRouterClient, type RouterClient } from '@vara-eth/api/eth/router';
 import { walletClientToSigner } from '@vara-eth/api/signer';
 import {
@@ -13,6 +14,8 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 
 import type { NetworkConfig } from './shared/types.js';
+
+const logger = createLogger('eth');
 
 type ClientPair = { routerClient: RouterClient; publicClient: PublicClient };
 
@@ -32,6 +35,16 @@ async function getClients(networkConfig: NetworkConfig): Promise<ClientPair> {
 
   const pair: ClientPair = { routerClient, publicClient };
   _clientCache.set(networkConfig.name, pair);
+
+  logger.info(
+    {
+      network: networkConfig.name,
+      rpc: networkConfig.ethereumRpcUrl,
+      account: account.address,
+      router: networkConfig.routerAddress,
+    },
+    'Clients created',
+  );
   return pair;
 }
 
@@ -49,6 +62,8 @@ export async function prepareCodeValidation(
 ): Promise<PreparedTx> {
   const { routerClient } = await getClients(networkConfig);
 
+  logger.info({ sender, codeId }, 'Preparing code validation request');
+
   const tx = await routerClient.requestCodeValidationOnBehalf(
     sender,
     code,
@@ -59,6 +74,7 @@ export async function prepareCodeValidation(
   );
 
   if (tx.codeId.toLowerCase() !== codeId.toLowerCase()) {
+    logger.warn({ expected: codeId, actual: tx.codeId }, 'Code ID mismatch');
     throw new Error(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
   }
 
@@ -70,7 +86,13 @@ export async function sendCodeValidation(
   tx: PreparedTx,
 ): Promise<{ transactionHash: Hash; status: 'success' | 'reverted' }> {
   const { publicClient } = await getClients(networkConfig);
+  logger.info({ codeId: tx.codeId }, 'Sending code validation request');
   const transactionHash = await tx.send();
+  logger.info({ codeId: tx.codeId, transactionHash }, 'Transaction submitted, waiting for receipt');
   const receipt = await publicClient.waitForTransactionReceipt({ hash: transactionHash });
+  logger.info(
+    { codeId: tx.codeId, transactionHash, status: receipt.status, blockNumber: receipt.blockNumber },
+    'Receipt received',
+  );
   return { transactionHash, status: receipt.status };
 }
