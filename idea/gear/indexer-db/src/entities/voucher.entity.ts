@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { hexToBytea } from '../transformers.js';
-import type { Hex } from '../types.js';
+import type { PgByteaString } from '../types.js';
 
 // Column order is tuned for PostgreSQL alignment.
 // id (bytea) ends at offset 33. Two bools advance to 35; bigint needs 5-byte pad to reach 40.
@@ -14,7 +14,7 @@ export class Voucher {
   }
 
   @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  id!: Hex;
+  id!: PgByteaString;
 
   // 33→34→35: two bools, then 35→(5pad)→40: bigints start ──────────────────
 
@@ -53,10 +53,10 @@ export class Voucher {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  owner!: Hex;
+  owner!: PgByteaString;
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  spender!: Hex;
+  spender!: PgByteaString;
 
   @Column('jsonb', { default: [] })
   programs?: string[];

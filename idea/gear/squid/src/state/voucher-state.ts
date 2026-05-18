@@ -1,16 +1,16 @@
 import type { Store } from '@subsquid/typeorm-store';
 import { In, MoreThanOrEqual } from 'typeorm';
 
-import { Voucher } from '../model/index.js';
+import { type PgByteaString, Voucher } from '../model/index.js';
 import type { ProcessorContext } from '../processor.js';
 
 export class VoucherState {
-  private _vouchers: Map<string, Voucher>;
-  private _transfers: Map<string, bigint>;
-  private _revokedVouchers: Set<string>;
-  private _declinedVouchers: Set<string>;
-  private _voucherUpdateQueue: Map<string, Array<(v: Voucher) => void>>;
-  private _activeVoucherIds: Map<string, bigint> | null; // id → expiryAtBlock; null = not yet loaded
+  private _vouchers: Map<PgByteaString, Voucher>;
+  private _transfers: Map<PgByteaString, bigint>;
+  private _revokedVouchers: Set<PgByteaString>;
+  private _declinedVouchers: Set<PgByteaString>;
+  private _voucherUpdateQueue: Map<PgByteaString, Array<(v: Voucher) => void>>;
+  private _activeVoucherIds: Map<PgByteaString, bigint> | null; // id → expiryAtBlock; null = not yet loaded
   private _ctx: ProcessorContext<Store>;
 
   constructor() {
@@ -55,32 +55,32 @@ export class VoucherState {
     this._activeVoucherIds?.set(voucher.id, voucher.expiryAtBlock);
   }
 
-  setTransfer(id: string, amount: bigint) {
+  setTransfer(id: PgByteaString, amount: bigint) {
     if (!this._activeVoucherIds?.has(id) && !this._vouchers.has(id)) return;
     this._ctx.log.debug({ id, amount: amount.toString() }, 'setVoucherTransfer');
     this._transfers.set(id, (this._transfers.get(id) ?? 0n) + amount);
   }
 
-  queueVoucherUpdate(id: string, updater: (v: Voucher) => void) {
+  queueVoucherUpdate(id: PgByteaString, updater: (v: Voucher) => void) {
     this._ctx.log.debug({ id }, 'queueVoucherUpdate');
     const queue = this._voucherUpdateQueue.get(id) ?? [];
     queue.push(updater);
     this._voucherUpdateQueue.set(id, queue);
   }
 
-  setVoucherDeclined(id: string) {
+  setVoucherDeclined(id: PgByteaString) {
     this._ctx.log.debug({ id }, 'setVoucherDeclined');
     this._declinedVouchers.add(id);
     this._activeVoucherIds?.delete(id);
   }
 
-  setVoucherRevoked(id: string) {
+  setVoucherRevoked(id: PgByteaString) {
     this._ctx.log.debug({ id }, 'setVoucherRevoked');
     this._revokedVouchers.add(id);
     this._activeVoucherIds?.delete(id);
   }
 
-  private async _queryVouchers(ids: string[]) {
+  private async _queryVouchers(ids: PgByteaString[]) {
     const vouchersToQuery = ids.filter((id) => !this._vouchers.has(id));
     if (vouchersToQuery.length > 0) {
       const vouchers = await this._ctx.store.find(Voucher, { where: { id: In(vouchersToQuery) } });

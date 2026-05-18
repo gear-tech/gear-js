@@ -1,7 +1,7 @@
 import { generateCodeHash } from '@gear-js/api';
 
 import type { IHandleEventProps } from './event.route.js';
-import { type MessageToProgram, Program, ProgramStatus } from './model/index.js';
+import { type MessageToProgram, Program, ProgramStatus, toPgByteaString } from './model/index.js';
 import type { Call } from './processor.js';
 import type { CCreateProgram, CSendMessage, CSendReply, CUploadProgram, CVoucherCall } from './types/calls/index.js';
 import type { EMessageQueuedEvent } from './types/index.js';
@@ -16,29 +16,29 @@ export function handleUploadProgram({ msg, event, common, batchState, call }: IH
   batchState.addProgram(
     new Program({
       ...common,
-      id: event.args.destination,
-      codeId,
-      owner: event.args.source,
+      id: toPgByteaString(event.args.destination),
+      codeId: toPgByteaString(codeId),
+      owner: toPgByteaString(event.args.source),
       name: event.args.destination,
       status: ProgramStatus.ProgramSet,
     }),
   );
-  msg.payload = call.args.initPayload;
+  msg.payload = toPgByteaString(call.args.initPayload);
   msg.value = BigInt(call.args.value);
 }
 
 export function handleSendMessageCall({ msg, call }: IHandleCallProps<CSendMessage>) {
-  msg.payload = call.args.payload;
+  msg.payload = toPgByteaString(call.args.payload);
   msg.value = BigInt(call.args.value);
 }
 
 export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps<CVoucherCall>) {
   if (call.args.call.__kind === 'SendMessage') {
-    msg.payload = call.args.call.payload;
+    msg.payload = toPgByteaString(call.args.call.payload);
     msg.value = BigInt(call.args.call.value);
   } else if (call.args.call.__kind === 'SendReply') {
-    msg.payload = call.args.call.payload;
-    msg.replyToMessageId = call.args.call.replyToId;
+    msg.payload = toPgByteaString(call.args.call.payload);
+    msg.replyToMessageId = toPgByteaString(call.args.call.replyToId);
     msg.value = BigInt(call.args.call.value);
   } else {
     ctx.log.error(call, 'Unknown voucher call');
@@ -49,20 +49,20 @@ export function handleCreateProgram({ msg, event, common, batchState, call }: IH
   batchState.addProgram(
     new Program({
       ...common,
-      id: event.args.destination,
-      codeId: call.args.codeId,
-      owner: event.args.source,
+      id: toPgByteaString(event.args.destination),
+      codeId: toPgByteaString(call.args.codeId),
+      owner: toPgByteaString(event.args.source),
       name: event.args.destination,
       status: ProgramStatus.ProgramSet,
     }),
   );
 
-  msg.payload = call.args.initPayload;
+  msg.payload = toPgByteaString(call.args.initPayload);
   msg.value = BigInt(call.args.value);
 }
 
 export function handleSendReplyCall({ msg, call }: IHandleCallProps<CSendReply>) {
-  msg.payload = call.args.payload;
+  msg.payload = toPgByteaString(call.args.payload);
   msg.value = BigInt(call.args.value);
-  msg.replyToMessageId = call.args.replyToId;
+  msg.replyToMessageId = toPgByteaString(call.args.replyToId);
 }
