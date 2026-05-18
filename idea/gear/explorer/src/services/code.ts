@@ -1,4 +1,4 @@
-import { Code } from 'gear-idea-indexer-db';
+import { Code, CodeStatus } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
 
 import { Pagination } from '../decorators/index.js';
@@ -38,10 +38,11 @@ export class CodeService {
     }
 
     if (status) {
+      const toNumeric = (s: string) => CodeStatus[s as keyof typeof CodeStatus];
       if (Array.isArray(status)) {
-        qb.andWhere('code.status IN (:...status)', { status });
+        qb.andWhere('code.status IN (:...status)', { status: status.map(toNumeric) });
       } else {
-        qb.andWhere('code.status = :status', { status });
+        qb.andWhere('code.status = :status', { status: toNumeric(status as string) });
       }
     }
 

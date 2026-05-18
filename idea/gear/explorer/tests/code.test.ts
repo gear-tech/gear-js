@@ -42,25 +42,6 @@ describe('code.data response shape', () => {
   });
 });
 
-// ── code.data ──────────────────────────────────────────────────────────────────
-
-describe('code.data', () => {
-  it('returns -32404 for unknown id', async () => {
-    const res = await rpc(getAgent(), 'code.data', { id: UNKNOWN_ID });
-    const error = err(res.body);
-
-    expect(error.code).toBe(-32404);
-    expect(error.message).toBe('Code not found');
-  });
-
-  it('returns -32602 when id param is missing', async () => {
-    const res = await rpc(getAgent(), 'code.data', {});
-    const error = err(res.body);
-
-    expect(error.code).toBe(-32602);
-  });
-});
-
 // ── code.all ───────────────────────────────────────────────────────────────────
 
 describe('code.all response shape', () => {
@@ -176,5 +157,24 @@ describe('code.all filters', () => {
 
     expect(result).toHaveLength(0);
     expect(count).toBe(0);
+  });
+});
+
+// ── code.data ──────────────────────────────────────────────────────────────────
+
+describe('code.data', () => {
+  it('returns -32404 for unknown id', async () => {
+    const res = await rpc(getAgent(), 'code.data', { id: UNKNOWN_ID });
+    const error = err(res.body);
+
+    expect(error.code).toBe(-32404);
+    expect(error.message).toBe('Code not found');
+  });
+
+  it('returns -32602 when id param is missing', async () => {
+    const res = await rpc(getAgent(), 'code.data', {});
+    const error = err(res.body);
+
+    expect(error.code).toBe(-32602);
   });
 });

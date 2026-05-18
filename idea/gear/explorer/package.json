@@ -25,6 +25,7 @@
     "start": "node dist/main.js",
     "clean": "echo \"clean gear-idea-explorer\" && rm -rf dist",
     "test": "npx vitest run",
-    "test:watch": "npx vitest"
+    "test:watch": "npx vitest",
+    "generate-dump": "./scripts/generate-dump.sh"
   }
 }

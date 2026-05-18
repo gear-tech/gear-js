@@ -5,17 +5,17 @@ export const GENESIS = '0xfe1b4c55fd4d668101126434206571a7838a8b6b93a6d1b95d607e
 
 // ── Codes ─────────────────────────────────────────────────────────────────────
 
-export const CODE_1_ID = '0x9b2d73f5c84907f90dfe93c5b8070597e2f9cca79505f5238f45649e2fe955a2';
-export const CODE_2_ID = '0x4889e8166071650e7d6c8a35bb165faebdddd08e3d0844acc626c0bbe60e590d';
-export const CODE_UPLOADER = '0xdc95b56fb734a986ee834268e2012d17b8afc5e0d1b1974bd013df7512abc466';
+export const CODE_1_ID = '0xc0d72f2ed5d60816f6dcb5e0a521f768e9d842caac9c953f0ae08df98deb8507';
+export const CODE_2_ID = '0xa477e1c66a60d5a25f3fd8d752126775b2a3e451178c58030707c2ab95cc6e82';
+export const CODE_UPLOADER = '0x46517ac536e39f93184971036283dead3c4a1bd7602490d5e6acf3946db31606';
 
 // ── Programs ──────────────────────────────────────────────────────────────────
 
 // status: active, owner: PROGRAM_OWNER, codeId: CODE_1_ID
-export const PROGRAM_ACTIVE_ID = '0x987cf50312043a55cf011652a7c7e2422d111c3881deb9300a022958ce7e172c';
+export const PROGRAM_ACTIVE_ID = '0x07f76871e4868533d2b964b21a895b2c338d7bb728e6746cde061d244fde1626';
 // status: terminated, same owner and code
 export const PROGRAM_TERMINATED_ID = '0xb9580cbf6f9b1d3eb80862924868fdf7dc8feed4bf96a0671f46340631bded53';
-export const PROGRAM_OWNER = '0xdc95b56fb734a986ee834268e2012d17b8afc5e0d1b1974bd013df7512abc466';
+export const PROGRAM_OWNER = '0xe978f1b1d3dab1efa436971bdc92543f16e3bd1e1ec58896527d2c3ad76aadad';
 
 // ── Messages to program ───────────────────────────────────────────────────────
 

@@ -84,6 +84,7 @@ export class MessageState {
   async save() {
     await this._updateReadReasons();
 
+    console.log(this._messagesFromProgram);
     if (this._messagesFromProgram.size > 0) await this._ctx.store.save(Array.from(this._messagesFromProgram.values()));
     if (this._messagesToProgram.size > 0) await this._ctx.store.save(Array.from(this._messagesToProgram.values()));
     if (this._events.size > 0) await this._ctx.store.save(Array.from(this._events.values()));
@@ -179,7 +180,7 @@ export class MessageState {
     if (msg.destination === ZERO_ADDRESS && msg.service && msg.fn) {
       this._addEvent(msg);
     } else {
-      this._messagesFromProgram.set(msg.id, msg);
+      this._messagesFromProgram.set(msg.id, { ...msg, id: `\\x${msg.id.slice(2)}` as any });
     }
   }
 

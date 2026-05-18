@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs';
+import { DataCache } from 'gear-idea-common';
 import { createDbConnection } from 'gear-idea-indexer-db';
 import 'reflect-metadata';
 import type { SuperTest, Test } from 'supertest';
 import supertest from 'supertest';
 import type { DataSource } from 'typeorm';
 
+import { initCache } from '../src/middlewares/caching.js';
 import { HybridApiServer } from '../src/server.js';
 import { AllInOneService } from '../src/services/all-in-one.js';
 import { GENESIS } from './fixtures.js';
@@ -32,7 +34,10 @@ let _agent: SuperTest<Test>;
 export async function setup() {
   dataSource = await createDbConnection(getDbConfig());
 
-  const services = new Map([[GENESIS, new AllInOneService(dataSource)]]);
+  const noopCache = new DataCache(null);
+  initCache(noopCache);
+
+  const services = new Map([[GENESIS, new AllInOneService(dataSource, GENESIS, noopCache)]]);
   const server = new HybridApiServer(services);
 
   // Access the express app directly — skip server.run() to avoid Redis connection
