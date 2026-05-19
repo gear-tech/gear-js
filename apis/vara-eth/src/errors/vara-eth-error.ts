@@ -16,6 +16,7 @@ export const VaraEthErrorCode = {
   NoSailsIdl: 'NO_SAILS_IDL',
   RpcConnectionFailed: 'RPC_CONNECTION_FAILED',
   ChainIdMismatch: 'CHAIN_ID_MISMATCH',
+  MessageReverted: 'MESSAGE_REVERTED',
 } as const;
 
 export type VaraEthErrorCode = (typeof VaraEthErrorCode)[keyof typeof VaraEthErrorCode];
@@ -173,5 +174,29 @@ export class ChainIdMismatchError extends VaraEthError {
       VaraEthErrorCode.ChainIdMismatch,
       `Ethereum chain ID mismatch: expected ${expected}, got ${got}. Check ethereumRpc + routerAddress configuration.`,
     );
+  }
+}
+
+/**
+ * A Mirror contract call (`sendMessage`, `sendReply`, etc.) reverted at simulation
+ * or broadcast time. `reason` is the decoded `ErrorName(args)` form when the
+ * selector was matched against the Mirror/Router ABIs, or a generic string when
+ * the selector was unknown.
+ *
+ * The `functionName` field identifies which contract entry-point reverted so
+ * callers can branch on it (e.g. ignore reverts on `sendReply` for stale msgs).
+ */
+export class MessageRevertedError extends VaraEthError {
+  public readonly reason: string;
+  public readonly functionName: string;
+
+  constructor(reason: string, functionName: string, cause?: unknown) {
+    super(
+      VaraEthErrorCode.MessageReverted,
+      `${functionName} reverted: ${reason}`,
+      { cause },
+    );
+    this.reason = reason;
+    this.functionName = functionName;
   }
 }

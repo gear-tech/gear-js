@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.5.0-rc.0",
+  "version": "0.5.0-rc.1",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",

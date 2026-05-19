@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0-rc.1] — typed contract reverts
+
+### Added
+- **`MessageRevertedError`** — thrown by `MirrorClient.sendMessage` and `MirrorClient.sendReply` when the on-chain simulation reverts. Carries `reason` (decoded `ErrorName(args)`), `functionName`, the stable `MESSAGE_REVERTED` code, and the original viem error as `cause`. Closes the typed-error gap previously bridged by generic `INTERNAL_ERROR` surfaces in downstream wallets.
+
 ## [0.5.0-rc.0] — wallet-CLI primitives (Phase 0 + Phase 1 + Phase 2)
 
 ### Fixed — review feedback on the initial rc.0 push

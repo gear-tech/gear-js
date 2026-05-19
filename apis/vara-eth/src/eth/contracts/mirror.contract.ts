@@ -1,9 +1,12 @@
 import type { Address, Hex, Signature, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
 
+import { decodeContractError } from '../../util/error.js';
 import { convertEventParams } from '../../util/index.js';
 import { getRVSComponents } from '../../util/signature.js';
+import { MessageRevertedError } from '../../errors/vara-eth-error.js';
 import { IMIRROR_ABI, type IMirrorContract } from '../abi/IMirror.js';
+import { IROUTER_ABI } from '../abi/IRouter.js';
 import type {
   ITxManager,
   MessageHelpers,
@@ -88,13 +91,18 @@ export class MirrorClient extends BaseContractClient<typeof IMIRROR_ABI> impleme
   ): Promise<TxManagerWithHelpers<MessageHelpers>> {
     const signer = this._ensureSigner();
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
-    await this._pc.simulateContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'sendMessage',
-      args: [payload as Hex, false],
-      account: await signer.getAddress(),
-    });
+    try {
+      await this._pc.simulateContract({
+        address: this.address,
+        abi: IMIRROR_ABI,
+        functionName: 'sendMessage',
+        args: [payload as Hex, false],
+        account: await signer.getAddress(),
+      });
+    } catch (cause) {
+      const decoded = decodeContractError(cause, [IMIRROR_ABI, IROUTER_ABI]);
+      throw new MessageRevertedError(decoded.message, 'sendMessage', cause);
+    }
 
     const tx: TransactionRequest = {
       ...options,
@@ -142,14 +150,19 @@ export class MirrorClient extends BaseContractClient<typeof IMIRROR_ABI> impleme
    */
   async sendReply(repliedTo: string, payload: string, value?: bigint): Promise<TxManagerWithHelpers<ReplyHelpers>> {
     const signer = this._ensureSigner();
-    await this._pc.simulateContract({
-      address: this.address,
-      abi: IMIRROR_ABI,
-      functionName: 'sendReply',
-      args: [repliedTo as Hex, payload as Hex],
-      account: await signer.getAddress(),
-      value,
-    });
+    try {
+      await this._pc.simulateContract({
+        address: this.address,
+        abi: IMIRROR_ABI,
+        functionName: 'sendReply',
+        args: [repliedTo as Hex, payload as Hex],
+        account: await signer.getAddress(),
+        value,
+      });
+    } catch (cause) {
+      const decoded = decodeContractError(cause, [IMIRROR_ABI, IROUTER_ABI]);
+      throw new MessageRevertedError(decoded.message, 'sendReply', cause);
+    }
 
     const tx: TransactionRequest = {
       to: this.address,
