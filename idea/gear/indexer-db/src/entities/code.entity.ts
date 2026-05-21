@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { CodeStatus, MetaType } from '../enums/index.js';
 import { codeStatusTransformer, hexToBytea } from '../transformers.js';
-import type { PgByteaString } from '../types.js';
+import type { Hex } from '../types.js';
 
 @Entity()
 export class Code {
@@ -28,7 +28,7 @@ export class Code {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', name: 'uploaded_by', nullable: true, transformer: hexToBytea })
-  public uploadedBy: PgByteaString;
+  public uploadedBy: Hex;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
   public blockHash: string;

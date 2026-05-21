@@ -6,9 +6,9 @@ export const hexToBytea = {
     const unprefixed = v.startsWith('0x') || v.startsWith('\\x') ? v.slice(2) : v;
     return Buffer.from(unprefixed, 'hex');
   },
-  from: (v: Buffer | null | undefined): PgByteaString | null => {
+  from: (v: Buffer | null | undefined): Hex | null => {
     if (!v) return null;
-    return `\\x${v.toString('hex')}`;
+    return `0x${v.toString('hex')}`;
   },
 };
 

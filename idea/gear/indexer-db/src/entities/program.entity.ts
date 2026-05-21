@@ -2,7 +2,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { MetaType, ProgramStatus } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
-import type { PgByteaString } from '../types.js';
+import type { Hex } from '../types.js';
 
 @Entity()
 @Index(['codeId', 'timestamp'])
@@ -24,13 +24,13 @@ export class Program {
   public timestamp: Date;
 
   @Column({ type: 'bytea', name: 'code_id', transformer: hexToBytea })
-  public codeId: PgByteaString;
+  public codeId: Hex;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public owner?: PgByteaString | null;
+  public owner?: Hex | null;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: PgByteaString;
+  public blockHash: Hex;
 
   @Column({ nullable: true })
   public name: string | null;

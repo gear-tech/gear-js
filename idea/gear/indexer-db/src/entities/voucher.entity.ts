@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { hexToBytea } from '../transformers.js';
-import type { PgByteaString } from '../types.js';
+import type { Hex } from '../types.js';
 
 @Entity()
 export class Voucher {
@@ -45,10 +45,10 @@ export class Voucher {
   // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  owner!: PgByteaString;
+  owner!: Hex;
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  spender!: PgByteaString;
+  spender!: Hex;
 
   @Column('jsonb', { default: [] })
   programs?: string[];

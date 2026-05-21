@@ -2,7 +2,7 @@ import type { HexString } from '@gear-js/api';
 import { hexToU8a } from '@polkadot/util';
 import type { Store } from '@subsquid/typeorm-store';
 import type { DataCache } from 'gear-idea-common';
-import { cacheKey, toPgByteaString, type Hex, type PgByteaString } from 'gear-idea-indexer-db';
+import { cacheKey, type Hex } from 'gear-idea-indexer-db';
 import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
 import { SailsMessageHeader } from 'sails-js/parser';
 import { In } from 'typeorm';
@@ -12,7 +12,7 @@ import { Event, MessageFromProgram, type MessageReadReason, MessageToProgram } f
 import type { ProcessorContext } from '../processor.js';
 import { findChildMessageId } from '../util.js';
 
-const ZERO_ADDRESS = `\\x0000000000000000000000000000000000000000000000000000000000000000`;
+const ZERO_ADDRESS = `0x0000000000000000000000000000000000000000000000000000000000000000`;
 
 function parseSailsHeader(payload: string | null) {
   if (!payload) return { ok: false, header: undefined };
@@ -145,10 +145,10 @@ export class MessageState {
     msg.isSailsIdlV2 = ok;
 
     if (ok && header) {
-      msg.header = `\\x${Buffer.from(header.toBytes()).toString('hex')}`;
+      msg.header = `0x${Buffer.from(header.toBytes()).toString('hex')}`;
       const routeIdxBuf = Buffer.allocUnsafe(4);
       routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
-      msg.routeIdx = `\\x${routeIdxBuf.toString('hex')}`;
+      msg.routeIdx = `0x${routeIdxBuf.toString('hex')}`;
     } else {
       const [service, name] = getServiceAndFn(msg.payload);
       msg.service = service;
@@ -166,10 +166,10 @@ export class MessageState {
       msg.isSailsIdlV2 = ok;
 
       if (ok && header) {
-        msg.header = `\\x${Buffer.from(header.toBytes()).toString('hex')}`;
+        msg.header = `0x${Buffer.from(header.toBytes()).toString('hex')}`;
         const routeIdxBuf = Buffer.allocUnsafe(4);
         routeIdxBuf.writeUInt32LE(header.routeIdx, 0);
-        msg.routeIdx = `\\x${routeIdxBuf.toString('hex')}`;
+        msg.routeIdx = `0x${routeIdxBuf.toString('hex')}`;
       } else {
         const [service, name] = getServiceAndFn(msg.payload);
         msg.service = service;
@@ -200,7 +200,7 @@ export class MessageState {
     }
   }
 
-  async getMessageId(childId: string): Promise<PgByteaString | null> {
+  async getMessageId(childId: string): Promise<Hex | null> {
     const finder = Object.entries(this._cachedMessages).map(([parentId, nonce]: [string, number]) => {
       return findChildMessageId(parentId as Hex, childId as Hex, Number(nonce));
     });
@@ -208,7 +208,7 @@ export class MessageState {
     return Promise.any(finder)
       .then(({ parentId, nonce }) => {
         this._saveParentMsgId(parentId, nonce);
-        return toPgByteaString(parentId as Hex);
+        return parentId;
       })
       .catch<null>(() => null);
   }

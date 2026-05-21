@@ -11,15 +11,14 @@ import {
 import {
   Code,
   CodeStatus,
+  type Hex,
   MessageEntryPoint,
   MessageFromProgram,
   MessageReadReason,
   MessageToProgram,
   MetaType,
-  type PgByteaString,
   Program,
   ProgramStatus,
-  toPgByteaString,
   Voucher,
 } from './model/index.js';
 
@@ -56,7 +55,7 @@ export interface IHandleEventProps<E = Event> {
   event: E;
   common: {
     timestamp: Date;
-    blockHash: PgByteaString;
+    blockHash: Hex;
     blockNumber: string;
     specVersion: number;
   };
@@ -90,8 +89,8 @@ export async function handleMessageQueued({
   const msg = new MessageToProgram({
     ...common,
     id: event.args.id,
-    source: toPgByteaString(event.args.source),
-    destination: toPgByteaString(event.args.destination),
+    source: event.args.source,
+    destination: event.args.destination,
     entry: MsgEntryPoint[event.args.entry.__kind.toLowerCase()],
   });
 
@@ -108,13 +107,13 @@ export async function handleMessageQueued({
 }
 
 export async function handleUserMessageSent({ event, common, batchState }: IHandleEventProps<EUserMessageSent>) {
-  const replyToMessageId = event.args.message.details ? toPgByteaString(event.args.message.details.to) : null;
+  const replyToMessageId = event.args.message.details ? event.args.message.details.to : null;
   const msg = new MessageFromProgram({
     ...common,
     id: event.args.message.id,
-    source: toPgByteaString(event.args.message.source),
-    destination: toPgByteaString(event.args.message.destination),
-    payload: toPgByteaString(event.args.message.payload),
+    source: event.args.message.source,
+    destination: event.args.message.destination,
+    payload: event.args.message.payload,
     value: String(event.args.message.value),
     replyToMessageId,
     expiration: event.args.expiration || null,
@@ -196,9 +195,7 @@ export async function handleCodeChanged({ event, common, batchState }: IHandleEv
 }
 
 export async function handleMessagesDispatched({ event, batchState }: IHandleEventProps<EMessagesDispatched>) {
-  await batchState.messages.setDispatchStatuses(
-    event.args.statuses.map((s) => ({ id: s[0], status: s[1].__kind })),
-  );
+  await batchState.messages.setDispatchStatuses(event.args.statuses.map((s) => ({ id: s[0], status: s[1].__kind })));
 }
 
 const reasons = {
@@ -230,8 +227,8 @@ export function handleVoucherIssued({ event, block, batchState, common }: IHandl
 
   const voucher = new Voucher({
     id: event.args.voucherId,
-    owner: toPgByteaString(event.args.owner),
-    spender: toPgByteaString(event.args.spender),
+    owner: event.args.owner,
+    spender: event.args.spender,
     amount: balance,
     balance,
     programs: call.args.programs,
@@ -259,7 +256,7 @@ export function handleVoucherUpdated({ event, block, batchState, common }: IHand
     voucher.updatedAt = atTime;
 
     if (call.args.moveOwnership) {
-      voucher.owner = toPgByteaString(call.args.moveOwnership);
+      voucher.owner = call.args.moveOwnership;
     }
 
     if (call.args.balanceTopUp) {

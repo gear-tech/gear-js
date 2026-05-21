@@ -2,7 +2,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { MessageReadReason } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
-import type { PgByteaString } from '../types.js';
+import type { Hex } from '../types.js';
 
 @Entity({ name: 'message_from_program' })
 @Index(['destination', 'timestamp'])
@@ -38,28 +38,28 @@ export class MessageFromProgram {
   public timestamp: Date;
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public destination: PgByteaString;
+  public destination: Hex;
 
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public source: PgByteaString;
+  public source: Hex;
 
   @Column({ type: 'bytea', nullable: true, name: 'parent_id', transformer: hexToBytea })
-  public parentId: PgByteaString | null;
+  public parentId: Hex | null;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: PgByteaString;
+  public blockHash: Hex;
 
   @Column({ type: 'bytea', nullable: true, name: 'reply_to_msg_id', transformer: hexToBytea })
-  public replyToMessageId?: PgByteaString | null;
+  public replyToMessageId?: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public header: PgByteaString | null;
+  public header: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, name: 'route_idx', transformer: hexToBytea })
-  public routeIdx: PgByteaString | null;
+  public routeIdx: Hex | null;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public payload: PgByteaString | null;
+  public payload: Hex | null;
 
   @Column({ nullable: true })
   public service?: string | null;

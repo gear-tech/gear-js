@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 import { hexToBytea } from '../transformers.js';
-import type { PgByteaString } from '../types.js';
+import type { Hex } from '../types.js';
 
 @Entity()
 export class Event {
@@ -24,16 +24,16 @@ export class Event {
 
   @Index()
   @Column({ type: 'bytea', transformer: hexToBytea })
-  public source: PgByteaString;
+  public source: Hex;
 
   @Column({ type: 'bytea', nullable: true, name: 'parent_id', transformer: hexToBytea })
-  public parentId: PgByteaString | null;
+  public parentId: Hex | null;
 
   @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
-  public blockHash: PgByteaString;
+  public blockHash: Hex;
 
   @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
-  public payload: PgByteaString | null;
+  public payload: Hex | null;
 
   @Column({ nullable: true })
   public service?: string | null;
