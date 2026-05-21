@@ -9,8 +9,8 @@ export class Event {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: PgByteaString;
+  @PrimaryColumn({ type: 'varchar', length: 66 })
+  public id: string;
 
   // ── 8-byte fixed ──────────────────────────────────────────────────────────
 

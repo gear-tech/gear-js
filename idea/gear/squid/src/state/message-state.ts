@@ -2,7 +2,7 @@ import type { HexString } from '@gear-js/api';
 import { hexToU8a } from '@polkadot/util';
 import type { Store } from '@subsquid/typeorm-store';
 import type { DataCache } from 'gear-idea-common';
-import { cacheKey, fromPgByteaString, type PgByteaString, toPgByteaString } from 'gear-idea-indexer-db';
+import { cacheKey, toPgByteaString, type Hex, type PgByteaString } from 'gear-idea-indexer-db';
 import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
 import { SailsMessageHeader } from 'sails-js/parser';
 import { In } from 'typeorm';
@@ -43,13 +43,13 @@ function getServiceAndFn(payload: string | null) {
 }
 
 export class MessageState {
-  private _messagesFromProgram: Map<PgByteaString, MessageFromProgram>;
-  private _messagesToProgram: Map<PgByteaString, MessageToProgram>;
-  private _events: Map<PgByteaString, Event>;
-  private _cachedMessages: { [key: PgByteaString]: number };
-  private _updatedParentIds: Set<PgByteaString>;
-  private _removedParentIds: Set<PgByteaString>;
-  private _readReasons: Map<PgByteaString, MessageReadReason>;
+  private _messagesFromProgram: Map<string, MessageFromProgram>;
+  private _messagesToProgram: Map<string, MessageToProgram>;
+  private _events: Map<string, Event>;
+  private _cachedMessages: { [key: string]: number };
+  private _updatedParentIds: Set<string>;
+  private _removedParentIds: Set<string>;
+  private _readReasons: Map<string, MessageReadReason>;
   private _ctx: ProcessorContext<Store>;
   private readonly _cache: DataCache;
   private readonly _genesisHash: string;
@@ -184,11 +184,11 @@ export class MessageState {
     }
   }
 
-  setReadStatus(id: PgByteaString, reason: MessageReadReason) {
+  setReadStatus(id: string, reason: MessageReadReason) {
     this._readReasons.set(id, reason);
   }
 
-  async setDispatchStatuses(messages: { id: PgByteaString; status: MessageStatus }[]) {
+  async setDispatchStatuses(messages: { id: string; status: MessageStatus }[]) {
     await this._queryMsgsToProgram(messages.map(({ id }) => id));
 
     for (const { id, status } of messages) {
@@ -200,32 +200,33 @@ export class MessageState {
     }
   }
 
-  async getMessageId(childId: PgByteaString): Promise<PgByteaString | null> {
-    const finder = Object.entries(this._cachedMessages).map(([parentId, nonce]: [PgByteaString, number]) => {
-      return findChildMessageId(fromPgByteaString(parentId), fromPgByteaString(childId), Number(nonce));
+  async getMessageId(childId: string): Promise<PgByteaString | null> {
+    const finder = Object.entries(this._cachedMessages).map(([parentId, nonce]: [string, number]) => {
+      return findChildMessageId(parentId as Hex, childId as Hex, Number(nonce));
     });
 
     return Promise.any(finder)
       .then(({ parentId, nonce }) => {
-        return this._saveParentMsgId(toPgByteaString(parentId), nonce);
+        this._saveParentMsgId(parentId, nonce);
+        return toPgByteaString(parentId as Hex);
       })
       .catch<null>(() => null);
   }
 
-  private _saveParentMsgId(parentId: PgByteaString, nonce = 0): PgByteaString {
+  private _saveParentMsgId(parentId: string, nonce = 0): string {
     this._cachedMessages[parentId] = nonce;
     this._updatedParentIds.add(parentId);
     this._removedParentIds.delete(parentId);
     return parentId;
   }
 
-  private _removeParentMsgId(parentId: PgByteaString) {
+  private _removeParentMsgId(parentId: string) {
     delete this._cachedMessages[parentId];
     this._removedParentIds.add(parentId);
     this._updatedParentIds.delete(parentId);
   }
 
-  private async _queryMsgsToProgram(ids: PgByteaString[]) {
+  private async _queryMsgsToProgram(ids: string[]) {
     const msgsToQuery = ids.filter((id) => !this._messagesToProgram.has(id));
     if (msgsToQuery.length > 0) {
       const msgs = await this._ctx.store.find(MessageToProgram, { where: { id: In(msgsToQuery) } });
@@ -235,7 +236,7 @@ export class MessageState {
     }
   }
 
-  private async _queryMsgsFromProgram(ids: PgByteaString[]) {
+  private async _queryMsgsFromProgram(ids: string[]) {
     const msgsToQuery = ids.filter((id) => !this._messagesFromProgram.has(id));
     if (msgsToQuery.length > 0) {
       const msgs = await this._ctx.store.find(MessageFromProgram, { where: { id: In(msgsToQuery) } });

@@ -4,11 +4,6 @@ import { MessageReadReason } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
 import type { PgByteaString } from '../types.js';
 
-// Column order is tuned for PostgreSQL alignment.
-// id (bytea) ends at offset 33.
-// bool advances to 34; int4 needs 2-byte pad to reach 36, then three int4s land at 36/40/44;
-// bigints start at 48 — zero padding throughout.
-
 @Entity({ name: 'message_from_program' })
 @Index(['destination', 'timestamp'])
 @Index(['source', 'timestamp'])
@@ -18,10 +13,8 @@ export class MessageFromProgram {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: PgByteaString;
-
-  // 33→34: bool, then 34→(2pad)→36: int4s bridge to 8-byte boundary at 48 ──
+  @PrimaryColumn({ type: 'varchar', length: 66 })
+  public id: string;
 
   @Column({ name: 'is_sails_idl_v2', default: false })
   public isSailsIdlV2: boolean;
@@ -35,18 +28,14 @@ export class MessageFromProgram {
   @Column({ type: 'enum', enum: MessageReadReason, nullable: true, default: null, name: 'read_reason' })
   public readReason?: MessageReadReason | null;
 
-  // 48→56→64→72: zero padding ───────────────────────────────────────────────
-
-  @Column({ type: 'bigint', default: 0n })
-  public value: bigint;
+  @Column({ type: 'numeric', default: '0' })
+  public value: string;
 
   @Column({ name: 'block_number', type: 'bigint' })
   public blockNumber: string;
 
   @Column({ type: 'timestamptz' })
   public timestamp: Date;
-
-  // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', transformer: hexToBytea })
   public destination: PgByteaString;

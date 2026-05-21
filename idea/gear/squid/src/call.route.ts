@@ -16,7 +16,7 @@ export function handleUploadProgram({ msg, event, common, batchState, call }: IH
   batchState.addProgram(
     new Program({
       ...common,
-      id: toPgByteaString(event.args.destination),
+      id: event.args.destination,
       codeId: toPgByteaString(codeId),
       owner: toPgByteaString(event.args.source),
       name: event.args.destination,
@@ -24,22 +24,22 @@ export function handleUploadProgram({ msg, event, common, batchState, call }: IH
     }),
   );
   msg.payload = toPgByteaString(call.args.initPayload);
-  msg.value = BigInt(call.args.value);
+  msg.value = String(call.args.value);
 }
 
 export function handleSendMessageCall({ msg, call }: IHandleCallProps<CSendMessage>) {
   msg.payload = toPgByteaString(call.args.payload);
-  msg.value = BigInt(call.args.value);
+  msg.value = String(call.args.value);
 }
 
 export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps<CVoucherCall>) {
   if (call.args.call.__kind === 'SendMessage') {
     msg.payload = toPgByteaString(call.args.call.payload);
-    msg.value = BigInt(call.args.call.value);
+    msg.value = String(call.args.call.value);
   } else if (call.args.call.__kind === 'SendReply') {
     msg.payload = toPgByteaString(call.args.call.payload);
     msg.replyToMessageId = toPgByteaString(call.args.call.replyToId);
-    msg.value = BigInt(call.args.call.value);
+    msg.value = String(call.args.call.value);
   } else {
     ctx.log.error(call, 'Unknown voucher call');
   }
@@ -49,7 +49,7 @@ export function handleCreateProgram({ msg, event, common, batchState, call }: IH
   batchState.addProgram(
     new Program({
       ...common,
-      id: toPgByteaString(event.args.destination),
+      id: event.args.destination,
       codeId: toPgByteaString(call.args.codeId),
       owner: toPgByteaString(event.args.source),
       name: event.args.destination,
@@ -58,11 +58,11 @@ export function handleCreateProgram({ msg, event, common, batchState, call }: IH
   );
 
   msg.payload = toPgByteaString(call.args.initPayload);
-  msg.value = BigInt(call.args.value);
+  msg.value = String(call.args.value);
 }
 
 export function handleSendReplyCall({ msg, call }: IHandleCallProps<CSendReply>) {
   msg.payload = toPgByteaString(call.args.payload);
-  msg.value = BigInt(call.args.value);
+  msg.value = String(call.args.value);
   msg.replyToMessageId = toPgByteaString(call.args.replyToId);
 }

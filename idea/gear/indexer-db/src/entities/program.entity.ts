@@ -4,9 +4,6 @@ import { MetaType, ProgramStatus } from '../enums/index.js';
 import { hexToBytea } from '../transformers.js';
 import type { PgByteaString } from '../types.js';
 
-// Column order is tuned for PostgreSQL alignment.
-// id (bytea) ends at offset 33. status (int4) fills 33→36 (+3 pad), reaching 8-byte boundary at 40.
-
 @Entity()
 @Index(['codeId', 'timestamp'])
 export class Program {
@@ -14,23 +11,17 @@ export class Program {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea', transformer: hexToBytea })
-  public id: PgByteaString;
-
-  // 33→(3pad)→36: int4 bridges to 8-byte boundary ──────────────────────────
+  @PrimaryColumn({ type: 'varchar', length: 66 })
+  public id: string;
 
   @Column({ type: 'enum', enum: ProgramStatus, default: ProgramStatus.Unknown })
   public status: ProgramStatus;
-
-  // 40→48→56: zero padding ──────────────────────────────────────────────────
 
   @Column({ name: 'block_number', type: 'bigint' })
   public blockNumber: string;
 
   @Column({ type: 'timestamptz' })
   public timestamp: Date;
-
-  // ── variable-length ───────────────────────────────────────────────────────
 
   @Column({ type: 'bytea', name: 'code_id', transformer: hexToBytea })
   public codeId: PgByteaString;

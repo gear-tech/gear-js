@@ -3,7 +3,7 @@ import type { SiLookupTypeId } from '@polkadot/types/interfaces';
 import { xxhashAsHex } from '@polkadot/util-crypto';
 import type { Store } from '@subsquid/typeorm-store';
 import type { DataCache } from 'gear-idea-common';
-import { cacheKey, type PgByteaString } from 'gear-idea-indexer-db';
+import { cacheKey } from 'gear-idea-indexer-db';
 import { In } from 'typeorm';
 
 import { Code, type CodeStatus, Program, type ProgramStatus } from '../model/index.js';
@@ -18,12 +18,12 @@ const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
 const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2);
 
 export class BatchState {
-  private _programs: Map<PgByteaString, Program>;
-  private _newPrograms: Set<PgByteaString>;
-  private _changedProgramIds: Set<PgByteaString>;
-  private _codes: Map<PgByteaString, Code>;
-  private _programStatusUpdates: Map<PgByteaString, { status: ProgramStatus; expiration?: string }>;
-  private _codeStatusUpdates: Map<PgByteaString, CodeStatus>;
+  private _programs: Map<string, Program>;
+  private _newPrograms: Set<string>;
+  private _changedProgramIds: Set<string>;
+  private _codes: Map<string, Code>;
+  private _programStatusUpdates: Map<string, { status: ProgramStatus; expiration?: string }>;
+  private _codeStatusUpdates: Map<string, CodeStatus>;
   private _ctx: ProcessorContext<Store>;
   private _metadata: Metadata;
   private _registry: TypeRegistry;
@@ -117,7 +117,7 @@ export class BatchState {
     this._codes.set(code.id, code);
   }
 
-  async getProgram(id: PgByteaString): Promise<Program | null> {
+  async getProgram(id: string): Promise<Program | null> {
     if (this._programs.has(id)) {
       return this._programs.get(id) ?? null;
     }
@@ -130,7 +130,7 @@ export class BatchState {
     }
   }
 
-  async getCode(id: PgByteaString): Promise<Code | null> {
+  async getCode(id: string): Promise<Code | null> {
     if (this._codes.has(id)) {
       return this._codes.get(id) ?? null;
     }
@@ -143,22 +143,22 @@ export class BatchState {
     }
   }
 
-  async isProgramIndexed(id: PgByteaString): Promise<boolean> {
+  async isProgramIndexed(id: string): Promise<boolean> {
     return !!(await this.getProgram(id));
   }
 
-  setProgramStatus(id: PgByteaString, status: ProgramStatus, expiration?: string) {
+  setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
     this._ctx.log.debug({ id, status, expiration }, 'setProgramStatus');
     this._programStatusUpdates.set(id, { status, expiration });
     this._changedProgramIds.add(id);
   }
 
-  setCodeStatus(id: PgByteaString, status: CodeStatus) {
+  setCodeStatus(id: string, status: CodeStatus) {
     this._ctx.log.debug({ id, status }, 'setCodeStatus');
     this._codeStatusUpdates.set(id, status);
   }
 
-  async getCodeId(programId: PgByteaString, block: Block) {
+  async getCodeId(programId: string, block: Block) {
     const param = PROGRAM_STORAGE_PREFIX + programId.slice(2);
 
     const calls = [{ method: 'state_getStorage', params: [param, block.hash] }];
@@ -200,7 +200,7 @@ export class BatchState {
     return '0x';
   }
 
-  private async _queryPrograms(ids: PgByteaString[]) {
+  private async _queryPrograms(ids: string[]) {
     const programsToQuery = ids.filter((id) => !this._programs.has(id));
     if (programsToQuery.length > 0) {
       const programs = await this._ctx.store.find(Program, { where: { id: In(programsToQuery) } });
