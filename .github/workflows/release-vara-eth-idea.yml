@@ -135,6 +135,8 @@ jobs:
               echo "upload-code-service=true" >> "$GITHUB_OUTPUT"
             else
               echo "upload-code-service=false" >> "$GITHUB_OUTPUT"
+            fi
+
             if [[ "${{ github.event.inputs.service }}" == "explorer" || "${{ github.event.inputs.service }}" == "all" ]]; then
               echo "explorer=true" >> "$GITHUB_OUTPUT"
             else
