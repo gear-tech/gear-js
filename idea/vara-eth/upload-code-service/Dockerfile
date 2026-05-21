@@ -26,6 +26,7 @@ RUN yarn workspaces focus @vara-eth/api @vara-eth/idea-upload-code @gear-js/logg
 
 FROM deps
 
+COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 COPY --from=builder /src/idea/vara-eth/upload-code-service/dist /src/idea/vara-eth/upload-code-service/dist
 COPY --from=builder /src/utils/logger/src /src/utils/logger/src
 

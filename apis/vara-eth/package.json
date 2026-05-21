@@ -60,7 +60,7 @@
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
     "viem": "npm:@vara-eth/viem@2.48.11",
-    "ws": "8.20.0"
+    "ws": "8.20.1"
   },
   "files": [
     "lib"
