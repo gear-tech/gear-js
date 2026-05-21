@@ -1,11 +1,12 @@
 import type { DataCache } from 'gear-idea-common';
 import { cacheKey, MetaType, Program } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
-
 import { Pagination } from '../decorators/index.js';
 import { RequiredParams } from '../decorators/required.js';
 import { ProgramNotFound } from '../errors/index.js';
+import { PROGRAM_STATUS_REVERSE, serializeProgram } from '../serializers.js';
 import type { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types/index.js';
+import { hexToBuffer } from '../utils.js';
 
 const $24_HOURS = 24 * 60 * 1000;
 
@@ -63,18 +64,18 @@ export class ProgramService {
     const key = cacheKey.programData(this._genesis, id);
     const cached = await this._dataCache.get(key, () => this._repo.findOne({ where: { id } }), $24_HOURS);
 
-    return cached ?? null;
+    return cached ? (serializeProgram(cached) as Program) : null;
   }
 
   private async _queryPrograms(params: Partial<ParamGetPrograms>): Promise<ResManyResult<Program>> {
     const qb = this._repo.createQueryBuilder('program');
 
     if (params.owner) {
-      qb.andWhere('program.owner = :owner', { owner: params.owner });
+      qb.andWhere('program.owner = :owner', { owner: hexToBuffer(params.owner) });
     }
 
     if (params.codeId) {
-      qb.andWhere('program.codeId = :codeId', { codeId: params.codeId });
+      qb.andWhere('program.codeId = :codeId', { codeId: hexToBuffer(params.codeId) });
     }
 
     if (params.name) {
@@ -82,16 +83,17 @@ export class ProgramService {
     }
 
     if (params.status) {
+      const toNumeric = (s: string) => PROGRAM_STATUS_REVERSE[s] ?? s;
       if (Array.isArray(params.status)) {
-        qb.andWhere('program.status IN (:...status)', { status: params.status });
+        qb.andWhere('program.status IN (:...status)', { status: params.status.map(toNumeric) });
       } else {
-        qb.andWhere('program.status = :status', { status: params.status });
+        qb.andWhere('program.status = :status', { status: toNumeric(params.status) });
       }
     }
 
     if (params.query) {
-      qb.andWhere("(encode(program.id, 'hex') ILIKE :query OR program.name ILIKE :query)", {
-        query: `%${params.query.toLowerCase().replace('0x', '')}%`,
+      qb.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', {
+        query: `%${params.query.toLowerCase()}%`,
       });
     }
 
@@ -99,7 +101,7 @@ export class ProgramService {
 
     const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
 
-    return { result, count };
+    return { result: result.map(serializeProgram) as Program[], count };
   }
 
   async setMeta({ id, metaType, name }: ParamSetProgramMeta) {

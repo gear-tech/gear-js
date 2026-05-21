@@ -1,5 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CODE_1_ID, PROGRAM_ACTIVE_ID, PROGRAM_OWNER, PROGRAM_TERMINATED_ID, UNKNOWN_ID } from './fixtures.js';
+import {
+  CODE_1_ID,
+  CODE_2_ID,
+  PROGRAM_ACTIVE_ID,
+  PROGRAM_OWNER,
+  PROGRAM_TERMINATED_ID,
+  UNKNOWN_ID,
+} from './fixtures.js';
 import { assertList, err, ID_REGEXP, ok, rpc } from './helpers.js';
 import { getAgent, setup, teardown } from './setup.js';
 
@@ -43,7 +50,7 @@ describe('program.data response shape', () => {
     expect(program.id).toBe(PROGRAM_ACTIVE_ID);
     expect(program.owner).toBe(PROGRAM_OWNER);
     expect(program.status).toBe('active');
-    expect(program.codeId).toBe(CODE_1_ID);
+    expect(program.codeId).toBe(CODE_2_ID);
   });
 });
 

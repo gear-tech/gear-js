@@ -37,6 +37,7 @@ export function assertList(result: any) {
   expect(result).toHaveProperty('count');
   expect(Array.isArray(result.result)).toBe(true);
   expect(typeof result.count).toBe('number');
+  return result;
 }
 
 export const ID_REGEXP = /^0x[0-9a-f]{64}$/i;

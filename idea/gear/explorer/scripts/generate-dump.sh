@@ -67,7 +67,7 @@ copy_table "code" 3
 copy_table "program" 6
 copy_table "message_from_program" 10
 copy_table "message_to_program" 10
-copy_table "event" 5
+copy_table "event" 10
 copy_table "voucher" 5 "issued_at"
 
 # ── Dump data ──────────────────────────────────────────────────────────────────

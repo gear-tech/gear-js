@@ -4,6 +4,7 @@ import type { DataSource, Repository } from 'typeorm';
 import { Pagination } from '../decorators/index.js';
 import { RequiredParams } from '../decorators/required.js';
 import { CodeNotFound } from '../errors/index.js';
+import { serializeCode } from '../serializers.js';
 import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types/index.js';
 import { hexToBuffer } from '../utils.js';
 
@@ -22,7 +23,7 @@ export class CodeService {
       throw new CodeNotFound();
     }
 
-    return c;
+    return serializeCode(c) as Code;
   }
 
   @Pagination()
@@ -47,8 +48,8 @@ export class CodeService {
     }
 
     if (query) {
-      qb.andWhere("(encode(code.id, 'hex') ILIKE :query OR code.name ILIKE :query)", {
-        query: `%${query.toLowerCase().replace('0x', '')}%`,
+      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', {
+        query: `%${query.toLowerCase()}%`,
       });
     }
 
@@ -56,7 +57,7 @@ export class CodeService {
 
     const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
 
-    return { result, count };
+    return { result: result.map(serializeCode) as Code[], count };
   }
 
   @RequiredParams(['id'])

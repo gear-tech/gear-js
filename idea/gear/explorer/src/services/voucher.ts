@@ -42,9 +42,9 @@ export class VoucherService {
 
     if (id) {
       if (id.length === 66) {
-        qb.andWhere('v.id = :id', { id: hexToBuffer(id) });
+        qb.andWhere('v.id = :id', { id });
       } else {
-        qb.andWhere("encode(v.id, 'hex') LIKE :id", { id: `%${id.toLowerCase().replace('0x', '')}%` });
+        qb.andWhere('v.id LIKE :id', { id: `%${id.toLowerCase()}%` });
       }
     }
 

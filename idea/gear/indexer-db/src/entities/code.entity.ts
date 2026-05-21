@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { CodeStatus, MetaType } from '../enums/index.js';
-import { codeStatusTransformer, hexToBytea } from '../transformers.js';
+import { hexToBytea } from '../transformers.js';
 import type { Hex } from '../types.js';
 
 @Entity()
@@ -13,7 +13,7 @@ export class Code {
   @PrimaryColumn({ type: 'varchar', length: 66 })
   public id: string;
 
-  @Column({ type: 'enum', enum: CodeStatus, transformer: codeStatusTransformer })
+  @Column({ type: 'enum', enum: CodeStatus })
   public status: CodeStatus;
 
   @Column({ name: 'block_number', type: 'bigint' })

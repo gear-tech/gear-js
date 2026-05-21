@@ -5,6 +5,7 @@ import type { DataSource, Repository } from 'typeorm';
 import { Pagination } from '../decorators/index.js';
 import { RequiredParams } from '../decorators/required.js';
 import { InvalidParams, MessageNotFound } from '../errors/index.js';
+import { ENTRY_REVERSE, serializeMsgFromProgram, serializeMsgToProgram } from '../serializers.js';
 import type {
   ParamGetMsgsFromProgram,
   ParamGetMsgsToProgram,
@@ -35,7 +36,7 @@ export class MessageService {
       throw new MessageNotFound();
     }
 
-    return m;
+    return serializeMsgToProgram(m) as MessageToProgram;
   }
 
   @RequiredParams(['id'])
@@ -46,7 +47,7 @@ export class MessageService {
       throw new MessageNotFound();
     }
 
-    return m;
+    return serializeMsgFromProgram(m) as MessageFromProgram;
   }
 
   @Pagination()
@@ -73,7 +74,7 @@ export class MessageService {
     }
 
     if (entry) {
-      qb.andWhere('msg.entry = :entry', { entry });
+      qb.andWhere('msg.entry = :entry', { entry: ENTRY_REVERSE[entry] ?? entry });
     }
 
     if (service) {
@@ -87,7 +88,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: hexToBuffer(query) });
+      qb.andWhere('msg.id = :query', { query });
     }
 
     if (from) {
@@ -107,7 +108,7 @@ export class MessageService {
 
     const [result, count] = await Promise.all([qb.getMany(), getCount()]);
 
-    return { result, count };
+    return { result: result.map(serializeMsgToProgram) as MessageToProgram[], count };
   }
 
   @Pagination()
@@ -153,7 +154,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: hexToBuffer(query) });
+      qb.andWhere('msg.id = :query', { query });
     }
 
     if (from) {
@@ -174,6 +175,6 @@ export class MessageService {
 
     const [result, count] = await Promise.all([qb.getMany(), getCount()]);
 
-    return { result, count };
+    return { result: result.map(serializeMsgFromProgram) as MessageFromProgram[], count };
   }
 }
