@@ -137,9 +137,13 @@ export default class Data1747699200000 {
       FROM "message_from_program_old"
     `);
     await db.query(`DROP TABLE "message_from_program_old"`);
-    await db.query(`CREATE INDEX "IDX_efb03e97b43c2467d0a710f2e0" ON "message_from_program" ("parent_id") WHERE "parent_id" IS NOT NULL`);
+    await db.query(
+      `CREATE INDEX "IDX_efb03e97b43c2467d0a710f2e0" ON "message_from_program" ("parent_id") WHERE "parent_id" IS NOT NULL`,
+    );
     await db.query(`CREATE INDEX "IDX_23b9bed872dd32fb59b75ae34b" ON "message_from_program" ("source", "timestamp")`);
-    await db.query(`CREATE INDEX "IDX_f968d93d9312061b84b85a7b39" ON "message_from_program" ("destination", "timestamp")`);
+    await db.query(
+      `CREATE INDEX "IDX_f968d93d9312061b84b85a7b39" ON "message_from_program" ("destination", "timestamp")`,
+    );
 
     // ── message_to_program ────────────────────────────────────────────────────
     await db.query(`DROP INDEX "public"."IDX_856cca228fa032025dd88fbb31"`);
@@ -194,7 +198,9 @@ export default class Data1747699200000 {
     `);
     await db.query(`DROP TABLE "message_to_program_old"`);
     await db.query(`CREATE INDEX "IDX_442e06c7a691260f740032fcad" ON "message_to_program" ("source", "timestamp")`);
-    await db.query(`CREATE INDEX "IDX_f54ab3e3cda6fcdb7447b9afe4" ON "message_to_program" ("destination", "timestamp")`);
+    await db.query(
+      `CREATE INDEX "IDX_f54ab3e3cda6fcdb7447b9afe4" ON "message_to_program" ("destination", "timestamp")`,
+    );
 
     // ── program ───────────────────────────────────────────────────────────────
     await db.query(`DROP INDEX "public"."IDX_2156fc4598c9a1b865d85b5f1e"`);

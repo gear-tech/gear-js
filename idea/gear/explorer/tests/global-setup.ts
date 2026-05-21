@@ -127,7 +127,13 @@ export async function setup() {
   }
 
   console.log('[test setup] Applying migrations...');
-  const client = new Client({ host: dbConfig.host, port: dbConfig.port, user: dbConfig.username, password: dbConfig.password, database: dbConfig.database });
+  const client = new Client({
+    host: dbConfig.host,
+    port: dbConfig.port,
+    user: dbConfig.username,
+    password: dbConfig.password,
+    database: dbConfig.database,
+  });
   await client.connect();
   await applyMigrations(client);
   await client.end();

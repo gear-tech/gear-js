@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { type MetaType } from 'gear-idea-indexer-db';
+import type { MetaType } from 'gear-idea-indexer-db';
 
 import { IsOneOf } from '../../decorators/index.js';
 import { ParamGenesis, ParamPagination } from './common.js';
