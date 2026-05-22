@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Hex } from 'viem';
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 
 import { useApi } from '@/app/api';
 
@@ -17,7 +17,7 @@ type WrappedVaraBalance =
     };
 
 const useWrappedVaraBalance = (address?: Hex) => {
-  const ethAccount = useAccount();
+  const ethAccount = useConnection();
   const { data: api } = useApi();
 
   const targetAddress = address || ethAccount.address;

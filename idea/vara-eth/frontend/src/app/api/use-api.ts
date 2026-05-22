@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createVaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { usePublicClient } from 'wagmi';
+import { useConnection, usePublicClient } from 'wagmi';
 
 import { nodeAtom } from '@/app/store';
 
@@ -11,10 +11,12 @@ import { useSigner } from './use-signer';
 function useApi() {
   const publicClient = usePublicClient();
   const signer = useSigner();
+
+  const { address } = useConnection();
   const { varaEthNodeAddress, routerContractAddress, ethChainId } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId],
+    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId, address],
 
     queryFn: () =>
       createVaraEthApi(new WsVaraEthProvider(varaEthNodeAddress), publicClient!, routerContractAddress, signer),

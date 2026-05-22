@@ -1,4 +1,4 @@
-import { useAccount, useBalance } from 'wagmi';
+import { useBalance, useConnection } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import EthSVG from '@/assets/icons/eth-coin.svg?react';
@@ -10,7 +10,7 @@ import { Skeleton } from '../ui';
 import styles from './header-balance.module.scss';
 
 const HeaderBalance = () => {
-  const ethAccount = useAccount();
+  const ethAccount = useConnection();
   const { value, decimals, isPending } = useWrappedVaraBalance();
 
   const { data: ethBalance } = useBalance({

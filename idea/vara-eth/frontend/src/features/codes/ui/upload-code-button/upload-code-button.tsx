@@ -1,6 +1,6 @@
 import { initKzgLoading } from '@vara-eth/api/util';
 import { useRef, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 
 import { Button, Modal } from '@/components';
 import { useUploadCode } from '@/features/codes/lib';
@@ -11,7 +11,7 @@ export const UploadCodeButton = () => {
   const uploadCode = useUploadCode();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { address } = useAccount();
+  const { address } = useConnection();
   const close = () => setIsOpen(false);
 
   if (!address) return null;

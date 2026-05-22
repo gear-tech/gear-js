@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { type Hex, toHex } from 'viem';
-import { useAccount } from 'wagmi';
+import {  bytesToHex, type Hex } from 'viem';
+import { useConnection } from 'wagmi';
 import { useApi } from '@/app/api';
 import { useAddMyActivity } from '@/app/store';
 import { TransactionTypes } from '@/app/store/my-activity';
 import { nodeAtom } from '@/app/store/node';
 import { CODE_VALIDATION_SERVICE_URL, ETH_CHAIN_ID_MAINNET } from '@/shared/config';
-import { DEFAULT_DEADLINE_MS } from './consts';
+import { DEFAULT_DEADLINE_SECONDS } from './consts';
 import { requestCodeValidation } from './requests';
 import { addValidationJob } from './validation-jobs-storage';
 
@@ -16,10 +16,9 @@ const getNetwork = (ethChainId: number) => (ethChainId === ETH_CHAIN_ID_MAINNET 
 export const useUploadCode = () => {
   const { data: api } = useApi();
   const addMyActivity = useAddMyActivity();
-  const { address } = useAccount();
+  const { address } = useConnection();
 
   const { ethChainId } = useAtomValue(nodeAtom);
-
   const uploadCode = async (code: Uint8Array) => {
     if (!api || !address) return;
 
@@ -33,9 +32,7 @@ export const useUploadCode = () => {
         router.requestCodeValidationBaseFee(),
         router.requestCodeValidationExtraFee(),
       ]);
-
-      const deadline = BigInt(Date.now() + DEFAULT_DEADLINE_MS);
-
+      const deadline = BigInt(Math.floor(Date.now() / 1000) + DEFAULT_DEADLINE_SECONDS);
       const { signature: wvaraPermitSig } = await wvara.prepareAndSignPermitData(
         router.address,
         baseFee + extraFee,
@@ -54,7 +51,7 @@ export const useUploadCode = () => {
 
       const { jobId } = await requestCodeValidation(CODE_VALIDATION_SERVICE_URL, network, {
         sender: address,
-        code: toHex(code),
+        code: bytesToHex(code),
         codeId,
         blobHashes,
         deadline: Number(deadline),
