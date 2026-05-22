@@ -15,7 +15,10 @@ export function hash(method: string, data: unknown): string {
     data !== null && typeof data === 'object'
       ? JSON.stringify(data, Object.keys(data as object).sort())
       : JSON.stringify(data);
-  return crypto.createHash('sha1').update(method + stable).digest('base64');
+  return crypto
+    .createHash('sha1')
+    .update(method + stable)
+    .digest('base64');
 }
 
 export class DataCache {
