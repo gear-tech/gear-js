@@ -4,5 +4,6 @@ export const cacheKey = {
   eventsSource: (genesis: string, addr: string) => `events:${genesis}:source:${addr}`,
   programData: (genesis: string, id: string) => `pdata:${genesis}:${id}`,
   programsVersion: (genesis: string) => `programs:${genesis}:version`,
-  programsPage: (genesis: string, offset: number | string) => `programs:${genesis}:page:${offset}`,
+  programsPage: (genesis: string, offset: number | string, limit: number | string) =>
+    `programs:${genesis}:page:${offset}:limit:${limit}`,
 };

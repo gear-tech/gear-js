@@ -54,7 +54,7 @@ export class ProgramService {
     }
 
     return this._dataCache.getVersioned(
-      cacheKey.programsPage(this._genesis, pageOffset),
+      cacheKey.programsPage(this._genesis, pageOffset, limit),
       cacheKey.programsVersion(this._genesis),
       () => this._queryPrograms({ limit, offset }),
     );

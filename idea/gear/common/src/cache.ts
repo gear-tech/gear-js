@@ -11,10 +11,11 @@ const INCRBY_IF_EXISTS = `
 `;
 
 export function hash(method: string, data: unknown): string {
-  return crypto
-    .createHash('sha1')
-    .update(method + JSON.stringify(data))
-    .digest('base64');
+  const stable =
+    data !== null && typeof data === 'object'
+      ? JSON.stringify(data, Object.keys(data as object).sort())
+      : JSON.stringify(data);
+  return crypto.createHash('sha1').update(method + stable).digest('base64');
 }
 
 export class DataCache {
@@ -39,8 +40,11 @@ export class DataCache {
     port?: string | number;
   }): Promise<DataCache> {
     if (!cfg.host) return new DataCache(null);
-    const url = `redis://${cfg.user}:${cfg.password}@${cfg.host}:${cfg.port}`;
-    const client = createClient({ url }) as RedisClientType;
+    const client = createClient({
+      username: cfg.user,
+      password: cfg.password,
+      socket: { host: cfg.host, port: Number(cfg.port) || 6379 },
+    }) as RedisClientType;
     try {
       await client.connect();
       return new DataCache(client);
@@ -67,7 +71,7 @@ export class DataCache {
     const cached = await this._redis.get(key);
     if (cached !== null) return Number(cached);
     const result = await fallback();
-    if (result !== 0) this._redis.set(key, result.toString()).catch(() => {});
+    this._redis.set(key, result.toString()).catch(() => {});
     return result;
   }
 
@@ -118,7 +122,7 @@ export class DataCache {
 
     if (cached !== null) {
       const wrapper = JSON.parse(cached as string) as { v: string; data: T };
-      if (wrapper.v === currentVersion) return wrapper.data;
+      if (wrapper.v === (currentVersion ?? '0')) return wrapper.data;
     }
 
     const data = await fallback();
