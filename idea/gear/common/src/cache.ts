@@ -71,7 +71,7 @@ export class DataCache {
     const cached = await this._redis.get(key);
     if (cached !== null) return Number(cached);
     const result = await fallback();
-    this._redis.set(key, result.toString()).catch(() => {});
+    if (result !== 0) this._redis.set(key, result.toString()).catch(() => {});
     return result;
   }
 
