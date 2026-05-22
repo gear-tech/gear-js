@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import { useAddMyActivity } from '@/app/store';
 import { TransactionTypes } from '@/app/store/my-activity';
-import { CODE_VALIDATION_SERVICE_URL } from '@/shared/config';
+import { CODE_VALIDATION_SERVICE_URL, routes } from '@/shared/config';
 
 import { POLL_INTERVAL_MS } from './consts';
 import { getCodeValidationStatus } from './requests';
@@ -11,6 +12,7 @@ import { getValidationJobs, removeValidationJob } from './validation-jobs-storag
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const useCodeValidationPolling = () => {
+  const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 
   useEffect(() => {
@@ -47,6 +49,10 @@ export const useCodeValidationPolling = () => {
                   resultStatus: status === 'success' ? 'success' : 'error',
                   error: status === 'success' ? undefined : 'validation error',
                 });
+
+                if (status === 'success') {
+                  void navigate(generatePath(routes.code, { codeId }));
+                }
               }
             } catch (error) {
               console.error('Code validation polling job failed:', { jobId, error });
@@ -67,5 +73,5 @@ export const useCodeValidationPolling = () => {
     return () => {
       isCancelled = true;
     };
-  }, [addMyActivity]);
+  }, [addMyActivity, navigate]);
 };

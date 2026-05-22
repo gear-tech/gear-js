@@ -1,3 +1,4 @@
+import { initKzgLoading } from '@vara-eth/api/util';
 import { useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -17,6 +18,7 @@ export const UploadCodeButton = () => {
 
   const onSelectFile = () => {
     inputRef.current?.click();
+    initKzgLoading();
   };
 
   const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = async (event) => {

@@ -1,13 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { generatePath, useNavigate } from 'react-router-dom';
 import { type Hex, toHex } from 'viem';
 import { useAccount } from 'wagmi';
 import { useApi } from '@/app/api';
 import { useAddMyActivity } from '@/app/store';
 import { TransactionTypes } from '@/app/store/my-activity';
 import { nodeAtom } from '@/app/store/node';
-import { CODE_VALIDATION_SERVICE_URL, ETH_CHAIN_ID_MAINNET, routes } from '@/shared/config';
+import { CODE_VALIDATION_SERVICE_URL, ETH_CHAIN_ID_MAINNET } from '@/shared/config';
 import { DEFAULT_DEADLINE_MS } from './consts';
 import { requestCodeValidation } from './requests';
 import { addValidationJob } from './validation-jobs-storage';
@@ -16,7 +15,6 @@ const getNetwork = (ethChainId: number) => (ethChainId === ETH_CHAIN_ID_MAINNET 
 
 export const useUploadCode = () => {
   const { data: api } = useApi();
-  const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
   const { address } = useAccount();
 
@@ -73,8 +71,6 @@ export const useUploadCode = () => {
         error: undefined,
       });
       hasPendingActivityAdded = true;
-
-      void navigate(generatePath(routes.code, { codeId }));
     } catch (error) {
       if (codeId && !hasPendingActivityAdded) {
         const errorMessage = error instanceof Error ? error.message : 'validation request error';
