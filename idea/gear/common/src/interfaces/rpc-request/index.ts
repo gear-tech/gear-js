@@ -1,4 +1,9 @@
-import type { API_GATEWAY_METHODS, INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '../../enums/index.js';
+import type {
+  API_GATEWAY_METHODS,
+  INDEXER_METHODS,
+  META_STORAGE_METHODS,
+  TEST_BALANCE_METHODS,
+} from '../../enums/index.js';
 import type { IRpcResponse } from '../api-response.js';
 
 export * from './indexer.js';

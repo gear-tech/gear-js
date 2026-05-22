@@ -1,5 +1,4 @@
 import { CronJob } from 'cron';
-
 import type { Logger } from 'winston';
 import type { FaucetRequest, FaucetType } from '../../database/index.js';
 import type { LastSeenService, RequestService } from '../db/index.js';

@@ -1,10 +1,11 @@
 {
   "name": "gear-idea-faucet",
   "private": true,
+  "type": "module",
   "version": "1.4.26",
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "test": "npx jest --clearCache && npx jest --runInBand",
+    "test": "npx vitest run",
     "start": "node dist/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "clean": "echo \"clean gear-idea-faucet\" && rm -rf dist",

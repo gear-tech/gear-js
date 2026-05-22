@@ -1,7 +1,7 @@
-import 'reflect-metadata';
 import { decodeAddress } from '@gear-js/api';
 import { validateOrReject } from 'class-validator';
 import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
+import 'reflect-metadata';
 import { In, type Repository } from 'typeorm';
 import type { Hex } from 'viem';
 

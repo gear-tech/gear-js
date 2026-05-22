@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors/index.js';
 import type { JsonRpcRequest, JsonRpcResponse } from '../types/index.js';
 

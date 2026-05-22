@@ -5,6 +5,7 @@ import { Pagination } from '../decorators/index.js';
 import { RequiredParams } from '../decorators/required.js';
 import { VoucherNotFound } from '../errors/index.js';
 import type { ParamGetVoucher, ParamGetVouchers, ResManyResult } from '../types/index.js';
+import { hexToBuffer } from '../utils.js';
 
 export class VoucherService {
   private _repo: Repository<Voucher>;
@@ -43,7 +44,7 @@ export class VoucherService {
       if (id.length === 66) {
         qb.andWhere('v.id = :id', { id });
       } else {
-        qb.andWhere('v.id LIKE :id', { id: `%${id}%` });
+        qb.andWhere('v.id LIKE :id', { id: `%${id.toLowerCase()}%` });
       }
     }
 
@@ -81,11 +82,14 @@ export class VoucherService {
     }
 
     if (owner && spender) {
-      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', { owner, spender });
+      qb.andWhere('(v.owner = :owner OR v.spender = :spender)', {
+        owner: hexToBuffer(owner),
+        spender: hexToBuffer(spender),
+      });
     } else if (owner) {
-      qb.andWhere('v.owner = :owner', { owner });
+      qb.andWhere('v.owner = :owner', { owner: hexToBuffer(owner) });
     } else if (spender) {
-      qb.andWhere('v.spender = :spender', { spender });
+      qb.andWhere('v.spender = :spender', { spender: hexToBuffer(spender) });
     }
 
     qb.limit(limit || 20);

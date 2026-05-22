@@ -1,10 +1,6 @@
-import './__mocks__/viem';
-import './__mocks__/typeorm';
-import './__mocks__/gear-js';
-
 import request from 'supertest';
-import { FaucetType, RequestStatus } from '../src/database';
 import { FaucetApp } from '../src/app';
+import { FaucetType, RequestStatus } from '../src/database';
 import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
 

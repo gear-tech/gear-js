@@ -1,11 +1,13 @@
 import { randomInt } from 'node:crypto';
-import type { FaucetRequest, UserLastSeen } from '../../src/database';
+import { vi } from 'vitest';
+
+import type { FaucetRequest, UserLastSeen } from '../../src/database/index.js';
 
 export function createFakeRepository<T extends { id: any; timestamp: Date; [key: string]: any }>() {
   let data: Record<string | number, T> = {};
 
   return {
-    save: jest.fn(async (entity: T | T[]) => {
+    save: vi.fn(async (entity: T | T[]) => {
       await new Promise((resolve) => setTimeout(resolve, randomInt(70, 200)));
       const entities = Array.isArray(entity) ? entity : [entity];
       for (const item of entities) {
@@ -19,7 +21,7 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
       }
       return entity;
     }),
-    find: jest.fn(async ({ where }) => {
+    find: vi.fn(async ({ where }) => {
       const keys = Object.keys(where);
       return Object.values(data).filter((item) =>
         keys.every((key) => {
@@ -31,14 +33,14 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
         }),
       );
     }),
-    findOne: jest.fn(async ({ where }) => {
+    findOne: vi.fn(async ({ where }) => {
       const keys = Object.keys(where);
       if (keys.length === 1 && keys[0] === 'id') {
         return data[where.id];
       }
       return Object.values(data).find((item) => keys.every((key) => item[key] === where[key]));
     }),
-    findBy: jest.fn(async (criteria) => {
+    findBy: vi.fn(async (criteria) => {
       const keys = Object.keys(criteria);
       return Object.values(data).filter((item) =>
         keys.every((key) =>
@@ -46,7 +48,7 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
         ),
       );
     }),
-    update: jest.fn(async (criteria, partialEntity) => {
+    update: vi.fn(async (criteria, partialEntity) => {
       const keys = Object.keys(criteria);
       const records = Object.values(data).filter((item) =>
         keys.every((key) =>

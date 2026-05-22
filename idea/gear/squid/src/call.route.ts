@@ -11,9 +11,9 @@ export interface IHandleCallProps<C = Call> extends IHandleEventProps<EMessageQu
   call: C;
 }
 
-export function handleUploadProgram({ msg, event, common, tempState, call }: IHandleCallProps<CUploadProgram>) {
+export function handleUploadProgram({ msg, event, common, batchState, call }: IHandleCallProps<CUploadProgram>) {
   const codeId = generateCodeHash(call.args.code);
-  tempState.addProgram(
+  batchState.addProgram(
     new Program({
       ...common,
       id: event.args.destination,
@@ -24,29 +24,29 @@ export function handleUploadProgram({ msg, event, common, tempState, call }: IHa
     }),
   );
   msg.payload = call.args.initPayload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleSendMessageCall({ msg, call }: IHandleCallProps<CSendMessage>) {
   msg.payload = call.args.payload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps<CVoucherCall>) {
   if (call.args.call.__kind === 'SendMessage') {
     msg.payload = call.args.call.payload;
-    msg.value = call.args.call.value;
+    msg.value = String(call.args.call.value);
   } else if (call.args.call.__kind === 'SendReply') {
     msg.payload = call.args.call.payload;
     msg.replyToMessageId = call.args.call.replyToId;
-    msg.value = call.args.call.value;
+    msg.value = String(call.args.call.value);
   } else {
     ctx.log.error(call, 'Unknown voucher call');
   }
 }
 
-export function handleCreateProgram({ msg, event, common, tempState, call }: IHandleCallProps<CCreateProgram>) {
-  tempState.addProgram(
+export function handleCreateProgram({ msg, event, common, batchState, call }: IHandleCallProps<CCreateProgram>) {
+  batchState.addProgram(
     new Program({
       ...common,
       id: event.args.destination,
@@ -58,11 +58,11 @@ export function handleCreateProgram({ msg, event, common, tempState, call }: IHa
   );
 
   msg.payload = call.args.initPayload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleSendReplyCall({ msg, call }: IHandleCallProps<CSendReply>) {
   msg.payload = call.args.payload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
   msg.replyToMessageId = call.args.replyToId;
 }
