@@ -18,6 +18,23 @@ import { type NetworkConfig, PermanentJobError } from './shared/types.js';
 
 const logger = createLogger('eth');
 
+function serializeError(err: unknown): unknown {
+  if (err instanceof BaseError) {
+    return {
+      name: err.name,
+      message: err.message,
+      shortMessage: err.shortMessage,
+      details: err.details,
+      metaMessages: err.metaMessages,
+      cause: serializeError(err.cause),
+    };
+  }
+  if (err instanceof Error) {
+    return { name: err.name, message: err.message, cause: serializeError((err as NodeJS.ErrnoException).cause) };
+  }
+  return err;
+}
+
 type ClientPair = { routerClient: RouterClient; publicClient: PublicClient };
 
 const _clientCache = new Map<string, ClientPair>();
@@ -80,7 +97,8 @@ export async function prepareCodeValidation(
     // Plain Error = decoded contract revert from decodeContractError — permanent.
     if (err instanceof BaseError) throw err;
     const message = err instanceof Error ? err.message : String(err);
-    logger.warn({ sender, codeId, cause: err }, 'Contract rejected code validation request');
+    const cause = serializeError(err);
+    logger.warn({ sender, codeId, cause }, 'Contract rejected code validation request');
     throw new PermanentJobError(message);
   }
 
