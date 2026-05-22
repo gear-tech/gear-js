@@ -1,3 +1,4 @@
+import cors from '@fastify/cors';
 import { createLogger } from '@gear-js/logger';
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify';
 
@@ -98,6 +99,8 @@ const statusHandler = async (request: FastifyRequest<{ Querystring: { jobId: str
 
 export async function runServer(enqueueForNetwork: (network: string, jobId: string) => void) {
   const app = Fastify({ logger: true });
+
+  await app.register(cors);
 
   app.post<{ Params: { network: string }; Body: RequestCodeValidationParams }>(
     '/:network/request-code-validation',

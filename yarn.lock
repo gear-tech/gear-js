@@ -9812,6 +9812,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@vara-eth/idea-upload-code@workspace:idea/vara-eth/upload-code-service"
   dependencies:
+    "@fastify/cors": "npm:^11.2.0"
     "@gear-js/logger": "workspace:*"
     "@types/pg": "npm:^8"
     "@vara-eth/api": "workspace:*"
