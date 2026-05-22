@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-import type { MessageReadReason } from '../enums';
 
-import { BaseEntity } from './base.entity';
+import type { MessageReadReason } from '../enums/index.js';
+import { BaseEntity } from './base.entity.js';
 
 @Entity({ name: 'message_from_program' })
 export class MessageFromProgram extends BaseEntity {

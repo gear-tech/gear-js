@@ -2,8 +2,9 @@
   "name": "gear-idea-indexer-db",
   "private": true,
   "version": "1.4.26",
+  "type": "module",
   "dependencies": {
-    "typeorm": "0.3.28"
+    "typeorm": "0.3.29"
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",

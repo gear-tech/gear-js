@@ -262,6 +262,11 @@ export const IROUTER_ABI = [
             internalType: 'struct Gear.ValidatorsCommitment[]',
             components: [
               {
+                name: 'hasAggregatedPublicKey',
+                type: 'bool',
+                internalType: 'bool',
+              },
+              {
                 name: 'aggregatedPublicKey',
                 type: 'tuple',
                 internalType: 'struct Gear.AggregatedPublicKey',
@@ -481,6 +486,13 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'paused',
     inputs: [],
     outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
@@ -519,6 +531,20 @@ export const IROUTER_ABI = [
     inputs: [],
     outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'reinitialize',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'renounceOwnership',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -612,6 +638,34 @@ export const IROUTER_ABI = [
       },
     ],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'transferOwnership',
+    inputs: [{ name: 'newOwner', type: 'address', internalType: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'unpause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'upgradeToAndCall',
+    inputs: [
+      {
+        name: 'newImplementation',
+        type: 'address',
+        internalType: 'address',
+      },
+      { name: 'data', type: 'bytes', internalType: 'bytes' },
+    ],
+    outputs: [],
+    stateMutability: 'payable',
   },
   {
     type: 'function',
@@ -921,6 +975,14 @@ export const IROUTER_ABI = [
   { type: 'error', name: 'GenesisHashNotFound', inputs: [] },
   {
     type: 'error',
+    name: 'InvalidAccountNonce',
+    inputs: [
+      { name: 'account', type: 'address', internalType: 'address' },
+      { name: 'currentNonce', type: 'uint256', internalType: 'uint256' },
+    ],
+  },
+  {
+    type: 'error',
     name: 'InvalidBlobHash',
     inputs: [
       { name: 'index', type: 'uint256', internalType: 'uint256' },
@@ -933,6 +995,22 @@ export const IROUTER_ABI = [
         name: 'expectedBlobHash',
         type: 'bytes32',
         internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'InvalidBlobHashesLength',
+    inputs: [
+      {
+        name: 'providedLength',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'expectedLength',
+        type: 'uint256',
+        internalType: 'uint256',
       },
     ],
   },

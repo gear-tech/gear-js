@@ -24,10 +24,10 @@
     "rootDir": "${configDir}/src",
 
     "paths": {
-      "@/*": ["${configDir}/src/*"],
+      "@/*": ["${configDir}/src/*"]
     },
 
-    "types": ["vite/client", "vite-plugin-svgr/client"],
+    "types": ["vite/client", "vite-plugin-svgr/client"]
   },
-  "include": ["${configDir}/src"],
+  "include": ["${configDir}/src"]
 }

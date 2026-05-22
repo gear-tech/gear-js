@@ -11,7 +11,7 @@ import { stringToU8a, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
 import request from 'supertest';
 import { RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
+import { FaucetApp } from '../src/app';
 import { repos } from './__mocks__/db';
 
 const VARA_GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';

@@ -1,5 +1,5 @@
 {
-  "name": "varaeth-idea-indexer",
+  "name": "@vara-eth/idea-indexer",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -8,38 +8,18 @@
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",
-    "start": "node lib/main.js",
-    "migration:generate": "yarn build && npx typeorm migration:generate -d lib/model/dataSource.js -o db/migrations/$NAME",
-    "migration:run": "npx typeorm migration:run -d lib/model/dataSource.js"
+    "start": "node lib/main.js"
   },
   "dependencies": {
-    "@fastify/cors": "^11.2.0",
-    "@fastify/static": "^9.1.3",
     "@gear-js/logger": "workspace:*",
-    "@nestjs/common": "^11.1.19",
-    "@nestjs/config": "^4.0.4",
-    "@nestjs/core": "^11.1.19",
-    "@nestjs/platform-fastify": "^11.1.19",
-    "@nestjs/swagger": "^11.4.2",
-    "@nestjs/throttler": "^6.5.0",
-    "@nestjs/typeorm": "^11.0.1",
     "@subsquid/evm-processor": "^1.29.1",
     "@subsquid/logger": "^1.5.0",
     "@subsquid/typeorm-store": "^1.9.0",
     "@vara-eth/api": "workspace:*",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.15.1",
-    "cors": "^2.8.6",
+    "@vara-eth/idea-indexer-db": "workspace:*",
     "dotenv": "^17.4.2",
-    "fastify": "^5.8.5",
-    "pg": "8.20.0",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2",
-    "typeorm": "0.3.28",
-    "viem": "npm:@vara-eth/viem@2.47.7-1",
+    "typeorm": "0.3.29",
+    "viem": "npm:@vara-eth/viem@2.48.11",
     "xxhash-addon": "^2.0.3"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19"
   }
 }
