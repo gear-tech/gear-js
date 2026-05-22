@@ -20,3 +20,10 @@ export type RequestCodeValidationParams = {
 export type JobStatus = 'pending' | 'processing' | 'success' | 'failed';
 
 export type DbRequest = RequestCodeValidationParams & { status: JobStatus; transactionHash?: Hash };
+
+export class PermanentJobError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PermanentJobError';
+  }
+}

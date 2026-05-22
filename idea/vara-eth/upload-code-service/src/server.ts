@@ -67,9 +67,12 @@ const requestCodeValidationHandler =
     logger.debug({ jobId, network, codeId: body.codeId }, 'Generated jobId');
 
     const existing = await getJobStatus(jobId);
-    if (existing && existing.status !== 'failed') {
-      logger.info({ jobId, status: existing.status }, 'Duplicate request, returning existing job');
-      return reply.send({ jobId, routerAddress: networkConfig.routerAddress });
+    if (existing) {
+      const isPermanentFailure = existing.status === 'failed' && !!existing.error;
+      if (existing.status !== 'failed' || isPermanentFailure) {
+        logger.info({ jobId, status: existing.status }, 'Duplicate request, returning existing job');
+        return reply.send({ jobId, routerAddress: networkConfig.routerAddress });
+      }
     }
 
     await createRequest(network, body);

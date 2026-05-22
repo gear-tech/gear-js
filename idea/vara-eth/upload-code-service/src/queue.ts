@@ -3,6 +3,7 @@ import type { Address, Hash, Hex } from 'viem';
 import { hexToBytes } from 'viem';
 
 import { getRequest, setStatus } from './shared/db.js';
+import { PermanentJobError } from './shared/types.js';
 
 const logger = createLogger('queue');
 
@@ -101,8 +102,14 @@ export function startQueue<T>(concurrency: number, prepareFn: PrepareFn<T>, send
       await setStatus(jobId, result.status === 'success' ? 'success' : 'failed', result.transactionHash);
       logger.info({ jobId, status: result.status }, 'Job completed');
     } catch (err) {
-      logger.error({ jobId, err }, 'Failed to process job');
-      await setStatus(jobId, 'failed').catch(() => {});
+      const isPermanent = err instanceof PermanentJobError;
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (isPermanent) {
+        logger.warn({ jobId, err }, 'Job permanently failed (contract rejected)');
+      } else {
+        logger.error({ jobId, err }, 'Failed to process job');
+      }
+      await setStatus(jobId, 'failed', undefined, errorMessage).catch(() => {});
     }
   }
 

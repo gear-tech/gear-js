@@ -19,6 +19,7 @@ export interface JobsTable {
   wvara_permit_signature: Hex;
   request_code_validation_signature: Hex;
   transaction_hash: Hash | null;
+  error: string | null;
   created_at: ColumnType<Date, never, never>;
   updated_at: ColumnType<Date, never, Date>;
 }
@@ -58,17 +59,32 @@ export async function createRequest(network: string, data: RequestCodeValidation
     request_code_validation_signature: data.requestCodeValidationSignature,
   };
 
-  await db.insertInto('jobs').values(item).execute();
+  await db
+    .insertInto('jobs')
+    .values(item)
+    .onConflict((oc) =>
+      oc.column('job_id').doUpdateSet({
+        status: 'pending',
+        error: null,
+        code: item.code,
+        blob_hashes: item.blob_hashes,
+        deadline: item.deadline,
+        sender: item.sender,
+        wvara_permit_signature: item.wvara_permit_signature,
+        request_code_validation_signature: item.request_code_validation_signature,
+      }).where('jobs.status', '=', 'failed'),
+    )
+    .execute();
 
   return job_id;
 }
 
 export async function getStatus(
   jobId: string,
-): Promise<{ jobId: string; status: JobStatus; transactionHash?: string } | null> {
+): Promise<{ jobId: string; status: JobStatus; transactionHash?: string; error?: string } | null> {
   const job = await db
     .selectFrom('jobs')
-    .select(['job_id', 'status', 'transaction_hash'])
+    .select(['job_id', 'status', 'transaction_hash', 'error'])
     .where('job_id', '=', jobId)
     .executeTakeFirst();
 
@@ -78,10 +94,16 @@ export async function getStatus(
     jobId: job.job_id,
     status: job.status,
     ...(job.transaction_hash ? { transactionHash: job.transaction_hash } : {}),
+    ...(job.error ? { error: job.error } : {}),
   };
 }
 
-export async function setStatus(jobId: string, status: JobStatus, transactionHash?: Hash): Promise<void> {
+export async function setStatus(
+  jobId: string,
+  status: JobStatus,
+  transactionHash?: Hash,
+  error?: string,
+): Promise<void> {
   await db
     .updateTable('jobs')
     .where('job_id', '=', jobId)
@@ -89,6 +111,7 @@ export async function setStatus(jobId: string, status: JobStatus, transactionHas
       status,
       ...(transactionHash ? { transaction_hash: transactionHash } : {}),
       ...(status === 'success' ? { code: null } : {}),
+      error: error ?? null,
     })
     .execute();
 }

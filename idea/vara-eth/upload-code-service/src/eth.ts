@@ -13,7 +13,7 @@ import {
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import type { NetworkConfig } from './shared/types.js';
+import { PermanentJobError, type NetworkConfig } from './shared/types.js';
 
 const logger = createLogger('eth');
 
@@ -64,18 +64,24 @@ export async function prepareCodeValidation(
 
   logger.info({ sender, codeId }, 'Preparing code validation request');
 
-  const tx = await routerClient.requestCodeValidationOnBehalf(
-    sender,
-    code,
-    blobHashes,
-    deadline,
-    parseSignature(requestCodeValidationSignature),
-    parseSignature(wvaraPermitSignature),
-  );
+  let tx: Awaited<ReturnType<RouterClient['requestCodeValidationOnBehalf']>>;
+  try {
+    tx = await routerClient.requestCodeValidationOnBehalf(
+      sender,
+      code,
+      blobHashes,
+      deadline,
+      parseSignature(requestCodeValidationSignature),
+      parseSignature(wvaraPermitSignature),
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new PermanentJobError(message);
+  }
 
   if (tx.codeId.toLowerCase() !== codeId.toLowerCase()) {
     logger.warn({ expected: codeId, actual: tx.codeId }, 'Code ID mismatch');
-    throw new Error(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
+    throw new PermanentJobError(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
   }
 
   return tx;
