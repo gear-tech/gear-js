@@ -13,7 +13,7 @@ import {
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { PermanentJobError, type NetworkConfig } from './shared/types.js';
+import { type NetworkConfig, PermanentJobError } from './shared/types.js';
 
 const logger = createLogger('eth');
 

@@ -63,16 +63,19 @@ export async function createRequest(network: string, data: RequestCodeValidation
     .insertInto('jobs')
     .values(item)
     .onConflict((oc) =>
-      oc.column('job_id').doUpdateSet({
-        status: 'pending',
-        error: null,
-        code: item.code,
-        blob_hashes: item.blob_hashes,
-        deadline: item.deadline,
-        sender: item.sender,
-        wvara_permit_signature: item.wvara_permit_signature,
-        request_code_validation_signature: item.request_code_validation_signature,
-      }).where('jobs.status', '=', 'failed'),
+      oc
+        .column('job_id')
+        .doUpdateSet({
+          status: 'pending',
+          error: null,
+          code: item.code,
+          blob_hashes: item.blob_hashes,
+          deadline: item.deadline,
+          sender: item.sender,
+          wvara_permit_signature: item.wvara_permit_signature,
+          request_code_validation_signature: item.request_code_validation_signature,
+        })
+        .where('jobs.status', '=', 'failed'),
     )
     .execute();
 
