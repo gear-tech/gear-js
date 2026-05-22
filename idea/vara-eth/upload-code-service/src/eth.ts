@@ -22,7 +22,6 @@ function serializeError(err: unknown): unknown {
   if (err instanceof BaseError) {
     return {
       name: err.name,
-      message: err.message,
       shortMessage: err.shortMessage,
       details: err.details,
       metaMessages: err.metaMessages,
