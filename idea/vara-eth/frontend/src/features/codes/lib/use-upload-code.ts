@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import {  bytesToHex, type Hex } from 'viem';
+import { bytesToHex, type Hex } from 'viem';
 import { useConnection } from 'wagmi';
 import { useApi } from '@/app/api';
 import { useAddMyActivity } from '@/app/store';
