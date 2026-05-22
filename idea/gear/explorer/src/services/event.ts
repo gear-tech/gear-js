@@ -1,16 +1,22 @@
-import { Event } from 'gear-idea-indexer-db';
+import type { DataCache } from 'gear-idea-common';
+import { cacheKey, Event } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
 
 import { Pagination } from '../decorators/index.js';
 import { RequiredParams } from '../decorators/required.js';
 import { EventNotFound } from '../errors/index.js';
 import type { ParamGetEvent, ParamGetEvents, ResManyResult } from '../types/index.js';
+import { hexToBuffer } from '../utils.js';
 
 export class EventService {
   private _repo: Repository<Event>;
+  private readonly _genesis: string;
+  private readonly _dataCache: DataCache;
 
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource, genesis: string, dataCache: DataCache) {
     this._repo = dataSource.getRepository(Event);
+    this._genesis = genesis;
+    this._dataCache = dataCache;
   }
 
   @RequiredParams(['id'])
@@ -38,11 +44,11 @@ export class EventService {
     const builder = this._repo.createQueryBuilder('event');
 
     if (source) {
-      builder.andWhere('event.source = :source', { source });
+      builder.andWhere('event.source = :source', { source: hexToBuffer(source) });
     }
 
     if (parentId) {
-      builder.andWhere('event.parent_id = :parentId', { parentId });
+      builder.andWhere('event.parentId = :parentId', { parentId: hexToBuffer(parentId) });
     }
 
     if (service) {
@@ -63,11 +69,13 @@ export class EventService {
 
     builder.orderBy('event.timestamp', 'DESC').take(limit).skip(offset);
 
-    const [result, count] = await Promise.all([builder.getMany(), builder.getCount()]);
+    const simpleSourceQuery = source && !parentId && !service && !name && !from && !to;
+    const getCount = simpleSourceQuery
+      ? () => this._dataCache.getNumber(cacheKey.eventsSource(this._genesis, source), () => builder.getCount())
+      : () => builder.getCount();
 
-    return {
-      result,
-      count,
-    };
+    const [result, count] = await Promise.all([builder.getMany(), getCount()]);
+
+    return { result, count };
   }
 }

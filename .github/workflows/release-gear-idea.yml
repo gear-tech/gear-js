@@ -4,12 +4,7 @@ on:
   push:
     branches: ['main', 'prod/gear-idea']
     paths:
-      - idea/gear/frontend/**
-      - idea/gear/faucet/**
-      - idea/gear/meta-storage/**
-      - idea/gear/squid/**
-      - idea/gear/explorer/**
-      - idea/gear/indexer-db/**
+      - idea/gear/**
   workflow_dispatch:
     inputs:
       service:
@@ -54,11 +49,7 @@ jobs:
       environment: ${{ steps.get_env.outputs.environment }}
     permissions:
       contents: read
-      packages: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       - name: Get environment
         id: get_env
         run: |
@@ -81,94 +72,55 @@ jobs:
       squid: ${{ steps.should-build.outputs.squid }}
       explorer: ${{ steps.should-build.outputs.explorer }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Check frontend changes
-        id: frontend
+      - name: Detect file changes
+        id: changes
+        if: ${{ github.event_name == 'push' && github.ref != 'refs/heads/stable' }}
         uses: dorny/paths-filter@v4
         with:
-          base: ${{ github.event.before }}
           filters: |
-            changed:
-              - 'idea/gear/frontend/**'
-
-      - name: Check faucet changes
-        id: faucet
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/faucet/**'
-
-      - name: Check meta-storage changes
-        id: meta_storage
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/meta-storage/**'
-
-      - name: Check squid changes
-        id: squid
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/squid/**'
-              - 'idea/gear/indexer-db/**'
-
-      - name: Check explorer changes
-        id: explorer
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/explorer/**'
-              - 'idea/gear/indexer-db/**'
+            frontend:
+              - idea/gear/frontend/**
+            faucet:
+              - idea/gear/faucet/**
+              - idea/gear/common/**
+              - idea/gear/indexer-db/**
+            meta-storage:
+              - idea/gear/meta-storage/**
+              - idea/gear/common/**
+            squid:
+              - idea/gear/squid/**
+              - idea/gear/common/**
+              - idea/gear/indexer-db/**
+            explorer:
+              - idea/gear/explorer/**
+              - idea/gear/common/**
+              - idea/gear/indexer-db/**
 
       - name: Determine what should be built
         id: should-build
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
-              echo "frontend=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "frontend=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "faucet" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "faucet=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "faucet=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "meta-storage" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "meta-storage=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "meta-storage=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "squid" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "squid=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "squid=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "explorer" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "explorer=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "explorer=false" >> "$GITHUB_OUTPUT"
-            fi
+            INPUT="${{ github.event.inputs.service }}"
+            [[ "$INPUT" == "frontend" || "$INPUT" == "all" ]] && echo "frontend=true" >> "$GITHUB_OUTPUT" || echo "frontend=false" >> "$GITHUB_OUTPUT"
+            [[ "$INPUT" == "faucet" || "$INPUT" == "all" || "$INPUT" == "backend" ]] && echo "faucet=true" >> "$GITHUB_OUTPUT" || echo "faucet=false" >> "$GITHUB_OUTPUT"
+            [[ "$INPUT" == "meta-storage" || "$INPUT" == "all" || "$INPUT" == "backend" ]] && echo "meta-storage=true" >> "$GITHUB_OUTPUT" || echo "meta-storage=false" >> "$GITHUB_OUTPUT"
+            [[ "$INPUT" == "squid" || "$INPUT" == "all" || "$INPUT" == "backend" ]] && echo "squid=true" >> "$GITHUB_OUTPUT" || echo "squid=false" >> "$GITHUB_OUTPUT"
+            [[ "$INPUT" == "explorer" || "$INPUT" == "all" || "$INPUT" == "backend" ]] && echo "explorer=true" >> "$GITHUB_OUTPUT" || echo "explorer=false" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == "refs/heads/stable" ]]; then
+            echo "frontend=true" >> "$GITHUB_OUTPUT"
+            echo "faucet=true" >> "$GITHUB_OUTPUT"
+            echo "meta-storage=true" >> "$GITHUB_OUTPUT"
+            echo "squid=true" >> "$GITHUB_OUTPUT"
+            echo "explorer=true" >> "$GITHUB_OUTPUT"
           else
-            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "faucet=${{ steps.faucet.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "meta-storage=${{ steps.meta_storage.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "squid=${{ steps.squid.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "explorer=${{ steps.explorer.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "frontend=${{ steps.changes.outputs.frontend }}" >> "$GITHUB_OUTPUT"
+            echo "faucet=${{ steps.changes.outputs.faucet }}" >> "$GITHUB_OUTPUT"
+            echo "meta-storage=${{ steps.changes.outputs.meta-storage }}" >> "$GITHUB_OUTPUT"
+            echo "squid=${{ steps.changes.outputs.squid }}" >> "$GITHUB_OUTPUT"
+            echo "explorer=${{ steps.changes.outputs.explorer }}" >> "$GITHUB_OUTPUT"
           fi
 
   build-frontend-image:

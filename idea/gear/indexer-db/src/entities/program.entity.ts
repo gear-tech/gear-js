@@ -1,36 +1,45 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-import { ProgramStatus } from '../enums/index.js';
-import { BaseEntity } from './base.entity.js';
+import { MetaType, ProgramStatus } from '../enums/index.js';
+import { hexToBytea } from '../transformers.js';
+import type { Hex } from '../types.js';
 
 @Entity()
-export class Program extends BaseEntity {
+@Index(['codeId', 'timestamp'])
+export class Program {
   constructor(props?: Partial<Program>) {
-    super();
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'varchar', length: 66 })
   public id: string;
 
-  @Column({ nullable: true })
-  public owner?: string | null;
+  @Column({ type: 'enum', enum: ProgramStatus, default: ProgramStatus.Unknown })
+  public status: ProgramStatus;
+
+  @Column({ name: 'block_number', type: 'bigint' })
+  public blockNumber: string;
+
+  @Column({ type: 'timestamptz' })
+  public timestamp: Date;
+
+  @Column({ type: 'bytea', name: 'code_id', transformer: hexToBytea })
+  public codeId: Hex;
+
+  @Column({ type: 'bytea', nullable: true, transformer: hexToBytea })
+  public owner?: Hex | null;
+
+  @Column({ nullable: true, name: 'block_hash', type: 'bytea', transformer: hexToBytea })
+  public blockHash: Hex;
 
   @Column({ nullable: true })
-  @Index()
   public name: string | null;
 
   @Column({ nullable: true })
   public expiration: string | null;
 
-  @Column({ type: 'text', default: ProgramStatus.Unknown })
-  public status: ProgramStatus;
-
-  @Column({ name: 'code_id' })
-  public codeId: string;
-
-  @Column({ name: 'meta_type', nullable: true })
-  public metaType?: 'sails' | 'meta' | null;
+  @Column({ type: 'enum', name: 'meta_type', nullable: true, enum: MetaType })
+  public metaType?: MetaType | null;
 
   // TODO: remove later
   @Column({ nullable: true })

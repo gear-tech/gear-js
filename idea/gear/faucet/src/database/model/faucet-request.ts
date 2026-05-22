@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { isValidAddress } from '../validators/index.js';

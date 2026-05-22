@@ -1,0 +1,172 @@
+name: 'CI-idea'
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [main]
+    paths:
+      - "idea/**"
+  workflow_dispatch:
+
+env:
+  BINARYEN_VERSION: version_111
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Run linter'
+        run: yarn check:idea
+
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      gear: ${{ steps.changes.outputs.gear }}
+      vara-eth: ${{ steps.changes.outputs.vara-eth }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: Detect changes
+        id: changes
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+              gear:
+                - 'idea/gear/**'
+              vara-eth:
+                - 'idea/vara-eth/**'
+
+  build-gear-idea:
+    runs-on: ubuntu-latest
+    needs: ['changes']
+    if: ${{ needs.changes.outputs.gear == 'true' }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build backend'
+        run: yarn build:gear-idea-backend
+
+      - name: 'Build frontend'
+        run: yarn build:gear-idea-frontend
+
+  build-vara-eth-idea:
+    runs-on: ubuntu-latest
+    needs: ['changes']
+    if: ${{ needs.changes.outputs.vara-eth == 'true' }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build frontend'
+        run: yarn build:varaeth-idea-frontend
+
+      - name: 'Build indexer'
+        run: yarn build:varaeth-idea-indexer
+
+      - name: 'Build explorer'
+        run: yarn build:varaeth-idea-explorer
+
+  test-gear-idea-backend:
+    runs-on: ubuntu-latest
+    needs: ['build-gear-idea']
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: Install NodeJS 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build'
+        run: yarn run build:gear-idea-backend
+
+      - name: 'Test: meta-storage'
+        timeout-minutes: 3
+        run: yarn test:gear-idea-meta-storage
+
+      - name: 'Test: faucet'
+        timeout-minutes: 3
+        run: yarn test:gear-idea-faucet
+
+      - name: 'Test: explorer'
+        timeout-minutes: 3
+        run: yarn test:gear-idea-explorer
+
+  check-dockerfiles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+
+      - name: 'Check for changed Dockerfiles'
+        id: changed-dockerfiles
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            **/Dockerfile
+
+      - name: 'Build changed Dockerfiles'
+        if: steps.changed-dockerfiles.outputs.any_changed == 'true'
+        run: |
+          for dockerfile in ${{ steps.changed-dockerfiles.outputs.all_changed_files }}; do
+            echo "Building $dockerfile"
+            docker build -f "$dockerfile" .
+          done
