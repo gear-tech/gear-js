@@ -33,16 +33,16 @@ export function decodeContractError(error: unknown, abis: Abi[] = []): Error {
     for (const abi of abis) {
       try {
         const decoded = decodeErrorResult({ abi, data: errorData });
-        return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`);
+        return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
       } catch {}
     }
     // fallback: handles built-in Error(string) and Panic(uint256)
     try {
       const decoded = decodeErrorResult({ abi: [], data: errorData });
-      return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`);
+      return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
     } catch {}
-    return new Error(`Unknown contract error ${match[1]}: ${match[2]}`);
+    return new Error(`Unknown contract error ${match[1]}: ${match[2]}`, { cause: error });
   }
 
-  return new Error(details || 'unknown contract error');
+  return new Error(details || 'unknown contract error', { cause: error });
 }

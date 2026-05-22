@@ -3,6 +3,7 @@ import { getRouterClient, type RouterClient } from '@vara-eth/api/eth/router';
 import { walletClientToSigner } from '@vara-eth/api/signer';
 import {
   type Address,
+  BaseError,
   createPublicClient,
   createWalletClient,
   type Hash,
@@ -75,7 +76,11 @@ export async function prepareCodeValidation(
       parseSignature(wvaraPermitSignature),
     );
   } catch (err) {
+    // BaseError = transient viem/RPC failure (network, timeout) — let it propagate for retry.
+    // Plain Error = decoded contract revert from decodeContractError — permanent.
+    if (err instanceof BaseError) throw err;
     const message = err instanceof Error ? err.message : String(err);
+    logger.warn({ sender, codeId, cause: err }, 'Contract rejected code validation request');
     throw new PermanentJobError(message);
   }
 

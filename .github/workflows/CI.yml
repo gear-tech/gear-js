@@ -19,7 +19,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      utils-ui: ${{ steps.changes.outputs.utils }}
+      utils-ui: ${{ steps.changes.outputs.utils-ui }}
       utils: ${{ steps.changes.outputs.utils }}
       tools: ${{ steps.changes.outputs.tools }}
     steps:
@@ -31,18 +31,18 @@ jobs:
         id: changes
         with:
           filters: |
-            utils:
-              - 'utils/frontend-configs'
-              - 'utils/gear-hooks'
-              - 'utils/gear-ui'
-              - 'utils/sails-payload-form'
-              - 'utils/vara-ui'
-              - 'utils/wallet-connect'
+            utils-ui:
+              - 'utils/frontend-configs/**'
+              - 'utils/gear-hooks/**'
+              - 'utils/gear-ui/**'
+              - 'utils/sails-payload-form/**'
+              - 'utils/vara-ui/**'
+              - 'utils/wallet-connect/**'
             tools:
               - 'tools/**'
             utils:
-              - 'utils/util'
-              - 'utils/logger'
+              - 'utils/util/**'
+              - 'utils/logger/**'
 
   lint:
     runs-on: ubuntu-latest
@@ -101,6 +101,11 @@ jobs:
 
       - name: 'Build wallet-connect'
         run: yarn build:wallet-connect
+
+      - name: "Build frontends"
+        run: |
+            yarn lerna run build --scope @gear-js/api --scope @vara-eth/api
+            yarn lerna run build --scope gear-idea-frontend varaeth-idea-frontend
 
   test-ui:
     runs-on: ubuntu-latest
