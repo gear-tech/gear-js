@@ -101,7 +101,7 @@ const statusHandler = async (request: FastifyRequest<{ Querystring: { jobId: str
 };
 
 export async function runServer(enqueueForNetwork: (network: string, jobId: string) => void) {
-  const app = Fastify({ logger: true });
+  const app = Fastify({ logger: false });
 
   await app.register(cors);
 
