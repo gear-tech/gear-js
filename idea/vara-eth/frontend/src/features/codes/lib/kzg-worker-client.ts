@@ -22,16 +22,24 @@ function callWorker<T = void>(type: string, payload?: unknown): Promise<T> {
       if (event.data?.id !== id) return;
 
       w.removeEventListener('message', handleMessage);
+      w.removeEventListener('error', handleError);
 
-      if (event.data.type.endsWith(':error')) {
-        reject(new Error(event.data.error));
+      if (event.data.type?.endsWith(':error')) {
+        reject(new Error(event.data.error || 'Unknown worker error'));
         return;
       }
 
       resolve(event.data.result as T);
     };
 
+    const handleError = (event: ErrorEvent) => {
+      w.removeEventListener('message', handleMessage);
+      w.removeEventListener('error', handleError);
+      reject(new Error(event.message || 'Worker error'));
+    };
+
     w.addEventListener('message', handleMessage);
+    w.addEventListener('error', handleError);
     w.postMessage({ id, type, payload });
   });
 }
