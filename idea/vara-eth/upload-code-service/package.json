@@ -5,7 +5,7 @@
     "@fastify/cors": "^11.2.0",
     "@gear-js/logger": "workspace:*",
     "@vara-eth/api": "workspace:*",
-    "dotenv": "^16",
+    "dotenv": "^17",
     "fastify": "^5.8.5",
     "kysely": "^0.28.16",
     "kzg-wasm": "^1.0.0",

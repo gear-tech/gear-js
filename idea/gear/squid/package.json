@@ -28,7 +28,7 @@
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "sails-js": "https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz",
-    "typeorm": "0.3.29"
+    "typeorm": "1.0.0"
   },
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "3.2.0",
