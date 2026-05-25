@@ -10,7 +10,7 @@ export class Batch {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: PgByteaString;
 
   @Column({ type: 'bytea', name: 'block_hash' })

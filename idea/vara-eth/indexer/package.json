@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@gear-js/logger": "workspace:*",
-    "@subsquid/evm-processor": "^1.29.1",
-    "@subsquid/logger": "^1.5.0",
-    "@subsquid/typeorm-store": "^1.9.0",
+    "@subsquid/evm-processor": "^1.30.1",
+    "@subsquid/logger": "^1.6.0",
+    "@subsquid/typeorm-store": "^1.9.1",
     "@vara-eth/api": "workspace:*",
     "@vara-eth/idea-indexer-db": "workspace:*",
     "dotenv": "^17.4.2",

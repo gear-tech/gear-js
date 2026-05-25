@@ -12,7 +12,7 @@ export class ReplySent {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: PgByteaString;
 
   @Column({ type: 'bytea', name: 'replied_to_id' })

@@ -12,7 +12,7 @@ export class MessageSent {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: PgByteaString;
 
   @Column({ type: 'bytea', name: 'source_program_id' })

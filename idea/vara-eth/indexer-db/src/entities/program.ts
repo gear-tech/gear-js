@@ -11,7 +11,7 @@ export class Program {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: PgByteaString;
 
   @Column({ type: 'bytea', name: 'code_id' })

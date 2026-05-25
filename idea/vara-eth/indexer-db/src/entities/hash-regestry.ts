@@ -19,7 +19,7 @@ export class HashRegistry {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: PgByteaString;
 
   @Column({ type: 'enum', enum: EntityType })
