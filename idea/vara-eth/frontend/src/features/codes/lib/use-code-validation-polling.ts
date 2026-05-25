@@ -34,7 +34,7 @@ export const useCodeValidationPolling = () => {
 
           for (const { jobId, codeId } of jobs) {
             try {
-              const { status } = await getCodeValidationStatus(CODE_VALIDATION_SERVICE_URL, jobId);
+              const { status, error } = await getCodeValidationStatus(CODE_VALIDATION_SERVICE_URL, jobId);
 
               if (status !== 'success' && status !== 'failed') {
                 continue;
@@ -47,7 +47,7 @@ export const useCodeValidationPolling = () => {
                   type: TransactionTypes.codeValidation,
                   codeId,
                   resultStatus: status === 'success' ? 'success' : 'error',
-                  error: status === 'success' ? undefined : 'validation error',
+                  error: status === 'success' ? undefined : (error ?? 'validation error'),
                 });
 
                 if (status === 'success') {

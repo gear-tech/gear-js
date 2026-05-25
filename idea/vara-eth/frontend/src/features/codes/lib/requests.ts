@@ -26,6 +26,7 @@ export type RequestCodeValidationResponse = {
 
 export type RequestCodeValidationStatusResponse = {
   status: JobStatus;
+  error?: string;
 };
 
 export const getCode = (explorerUrl: string, id: Hex) => fetchWithGuard<Code>({ url: `${explorerUrl}/codes/${id}` });
