@@ -41,7 +41,11 @@ export const useUploadCode = () => {
       );
 
       const blobHashes = await computeBlobHashesInWorker(code);
-      const preparedValidationData = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline, blobHashes);
+      const preparedValidationData = await router.prepareAndSignRequestCodeValidationPermitData(
+        code,
+        deadline,
+        blobHashes,
+      );
       const { signature: requestCodeValidationSig } = preparedValidationData;
       codeId = preparedValidationData.codeId;
 
