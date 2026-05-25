@@ -14,7 +14,7 @@ function useSigner() {
     const getSigner = () => (walletClientRef.current ? walletClientToSigner(walletClientRef.current) : undefined);
 
     return new DynamicSigner(getSigner);
-  }, []);
+  }, [walletClient?.account.address]);
 }
 
 export { useSigner };
