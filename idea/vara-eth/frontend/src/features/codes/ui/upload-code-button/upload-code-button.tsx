@@ -63,7 +63,7 @@ export const UploadCodeButton = () => {
           heading="Upload Code"
           close={close}
           action={
-            <Button size="xs" onClick={onSelectFile} isLoading={uploadCode.isPending} disabled={hasInsufficientBalance}>
+            <Button size="xs" onClick={onSelectFile} isLoading={uploadCode.isPending} disabled={hasInsufficientBalance || isFeePending || isBalancePending}>
               Select File
             </Button>
           }>
