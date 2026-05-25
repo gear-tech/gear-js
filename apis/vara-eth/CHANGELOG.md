@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Updated Router abi (https://github.com/gear-tech/gear-js/pull/2486)
+
+## [0.4.0]
+
 ### Added
 - Precalculated blob versioned hash to the `requestCodeValidation` method in the Router client (https://github.com/gear-tech/gear-js/pull/2435)
 - EIP-2612 permit support for `requestCodeValidation` — charges the WVARA fee via a signed permit, so no prior `approve` call is needed (https://github.com/gear-tech/gear-js/pull/2446)

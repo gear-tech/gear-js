@@ -1,6 +1,11 @@
 process.env.LOG_LEVEL = 'emerg';
 process.env.NODE_ENV = 'test';
 
+process.env.AGENT_FAUCET_ENABLED = 'true';
+process.env.AGENT_CHALLENGE_TTL_MS = '5000';
+process.env.AGENT_DAILY_CAP = '100';
+process.env.AGENT_RATE_LIMIT_MS = '1000';
+
 process.env.VARA_GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 process.env.ETH_PROVIDER = 'https://<ethereum_node>';

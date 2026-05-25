@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors';
-import type { JsonRpcRequest, JsonRpcResponse } from '../types';
+import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors/index.js';
+import type { JsonRpcRequest, JsonRpcResponse } from '../types/index.js';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 type AllowedMethods = 'get' | 'post';

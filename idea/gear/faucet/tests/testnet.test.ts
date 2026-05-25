@@ -1,12 +1,9 @@
-import './__mocks__/gear-js';
-import './__mocks__/typeorm';
-
 import { decodeAddress } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
 import request from 'supertest';
+import { FaucetApp } from '../src/app';
 import { RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
 import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
 

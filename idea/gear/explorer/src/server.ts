@@ -1,9 +1,9 @@
 import express, { type Express } from 'express';
-import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
-import { Cache } from './middlewares/caching';
-import { redisConnect } from './middlewares/redis';
-import { Retry } from './middlewares/retry';
-import type { AllInOneService } from './services/all-in-one';
+
+import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method.js';
+import { Cache } from './middlewares/caching.js';
+import { Retry } from './middlewares/retry.js';
+import type { AllInOneService } from './services/all-in-one.js';
 import type {
   ParamGetCode,
   ParamGetCodes,
@@ -18,7 +18,7 @@ import type {
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ParamSetProgramMeta,
-} from './types';
+} from './types/index.js';
 
 export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;
@@ -37,7 +37,6 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   }
 
   public async run() {
-    await redisConnect();
     this._app.listen(3000, () => {
       console.log('Server is running on port 3000');
     });
@@ -62,13 +61,11 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   }
 
   @JsonRpcMethod('program.all')
-  @Cache(15)
   async programAll(params: ParamGetPrograms) {
     return this._services.get(params.genesis).program.getPrograms(params);
   }
 
   @JsonRpcMethod('program.data')
-  @Cache(300)
   async programData(params: ParamGetProgram) {
     return this._services.get(params.genesis).program.getProgram(params);
   }

@@ -17,4 +17,5 @@ export const config = {
   rateLimit: Number(getEnv('RPC_RATE_LIMIT', '20')),
   fromBlock: Number(getEnv('FROM_BLOCK', '0')),
   routerAddr: getEnv('ROUTER_ADDR') as Address,
+  apiKey: getEnv('API_KEY'),
 };

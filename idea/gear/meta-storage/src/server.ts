@@ -1,8 +1,9 @@
 import { logger } from 'gear-idea-common';
-import { main } from './app';
-import config from './config';
-import { AppDataSource } from './database';
-import { MetaService } from './service';
+
+import { main } from './app.js';
+import config from './config.js';
+import { AppDataSource } from './database/index.js';
+import { MetaService } from './service.js';
 
 const port = config.server.port;
 

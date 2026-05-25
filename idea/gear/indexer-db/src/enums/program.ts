@@ -1,8 +1,8 @@
 export enum ProgramStatus {
-  Unknown = 'unknown',
-  ProgramSet = 'programSet',
-  Active = 'active',
-  Terminated = 'terminated',
-  Exited = 'exited',
-  Paused = 'paused',
+  Unknown = 0,
+  ProgramSet = 1,
+  Active = 2,
+  Terminated = 3,
+  Exited = 4,
+  Paused = 5,
 }

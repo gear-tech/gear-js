@@ -1,4 +1,4 @@
-import { GearJsonRPCError } from './base';
+import { GearJsonRPCError } from './base.js';
 
 export class StateNotFound extends GearJsonRPCError {
   name = 'StateNotFound';

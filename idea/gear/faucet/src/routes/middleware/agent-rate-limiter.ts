@@ -2,7 +2,7 @@ import { decodeAddress } from '@gear-js/api';
 import { rateLimit } from 'express-rate-limit';
 import xxhash from 'xxhashjs';
 
-import config from '../../config';
+import config from '../../config.js';
 
 function normalizeAddress(address: string | undefined): string {
   if (!address) return '';

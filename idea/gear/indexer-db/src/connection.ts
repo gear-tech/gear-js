@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
-import { Code, Event, MessageFromProgram, MessageToProgram, Program, Voucher } from './entities';
+
+import { Code, Event, MessageFromProgram, MessageToProgram, Program, Voucher } from './entities/index.js';
 
 export interface DbConfig {
   host: string;
@@ -21,6 +22,10 @@ export const createDbConnection = async ({ host, port, username, password, datab
     synchronize: false,
     migrationsRun: false,
     logging: ['error', 'schema', 'migration'],
+    poolSize: 10,
+    extra: {
+      options: '-c random_page_cost=1.1',
+    },
   });
 
   await dataSource.initialize();

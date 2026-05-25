@@ -1,11 +1,7 @@
-import './__mocks__/viem';
-import './__mocks__/typeorm';
-import './__mocks__/gear-js';
-
 import { Keyring } from '@polkadot/api';
 import request from 'supertest';
+import { FaucetApp } from '../src/app';
 import { FaucetType, RequestStatus } from '../src/database';
-import { FaucetApp } from '../src/main';
 import { hash } from '../src/services/db/last-seen';
 import { repos } from './__mocks__/db';
 
