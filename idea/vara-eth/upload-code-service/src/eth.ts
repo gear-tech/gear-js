@@ -3,6 +3,7 @@ import { getRouterClient, type RouterClient } from '@vara-eth/api/eth/router';
 import { walletClientToSigner } from '@vara-eth/api/signer';
 import {
   type Address,
+  BaseError,
   createPublicClient,
   createWalletClient,
   type Hash,
@@ -13,9 +14,25 @@ import {
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import type { NetworkConfig } from './shared/types.js';
+import { type NetworkConfig, PermanentJobError } from './shared/types.js';
 
 const logger = createLogger('eth');
+
+function serializeError(err: unknown): unknown {
+  if (err instanceof BaseError) {
+    return {
+      name: err.name,
+      shortMessage: err.shortMessage,
+      details: err.details,
+      metaMessages: err.metaMessages,
+      cause: serializeError(err.cause),
+    };
+  }
+  if (err instanceof Error) {
+    return { name: err.name, message: err.message, cause: serializeError((err as NodeJS.ErrnoException).cause) };
+  }
+  return err;
+}
 
 type ClientPair = { routerClient: RouterClient; publicClient: PublicClient };
 
@@ -64,18 +81,29 @@ export async function prepareCodeValidation(
 
   logger.info({ sender, codeId }, 'Preparing code validation request');
 
-  const tx = await routerClient.requestCodeValidationOnBehalf(
-    sender,
-    code,
-    blobHashes,
-    deadline,
-    parseSignature(requestCodeValidationSignature),
-    parseSignature(wvaraPermitSignature),
-  );
+  let tx: Awaited<ReturnType<RouterClient['requestCodeValidationOnBehalf']>>;
+  try {
+    tx = await routerClient.requestCodeValidationOnBehalf(
+      sender,
+      code,
+      blobHashes,
+      deadline,
+      parseSignature(requestCodeValidationSignature),
+      parseSignature(wvaraPermitSignature),
+    );
+  } catch (err) {
+    // BaseError = transient viem/RPC failure (network, timeout) — let it propagate for retry.
+    // Plain Error = decoded contract revert from decodeContractError — permanent.
+    if (err instanceof BaseError) throw err;
+    const message = err instanceof Error ? err.message : String(err);
+    const cause = serializeError(err);
+    logger.warn({ sender, codeId, cause }, 'Contract rejected code validation request');
+    throw new PermanentJobError(message);
+  }
 
   if (tx.codeId.toLowerCase() !== codeId.toLowerCase()) {
     logger.warn({ expected: codeId, actual: tx.codeId }, 'Code ID mismatch');
-    throw new Error(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
+    throw new PermanentJobError(`Code ID mismatch: expected ${codeId}, got ${tx.codeId}`);
   }
 
   return tx;
