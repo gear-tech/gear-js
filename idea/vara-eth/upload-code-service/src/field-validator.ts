@@ -26,7 +26,8 @@ export const validateBlobHashes = (data: unknown) => {
 
 export const validateDeadline = (data: unknown) => {
   const n = Number(data);
-  return Number.isInteger(n) && n > 0;
+  if (!Number.isInteger(n) || n <= 0) return false;
+  return n > Math.floor(Date.now() / 1000);
 };
 
 export const validateSignature = (data: unknown) => {
