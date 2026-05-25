@@ -8,6 +8,7 @@ import { TransactionTypes } from '@/app/store/my-activity';
 import { nodeAtom } from '@/app/store/node';
 import { CODE_VALIDATION_SERVICE_URL, ETH_CHAIN_ID_MAINNET } from '@/shared/config';
 import { DEFAULT_DEADLINE_SECONDS } from './consts';
+import { computeBlobHashesInWorker } from './kzg-worker-client';
 import { requestCodeValidation } from './requests';
 import { addValidationJob } from './validation-jobs-storage';
 
@@ -39,8 +40,9 @@ export const useUploadCode = () => {
         deadline,
       );
 
-      const preparedValidationData = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline);
-      const { signature: requestCodeValidationSig, blobHashes } = preparedValidationData;
+      const blobHashes = await computeBlobHashesInWorker(code);
+      const preparedValidationData = await router.prepareAndSignRequestCodeValidationPermitData(code, deadline, blobHashes);
+      const { signature: requestCodeValidationSig } = preparedValidationData;
       codeId = preparedValidationData.codeId;
 
       if (!CODE_VALIDATION_SERVICE_URL) {
