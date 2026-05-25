@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StateTransition, type PgByteaString } from '@vara-eth/idea-indexer-db';
+import { type PgByteaString, StateTransition } from '@vara-eth/idea-indexer-db';
 import { plainToInstance } from 'class-transformer';
 import type { FindOptionsWhere, Repository } from 'typeorm';
 

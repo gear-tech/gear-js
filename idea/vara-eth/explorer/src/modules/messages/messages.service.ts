@@ -5,9 +5,9 @@ import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import type { QueryMessagesDto } from './dto/query-messages.dto.js';
 import { MessageRequestResponseDto } from './dto/message-request-response.dto.js';
 import { MessageSentResponseDto } from './dto/message-sent-response.dto.js';
+import type { QueryMessagesDto } from './dto/query-messages.dto.js';
 
 @Injectable()
 export class MessagesService {

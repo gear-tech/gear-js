@@ -30,7 +30,7 @@ export class StateTransition {
   program?: Program;
 
   @Column({ type: 'bigint', name: 'value_to_receive', nullable: true })
-  valueToReceive: bigint;
+  valueToReceive: bigint | null;
 
   @Column({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;

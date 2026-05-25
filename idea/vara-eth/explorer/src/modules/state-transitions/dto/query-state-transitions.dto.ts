@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
 import { TransformToBytea } from '../../../common/utils/hex.util.js';

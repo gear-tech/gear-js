@@ -1,7 +1,7 @@
 import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 import { Transform } from 'class-transformer';
 
-export const toBytea = (hex: string): PgByteaString => `\\x${hex.replace(/^0x/i, '')}` as PgByteaString;
+export const toBytea = (hex: string): PgByteaString => `\\x${hex.replace(/^0x/i, '').toLowerCase()}` as PgByteaString;
 
 export const toHexString = (value: Buffer | string): string => {
   if (Buffer.isBuffer(value)) return `0x${value.toString('hex')}`;
