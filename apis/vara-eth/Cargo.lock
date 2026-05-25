@@ -449,6 +449,53 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
+name = "askama"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1bf825125edd887a019d0a3a837dcc5499a68b0d034cc3eb594070c3e18addc"
+dependencies = [
+ "askama_macros",
+ "itoa",
+ "percent-encoding",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "askama_derive"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e1c7065972a130eafa84215f21352ae15b4a7393da48c1f5e103904490736738"
+dependencies = [
+ "askama_parser",
+ "memchr",
+ "proc-macro2",
+ "quote",
+ "rustc-hash",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "askama_macros"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e23b1d2c4bd39a41971f6124cef4cc6fd0540913ecb90919b69ab3bbe44ae1a"
+dependencies = [
+ "askama_derive",
+]
+
+[[package]]
+name = "askama_parser"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7db09fde9143e7ac4513358fb32ee32847125b63b18ea715afd487956da715da"
+dependencies = [
+ "rustc-hash",
+ "unicode-ident",
+ "winnow 1.0.3",
+]
+
+[[package]]
 name = "auto_impl"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -834,18 +881,18 @@ checksum = "3d52eff69cd5e647efe296129160853a42795992097e8af39800e1060caeea9b"
 
 [[package]]
 name = "convert_case"
-version = "0.7.1"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb402b8d4c85569410425650ce3eddc7d698ed96d39a73f941b08fb63082f1e7"
+checksum = "633458d4ef8c78b72454de2d54fd6ab2e60f9e02be22f3c6104cdc8a4e0fceb9"
 dependencies = [
  "unicode-segmentation",
 ]
 
 [[package]]
 name = "convert_case"
-version = "0.10.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "633458d4ef8c78b72454de2d54fd6ab2e60f9e02be22f3c6104cdc8a4e0fceb9"
+checksum = "affbf0190ed2caf063e3def54ff444b449371d55c58e513a95ab98eca50adb49"
 dependencies = [
  "unicode-segmentation",
 ]
@@ -1652,7 +1699,6 @@ dependencies = [
  "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hex",
- "impl-serde",
  "log",
  "num-traits",
  "numerated 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1661,7 +1707,6 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
- "serde",
  "wasmparser 0.230.0",
 ]
 
@@ -1705,7 +1750,6 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
- "serde",
  "thiserror 2.0.18",
 ]
 
@@ -1913,7 +1957,6 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
- "serde",
  "thiserror 2.0.18",
 ]
 
@@ -2029,20 +2072,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "handlebars"
-version = "4.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faa67bab9ff362228eb3d00bd024a4965d8231bbb7921167f0cfa66c6626b225"
-dependencies = [
- "log",
- "pest",
- "pest_derive",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
-]
-
-[[package]]
 name = "hash-db"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2082,8 +2111,6 @@ version = "0.15.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
 dependencies = [
- "allocator-api2",
- "equivalent",
  "foldhash 0.1.5",
 ]
 
@@ -2104,6 +2131,8 @@ version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 dependencies = [
+ "allocator-api2",
+ "equivalent",
  "foldhash 0.2.0",
  "serde",
  "serde_core",
@@ -2920,39 +2949,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pest_derive"
-version = "2.8.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11f486f1ea21e6c10ed15d5a7c77165d0ee443402f0780849d1768e7d9d6fe77"
-dependencies = [
- "pest",
- "pest_generator",
-]
-
-[[package]]
-name = "pest_generator"
-version = "2.8.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8040c4647b13b210a963c1ed407c1ff4fdfa01c31d6d2a098218702e6664f94f"
-dependencies = [
- "pest",
- "pest_meta",
- "proc-macro2",
- "quote",
- "syn 2.0.117",
-]
-
-[[package]]
-name = "pest_meta"
-version = "2.8.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89815c69d36021a140146f26659a81d6c2afa33d216d736dd4be5381a7362220"
-dependencies = [
- "pest",
- "sha2 0.10.9",
-]
-
-[[package]]
 name = "pin-project-lite"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3468,35 +3464,49 @@ dependencies = [
 ]
 
 [[package]]
-name = "sails-idl-gen"
-version = "0.10.4"
+name = "sails-idl-ast"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66adda09ec69160e523815e5e168870f1580531f1a3758a6e6915cc45c4c6801"
+checksum = "139764c117ece5cd0ad77da361c28231439cdff1a3bf7ff8e73000506c8de6c5"
 dependencies = [
- "convert_case 0.7.1",
+ "askama",
+ "keccak-const",
+ "parity-scale-codec",
+]
+
+[[package]]
+name = "sails-idl-gen"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d1e3a103faefd7c1874156cf24b72f35eac4708ec471854b6bbf4dae64a6a23"
+dependencies = [
+ "askama",
+ "convert_case 0.11.0",
  "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "handlebars",
+ "quote",
+ "sails-idl-ast",
  "sails-idl-meta",
- "scale-info",
- "serde",
- "serde_json",
+ "sails-type-registry",
+ "syn 2.0.117",
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "sails-idl-meta"
-version = "0.10.4"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c95f45c1067065ebc1cb06cf4e04c3188d80811be775f9e1943783545037395"
+checksum = "b0fc920251e8c6f3b422210d79ba131db1f8f2c92dfe440a24b784165de07100"
 dependencies = [
- "scale-info",
+ "parity-scale-codec",
+ "sails-idl-ast",
+ "sails-type-registry",
 ]
 
 [[package]]
 name = "sails-macros"
-version = "0.10.4"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc0f1ae95217acfa3de0272060d17fee0e28efba8eac9e133ab2bc69e8d85435"
+checksum = "929b849b696129b877d547c19c11d22b894eee2a665f895b63f92a98632cabdc"
 dependencies = [
  "proc-macro-error",
  "sails-macros-core",
@@ -3504,11 +3514,11 @@ dependencies = [
 
 [[package]]
 name = "sails-macros-core"
-version = "0.10.4"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "759250abb4c070c798f159c9fda3ea2c8b6ffe0fe5d096fdf1f5aa2b8b619041"
+checksum = "0878afaa32ecb86cafbe5caf7a839abd3db7afeecc53858e30986f9d2b106a73"
 dependencies = [
- "convert_case 0.7.1",
+ "convert_case 0.11.0",
  "parity-scale-codec",
  "proc-macro-error",
  "proc-macro2",
@@ -3517,10 +3527,34 @@ dependencies = [
 ]
 
 [[package]]
-name = "sails-rs"
-version = "0.10.4"
+name = "sails-reflect-hash"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3666ba4b6b3d2ca138007d1a22b194ee6422c89aff3fe33a2230c898b843ab2"
+checksum = "e26e2959adfbedbe01d37c3d5b0054caf03e33279c822bd8757bff783330be07"
+dependencies = [
+ "alloy-primitives",
+ "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "keccak-const",
+ "sails-reflect-hash-derive",
+]
+
+[[package]]
+name = "sails-reflect-hash-derive"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7642a36c8286f560f557cd3b0734837f293af12f191b5d710c02501417f1ea6a"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "sails-rs"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aa3b590bb2d18a98cabb7908fa18c2523e4cf4454f4fa4c6a52f48e9dce0f7c7"
 dependencies = [
  "alloy-primitives",
  "alloy-sol-types",
@@ -3531,7 +3565,8 @@ dependencies = [
  "gear-wasm-builder",
  "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gstd",
- "hashbrown 0.15.5",
+ "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hashbrown 0.17.1",
  "hex",
  "keccak-const",
  "parity-scale-codec",
@@ -3540,9 +3575,34 @@ dependencies = [
  "sails-idl-gen",
  "sails-idl-meta",
  "sails-macros",
- "scale-info",
+ "sails-reflect-hash",
+ "sails-type-registry",
  "spin",
  "thiserror 2.0.18",
+]
+
+[[package]]
+name = "sails-type-registry"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "226fcfbb34d28c8e5a76fac88006defa1df7f9110f9ad9d9a0d055cfb5ebb7ef"
+dependencies = [
+ "alloy-primitives",
+ "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sails-idl-ast",
+ "sails-type-registry-derive",
+]
+
+[[package]]
+name = "sails-type-registry-derive"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "17ddd15d3e7a807553a360531fa90a734fb883c40d5acfa1094b73e06f8e2371"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
 ]
 
 [[package]]
@@ -4240,9 +4300,9 @@ dependencies = [
 
 [[package]]
 name = "spin"
-version = "0.9.8"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
+checksum = "d5fe4ccb98d9c292d56fec89a5e07da7fc4cf0dc11e156b41793132775d3e591"
 
 [[package]]
 name = "spki"
