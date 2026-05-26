@@ -10080,6 +10080,7 @@ __metadata:
     "@noble/hashes": "npm:1.8.0"
     "@types/ws": "npm:8.18.1"
     kzg-wasm: "npm:1.0.0"
+    sails-js: "npm:^1.0.0"
     viem: "npm:@vara-eth/viem@2.48.11"
     ws: "npm:8.20.1"
   peerDependencies:
@@ -22907,6 +22908,17 @@ __metadata:
     sails-js-types:
       optional: true
   checksum: 10c0/164761939feeed3fa411057d8b59e7ab09a470f7e5b8224de1a87cc8af11a24f98c81da969cd482c62e2da631e6f7e0eb05ea419278256f4a30913fee59476cc
+  languageName: node
+  linkType: hard
+
+"sails-js@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "sails-js@npm:1.0.0"
+  peerDependencies:
+    "@gear-js/api": ^0.45.0
+    "@polkadot/api": ^16.5.1
+    "@polkadot/util": ^14.0.1
+  checksum: 10c0/e2e306665ccd685b610b5492fa2271a2dcfff09744d0191fc4641b8c74d9cce0691570cd3eac926cd63b3eb4bdb12725736ec71b96a2fe7cdb0ea54a8d6965ae
   languageName: node
   linkType: hard
 

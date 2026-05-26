@@ -8,5 +8,5 @@ repository.workspace = true
 
 
 [build-dependencies]
-sails-rs = { workspace = true, features = ["idl-gen"] }
+sails-rs = { workspace = true, features = ["build"] }
 counter = { path = "../counter" }
