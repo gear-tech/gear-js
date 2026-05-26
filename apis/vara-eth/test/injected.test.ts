@@ -1,4 +1,7 @@
 import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import { SailsProgram } from 'sails-js';
+import { SailsIdlParser } from 'sails-js/parser';
 import type { Hash, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -25,6 +28,8 @@ let signer: ReturnType<typeof walletClientToSigner>;
 let mirror: ReturnType<typeof getMirrorClient>;
 
 let programId: Hash;
+let sailsParser: SailsIdlParser;
+let counterProgram: SailsProgram;
 
 const injectedTxs: {
   id: Hash;
@@ -36,6 +41,11 @@ const injectedTxs: {
 }[] = [];
 
 beforeAll(async () => {
+  sailsParser = new SailsIdlParser();
+  await sailsParser.init();
+  const idl = fs.readFileSync('./programs/counter-idl/counter_idl.idl', 'utf-8');
+  counterProgram = new SailsProgram(sailsParser.parse(idl));
+
   const account = privateKeyToAccount(config.privateKey);
 
   const transport = webSocket(config.wsRpc);
@@ -240,7 +250,8 @@ describe('Injected Transactions', () => {
     test(
       'should send init message',
       async () => {
-        const payload = '0x24437265617465507267';
+        if (!counterProgram.ctors) throw new Error('No ctors');
+        const payload = counterProgram.ctors.CreatePrg.encodePayload();
 
         const tx = await mirror.sendMessage(payload);
 
@@ -312,7 +323,7 @@ describe('Injected Transactions', () => {
     });
 
     test('should send increment message', async () => {
-      const payload = '0x1c436f756e74657224496e6372656d656e74';
+      const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
 
       const injected: IInjectedTransaction = {
         destination: programId,
@@ -344,11 +355,11 @@ describe('Injected Transactions', () => {
       async () => {
         const reply = await mirror.waitForReply(messageId);
 
-        expect(reply).toHaveProperty('payload', '0x1c436f756e74657224496e6372656d656e7401000000');
         expect(reply).toHaveProperty('value', 0n);
         expect(reply).toHaveProperty('replyCode', '0x00010000');
         expect(reply).toHaveProperty('blockNumber');
         expect(reply).toHaveProperty('txHash');
+        expect(counterProgram.services.Counter.functions.Increment.decodeResult(reply.payload)).toEqual(1);
       },
       config.longRunningTestTimeout,
     );
@@ -367,7 +378,7 @@ describe('Injected Transactions', () => {
     });
 
     test('should send a message and wait for the promise', async () => {
-      const payload = '0x1c436f756e74657224496e6372656d656e74';
+      const payload = counterProgram.services.Counter.functions.Decrement.encodePayload();
 
       const injected: IInjectedTransaction = {
         destination: programId,
@@ -392,9 +403,9 @@ describe('Injected Transactions', () => {
       expect(result.txHash).toBeDefined();
       expect(result.code.isSuccess).toBeTruthy();
       expect(Array.from(result.code.toBytes())).toEqual([0, 1, 0, 0]);
-      expect(result.payload).toBe('0x1c436f756e74657224496e6372656d656e7402000000');
       expect(result.value).toBe(0n);
       expect(result.signature).toBeDefined();
+      expect(counterProgram.services.Counter.functions.Decrement.decodeResult(result.payload)).toEqual(0);
 
       promise = result;
     });

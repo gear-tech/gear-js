@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import { SailsProgram } from 'sails-js';
+import { SailsIdlParser } from 'sails-js/parser';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -22,8 +24,15 @@ let signer: ITransactionSigner;
 let mirror: ReturnType<typeof getMirrorClient>;
 
 let programId: `0x${string}`;
+let sailsParser: SailsIdlParser;
+let counterProgram: SailsProgram;
 
 beforeAll(async () => {
+  sailsParser = new SailsIdlParser();
+  await sailsParser.init();
+  const idl = fs.readFileSync('./programs/counter-idl/counter_idl.idl', 'utf-8');
+  counterProgram = new SailsProgram(sailsParser.parse(idl));
+
   const transport = webSocket(config.wsRpc);
 
   publicClient = createPublicClient({
@@ -280,7 +289,10 @@ describe('messages', () => {
   test(
     'should send init message',
     async () => {
-      const payload = '0x24437265617465507267';
+      if (!counterProgram.ctors) throw new Error('ctors not found');
+      // if (!('CreatePrg' in counterProgram.ctors)) throw new Error('CreatePrg not found');
+
+      const payload = counterProgram.ctors.CreatePrg.encodePayload();
 
       const tx = await mirror.sendMessage(payload);
 
@@ -311,7 +323,8 @@ describe('messages', () => {
   test(
     'should send message and receive reply',
     async () => {
-      const _payload = '0x1c436f756e74657224496e6372656d656e74';
+      const _payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+      // '0x1c436f756e74657224496e6372656d656e74';
 
       const tx = await mirror.sendMessage(_payload);
 
@@ -325,8 +338,8 @@ describe('messages', () => {
 
       const { payload, replyCode, value } = await waitForReply();
 
-      expect(payload).toEqual('0x1c436f756e74657224496e6372656d656e7401000000');
       expect(replyCode).toBe('0x00010000');
+      expect(counterProgram.services.Counter.functions.Increment.decodeResult(payload)).toEqual(1);
       expect(value).toBe(0n);
 
       await waitNBlocks(1);
@@ -338,7 +351,8 @@ describe('messages', () => {
     'should send message with value',
     async () => {
       // IncrementWithValue
-      const _payload = '0x1c436f756e74657248496e6372656d656e745769746856616c7565';
+      const _payload = counterProgram.services.Counter.functions.IncrementWithValue.encodePayload();
+      // '0x1c436f756e74657248496e6372656d656e745769746856616c7565';
 
       const tx = await mirror.sendMessage(_payload, 100n);
 
@@ -353,7 +367,7 @@ describe('messages', () => {
       const { payload, replyCode, value } = await waitForReply();
 
       expect(replyCode).toBe('0x00010000');
-      expect(payload).toEqual('0x1c436f756e74657248496e6372656d656e745769746856616c756565000000');
+      expect(counterProgram.services.Counter.functions.IncrementWithValue.decodeResult(payload)).toEqual(101);
       expect(value).toBe(0n);
 
       await waitNBlocks(1);
@@ -372,11 +386,11 @@ describe('program state', () => {
   });
 
   test('should calculate reply for handle', async () => {
-    const payload = '0x1c436f756e7465722047657456616c7565';
+    const payload = counterProgram.services.Counter.queries.GetValue.encodePayload();
 
     const reply = await api.call.program.calculateReplyForHandle(await signer.getAddress(), programId, payload);
 
-    expect(reply.payload).toBe('0x1c436f756e7465722047657456616c756565000000');
+    expect(counterProgram.services.Counter.queries.GetValue.decodeResult(reply.payload)).toBe(101);
   });
 
   test('should fail calculateReplyForHandle for incorrect program id', async () => {

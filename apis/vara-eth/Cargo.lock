@@ -937,6 +937,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "crc32fast"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9481c1c90cbf2ac953f07c8d4a58aa3945c425b7185c9154d67a65e4230da511"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "crunchy"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1530,6 +1539,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "flate2"
+version = "1.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "843fba2746e448b37e26a819579957415c8cef339bf08564fe8b7ddbd959573c"
+dependencies = [
+ "crc32fast",
+ "miniz_oxide",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1699,6 +1718,7 @@ dependencies = [
  "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hex",
+ "impl-serde",
  "log",
  "num-traits",
  "numerated 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1707,6 +1727,7 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
+ "serde",
  "wasmparser 0.230.0",
 ]
 
@@ -1750,6 +1771,7 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
+ "serde",
  "thiserror 2.0.18",
 ]
 
@@ -1879,6 +1901,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76ac67118eef8a153d4df06bd865d0a5c3ac51888c238673a203a5c424db0327"
 
 [[package]]
+name = "genco"
+version = "0.19.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77ab846431e5d637791b3279e7242fe2b21e11c3d8b4cf6a99f645c5f16ba7c0"
+dependencies = [
+ "genco-macros",
+ "relative-path",
+ "smallvec",
+]
+
+[[package]]
+name = "genco-macros"
+version = "0.19.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c42a1fe5a699c7f1d36ea6e04ed680a5c787cabff4b610ae3b8954ea3bcefec1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.14.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1957,6 +2001,7 @@ dependencies = [
  "scale-decode",
  "scale-encode",
  "scale-info",
+ "serde",
  "thiserror 2.0.18",
 ]
 
@@ -2112,6 +2157,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
 dependencies = [
  "foldhash 0.1.5",
+ "serde",
 ]
 
 [[package]]
@@ -2689,6 +2735,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fa76a2c86f704bdb222d66965fb3d63269ce38518b83cb0575fca855ebb6316"
 dependencies = [
  "adler2",
+ "simd-adler32",
 ]
 
 [[package]]
@@ -2946,6 +2993,39 @@ checksum = "e0848c601009d37dfa3430c4666e147e49cdcf1b92ecd3e63657d8a5f19da662"
 dependencies = [
  "memchr",
  "ucd-trie",
+]
+
+[[package]]
+name = "pest_derive"
+version = "2.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11f486f1ea21e6c10ed15d5a7c77165d0ee443402f0780849d1768e7d9d6fe77"
+dependencies = [
+ "pest",
+ "pest_generator",
+]
+
+[[package]]
+name = "pest_generator"
+version = "2.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8040c4647b13b210a963c1ed407c1ff4fdfa01c31d6d2a098218702e6664f94f"
+dependencies = [
+ "pest",
+ "pest_meta",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "pest_meta"
+version = "2.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89815c69d36021a140146f26659a81d6c2afa33d216d736dd4be5381a7362220"
+dependencies = [
+ "pest",
+ "sha2 0.10.9",
 ]
 
 [[package]]
@@ -3330,6 +3410,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc897dd8d9e8bd1ed8cdad82b5966c3e0ecae09fb1907d58efaa013543185d0a"
 
 [[package]]
+name = "relative-path"
+version = "1.9.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba39f3699c378cd8970968dcbff9c43159ea4cfbd88d43c00b22f2ef10a435d2"
+
+[[package]]
 name = "rfc6979"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3464,6 +3550,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "sails-client-gen-v2"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37e1da30f391467352121ba3f76e1e4d6f51efffa48bc3df13127da966e747f8"
+dependencies = [
+ "anyhow",
+ "convert_case 0.11.0",
+ "genco",
+ "parity-scale-codec",
+ "sails-idl-ast",
+ "sails-idl-parser-v2",
+]
+
+[[package]]
 name = "sails-idl-ast"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3472,6 +3572,19 @@ dependencies = [
  "askama",
  "keccak-const",
  "parity-scale-codec",
+]
+
+[[package]]
+name = "sails-idl-embed"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f306b339ad97ce8a6d1df08ed7c94de1ff7b937fa10faf9eb369f9d5ce7d0efc"
+dependencies = [
+ "flate2",
+ "tempfile",
+ "thiserror 2.0.18",
+ "wasm-encoder 0.244.0",
+ "wasmparser 0.244.0",
 ]
 
 [[package]]
@@ -3500,6 +3613,20 @@ dependencies = [
  "parity-scale-codec",
  "sails-idl-ast",
  "sails-type-registry",
+]
+
+[[package]]
+name = "sails-idl-parser-v2"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eb44e70eb2ef80a89bc6d034e83d15fcb1bbc6ede8a96a6db76febfaabd2955c"
+dependencies = [
+ "paste",
+ "pest",
+ "pest_derive",
+ "sails-idl-ast",
+ "tempfile",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -3558,6 +3685,7 @@ checksum = "aa3b590bb2d18a98cabb7908fa18c2523e4cf4454f4fa4c6a52f48e9dce0f7c7"
 dependencies = [
  "alloy-primitives",
  "alloy-sol-types",
+ "convert_case 0.11.0",
  "futures",
  "gcore",
  "gear-core 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -3572,6 +3700,8 @@ dependencies = [
  "parity-scale-codec",
  "paste",
  "pin-project-lite",
+ "sails-client-gen-v2",
+ "sails-idl-embed",
  "sails-idl-gen",
  "sails-idl-meta",
  "sails-macros",
@@ -4012,6 +4142,12 @@ dependencies = [
  "digest 0.10.7",
  "rand_core 0.6.4",
 ]
+
+[[package]]
+name = "simd-adler32"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "703d5c7ef118737c72f1af64ad2f6f8c5e1921f818cdcb97b8fe6fc69bf66214"
 
 [[package]]
 name = "slab"
@@ -4988,6 +5124,7 @@ dependencies = [
  "hashbrown 0.15.5",
  "indexmap",
  "semver 1.0.28",
+ "serde",
 ]
 
 [[package]]

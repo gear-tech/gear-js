@@ -13,7 +13,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "types": ["jest", "node"],
   },
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib"],
 }
