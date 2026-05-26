@@ -1,7 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
+
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
+import { TransformToBytea } from '../../../common/utils/hex.util.js';
 
 export class QueryStateTransitionsDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -9,14 +12,16 @@ export class QueryStateTransitionsDto extends PaginationDto {
   })
   @IsOptional()
   @IsString()
-  programId?: string;
+  @TransformToBytea()
+  programId?: PgByteaString;
 
   @ApiPropertyOptional({
     description: 'Filter by batch hash (hex with 0x prefix)',
   })
   @IsOptional()
   @IsString()
-  batchHash?: string;
+  @TransformToBytea()
+  batchHash?: PgByteaString;
 
   @ApiPropertyOptional({
     description: 'Filter by exited status',
@@ -26,13 +31,4 @@ export class QueryStateTransitionsDto extends PaginationDto {
   @Type(() => Boolean)
   @IsBoolean()
   exited?: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Sort field',
-    enum: ['timestamp'],
-    default: 'timestamp',
-  })
-  @IsOptional()
-  @IsIn(['timestamp'])
-  sortBy?: 'timestamp' = 'timestamp' as const;
 }

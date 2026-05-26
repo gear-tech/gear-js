@@ -2,7 +2,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
 import { QueryProgramsDto } from './dto/query-programs.dto.js';
 import { ProgramsService } from './programs.service.js';
@@ -34,7 +36,7 @@ export class ProgramsController {
     type: ProgramResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Program not found' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.programsService.findOne(id);
   }
 }

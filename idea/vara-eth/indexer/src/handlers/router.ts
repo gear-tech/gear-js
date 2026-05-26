@@ -1,3 +1,4 @@
+import { type PgByteaString, toPgByteaString } from '@vara-eth/idea-indexer-db';
 import { In } from 'typeorm';
 import { type Address, zeroAddress, zeroHash } from 'viem';
 
@@ -16,20 +17,20 @@ import {
 } from '../model/index.js';
 import type { Context, Log } from '../processor.js';
 import type { BlockDataCommon } from '../types/block.js';
-import { createHash, fromPgBytea, mapKeys, mapValues, toPgBytea, toPgByteaString } from '../util/index.js';
+import { createHash, mapKeys, mapValues } from '../util/index.js';
 import { BaseHandler } from './base.js';
 
 export class RouterHandler extends BaseHandler {
   private _address: Address;
 
-  private _codes: Map<string, Code>;
-  private _codeStatuses: Map<string, CodeStatus>;
-  private _programs: Map<string, Program>;
-  private _txs: Map<string, EthereumTx>;
-  private _stateTransitions: Map<string, StateTransition>;
-  private _batches: Map<string, Batch>;
-  private _messagesSent: Map<string, MessageSent>;
-  private _repliesSent: Map<string, ReplySent>;
+  private _codes: Map<PgByteaString, Code>;
+  private _codeStatuses: Map<PgByteaString, CodeStatus>;
+  private _programs: Map<PgByteaString, Program>;
+  private _txs: Map<PgByteaString, EthereumTx>;
+  private _stateTransitions: Map<PgByteaString, StateTransition>;
+  private _batches: Map<PgByteaString, Batch>;
+  private _messagesSent: Map<PgByteaString, MessageSent>;
+  private _repliesSent: Map<PgByteaString, ReplySent>;
 
   constructor() {
     super();
@@ -102,10 +103,9 @@ export class RouterHandler extends BaseHandler {
     const codes = mapValues(this._codes);
 
     for (const code of codes) {
-      const id = fromPgBytea(code.id);
-      if (this._codeStatuses.has(id)) {
-        code.status = this._codeStatuses.get(id)!;
-        this._codeStatuses.delete(id);
+      if (this._codeStatuses.has(code.id)) {
+        code.status = this._codeStatuses.get(code.id)!;
+        this._codeStatuses.delete(code.id);
       }
     }
 
@@ -129,7 +129,7 @@ export class RouterHandler extends BaseHandler {
       const common: BlockDataCommon = {
         blockNumber: BigInt(block.header.height),
         timestamp: new Date(block.header.timestamp),
-        blockHash: toPgBytea(block.header.hash),
+        blockHash: toPgByteaString(block.header.hash),
       };
 
       for (const tx of block.transactions) {
@@ -141,14 +141,14 @@ export class RouterHandler extends BaseHandler {
         const id = toPgByteaString(tx.hash);
 
         this._txs.set(
-          tx.hash,
+          id,
           new EthereumTx({
             id,
-            contractAddress: toPgBytea(tx.to),
-            sender: toPgBytea(tx.from),
-            data: Buffer.from(tx.input.slice(2), 'hex'),
+            contractAddress: toPgByteaString(tx.to),
+            sender: toPgByteaString(tx.from),
+            data: toPgByteaString(tx.input),
             blockNumber: common.blockNumber,
-            selector,
+            selector: toPgByteaString(selector),
             createdAt: common.timestamp,
           }),
         );
@@ -186,7 +186,7 @@ export class RouterHandler extends BaseHandler {
 
   private _handleCodeValidationRequested(log: Log, common: BlockDataCommon) {
     const data = RouterAbi.events.CodeValidationRequested.decode(log);
-    const id = data.args.codeId.toLowerCase();
+    const id = toPgByteaString(data.args.codeId);
     this._codes.set(
       id,
       new Code({
@@ -203,20 +203,20 @@ export class RouterHandler extends BaseHandler {
     const data = RouterAbi.events.CodeGotValidated.decode(log);
     const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
-    this._codeStatuses.set(data.args.codeId.toLowerCase(), status);
+    this._codeStatuses.set(toPgByteaString(data.args.codeId), status);
     this._logger.info({ codeId: data.args.codeId, status }, 'Code validation completed');
   }
 
   private _handleProgramCreated(log: Log, common: BlockDataCommon) {
     const data = RouterAbi.events.ProgramCreated.decode(log);
 
-    const id = data.args.actorId.toLowerCase();
+    const id = toPgByteaString(data.args.actorId);
 
     const program = new Program({
       id,
-      codeId: data.args.codeId.toLowerCase(),
+      codeId: toPgByteaString(data.args.codeId),
       blockNumber: BigInt(log.block.height),
-      txHash: toPgBytea(log.transaction.hash),
+      txHash: toPgByteaString(log.transaction.hash),
       createdAt: common.timestamp,
     });
     this._addHashEntry(EntityType.Program, id, common.timestamp);
@@ -225,7 +225,7 @@ export class RouterHandler extends BaseHandler {
       const {
         args: [_codeId, _salt, _overrideInitializer, abiInterface],
       } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
-      program.abiInterfaceAddress = toPgBytea(abiInterface);
+      program.abiInterfaceAddress = toPgByteaString(abiInterface);
     }
 
     this._programs.set(program.id, program);
@@ -240,13 +240,13 @@ export class RouterHandler extends BaseHandler {
     const txData = RouterAbi.functions.commitBatch.decode(log.transaction);
 
     const batch = new Batch({
-      id: hash.toLowerCase(),
+      id: toPgByteaString(hash),
       committedAt: common.timestamp,
       committedAtBlock: common.blockNumber,
-      blockHash: toPgBytea(txData.args[0].blockHash),
+      blockHash: toPgByteaString(txData.args[0].blockHash),
       blockTimestamp: BigInt(txData.args[0].blockTimestamp),
-      previousCommittedBatchHash: toPgBytea(txData.args[0].previousCommittedBatchHash),
-      expiry: txData.args[0].expiry,
+      previousCommittedBatchHash: toPgByteaString(txData.args[0].previousCommittedBatchHash),
+      expiry: BigInt(txData.args[0].expiry),
     });
 
     this._batches.set(batch.id, batch);
@@ -261,45 +261,45 @@ export class RouterHandler extends BaseHandler {
 
       const stateTransition = new StateTransition({
         id: transitionId,
-        hash: toPgBytea(trans.newStateHash),
+        hash: toPgByteaString(trans.newStateHash),
         batch: batch,
-        timestamp: common.timestamp,
-        programId: trans.actorId.toLowerCase(),
+        programId: toPgByteaString(trans.actorId),
         exited: trans.exited,
-        inheritor: trans.inheritor === zeroAddress ? null : toPgBytea(trans.inheritor),
+        inheritor: trans.inheritor === zeroAddress ? null : toPgByteaString(trans.inheritor),
         valueToReceive: trans.valueToReceive * (trans.valueToReceiveNegativeSign ? -1n : 1n),
+        createdAt: common.timestamp,
       });
       this._stateTransitions.set(stateTransition.id, stateTransition);
       this._logger.info(
         { id: stateTransition.id, hash: trans.newStateHash, block: common.blockNumber },
         'State transition created',
       );
-      this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.timestamp);
+      this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.createdAt);
 
       for (const message of trans.messages) {
-        this._processMessageFromTransition(message, trans.actorId.toLowerCase(), common, stateTransition.id);
+        this._processMessageFromTransition(message, toPgByteaString(trans.actorId), common, stateTransition.id);
       }
     }
   }
 
   private _processMessageFromTransition(
     message: any,
-    sourceProgramId: string,
+    sourceProgramId: PgByteaString,
     common: BlockDataCommon,
-    stateTransitionId: string,
+    stateTransitionId: PgByteaString,
   ): void {
-    const id = message.id.toLowerCase();
+    const id = toPgByteaString(message.id);
 
     const isReply = message.replyDetails.to !== zeroHash;
 
     if (isReply) {
       const replySent = new ReplySent({
         id,
-        repliedToId: toPgBytea(message.replyDetails.to),
+        repliedToId: toPgByteaString(message.replyDetails.to),
         replyCode: message.replyDetails.code,
         sourceProgramId,
-        destination: toPgBytea(message.destination),
-        payload: Buffer.from(message.payload.slice(2), 'hex'),
+        destination: toPgByteaString(message.destination),
+        payload: toPgByteaString(message.payload),
         value: message.value,
         isCall: message.call,
         stateTransitionId,
@@ -315,8 +315,8 @@ export class RouterHandler extends BaseHandler {
       const messageSent = new MessageSent({
         id,
         sourceProgramId: sourceProgramId,
-        destination: toPgBytea(message.destination),
-        payload: Buffer.from(message.payload.slice(2), 'hex'),
+        destination: toPgByteaString(message.destination),
+        payload: toPgByteaString(message.payload),
         value: message.value,
         isCall: message.call,
         stateTransitionId,

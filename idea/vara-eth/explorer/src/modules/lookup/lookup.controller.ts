@@ -1,6 +1,9 @@
 /** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { LookupService } from './lookup.service.js';
 
 @ApiTags('lookup')
@@ -13,7 +16,7 @@ export class LookupController {
   @ApiParam({ name: 'hash', description: 'Hash to lookup (0x-prefixed hex string)' })
   @ApiResponse({ status: 200, description: 'Returns the entity data with its type' })
   @ApiResponse({ status: 404, description: 'Hash not found' })
-  async lookupByHash(@Param('hash') hash: string) {
+  async lookupByHash(@Param('hash', ParseByteaPipe) hash: PgByteaString) {
     return this.lookupService.lookupByHash(hash);
   }
 }

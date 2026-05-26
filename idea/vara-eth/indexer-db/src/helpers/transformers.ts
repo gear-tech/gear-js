@@ -1,13 +1,17 @@
 import { type Hex, isHex } from 'viem';
 
-export function toPgByteaString(value: string | Buffer): string {
+import type { PgByteaString } from './types.js';
+
+export function toPgByteaString(value: string | Buffer): PgByteaString {
+  if (!value) throw new Error('Invalid value');
+
   if (Buffer.isBuffer(value)) {
     return `\\x${value.toString('hex')}`;
   }
 
-  if (isHex(value)) {
+  if (isHex(value) || isHex(`0x${value}`)) {
     const cleaned = value.startsWith('0x') ? value.slice(2) : value;
-    return `\\x${cleaned}`;
+    return `\\x${cleaned.toLowerCase()}`;
   }
 
   throw new Error('Invalid hex string');

@@ -11,13 +11,4 @@ export class QueryCodesDto extends PaginationDto {
   @IsOptional()
   @IsIn(['ValidationRequested', 'ValidationFailed', 'Validated'])
   status?: 'ValidationRequested' | 'ValidationFailed' | 'Validated';
-
-  @ApiPropertyOptional({
-    description: 'Sort field',
-    enum: ['createdAt'],
-    default: 'createdAt',
-  })
-  @IsOptional()
-  @IsIn(['createdAt'])
-  sortBy?: 'createdAt' = 'createdAt' as const;
 }

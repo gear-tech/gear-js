@@ -2,7 +2,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { QueryRepliesDto } from './dto/query-replies.dto.js';
 import { RepliesService } from './replies.service.js';
 
@@ -31,7 +33,7 @@ export class RepliesController {
   @ApiParam({ name: 'id', description: 'Reply ID (hex with 0x prefix)' })
   @ApiResponse({ status: 200, description: 'Returns the reply request' })
   @ApiResponse({ status: 404, description: 'Reply request not found' })
-  async findOneRequest(@Param('id') id: string) {
+  async findOneRequest(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.repliesService.findOneRequest(id);
   }
 
@@ -40,7 +42,7 @@ export class RepliesController {
   @ApiParam({ name: 'id', description: 'Reply ID (hex with 0x prefix)' })
   @ApiResponse({ status: 200, description: 'Returns the sent reply' })
   @ApiResponse({ status: 404, description: 'Sent reply not found' })
-  async findOneSent(@Param('id') id: string) {
+  async findOneSent(@Param('id', ParseByteaPipe) id: PgByteaString) {
     return this.repliesService.findOneSent(id);
   }
 }
