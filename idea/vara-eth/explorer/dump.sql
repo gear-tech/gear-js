@@ -156,14 +156,6 @@ COPY public.reply_sent (id, replied_to_id, source_program_id, destination, state
 
 
 --
--- Data for Name: router_implementation; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.router_implementation (id, from_block, version) FROM stdin;
-\.
-
-
---
 -- Data for Name: state_transition; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -219,4 +211,3 @@ SELECT pg_catalog.setval('public.migrations_id_seq', 1, false);
 --
 
 \unrestrict 78xV3JyYDksXRv724bWhxhTwMsOBQ17tTsL47dwgMdMfKwpgk2YdwCSZn1Y8kqU
-
