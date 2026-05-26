@@ -1,10 +1,10 @@
-import { initKzgLoading } from '@vara-eth/api/util';
 import { useRef, useState } from 'react';
 import { useConnection } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
 import { Button, Modal } from '@/components';
 import { useUploadCode, useUploadCodeFee } from '@/features/codes/lib';
+import { initKzgInWorker } from '@/features/codes/lib/kzg-worker-client';
 import { formatBalance } from '@/shared/utils';
 
 import styles from './upload-code-button.module.scss';
@@ -13,8 +13,16 @@ export const UploadCodeButton = () => {
   const uploadCode = useUploadCode();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+
   const { address } = useConnection();
   const close = () => setIsOpen(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+    initKzgInWorker()
+      .then(() => console.log('KZG worker initialized'))
+      .catch((error) => console.error('KZG worker initialization failed:', error));
+  };
 
   const { data: feeData, isPending: isFeePending } = useUploadCodeFee();
   const { value: balance, decimals: balanceDecimals, isPending: isBalancePending } = useWrappedVaraBalance();
@@ -34,7 +42,6 @@ export const UploadCodeButton = () => {
 
   const onSelectFile = () => {
     inputRef.current?.click();
-    initKzgLoading();
   };
 
   const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
@@ -54,7 +61,7 @@ export const UploadCodeButton = () => {
 
   return (
     <>
-      <Button size="xs" onClick={() => setIsOpen(true)}>
+      <Button size="xs" onClick={openModal}>
         Upload code
       </Button>
 
