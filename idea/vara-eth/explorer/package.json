@@ -8,7 +8,9 @@
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "test": "npx vitest run",
+    "test:watch": "npx vitest"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
