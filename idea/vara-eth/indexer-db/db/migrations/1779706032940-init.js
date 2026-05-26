@@ -7,7 +7,7 @@
  * @class
  * @implements {MigrationInterface}
  */
-module.exports = class Init1779706032940 {
+export default class Init1779706032940 {
   name = 'Init1779706032940';
 
   /**
@@ -167,4 +167,4 @@ module.exports = class Init1779706032940 {
     await queryRunner.query(`DROP INDEX "public"."idx_block_hash"`);
     await queryRunner.query(`DROP TABLE "batch"`);
   }
-};
+}
