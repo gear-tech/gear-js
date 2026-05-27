@@ -21,6 +21,9 @@ export const config = {
     toBlock: Number.parseInt(getEnv('TO_BLOCK', '0'), 10) || undefined,
     apiKey: getEnv('API_KEY'),
   },
+  dns: {
+    programAddress: getEnv('DNS_PROGRAM_ADDRESS', '').toLowerCase(),
+  },
   redis: {
     host: getEnv('REDIS_HOST', '127.0.0.1'),
     port: Number.parseInt(getEnv('REDIS_PORT', '6379'), 10),

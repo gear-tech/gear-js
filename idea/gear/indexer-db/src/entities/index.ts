@@ -1,4 +1,5 @@
 export * from './code.entity.js';
+export * from './dns/index.js';
 export * from './event.entity.js';
 export * from './message-from-program.entity.js';
 export * from './message-to-program.entity.js';

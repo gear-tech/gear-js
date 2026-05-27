@@ -97,7 +97,7 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
 
       for (const { method, path, handler } of restHandlers) {
         router[method](path, async (req, res) => {
-          const { genesis } = req.body;
+          const genesis = (req.body?.genesis ?? req.query?.genesis) as string | undefined;
           if (!genesis) {
             res.status(400).json({ error: 'Genesis not found in the request' });
             return;
@@ -109,7 +109,7 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
           }
 
           try {
-            const result = await handler.apply(this, [{ ...req.body, ...req.params, genesis }]);
+            const result = await handler.apply(this, [{ ...req.query, ...req.body, ...req.params, genesis }]);
             res.json(result);
           } catch (err) {
             if (err instanceof VoucherNotFound) {

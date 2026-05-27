@@ -4,6 +4,7 @@ import { DataCache } from 'gear-idea-common';
 import type { Hex } from 'gear-idea-indexer-db';
 
 import { config } from './config.js';
+import { handleDnsEvent } from './dns-event.route.js';
 import {
   handleBalanceTransfer,
   handleCodeChanged,
@@ -52,7 +53,10 @@ const handler = async (ctx: ProcessorContext<Store>) => {
         if (isMessageQueued(event)) {
           await handleMessageQueued({ block, common, ctx, event, batchState });
         } else if (isUserMessageSent(event)) {
-          await handleUserMessageSent({ block, common, ctx, event, batchState });
+          await Promise.all([
+            handleDnsEvent({ block, common, ctx, event, batchState }),
+            handleUserMessageSent({ block, common, ctx, event, batchState }),
+          ]);
         } else if (isProgramChanged(event)) {
           await handleProgramChanged({ block, common, ctx, event, batchState });
         } else if (isCodeChanged(event)) {
@@ -89,6 +93,7 @@ const main = async (api: GearApi) => {
   if (!dataCache.connected) throw new Error('Redis connection failed');
 
   batchState = new BatchState(dataCache, api.genesisHash.toHex());
+  await batchState.dns.init();
   api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };

@@ -21,7 +21,6 @@ import {
   ProgramStatus,
   Voucher,
 } from './model/index.js';
-
 import type { Event, Fields, ProcessorContext } from './processor.js';
 import type { BatchState } from './state/index.js';
 import {
