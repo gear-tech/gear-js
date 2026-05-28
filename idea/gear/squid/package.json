@@ -28,7 +28,8 @@
     "gear-idea-indexer-db": "1.4.26",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
-    "sails-js": "https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz",
+    "sails-js": "1.0.0",
+    "sails-js-parser": "^0.5.1",
     "typeorm": "0.3.29",
     "uuid": "^14.0.0"
   },

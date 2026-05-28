@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { HexString } from '@gear-js/api';
 import { getFnNamePrefix, getServiceNamePrefix, Sails } from 'sails-js';
+import { SailsIdlParser } from 'sails-js-parser';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 
@@ -79,7 +80,9 @@ export class DnsParser {
   async init() {
     const idlPath = join(__dirname, '..', 'assets', 'dns.idl');
     const idl = readFileSync(idlPath, 'utf-8');
-    const sails = await (Sails as any).new();
+    const parser = new SailsIdlParser();
+    await parser.init();
+    const sails = new Sails(parser);
     sails.parseIdl(idl);
     this.sails = sails;
   }
