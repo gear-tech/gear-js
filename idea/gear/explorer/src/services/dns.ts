@@ -38,7 +38,9 @@ export class DnsService {
     const limit = params.limit !== undefined ? Number(params.limit) : 10;
     const offset = params.offset !== undefined ? Number(params.offset) : 0;
 
-    qb.limit(limit).offset(offset).orderBy('p.updatedAt', params.sort === 'asc' ? 'ASC' : 'DESC');
+    qb.limit(limit)
+      .offset(offset)
+      .orderBy('p.updatedAt', params.sort === 'asc' ? 'ASC' : 'DESC');
 
     const [programs, count] = await qb.getManyAndCount();
 
