@@ -15905,7 +15905,8 @@ __metadata:
     gear-idea-indexer-db: "npm:1.4.26"
     pg: "npm:8.20.0"
     reflect-metadata: "npm:0.2.2"
-    sails-js: "https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz"
+    sails-js: "npm:1.0.0"
+    sails-js-parser: "npm:^0.5.1"
     typeorm: "npm:0.3.29"
   languageName: unknown
   linkType: soft
@@ -22854,7 +22855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-parser@npm:0.5.1":
+"sails-js-parser@npm:0.5.1, sails-js-parser@npm:^0.5.1":
   version: 0.5.1
   resolution: "sails-js-parser@npm:0.5.1"
   dependencies:
@@ -22882,17 +22883,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js@https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz":
-  version: 0.5.1
-  resolution: "sails-js@https://github.com/gear-tech/sails/releases/download/js%2Fv1.0.0-beta.1/sails-js.tgz"
-  peerDependencies:
-    "@gear-js/api": ^0.45.0
-    "@polkadot/api": ^16.5.1
-    "@polkadot/util": ^14.0.1
-  checksum: 10c0/9b328d1e909a2c76c75c5748f94b6dc70ed5ec5237d9c25b682ad36b356214aa1833594896e21d222352a3e2e0fbc7f46044ece6072757e75b5489a577e58d61
-  languageName: node
-  linkType: hard
-
 "sails-js@npm:0.5.1":
   version: 0.5.1
   resolution: "sails-js@npm:0.5.1"
@@ -22910,7 +22900,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js@npm:^1.0.0":
+"sails-js@npm:1.0.0, sails-js@npm:^1.0.0":
   version: 1.0.0
   resolution: "sails-js@npm:1.0.0"
   peerDependencies:
