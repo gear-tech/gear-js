@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import { SailsProgram } from 'sails-js';
+import { SailsIdlParser } from 'sails-js/parser';
 import type { Hex, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -16,11 +19,18 @@ let signer: ReturnType<typeof walletClientToSigner>;
 let mirror: MirrorClient;
 
 let programId: `0x${string}`;
+let sailsParser: SailsIdlParser;
+let counterProgram: SailsProgram;
 
 const stateHashes: Hex[] = [];
 const messageIds: Hex[] = [];
 
 beforeAll(async () => {
+  sailsParser = new SailsIdlParser();
+  await sailsParser.init();
+  const idl = fs.readFileSync('./programs/counter-idl/counter_idl.idl', 'utf-8');
+  counterProgram = new SailsProgram(sailsParser.parse(idl));
+
   const transport = webSocket(config.wsRpc);
 
   publicClient = createPublicClient({
@@ -111,8 +121,8 @@ describe('Program Queries', () => {
     test(
       'should send init message',
       async () => {
-        expect(programId).toBeDefined();
-        const payload = '0x24437265617465507267';
+        if (!counterProgram.ctors) throw new Error('No ctors');
+        const payload = counterProgram.ctors.CreatePrg.encodePayload();
 
         const tx = await mirror.sendMessage(payload);
 
@@ -133,8 +143,7 @@ describe('Program Queries', () => {
   describe('send messages', () => {
     let unwatch: () => void;
 
-    // Counter::Increment payload
-    const PAYLOAD = '0x1c436f756e74657224496e6372656d656e74';
+    // const PAYLOAD = counterProgram.services.Counter.functions.Increment.encodePayload();
 
     test('should subscribe to StateChanged events', () => {
       unwatch = mirror.watchStateChangedEvent((stateHash) => {
@@ -145,15 +154,16 @@ describe('Program Queries', () => {
     test(
       'should send 5 messages concurrently (mix of injected and mirror)',
       async () => {
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
         const [injected1, injected2, injected3] = await Promise.all(
-          [0, 1, 2].map(() => api.createInjectedTransaction({ destination: programId, payload: PAYLOAD })),
+          [0, 1, 2].map(() => api.createInjectedTransaction({ destination: programId, payload })),
         );
         const startingNonce = await publicClient.getTransactionCount({
           address: await signer.getAddress(),
           blockTag: 'pending',
         });
         const [mirror1, mirror2] = await Promise.all(
-          [0, 1].map((i) => mirror.sendMessage(PAYLOAD, 0n, { nonce: startingNonce + i })),
+          [0, 1].map((i) => mirror.sendMessage(payload, 0n, { nonce: startingNonce + i })),
         );
 
         messageIds.push(injected1.messageId, injected2.messageId, injected3.messageId);
@@ -186,14 +196,15 @@ describe('Program Queries', () => {
     test(
       'should send 5 messages sequentially (alternating injected and mirror)',
       async () => {
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
         for (let i = 0; i < 5; i++) {
           if (i % 2 === 0) {
-            const tx = await api.createInjectedTransaction({ destination: programId, payload: PAYLOAD });
+            const tx = await api.createInjectedTransaction({ destination: programId, payload });
             messageIds.push(tx.messageId);
             const result = await tx.sendAndWaitForPromise();
             expect(result.code.isSuccess).toBeTruthy();
           } else {
-            const tx = await mirror.sendMessage(PAYLOAD);
+            const tx = await mirror.sendMessage(payload);
             await tx.send();
             const { message, waitForReply } = await tx.setupReplyListener();
             messageIds.push(message.id);
