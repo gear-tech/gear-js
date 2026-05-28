@@ -7,14 +7,17 @@ import { SailsIdlParser } from 'sails-js-parser';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 
-let instance: DnsParser | undefined;
+let instancePromise: Promise<DnsParser> | undefined;
 
-export async function getDnsParser(): Promise<DnsParser> {
-  if (!instance) {
-    instance = new DnsParser();
-    await instance.init();
+export function getDnsParser(): Promise<DnsParser> {
+  if (!instancePromise) {
+    instancePromise = (async () => {
+      const parser = new DnsParser();
+      await parser.init();
+      return parser;
+    })();
   }
-  return instance;
+  return instancePromise;
 }
 
 export enum DnsEventType {
@@ -105,6 +108,7 @@ export class DnsParser {
       return undefined;
     }
     const ev = eventFn.decode(payload);
+    if (!ev) return undefined;
     switch (functionName) {
       case 'ProgramDeleted': {
         const event = ev as { name: string };

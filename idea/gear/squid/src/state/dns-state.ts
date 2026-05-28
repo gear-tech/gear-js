@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import type { Store } from '@subsquid/typeorm-store';
 
 import { config } from '../config.js';
@@ -167,7 +169,7 @@ export class DnsState {
     }
 
     const eventEntity = new DnsEvent({
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       type: dnsEvent.type,
       raw: JSON.stringify(dnsEvent, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
       blockNumber: eventInfo.blockNumber,
@@ -199,7 +201,7 @@ export class DnsState {
   }
 
   async saveDns(): Promise<void> {
-    if (this._dnsSaved) return;
+    if (this._dnsSaved || !config.dns.programAddress) return;
     const existing = await this._ctx.store.findOneBy(Dns, {});
     if (!existing) {
       await this._ctx.store.save(new Dns({ id: 'dns', address: config.dns.programAddress }));

@@ -97,7 +97,8 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
 
       for (const { method, path, handler } of restHandlers) {
         router[method](path, async (req, res) => {
-          const genesis = (req.body?.genesis ?? req.query?.genesis) as string | undefined;
+          const rawGenesis = req.body?.genesis ?? req.query?.genesis;
+          const genesis = typeof rawGenesis === 'string' ? rawGenesis : undefined;
           if (!genesis) {
             res.status(400).json({ error: 'Genesis not found in the request' });
             return;

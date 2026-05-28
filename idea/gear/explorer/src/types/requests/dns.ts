@@ -8,8 +8,7 @@ export interface ParamGetDnsPrograms {
   createdBy?: string;
   limit?: number;
   offset?: number;
-  orderByField?: string;
-  orderByDirection?: 'ASC' | 'DESC';
+  sort?: 'asc' | 'desc';
 }
 
 export interface ParamGetDnsByName {

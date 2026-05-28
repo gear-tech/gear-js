@@ -17,21 +17,19 @@ type Dns = {
   updatedAt: string;
 };
 
-type SortDirection = 'ASC' | 'DESC';
 type DnsParams = {
   limit: number;
   offset: number;
   createdBy?: string;
   search?: string;
-  orderByField: string;
-  orderByDirection: SortDirection;
+  sort: 'asc' | 'desc';
 };
 
-type DnsFilterParams = Pick<DnsParams, 'createdBy' | 'orderByDirection' | 'orderByField'>;
+type DnsFilterParams = Pick<DnsParams, 'createdBy' | 'sort'>;
 
 type DnsResponse = {
   data: Dns[];
   count: number;
 };
 
-export type { Dns, DnsFilterParams, DnsParams, DnsResponse, SortDirection, Values };
+export type { Dns, DnsFilterParams, DnsParams, DnsResponse, Values };

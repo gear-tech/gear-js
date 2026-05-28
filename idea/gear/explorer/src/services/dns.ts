@@ -10,8 +10,6 @@ import type {
   ParamGetDnsPrograms,
 } from '../types/index.js';
 
-const SORTABLE_FIELDS = new Set(['name', 'address', 'createdAt', 'updatedAt', 'createdBy']);
-
 export class DnsService {
   private _programRepo: Repository<DnsProgram>;
   private _dnsRepo: Repository<Dns>;
@@ -40,35 +38,27 @@ export class DnsService {
     const limit = params.limit !== undefined ? Number(params.limit) : 10;
     const offset = params.offset !== undefined ? Number(params.offset) : 0;
 
-    qb.limit(limit).offset(offset);
-
-    if (params.orderByField && SORTABLE_FIELDS.has(params.orderByField) && params.orderByDirection) {
-      qb.addOrderBy(`p.${params.orderByField}`, params.orderByDirection);
-    }
+    qb.limit(limit).offset(offset).orderBy('p.updatedAt', params.sort === 'asc' ? 'ASC' : 'DESC');
 
     const [programs, count] = await qb.getManyAndCount();
 
     return {
-      data: programs.map(this._toDto),
+      data: programs.map((p) => this._toDto(p)),
       count,
     };
   }
 
   async getProgramByName({ name }: ParamGetDnsByName): Promise<DnsProgramResponse | null> {
     const program = await this._programRepo.findOneBy({ id: name });
-    return this._toDto(program);
+    return program ? this._toDto(program) : null;
   }
 
   async getProgramByAddress({ address }: ParamGetDnsByAddress): Promise<DnsProgramResponse | null> {
     const program = await this._programRepo.findOneBy({ address });
-    return this._toDto(program);
+    return program ? this._toDto(program) : null;
   }
 
-  private _toDto(program: DnsProgram | null): DnsProgramResponse | null {
-    if (!program) {
-      return null;
-    }
-
+  private _toDto(program: DnsProgram): DnsProgramResponse {
     return {
       id: program.id,
       name: program.name,
