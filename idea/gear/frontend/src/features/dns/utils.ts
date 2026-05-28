@@ -1,25 +1,22 @@
 import type { HexString } from '@gear-js/api';
 
-import { DEFAULT_LIMIT } from '@/shared/config';
+import { DEFAULT_LIMIT, INDEXER_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
-import { DNS_API_URL } from './consts';
 import type { Dns, DnsParams, DnsResponse } from './types';
 
 type Genesis = {
   genesis: HexString;
 };
 
-const getUrl = (genesis: HexString, path: string) => `${DNS_API_URL[genesis as keyof typeof DNS_API_URL]}/${path}`;
-
 const getDnsProgramId = async ({ genesis }: Genesis) => {
-  const url = new URL(getUrl(genesis, 'dns/contract'));
+  const url = new URL(`${INDEXER_API_URL}/dns/contract`);
   url.searchParams.set('genesis', genesis);
   return (await fetchWithGuard<{ contract: HexString }>({ url })).contract;
 };
 
 const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
-  const url = new URL(getUrl(genesis, 'dns'));
+  const url = new URL(`${INDEXER_API_URL}/dns`);
 
   Object.entries({ ...params, genesis }).forEach(([key, value]) => void url.searchParams.append(key, String(value)));
 
@@ -28,7 +25,7 @@ const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
 
 const getSingleDns = ({ genesis, ...params }: ({ address: HexString } | { name: string }) & Genesis) => {
   const [key, value] = Object.entries(params)[0];
-  const url = new URL(getUrl(genesis, `dns/by_${key}/${value}`));
+  const url = new URL(`${INDEXER_API_URL}/dns/by_${key}/${value}`);
   url.searchParams.set('genesis', genesis);
 
   return fetchWithGuard<Dns>({ url });
