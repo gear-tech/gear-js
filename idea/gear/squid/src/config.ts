@@ -22,7 +22,8 @@ export const config = {
     apiKey: getEnv('API_KEY'),
   },
   dns: {
-    programAddress: getEnv('DNS_PROGRAM_ADDRESS', '').toLowerCase(),
+    programAddress: getEnv('DNS_PROGRAM_ADDRESS', '0x').toLowerCase(),
+    enabled: getEnv('DNS_PROGRAM_ADDRESS', '0x') !== '0x',
   },
   redis: {
     host: getEnv('REDIS_HOST', '127.0.0.1'),
