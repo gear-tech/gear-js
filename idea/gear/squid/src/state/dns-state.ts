@@ -201,7 +201,7 @@ export class DnsState {
   }
 
   async saveDns(): Promise<void> {
-    if (this._dnsSaved || !config.dns.programAddress) return;
+    if (this._dnsSaved || !config.dns.enabled) return;
     const existing = await this._ctx.store.findOneBy(Dns, {});
     if (!existing) {
       await this._ctx.store.save(new Dns({ id: 'dns', address: config.dns.programAddress }));
