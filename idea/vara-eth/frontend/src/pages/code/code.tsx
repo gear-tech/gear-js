@@ -40,7 +40,7 @@ const Code = () => {
     const onValidationJobResolved = (event: Event) => {
       const { detail } = event as CustomEvent<{ codeId?: string }>;
 
-      if (detail.codeId?.toLowerCase() === codeId.toLowerCase()) {
+      if (detail?.codeId?.toLowerCase() === codeId.toLowerCase()) {
         setHasPendingValidation(false);
         void refetch();
       }

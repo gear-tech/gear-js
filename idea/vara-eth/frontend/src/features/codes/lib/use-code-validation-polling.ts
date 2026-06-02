@@ -2,9 +2,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useAddMyActivity } from '@/app/store';
-import { TransactionTypes } from '@/app/store/my-activity';
-import { nodeAtom } from '@/app/store/node';
+import { nodeAtom, TransactionTypes, useAddMyActivity } from '@/app/store';
 import { CODE_VALIDATION_SERVICE_URL, routes } from '@/shared/config';
 
 import { POLL_INTERVAL_MS } from './consts';
