@@ -5,6 +5,8 @@ export type ValidationJob = {
   codeId?: string;
 };
 
+const getValidationJobsStorageKey = (ethChainId: number) => `${VALIDATION_JOB_STORAGE_KEY}:${ethChainId}`;
+
 const isValidationJob = (value: unknown): value is ValidationJob => {
   if (!value || typeof value !== 'object') return false;
 
@@ -13,8 +15,8 @@ const isValidationJob = (value: unknown): value is ValidationJob => {
   return typeof job.jobId === 'string' && (job.codeId === undefined || typeof job.codeId === 'string');
 };
 
-export const getValidationJobs = (): ValidationJob[] => {
-  const rawValue = localStorage.getItem(VALIDATION_JOB_STORAGE_KEY);
+export const getValidationJobs = (ethChainId: number): ValidationJob[] => {
+  const rawValue = localStorage.getItem(getValidationJobsStorageKey(ethChainId));
 
   if (!rawValue) return [];
 
@@ -31,27 +33,32 @@ export const getValidationJobs = (): ValidationJob[] => {
   return [];
 };
 
-const setValidationJobs = (jobs: ValidationJob[]) => {
+const setValidationJobs = (ethChainId: number, jobs: ValidationJob[]) => {
+  const storageKey = getValidationJobsStorageKey(ethChainId);
+
   if (!jobs.length) {
-    localStorage.removeItem(VALIDATION_JOB_STORAGE_KEY);
+    localStorage.removeItem(storageKey);
     return;
   }
 
-  localStorage.setItem(VALIDATION_JOB_STORAGE_KEY, JSON.stringify(jobs));
+  localStorage.setItem(storageKey, JSON.stringify(jobs));
 };
 
-export const addValidationJob = (job: ValidationJob) => {
-  const jobs = getValidationJobs();
+export const addValidationJob = (ethChainId: number, job: ValidationJob) => {
+  const jobs = getValidationJobs(ethChainId);
 
   if (jobs.some(({ jobId }) => jobId === job.jobId)) {
     return;
   }
 
-  setValidationJobs([job, ...jobs]);
+  setValidationJobs(ethChainId, [job, ...jobs]);
 };
 
-export const removeValidationJob = (jobId: string) => {
-  const jobs = getValidationJobs().filter((job) => job.jobId !== jobId);
+export const removeValidationJob = (ethChainId: number, jobId: string) => {
+  const jobs = getValidationJobs(ethChainId).filter((job) => job.jobId !== jobId);
 
-  setValidationJobs(jobs);
+  setValidationJobs(ethChainId, jobs);
 };
+
+export const hasPendingValidationJobByCodeId = (ethChainId: number, codeId: string) =>
+  getValidationJobs(ethChainId).some((job) => job.codeId?.toLowerCase() === codeId.toLowerCase());

@@ -65,7 +65,7 @@ export const useUploadCode = () => {
         wvaraPermitSignature: wvaraPermitSig,
       });
 
-      addValidationJob({ jobId, codeId });
+      addValidationJob(ethChainId, { jobId, codeId });
 
       await addMyActivity({
         type: TransactionTypes.codeValidation,

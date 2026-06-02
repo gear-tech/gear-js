@@ -16,7 +16,7 @@ function useApi() {
   const { varaEthNodeAddress, routerContractAddress, ethChainId } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId, address],
+    queryKey: ['varaEthApi', publicClient?.uid, varaEthNodeAddress, routerContractAddress, ethChainId, address, signer],
 
     queryFn: () =>
       createVaraEthApi(new WsVaraEthProvider(varaEthNodeAddress), publicClient!, routerContractAddress, signer),
