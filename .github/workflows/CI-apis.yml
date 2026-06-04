@@ -64,8 +64,12 @@ jobs:
               - 'apis/gear/**'
               - 'Cargo.toml'
               - 'Cargo.lock'
+              - package.json
+              - yarn.lock
             vara-eth-api:
               - 'apis/vara-eth/**'
+              - package.json
+              - yarn.lock
 
       - name: "Detect what should be running"
         id: run
