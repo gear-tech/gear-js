@@ -75,7 +75,7 @@ jobs:
   build-ui-utils:
     runs-on: ubuntu-latest
     needs: [changes]
-    if: ${{ steps.changes.outputs.utils-ui == 'true' }}
+    if: ${{ needs.changes.outputs.utils-ui == 'true' }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -142,7 +142,7 @@ jobs:
   build-tools:
     runs-on: ubuntu-latest
     needs: [changes]
-    if: ${{ steps.changes.outputs.tools == 'true' }}
+    if: ${{ needs.changes.outputs.tools == 'true' }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
