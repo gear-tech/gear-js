@@ -1,8 +1,16 @@
 import { type PgByteaString, toPgByteaString } from '@vara-eth/idea-indexer-db';
-import { In } from 'typeorm';
+import { ILike, In } from 'typeorm';
 import { type Address, zeroAddress, zeroHash } from 'viem';
 
-import { RouterAbi } from '../abi/router.abi.js';
+import {
+  decodeUpgradedEvent,
+  getAllRouterEventTopics,
+  getAllRouterFunctionSelectors,
+  ROUTER_UPGRADED_TOPIC,
+  ROUTER_VERSION_TO_ABI,
+  RouterAbi,
+  type RouterAbiShape,
+} from '../abi/router.abi.js';
 import { config } from '../config.js';
 import {
   Batch,
@@ -13,6 +21,7 @@ import {
   MessageSent,
   Program,
   ReplySent,
+  RouterImplementation,
   StateTransition,
 } from '../model/index.js';
 import type { Context, Log } from '../processor.js';
@@ -32,31 +41,22 @@ export class RouterHandler extends BaseHandler {
   private _messagesSent: Map<PgByteaString, MessageSent>;
   private _repliesSent: Map<PgByteaString, ReplySent>;
 
+  // Sorted ascending by fromBlock. Populated from DB on init().
+  private _implHistory: Array<{ fromBlock: bigint; abi: RouterAbiShape }> = [];
+
   constructor() {
     super();
     this._address = config.routerAddr.toLowerCase() as Address;
     this._logs = [
       {
         addr: config.routerAddr,
-        topic0: [
-          RouterAbi.events.AnnouncesCommitted.topic,
-          RouterAbi.events.BatchCommitted.topic,
-          RouterAbi.events.CodeGotValidated.topic,
-          RouterAbi.events.CodeValidationRequested.topic,
-          RouterAbi.events.ProgramCreated.topic,
-          RouterAbi.events.ValidatorsCommittedForEra.topic,
-        ],
+        topic0: [...getAllRouterEventTopics(), ROUTER_UPGRADED_TOPIC],
       },
     ];
     this._transactions = [
       {
         addr: config.routerAddr,
-        sighash: [
-          RouterAbi.functions.commitBatch.selector,
-          RouterAbi.functions.createProgram.selector,
-          RouterAbi.functions.createProgramWithAbiInterface.selector,
-          RouterAbi.functions.requestCodeValidation.selector,
-        ],
+        sighash: getAllRouterFunctionSelectors(),
       },
     ];
   }
@@ -83,6 +83,15 @@ export class RouterHandler extends BaseHandler {
     this._batches.clear();
     this._messagesSent.clear();
     this._repliesSent.clear();
+  }
+
+  private _getAbi(blockNumber: number): RouterAbiShape {
+    const bn = BigInt(blockNumber);
+    for (let i = this._implHistory.length - 1; i >= 0; i--) {
+      if (this._implHistory[i].fromBlock <= bn) return this._implHistory[i].abi;
+    }
+    this._logger.error('No ABI version found for block, using latest');
+    return RouterAbi;
   }
 
   public async save(): Promise<void> {
@@ -122,8 +131,33 @@ export class RouterHandler extends BaseHandler {
     this._logger.info(`${this._codes.size} codes saved`);
   }
 
+  private async _loadImplHistory(): Promise<void> {
+    const records = await this._ctx.store.find(RouterImplementation, { order: { fromBlock: 'ASC' } });
+
+    if (records.length === 0) {
+      this._logger.error('No router implementations found in DB — seed the initial implementation and redeploy');
+      process.exit(1);
+    }
+
+    this._implHistory = records.map((r) => {
+      const abi = ROUTER_VERSION_TO_ABI[r.version];
+      if (!abi) {
+        this._logger.error(
+          { implementation: r.id, version: r.version },
+          'Router ABI version in DB not found in ROUTER_VERSION_TO_ABI — add it and redeploy',
+        );
+        process.exit(1);
+      }
+      return { fromBlock: r.fromBlock, abi: abi! };
+    });
+  }
+
   public async process(_ctx: Context): Promise<void> {
     await super.process(_ctx);
+
+    if (this._implHistory.length === 0) {
+      await this._loadImplHistory();
+    }
 
     for (const block of this._ctx.blocks) {
       const common: BlockDataCommon = {
@@ -162,6 +196,40 @@ export class RouterHandler extends BaseHandler {
         if (log.address.toLowerCase() !== this._address) continue;
 
         const topic = log.topics[0].toLowerCase();
+
+        if (topic === ROUTER_UPGRADED_TOPIC) {
+          const { implementation } = decodeUpgradedEvent(log);
+          const implLower = implementation.toLowerCase();
+          const record = await this._ctx.store.findOne(RouterImplementation, { where: { id: ILike(implLower) } });
+          if (!record) {
+            this._logger.error(
+              { implementation: implLower, block: log.block.height },
+              `Router upgraded to unknown implementation. Pre-seed the DB and restart: ` +
+                `INSERT INTO router_implementation (id, from_block, version) VALUES ('${implLower}', ${log.block.height}, '<version>');`,
+            );
+            process.exit(1);
+          }
+          const nextAbi = ROUTER_VERSION_TO_ABI[record.version];
+          if (!nextAbi) {
+            this._logger.error(
+              { implementation: implLower, version: record.version },
+              'Router ABI version in DB not found in ROUTER_VERSION_TO_ABI — add it and redeploy',
+            );
+            process.exit(1);
+          }
+          record.fromBlock = BigInt(log.block.height);
+          await this._ctx.store.save(record);
+          this._implHistory.push({ fromBlock: record.fromBlock, abi: nextAbi });
+          this._logger.info(
+            { implementation: implLower, version: record.version, fromBlock: log.block.height },
+            'Router upgraded — switched ABI version',
+          );
+          continue;
+        }
+
+        // NOTE: case labels are derived from the latest RouterAbi topics.
+        // If a future upgrade changes a topic, add an additional case for the old topic
+        // pointing to the same handler — _getAbi() will select the correct decoder.
         switch (topic) {
           case RouterAbi.events.CodeValidationRequested.topic: {
             this._handleCodeValidationRequested(log, common);
@@ -185,7 +253,7 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleCodeValidationRequested(log: Log, common: BlockDataCommon) {
-    const data = RouterAbi.events.CodeValidationRequested.decode(log);
+    const data = this._getAbi(log.block.height).events.CodeValidationRequested.decode(log);
     const id = toPgByteaString(data.args.codeId);
     this._codes.set(
       id,
@@ -200,7 +268,7 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleCodeGotValidated(log: Log) {
-    const data = RouterAbi.events.CodeGotValidated.decode(log);
+    const data = this._getAbi(log.block.height).events.CodeGotValidated.decode(log);
     const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
     this._codeStatuses.set(toPgByteaString(data.args.codeId), status);
@@ -208,7 +276,8 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleProgramCreated(log: Log, common: BlockDataCommon) {
-    const data = RouterAbi.events.ProgramCreated.decode(log);
+    const abi = this._getAbi(log.block.height);
+    const data = abi.events.ProgramCreated.decode(log);
 
     const id = toPgByteaString(data.args.actorId);
 
@@ -221,10 +290,10 @@ export class RouterHandler extends BaseHandler {
     });
     this._addHashEntry(EntityType.Program, id, common.timestamp);
 
-    if (log.transaction.input.startsWith(RouterAbi.functions.createProgramWithAbiInterface.selector)) {
+    if (log.transaction.input.startsWith(abi.functions.createProgramWithAbiInterface.selector)) {
       const {
         args: [_codeId, _salt, _overrideInitializer, abiInterface],
-      } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
+      } = abi.functions.createProgramWithAbiInterface.decode(log.transaction);
       program.abiInterfaceAddress = toPgByteaString(abiInterface);
     }
 
@@ -233,11 +302,12 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleBatchCommitted(log: Log, common: BlockDataCommon) {
+    const abi = this._getAbi(log.block.height);
     const {
       args: { hash },
-    } = RouterAbi.events.BatchCommitted.decode(log);
+    } = abi.events.BatchCommitted.decode(log);
 
-    const txData = RouterAbi.functions.commitBatch.decode(log.transaction);
+    const txData = abi.functions.commitBatch.decode(log.transaction);
 
     const batch = new Batch({
       id: toPgByteaString(hash),
