@@ -1,6 +1,8 @@
+import { useAtomValue } from 'jotai';
 import { useBalance, useConnection } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
+import { nodeAtom } from '@/app/store';
 import EthSVG from '@/assets/icons/eth-coin.svg?react';
 import VaraSVG from '@/assets/icons/vara-coin.svg?react';
 import { formatBalance, isUndefined } from '@/shared/utils';
@@ -11,10 +13,12 @@ import styles from './header-balance.module.scss';
 
 const HeaderBalance = () => {
   const ethAccount = useConnection();
+  const { ethChainId } = useAtomValue(nodeAtom);
   const { value, decimals, isPending } = useWrappedVaraBalance();
 
   const { data: ethBalance } = useBalance({
     address: ethAccount.address,
+    chainId: ethChainId,
   });
 
   const splittedWVara = !isPending ? formatBalance(value, decimals).split('.') : undefined;

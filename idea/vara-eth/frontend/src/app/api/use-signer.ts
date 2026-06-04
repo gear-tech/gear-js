@@ -1,9 +1,10 @@
 import { DynamicSigner, walletClientToSigner } from '@vara-eth/api/signer';
 import { useEffect, useMemo, useRef } from 'react';
-import { useWalletClient } from 'wagmi';
+import { useConnection, useWalletClient } from 'wagmi';
 
 function useSigner() {
-  const { data: walletClient } = useWalletClient();
+  const { address } = useConnection();
+  const { data: walletClient } = useWalletClient({ account: address });
   const walletClientRef = useRef(walletClient);
 
   useEffect(() => {
@@ -14,7 +15,7 @@ function useSigner() {
     const getSigner = () => (walletClientRef.current ? walletClientToSigner(walletClientRef.current) : undefined);
 
     return new DynamicSigner(getSigner);
-  }, [walletClient?.account.address]);
+  }, [walletClient?.account?.address, walletClient?.chain?.id]);
 }
 
 export { useSigner };
