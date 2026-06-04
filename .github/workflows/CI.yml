@@ -10,8 +10,8 @@ on:
     paths:
       - "utils/**"
       - "tools/**"
-      - package.json
-      - yarn.lock
+      - "package.json"
+      - "yarn.lock"
   workflow_dispatch:
 
 env:
@@ -40,17 +40,17 @@ jobs:
               - 'utils/sails-payload-form/**'
               - 'utils/vara-ui/**'
               - 'utils/wallet-connect/**'
-              - package.json
-              - yarn.lock
+              - 'package.json'
+              - 'yarn.lock'
             tools:
               - 'tools/**'
-              - package.json
-              - yarn.lock
+              - 'package.json'
+              - 'yarn.lock'
             utils:
               - 'utils/util/**'
               - 'utils/logger/**'
-              - package.json
-              - yarn.lock
+              - 'package.json'
+              - 'yarn.lock'
 
   lint:
     runs-on: ubuntu-latest
