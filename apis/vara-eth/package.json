@@ -61,7 +61,7 @@
     "kzg-wasm": "1.0.0",
     "sails-js": "^1.0.0",
     "viem": "npm:@vara-eth/viem@2.48.11",
-    "ws": "8.20.1"
+    "ws": "8.21.0"
   },
   "files": [
     "lib"
