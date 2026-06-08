@@ -1425,21 +1425,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "ethexe-common"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "alloy-primitives",
  "anyhow",
  "auto_impl",
  "derive_more 2.1.1",
- "gear-core 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core 2.0.0",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 2.0.0",
  "gsigner",
  "hex",
  "k256",
@@ -1694,10 +1694,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "015093eb24aa69f98f6474a9547a51a1a9230204e55a1778e9c8588cd8ee6047"
 dependencies = [
  "arrayvec",
- "gear-core-errors 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-core-errors 1.10.0",
  "gear-stack-buffer",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
+ "gsys 1.10.0",
  "paste",
  "thiserror 2.0.18",
 ]
@@ -1713,10 +1713,10 @@ dependencies = [
  "byteorder",
  "derive_more 2.1.1",
  "enum-iterator",
- "gear-core-errors 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gear-wasm-instrument 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-core-errors 1.10.0",
+ "gear-wasm-instrument 1.10.0",
+ "gprimitives 1.10.0",
+ "gsys 1.10.0",
  "hex",
  "impl-serde",
  "log",
@@ -1733,19 +1733,19 @@ dependencies = [
 
 [[package]]
 name = "gear-core"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "blake2",
  "bytemuck",
  "byteorder",
  "derive_more 2.1.1",
  "enum-iterator",
- "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gear-wasm-instrument 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core-errors 2.0.0",
+ "gear-wasm-instrument 2.0.0",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gsys 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 2.0.0",
+ "gsys 2.0.0",
  "hex",
  "impl-serde",
  "log",
@@ -1777,8 +1777,8 @@ dependencies = [
 
 [[package]]
 name = "gear-core-errors"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "enum-iterator",
  "gear-workspace-hack",
@@ -1816,8 +1816,8 @@ dependencies = [
 
 [[package]]
 name = "gear-ss58"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "blake2",
  "bs58",
@@ -1841,8 +1841,8 @@ dependencies = [
  "cargo_metadata",
  "cargo_toml",
  "chrono",
- "gear-core 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gear-wasm-instrument 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-core 1.10.0",
+ "gear-wasm-instrument 1.10.0",
  "gear-wasm-optimizer",
  "itertools 0.13.0",
  "log",
@@ -1867,8 +1867,8 @@ dependencies = [
 
 [[package]]
 name = "gear-wasm-instrument"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "derive_more 2.1.1",
  "enum-iterator",
@@ -1886,7 +1886,7 @@ checksum = "ed336b47eecdcee1c91dbedb8e6f6f702734f405afae68fdca3f1ddea4c3669d"
 dependencies = [
  "anyhow",
  "colored",
- "gear-wasm-instrument 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-wasm-instrument 1.10.0",
  "log",
  "regex",
  "rustc_version 0.4.1",
@@ -1995,7 +1995,7 @@ dependencies = [
  "alloy-sol-types",
  "bytemuck",
  "derive_more 2.1.1",
- "gear-ss58 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-ss58 1.10.0",
  "hex",
  "primitive-types 0.12.2",
  "scale-decode",
@@ -2007,12 +2007,12 @@ dependencies = [
 
 [[package]]
 name = "gprimitives"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "bytemuck",
  "derive_more 2.1.1",
- "gear-ss58 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-ss58 2.0.0",
  "gear-workspace-hack",
  "hex",
  "primitive-types 0.12.2",
@@ -2036,8 +2036,8 @@ dependencies = [
 
 [[package]]
 name = "gsigner"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "alloy-primitives",
  "anyhow",
@@ -2045,7 +2045,7 @@ dependencies = [
  "derive_more 2.1.1",
  "dirs",
  "gear-workspace-hack",
- "gprimitives 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gprimitives 2.0.0",
  "hex",
  "k256",
  "nacl",
@@ -2075,8 +2075,8 @@ dependencies = [
  "futures",
  "galloc",
  "gcore",
- "gear-core-errors 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-core-errors 1.10.0",
+ "gprimitives 1.10.0",
  "gstd-codegen",
  "hashbrown 0.14.5",
  "hex",
@@ -2092,7 +2092,7 @@ version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b347d845d9fdc17b47288d082fd7001390d0652acb5d221c29a1b3f16e9a238"
 dependencies = [
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
  "proc-macro2",
  "quote",
  "syn 2.0.117",
@@ -2109,8 +2109,8 @@ dependencies = [
 
 [[package]]
 name = "gsys"
-version = "1.10.0"
-source = "git+https://github.com/gear-tech/gear#e19fd5bfd7a5dca021ebef2f96d7ddd52e1fe06f"
+version = "2.0.0"
+source = "git+https://github.com/gear-tech/gear#d047e3e3ba81e00b2135f444fd907fdaadebee29"
 dependencies = [
  "bytemuck",
  "gear-workspace-hack",
@@ -2444,8 +2444,8 @@ name = "injected"
 version = "0.1.0"
 dependencies = [
  "ethexe-common",
- "gear-core 1.10.0 (git+https://github.com/gear-tech/gear)",
- "gear-core-errors 1.10.0 (git+https://github.com/gear-tech/gear)",
+ "gear-core 2.0.0",
+ "gear-core-errors 2.0.0",
  "hex",
 ]
 
@@ -2762,7 +2762,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -3528,7 +3528,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -3595,7 +3595,7 @@ checksum = "7d1e3a103faefd7c1874156cf24b72f35eac4708ec471854b6bbf4dae64a6a23"
 dependencies = [
  "askama",
  "convert_case 0.11.0",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
  "quote",
  "sails-idl-ast",
  "sails-idl-meta",
@@ -3660,7 +3660,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e26e2959adfbedbe01d37c3d5b0054caf03e33279c822bd8757bff783330be07"
 dependencies = [
  "alloy-primitives",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
  "keccak-const",
  "sails-reflect-hash-derive",
 ]
@@ -3688,12 +3688,12 @@ dependencies = [
  "convert_case 0.11.0",
  "futures",
  "gcore",
- "gear-core 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gear-core-errors 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gear-core 1.10.0",
+ "gear-core-errors 1.10.0",
  "gear-wasm-builder",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
  "gstd",
- "gsys 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gsys 1.10.0",
  "hashbrown 0.17.1",
  "hex",
  "keccak-const",
@@ -3718,7 +3718,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "226fcfbb34d28c8e5a76fac88006defa1df7f9110f9ad9d9a0d055cfb5ebb7ef"
 dependencies = [
  "alloy-primitives",
- "gprimitives 1.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gprimitives 1.10.0",
  "sails-idl-ast",
  "sails-type-registry-derive",
 ]
@@ -4568,7 +4568,7 @@ dependencies = [
  "getrandom 0.4.2",
  "once_cell",
  "rustix 1.1.4",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -5161,7 +5161,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
