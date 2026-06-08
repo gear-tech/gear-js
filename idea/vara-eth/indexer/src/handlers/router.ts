@@ -1,5 +1,5 @@
 import { type PgByteaString, toPgByteaString } from '@vara-eth/idea-indexer-db';
-import { ILike, In } from 'typeorm';
+import { In } from 'typeorm';
 import { type Address, zeroAddress, zeroHash } from 'viem';
 
 import {
@@ -42,7 +42,7 @@ export class RouterHandler extends BaseHandler {
   private _repliesSent: Map<PgByteaString, ReplySent>;
 
   // Sorted ascending by fromBlock. Populated from DB on init().
-  private _implHistory: Array<{ fromBlock: bigint; abi: RouterAbiShape }> = [];
+  private _implHistory: Array<{ id: string; fromBlock: bigint; abi: RouterAbiShape }> = [];
 
   constructor() {
     super();
@@ -148,7 +148,7 @@ export class RouterHandler extends BaseHandler {
         );
         process.exit(1);
       }
-      return { fromBlock: r.fromBlock, abi: abi! };
+      return { id: r.id.toLowerCase(), fromBlock: r.fromBlock, abi: abi! };
     });
   }
 
@@ -200,7 +200,7 @@ export class RouterHandler extends BaseHandler {
         if (topic === ROUTER_UPGRADED_TOPIC) {
           const { implementation } = decodeUpgradedEvent(log);
           const implLower = implementation.toLowerCase();
-          const record = await this._ctx.store.findOne(RouterImplementation, { where: { id: ILike(implLower) } });
+          const record = await this._ctx.store.findOne(RouterImplementation, { where: { id: implLower } });
           if (!record) {
             this._logger.error(
               { implementation: implLower, block: log.block.height },
@@ -219,7 +219,15 @@ export class RouterHandler extends BaseHandler {
           }
           record.fromBlock = BigInt(log.block.height);
           await this._ctx.store.save(record);
-          this._implHistory.push({ fromBlock: record.fromBlock, abi: nextAbi });
+
+          const existingIndex = this._implHistory.findIndex((h) => h.id === implLower);
+          if (existingIndex !== -1) {
+            this._implHistory[existingIndex].fromBlock = record.fromBlock;
+          } else {
+            this._implHistory.push({ id: implLower, fromBlock: record.fromBlock, abi: nextAbi });
+          }
+          this._implHistory.sort((a, b) => (a.fromBlock < b.fromBlock ? -1 : a.fromBlock > b.fromBlock ? 1 : 0));
+
           this._logger.info(
             { implementation: implLower, version: record.version, fromBlock: log.block.height },
             'Router upgraded — switched ABI version',
