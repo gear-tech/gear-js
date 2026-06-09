@@ -14,8 +14,8 @@ members = [
 ]
 
 [workspace.dependencies]
-gstd = { git = "https://github.com/gear-tech/gear", tag = "v2.0.0"}
+gstd = { git = "https://github.com/gear-tech/gear" }
 scale-info = { version = "=2.11", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "=3.7.5", default-features = false, features = ["derive", "full"] }
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear", tag = "v2.0.0"}
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear" }
 primitive-types = { version = "0.12.2", default-features = false }
