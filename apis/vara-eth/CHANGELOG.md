@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.5.0]
 
 ### Added
 - `InjectedTxReceipt` class — signed receipt returned after an injected transaction is processed. Supports `Promise` (transaction executed, reply available) and `Purged` (transaction dropped before execution) variants. Exposes `hash`, `replyHash`, `promise`, `error`, `purgedReason`, `txHash`, `address`, `signature`, and `validateSignature()`.
