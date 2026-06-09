@@ -9,8 +9,8 @@ on:
     branches: [main]
     paths:
       - "idea/**"
-      - package.json
-      - yarn.lock
+      - "package.json"
+      - "yarn.lock"
   workflow_dispatch:
 
 env:
