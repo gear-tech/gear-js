@@ -25,6 +25,17 @@ export class VaraEthApi {
     this._setProps = undefined;
   }
 
+  /**
+   * Creates a fully initialized `VaraEthApi` by fetching the node's RPC version.
+   *
+   * The RPC version determines which transaction format is used for injected transactions:
+   * versioned nodes use the compact `{ data, signature, address }` payload and return
+   * {@link InjectedTxReceipt}; unversioned or legacy nodes fall back to the old
+   * `{ recipient, tx }` format.
+   *
+   * Prefer {@link createVaraEthApi} for external use — it constructs and initializes
+   * the `EthereumClient` as well.
+   */
   static async create(
     provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
     ethClient?: EthereumClient,
@@ -58,7 +69,8 @@ export class VaraEthApi {
       throw new Error('Eth client is not set');
     }
 
-    const injectedTx = new InjectedTx(this.provider, this._ethClient, tx, this._rpcVersion);
+    const version = this._rpcVersion !== null && this._rpcVersion !== '0.0.0' ? this._rpcVersion : undefined;
+    const injectedTx = new InjectedTx(this.provider, this._ethClient, tx, version);
 
     if (!tx.referenceBlock) {
       await injectedTx.setReferenceBlock();
@@ -67,6 +79,13 @@ export class VaraEthApi {
     return injectedTx;
   }
 
+  /**
+   * The RPC version reported by the connected node, or `null` if the node does not
+   * support the `version` RPC method (legacy node) or if this instance was constructed
+   * directly without {@link create}.
+   *
+   * A non-null, non-`'0.0.0'` value enables the versioned injected transaction path.
+   */
   get rpcVersion(): string | null {
     return this._rpcVersion;
   }

@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import { SailsProgram } from 'sails-js';
 import { SailsIdlParser } from 'sails-js/parser';
-import type { Hash, PublicClient, WalletClient } from 'viem';
+import type { Hash, Hex, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, recoverMessageAddress, webSocket, zeroAddress } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -14,7 +14,11 @@ import {
   type VaraEthApi,
   WsVaraEthProvider,
 } from '../src';
-import { type InjectedTransactionReceiptRaw, InjectedTxReceipt } from '../src/api/injected/receipt';
+import {
+  type InjectedTransactionReceiptRaw,
+  InjectedTxReceipt,
+  TransactionPurgedReason,
+} from '../src/api/injected/receipt';
 import { walletClientToSigner } from '../src/signer/index.js';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
@@ -179,6 +183,68 @@ describe('Injected Transactions', () => {
       const address = await recoverMessageAddress({ message: { raw: receipt.hash }, signature: RECEIPT.signature });
 
       expect(address).toBe(account.address);
+    });
+
+    describe('purged receipt', () => {
+      const PURGED_TX_HASH = '0x3da340a094072196a9067c7ddc4c76e1783596464887c8b9a66c4a656f22f633' as Hash;
+      const PURGED_SIGNATURE =
+        '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' as Hex;
+
+      const makePurgedReceipt = (reason: number): InjectedTransactionReceiptRaw => ({
+        data: { Purged: { txHash: PURGED_TX_HASH, reason } },
+        signature: PURGED_SIGNATURE,
+        address: privateKeyToAccount(PRIVATE_KEY).address,
+      });
+
+      test('should identify as purged', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.Outdated), api.eth);
+        expect(receipt.error).not.toBeNull();
+        expect(receipt.purgedReason).toBe(TransactionPurgedReason.Outdated);
+      });
+
+      test('should decode error reason to a human-readable string', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.Outdated), api.eth);
+        expect(receipt.error).toBe('transaction reference block is outdated');
+      });
+
+      test('should decode UnknownReferenceBlock reason', () => {
+        const receipt = new InjectedTxReceipt(
+          makePurgedReceipt(TransactionPurgedReason.UnknownReferenceBlock),
+          api.eth,
+        );
+        expect(receipt.error).toBe('transaction reference block is unknown');
+        expect(receipt.purgedReason).toBe(TransactionPurgedReason.UnknownReferenceBlock);
+      });
+
+      test('should decode NonZeroValue reason', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.NonZeroValue), api.eth);
+        expect(receipt.error).toBe('transaction value must be zero');
+        expect(receipt.purgedReason).toBe(TransactionPurgedReason.NonZeroValue);
+      });
+
+      test('should decode unknown reason code', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(42), api.eth);
+        expect(receipt.error).toBe('unknown purge reason: 42');
+        expect(receipt.purgedReason).toBe(42);
+      });
+
+      test('should throw when accessing promise on purged receipt', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.Outdated), api.eth);
+        expect(() => receipt.promise).toThrow('transaction reference block is outdated');
+      });
+
+      test('should compute a stable hash without throwing', () => {
+        const receipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.Outdated), api.eth);
+        const hash = receipt.hash;
+        expect(hash).toMatch(/^0x[0-9a-f]{64}$/);
+        expect(receipt.hash).toBe(hash);
+      });
+
+      test('should produce different hashes for different reason codes', () => {
+        const outdatedReceipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.Outdated), api.eth);
+        const nonZeroReceipt = new InjectedTxReceipt(makePurgedReceipt(TransactionPurgedReason.NonZeroValue), api.eth);
+        expect(outdatedReceipt.hash).not.toBe(nonZeroReceipt.hash);
+      });
     });
   });
 
@@ -375,6 +441,28 @@ describe('Injected Transactions', () => {
 
       await expect(receipt.validateSignature()).resolves.not.toThrow();
     });
+
+    test(
+      'should receive purged receipt for an unknown reference block',
+      async () => {
+        const block = await api.eth.publicClient.getBlock({ blockNumber: 1n });
+
+        const tx = await api.createInjectedTransaction({
+          destination: programId,
+          payload: '0x',
+          referenceBlock: block.hash!,
+        });
+
+        const result = await tx.sendAndWaitForReceipt();
+
+        expect(result.error).not.toBeNull();
+        expect(result.error).toBe('transaction reference block is unknown');
+        expect(result.txHash).toBeDefined();
+        expect(result.signature).toBeDefined();
+        expect(() => result.promise).toThrow();
+      },
+      config.longRunningTestTimeout,
+    );
 
     test('should send tx with invalid signature', async () => {
       const payload = '0x';

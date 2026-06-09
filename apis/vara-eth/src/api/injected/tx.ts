@@ -183,7 +183,7 @@ export class InjectedTx {
   }
 
   /**
-   * @deprecated receipient field was removed from the transaction data. The method is to be removed in the next release
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Specify validator address the transaction is intended for
    * @param address - (optional) the validator address. If omitted, defaults to the validator assigned to the current slot via {@link setSlotValidator}. Use {@link setDefaultValidator} to explicitly target no specific validator.
    * @returns the validator address
@@ -206,7 +206,7 @@ export class InjectedTx {
   }
 
   /**
-   * @deprecated receipient field was removed from the transaction data. The method is to be removed in the next release
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Target the validator assigned to the current slot
    *
    * Computes the validator scheduled to process the imminent block using slot-based
@@ -246,7 +246,7 @@ export class InjectedTx {
   }
 
   /**
-   * @deprecated receipient field was removed from the transaction data. The method is to be removed in the next release
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Let any validator process the transaction
    *
    * Sets the recipient to the zero address, signalling that no specific validator is
@@ -322,6 +322,17 @@ export class InjectedTx {
     return result;
   }
 
+  /**
+   * Send the transaction and wait for the validator's signed receipt.
+   *
+   * Automatically signs and sets a reference block if not already done.
+   * Opens a subscription to `sendTransactionAndWatch` and resolves with an
+   * {@link InjectedTxReceipt} on the first notification. The subscription is
+   * cancelled immediately after the receipt arrives.
+   *
+   * Check {@link InjectedTxReceipt.error} to distinguish a successful Promise
+   * receipt from a Purged receipt before accessing reply data.
+   */
   public async sendAndWaitForReceipt(): Promise<InjectedTxReceipt> {
     if (!this._referenceBlock) {
       await this.setReferenceBlock();
