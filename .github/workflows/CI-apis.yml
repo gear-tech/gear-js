@@ -211,7 +211,7 @@ jobs:
           version: v1.7.0
 
       - name: 'Install dependencies'
-        run: yarn workspaces focus gear-js @vara-eth/api
+        run: yarn workspaces focus gear-js @vara-eth/api @gear-js/api
 
       - name: 'Download ethexe bin from gear releases'
         working-directory: apis/vara-eth
@@ -226,6 +226,10 @@ jobs:
       - name: 'Compile contracts'
         working-directory: apis/vara-eth
         run: forge compile
+
+      - name: 'Build @gear-js/api'
+        working-directory: apis/gear-js
+        run: yarn build
 
       - name: 'Test: run'
         working-directory: apis/vara-eth
