@@ -7,5 +7,6 @@ export * from './message-sent.js';
 export * from './program.js';
 export * from './reply-request.js';
 export * from './reply-sent.js';
+export * from './router-implementation.js';
 export * from './state-transition.js';
 export * from './tx.js';
