@@ -8,7 +8,10 @@ import type { EthereumClient } from '../../eth/index.js';
 import type { IInjectedTransactionPromise } from '../../types/index.js';
 import { bigint128ToBytes } from '../../util/index.js';
 
-export type InjectedTransactionPromiseRaw = {
+/**
+ * @deprecated
+ */
+export type LegacyInjectedTransactionPromiseRaw = {
   data: {
     txHash: Hash;
     reply: {
@@ -20,6 +23,9 @@ export type InjectedTransactionPromiseRaw = {
   signature: Hex;
 };
 
+/**
+ * @deprecated
+ */
 export class InjectedTxPromise implements IInjectedTransactionPromise {
   /**
    * The hash of the original injected transaction
@@ -45,7 +51,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
   private _validatorAddress?: Address;
 
   constructor(
-    promise: InjectedTransactionPromiseRaw,
+    promise: LegacyInjectedTransactionPromiseRaw,
     private _ethClient: EthereumClient,
   ) {
     this.txHash = promise.data.txHash;

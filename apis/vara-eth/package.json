@@ -57,6 +57,7 @@
     "viem": "*"
   },
   "devDependencies": {
+    "@gear-js/api": "workspace:*",
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
     "sails-js": "^1.0.0",

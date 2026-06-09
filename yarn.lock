@@ -10077,6 +10077,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@vara-eth/api@workspace:apis/vara-eth"
   dependencies:
+    "@gear-js/api": "workspace:*"
     "@noble/hashes": "npm:1.8.0"
     "@types/ws": "npm:8.18.1"
     kzg-wasm: "npm:1.0.0"

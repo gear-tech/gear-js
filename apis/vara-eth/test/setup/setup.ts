@@ -12,6 +12,7 @@ config({ quiet: true });
 const BLOCK_TIME = 1;
 const COUNTER_CODE = 'target/wasm32-gear/release/counter.opt.wasm';
 const LOG_FILE = 'vara-eth.log';
+
 let routerAddress: string;
 let keyStore: string;
 

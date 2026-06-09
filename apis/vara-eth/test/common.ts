@@ -48,33 +48,6 @@ export const expectDispatch = (d: unknown) => {
   if ('Stored' in payload) expectHex(payload.Stored);
 };
 
-/** Asserts a StateTransition object has the expected shape and field types. */
-export const expectStateTransition = (t: unknown) => {
-  const tr = t as any;
-  expectHex(tr.actorId);
-  expectHex(tr.newStateHash);
-  expect(typeof tr.exited).toBe('boolean');
-  expectHex(tr.inheritor);
-  expectNumeric(tr.valueToReceive);
-  expect(typeof tr.valueToReceiveNegativeSign).toBe('boolean');
-  expect(Array.isArray(tr.valueClaims)).toBe(true);
-  expect(Array.isArray(tr.messages)).toBe(true);
-
-  for (const claim of tr.valueClaims) {
-    expect(typeof claim.messageId).toBe('string');
-    expectHex(claim.destination);
-    expectNumeric(claim.value);
-  }
-
-  for (const msg of tr.messages) {
-    expect(typeof msg.id).toBe('string');
-    expectHex(msg.destination);
-    expect(Array.isArray(msg.payload)).toBe(true);
-    expectNumeric(msg.value);
-    expect(typeof msg.call).toBe('boolean');
-  }
-};
-
 /** Asserts a BlockRequestEvent has the expected shape. */
 export const expectBlockRequestEvent = (e: unknown) => {
   const event = e as any;

@@ -1,4 +1,5 @@
 export { InjectedTxPromise } from './promise.js';
+export { InjectedTxReceipt } from './receipt.js';
 
 import { InjectedTx } from './tx.js';
 

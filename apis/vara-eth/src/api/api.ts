@@ -6,6 +6,8 @@ import { type Query, query } from './query/index.js';
 
 export class VaraEthApi {
   private _provider: IVaraEthProvider | IVaraEthValidatorPoolProvider;
+  private _rpcVersion: string | null = null;
+
   public readonly query!: Query;
   public readonly call!: Call;
 
@@ -21,6 +23,15 @@ export class VaraEthApi {
     }
 
     this._setProps = undefined;
+  }
+
+  static async create(
+    provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
+    ethClient?: EthereumClient,
+  ): Promise<VaraEthApi> {
+    const api = new VaraEthApi(provider, ethClient);
+    api._rpcVersion = await api.query.info.version();
+    return api;
   }
 
   private _setProps?(thisProperty: string, modules: Record<string, any>) {
@@ -47,12 +58,16 @@ export class VaraEthApi {
       throw new Error('Eth client is not set');
     }
 
-    const injectedTx = new InjectedTx(this.provider, this._ethClient, tx);
+    const injectedTx = new InjectedTx(this.provider, this._ethClient, tx, this._rpcVersion);
 
     if (!tx.referenceBlock) {
       await injectedTx.setReferenceBlock();
     }
 
     return injectedTx;
+  }
+
+  get rpcVersion(): string | null {
+    return this._rpcVersion;
   }
 }
