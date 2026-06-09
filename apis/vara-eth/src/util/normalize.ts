@@ -2,12 +2,6 @@ export function normalizeDispatch(d: any): void {
   d.value = BigInt(d.value);
 }
 
-export function normalizeStateTransition(t: any): void {
-  t.valueToReceive = BigInt(t.valueToReceive);
-  for (const claim of t.valueClaims) claim.value = BigInt(claim.value);
-  for (const msg of t.messages) msg.value = BigInt(msg.value);
-}
-
 export function normalizeBlockEvent(e: any): void {
   if ('Router' in e) {
     const inner = e.Router;

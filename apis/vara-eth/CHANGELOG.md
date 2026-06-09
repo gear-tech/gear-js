@@ -4,7 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.5.0]
+
+### Added
+- `InjectedTxReceipt` class — signed receipt returned after an injected transaction is processed. Supports `Promise` (transaction executed, reply available) and `Purged` (transaction dropped before execution) variants. Exposes `hash`, `replyHash`, `promise`, `error`, `purgedReason`, `txHash`, `address`, `signature`, and `validateSignature()`.
+- `TransactionPurgedReason` enum — mirrors the Rust `#[repr(u8)]` enum: `Outdated = 1`, `UnknownReferenceBlock = 2`, `NonZeroValue = 255`.
+- `InjectedTx.sendAndWaitForReceipt()` — sends the transaction and waits for the validator's signed `InjectedTxReceipt`. Replaces `sendAndWaitForPromise()` on versioned nodes.
+- `api.query.info` namespace with `version()` method — returns the node's RPC version string, or `null` if the node does not implement the `version` RPC method.
+- `VaraEthApi.create()` static async factory — fetches the RPC version at construction time to configure the injected transaction format. Used internally by `createVaraEthApi()`.
+
+### Changed
+- `program_calculateReplyForHandle` RPC response is now expected in a `{ reply, messages }` wrapper; callers receive the same flat `ReplyInfo` shape as before.
+- `InjectedTx` hash and `messageId` computation: when connected to a versioned node, `payload` and `salt` are pre-hashed with blake2b-256 before being fed into the outer hash function.
+- `InjectedTx` RPC payload: on versioned nodes the `{ recipient, tx }` wrapper is removed — data is sent as `{ data, signature, address }` directly.
+- `VaraEthApi` no longer starts background async initialization in the constructor. Use `createVaraEthApi()` (which calls `VaraEthApi.create()` internally) to get a fully initialized instance.
+- `InfoQueries.version()` return type changed from `string` to `string | null`.
+
+### Deprecated
+- `InjectedTxPromise` — use `InjectedTxReceipt` instead.
+- `LegacyInjectedTransactionPromiseRaw` (previously exported as `InjectedTransactionPromiseRaw` from `promise.ts`) — use `InjectedTransactionReceiptRaw` from `receipt.ts`.
+- `InjectedTx.sendAndWaitForPromise()` — use `sendAndWaitForReceipt()` instead.
+- `InjectedTx.setRecipient()`, `setSlotValidator()`, `setDefaultValidator()` — the `recipient` field has been removed from the versioned RPC format; these methods remain for legacy node connections.
+- `IInjectedTransaction.recipient` field — silently ignored when connecting to a versioned node.
+
+### Removed
+- `api.query.block.outcome()` — removed server-side, no replacement.
+- `VaraEthApi.waitForInitialization()` — superseded by the `VaraEthApi.create()` factory pattern.
+- `normalizeStateTransition` internal utility function.
 
 ### Changed
 - Updated Router abi (https://github.com/gear-tech/gear-js/pull/2486)

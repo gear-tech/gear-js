@@ -169,14 +169,14 @@ describe('Program Queries', () => {
         messageIds.push(injected1.messageId, injected2.messageId, injected3.messageId);
 
         const [injectedResult1, injectedResult2, injectedResult3] = await Promise.all([
-          injected1.sendAndWaitForPromise(),
-          injected2.sendAndWaitForPromise(),
-          injected3.sendAndWaitForPromise(),
+          injected1.sendAndWaitForReceipt(),
+          injected2.sendAndWaitForReceipt(),
+          injected3.sendAndWaitForReceipt(),
         ]);
 
-        expect(injectedResult1.code.isSuccess).toBeTruthy();
-        expect(injectedResult2.code.isSuccess).toBeTruthy();
-        expect(injectedResult3.code.isSuccess).toBeTruthy();
+        expect(injectedResult1.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult2.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult3.promise.code.isSuccess).toBeTruthy();
 
         await Promise.all([mirror1.send(), mirror2.send()]);
 
@@ -201,8 +201,8 @@ describe('Program Queries', () => {
           if (i % 2 === 0) {
             const tx = await api.createInjectedTransaction({ destination: programId, payload });
             messageIds.push(tx.messageId);
-            const result = await tx.sendAndWaitForPromise();
-            expect(result.code.isSuccess).toBeTruthy();
+            const result = await tx.sendAndWaitForReceipt();
+            expect(result.promise.code.isSuccess).toBeTruthy();
           } else {
             const tx = await mirror.sendMessage(payload);
             await tx.send();

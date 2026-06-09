@@ -13,7 +13,7 @@ interface ICounter {
     function counterIncrementWithValue(bool _callReply) external payable returns (bytes32 messageId);
 }
 
-contract CounterIdlAbi is ICounterIdl {
+contract CounterAbi is ICounter {
     function createPrg(bool _callReply) external returns (bytes32 messageId) {}
 
     function counterDecrement(bool _callReply) external returns (bytes32 messageId) {}
@@ -25,7 +25,7 @@ contract CounterIdlAbi is ICounterIdl {
     function counterIncrementWithValue(bool _callReply) external payable returns (bytes32 messageId) {}
 }
 
-interface ICounterIdlCallbacks {
+interface ICounterCallbacks {
     function replyOn_createPrg(bytes32 messageId) external;
 
     function replyOn_counterDecrement(bytes32 messageId, uint32 reply) external;
@@ -39,12 +39,12 @@ interface ICounterIdlCallbacks {
     function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external payable;
 }
 
-contract CounterIdlCaller is ICounterIdlCallbacks {
-    ICounterIdl public immutable VARA_ETH_PROGRAM;
+contract CounterCaller is ICounterCallbacks {
+    ICounter public immutable VARA_ETH_PROGRAM;
 
     error UnauthorizedCaller();
 
-    constructor(ICounterIdl _varaEthProgram) {
+    constructor(ICounter _varaEthProgram) {
         VARA_ETH_PROGRAM = _varaEthProgram;
     }
 
