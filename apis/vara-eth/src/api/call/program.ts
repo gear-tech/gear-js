@@ -31,10 +31,13 @@ export class ProgramCalls {
     atBlock?: Hex,
   ): Promise<ReplyInfo> {
     // TODO: return messages
-    const { reply, messages: _ } = await this._provider.send<ICalculateReplyForHandleResultRpc>(
+    const response = await this._provider.send<ICalculateReplyForHandleResultRpc | IReplyInfoRpc>(
       'program_calculateReplyForHandle',
       [atBlock || null, source, programId, payload, value],
     );
+
+    // Legacy nodes return a flat IReplyInfoRpc; versioned nodes wrap it in { reply, messages }.
+    const reply = response && 'reply' in response ? response.reply : (response as IReplyInfoRpc);
 
     return {
       ...reply,

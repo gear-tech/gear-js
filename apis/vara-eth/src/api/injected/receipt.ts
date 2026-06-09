@@ -136,7 +136,7 @@ export class InjectedTxReceipt {
 
     const validators = await this._ethClient.router.validators();
 
-    if (!validators.includes(lcAddress)) {
+    if (!validators.map((v) => v.toLowerCase()).includes(lcAddress)) {
       throw new Error(
         `Promise signature validation failed: recovered address ${lcAddress} is not a registered validator`,
       );
@@ -205,6 +205,9 @@ export class InjectedTxReceipt {
     } else if (this._error !== null) {
       data.push(Uint8Array.from([1]));
       data.push(this._txHashU8a);
+      if (this._error < 0 || this._error > 255) {
+        throw new Error(`Cannot compute hash: unrecognized purge reason code ${this._error}`);
+      }
       data.push(Uint8Array.from([this._error]));
     } else {
       throw new Error('Unable to create hash. No promise or error was received.');
