@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
+import { InjectedTxReceipt } from '@vara-eth/api';
 import type { Sails } from 'sails-js';
 import type { Hex } from 'viem';
-
-import { InjectedTxReceipt } from '@vara-eth/api';
 
 import { useApi } from '@/app/api';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
