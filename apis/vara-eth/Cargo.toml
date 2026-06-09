@@ -4,7 +4,7 @@ authors = ["Gear Technologies"]
 edition = "2024"
 license = "GPL-3.0"
 repository = "https://github.com/gear-tech/gear-js"
-version = "1.91"
+rust-version = "1.91"
 
 [workspace]
 resolver = "3"
