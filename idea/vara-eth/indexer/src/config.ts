@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import type { Address } from 'viem';
 
-dotenv.config({ quiet: true, path: ['.env', '../../../.env'] });
+dotenv.config({ quiet: true, path: ['.env', '../.env', '../../../.env'] });
 
 const getEnv = (key: string, _default?: string): string => {
   const value = process.env[key] || _default;

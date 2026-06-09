@@ -12,6 +12,7 @@ import {
   Program,
   ReplyRequest,
   ReplySent,
+  RouterImplementation,
   StateTransition,
 } from './entities/index.js';
 
@@ -35,6 +36,7 @@ const AppDataSource = new DataSource({
     MessageSent,
     ReplyRequest,
     ReplySent,
+    RouterImplementation,
   ],
   migrations: ['db/migrations/*.js'],
 });
