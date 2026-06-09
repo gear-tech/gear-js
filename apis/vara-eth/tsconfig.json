@@ -20,5 +20,5 @@
       "sails-js/*": ["./node_modules/sails-js/lib/*.d.ts"]
     }
   },
-  "exclude": ["node_modules", "lib"],
+  "exclude": ["node_modules", "lib"]
 }
