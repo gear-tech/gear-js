@@ -1,19 +1,3 @@
-/**
- * Integration tests for the legacy injected transaction RPC format.
- *
- * Run these against a node that does NOT implement the `version` RPC method so that
- * `createVaraEthApi` falls back to the legacy `{ recipient, tx }` payload shape and
- * `sendAndWaitForPromise` resolves to an `InjectedTxPromise`.
- *
- * Required environment variables:
- *   LEGACY_WS_RPC        – WebSocket RPC URL of the legacy Vara.Eth node
- *   LEGACY_ROUTER_ADDRESS – Router contract address on the Ethereum side
- *   LEGACY_CODE_ID       – Validated code ID to use for program deployment
- *
- * Optional:
- *   WS_RPC  – Ethereum WebSocket RPC (defaults to ws://127.0.0.1:8545)
- */
-
 import fs from 'node:fs';
 import { SailsProgram } from 'sails-js';
 import { SailsIdlParser } from 'sails-js/parser';
@@ -171,6 +155,7 @@ describe.skip('Legacy Injected Transactions', () => {
       const result = await tx.send();
 
       expect(tx.recipient).not.toBeNull();
+
       expect(result).toBe('Accept');
     });
 

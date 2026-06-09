@@ -13,8 +13,7 @@ export class InfoQueries {
   async version(): Promise<string | null> {
     try {
       return await this._provider.send<string>('version', []);
-    } catch (error) {
-      console.log(error);
+    } catch {
       return null;
     }
   }
