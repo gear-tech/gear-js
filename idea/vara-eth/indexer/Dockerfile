@@ -31,6 +31,7 @@ FROM deps
 
 COPY --from=builder /src/idea/vara-eth/indexer/lib /src/idea/vara-eth/indexer/lib
 COPY --from=builder /src/idea/vara-eth/indexer-db/lib /src/idea/vara-eth/indexer-db/lib
+COPY --from=builder /src/idea/vara-eth/indexer-db/db /src/idea/vara-eth/indexer-db/db
 COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 COPY --from=builder /src/utils/logger/src /src/utils/logger/src
 
