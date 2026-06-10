@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["jest", "node"],
+    "paths": {
+      "sails-js": ["../../node_modules/sails-js/lib/index.d.ts"],
+      "sails-js/*": ["../../node_modules/sails-js/lib/*.d.ts"]
+    }
+  },
+  "include": ["src/**/*", "test/**/*"]
+}

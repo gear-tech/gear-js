@@ -18,11 +18,7 @@ const config: Config.InitialOptions = {
       'ts-jest',
       {
         useESM: true,
-        tsconfig: {
-          module: 'ESNext',
-          moduleResolution: 'bundler',
-          types: ['jest'],
-        },
+        tsconfig: './tsconfig.test.json',
       },
     ],
   },

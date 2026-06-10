@@ -14,11 +14,7 @@
     "strict": true,
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
-    "types": ["jest", "node"],
-    "paths": {
-      "sails-js": ["./node_modules/sails-js/lib/index.d.ts"],
-      "sails-js/*": ["./node_modules/sails-js/lib/*.d.ts"]
-    }
+    "types": ["jest", "node"]
   },
   "exclude": ["node_modules", "lib"]
 }
