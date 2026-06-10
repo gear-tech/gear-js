@@ -200,6 +200,7 @@ jobs:
           PATH_TO_ETHEXE: ./ethexe
 
       - name: 'Upload vara-eth node log'
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: vara-eth-log
