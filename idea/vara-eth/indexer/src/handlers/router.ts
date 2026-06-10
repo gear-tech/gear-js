@@ -299,10 +299,13 @@ export class RouterHandler extends BaseHandler {
     this._addHashEntry(EntityType.Program, id, common.timestamp);
 
     if (log.transaction.input.startsWith(abi.functions.createProgramWithAbiInterface.selector)) {
-      const {
-        args: [_codeId, _salt, _overrideInitializer, abiInterface],
-      } = abi.functions.createProgramWithAbiInterface.decode(log.transaction);
-      program.abiInterfaceAddress = toPgByteaString(abiInterface);
+      const { args } = abi.functions.createProgramWithAbiInterface.decode(log.transaction);
+      program.abiInterfaceAddress = toPgByteaString(args[3]);
+    } else if (
+      log.transaction.input.startsWith(abi.functions.createProgramWithAbiInterfaceAndExecutableBalance.selector)
+    ) {
+      const { args } = abi.functions.createProgramWithAbiInterfaceAndExecutableBalance.decode(log.transaction);
+      program.abiInterfaceAddress = toPgByteaString(args[3]);
     }
 
     this._programs.set(program.id, program);
