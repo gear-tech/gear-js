@@ -12,6 +12,7 @@ import type {
 import { decodeEventLog, decodeFunctionData, encodeEventTopics, getAbiItem, toFunctionSelector } from 'viem/utils';
 import type { Log, Transaction } from '../processor.js';
 import { IROUTER_ABI_V1 } from './router-versions/router.v1.abi.js';
+import { IROUTER_ABI_V2 } from './router-versions/router.v2.abi.js';
 
 // ── EIP-1967 Upgraded event ──────────────────────────────────────────────────
 // Fixed by standard; signature never changes between contract upgrades.
@@ -48,7 +49,7 @@ function createRouterAbi(abi: Abi) {
         topics: log.topics as [Hex, ...Hex[]],
       }) as DecodeEventLogReturnType<typeof IROUTER_ABI, TName>;
   }
-  function fnDecoder<TName extends ContractFunctionName<typeof IROUTER_ABI>>(fnName: TName) {
+  function fnDecoder<TName extends ContractFunctionName<typeof IROUTER_ABI>>(_fnName: TName) {
     return (tx: Transaction): DecodeFunctionDataReturnType<typeof IROUTER_ABI, TName> =>
       decodeFunctionData({ abi, data: tx.input as Hex }) as DecodeFunctionDataReturnType<typeof IROUTER_ABI, TName>;
   }
@@ -57,7 +58,6 @@ function createRouterAbi(abi: Abi) {
   }
   return {
     events: {
-      AnnouncesCommitted: { topic: eventTopic('AnnouncesCommitted'), decode: eventDecoder('AnnouncesCommitted') },
       BatchCommitted: { topic: eventTopic('BatchCommitted'), decode: eventDecoder('BatchCommitted') },
       CodeGotValidated: { topic: eventTopic('CodeGotValidated'), decode: eventDecoder('CodeGotValidated') },
       CodeValidationRequested: {
@@ -105,7 +105,8 @@ export const RouterAbi = createRouterAbi(IROUTER_ABI);
 //   4. Deploy indexer BEFORE the upgrade transaction is mined.
 export const ROUTER_VERSION_TO_ABI: Record<string, RouterAbiShape> = {
   v1: createRouterAbi(IROUTER_ABI_V1),
-  v2: RouterAbi,
+  v2: createRouterAbi(IROUTER_ABI_V2),
+  v3: RouterAbi,
 };
 
 // ── Aggregate topics / selectors across all known versions ───────────────────
