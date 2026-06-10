@@ -75,10 +75,22 @@ function createRouterAbi(abi: Abi) {
         selector: fnSelector('requestCodeValidation'),
         decode: fnDecoder('requestCodeValidation'),
       },
+      requestCodeValidationOnBehalf: {
+        selector: fnSelector('requestCodeValidationOnBehalf'),
+        decode: fnDecoder('requestCodeValidationOnBehalf'),
+      },
       createProgram: { selector: fnSelector('createProgram'), decode: fnDecoder('createProgram') },
       createProgramWithAbiInterface: {
         selector: fnSelector('createProgramWithAbiInterface'),
         decode: fnDecoder('createProgramWithAbiInterface'),
+      },
+      createProgramWithAbiInterfaceAndExecutableBalance: {
+        selector: fnSelector('createProgramWithAbiInterfaceAndExecutableBalance'),
+        decode: fnDecoder('createProgramWithAbiInterfaceAndExecutableBalance'),
+      },
+      createProgramWithExecutableBalance: {
+        selector: fnSelector('createProgramWithExecutableBalance'),
+        decode: fnDecoder('createProgramWithExecutableBalance'),
       },
       commitBatch: { selector: fnSelector('commitBatch'), decode: fnDecoder('commitBatch') },
     },
