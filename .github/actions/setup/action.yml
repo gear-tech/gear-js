@@ -1,0 +1,27 @@
+name: 'Setup'
+description: 'Cancel previous runs, checkout, set up Node.js, and install dependencies'
+inputs:
+  node-version:
+    description: 'Node.js version'
+    default: '20.x'
+  install-command:
+    description: 'Dependency install command'
+    default: 'yarn install'
+runs:
+  using: composite
+  steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.13.1
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Install Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: yarn
+
+    - name: Install dependencies
+      shell: bash
+      run: ${{ inputs.install-command }}
