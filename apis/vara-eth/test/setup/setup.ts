@@ -39,10 +39,6 @@ async function setupVaraEth() {
     {
       stdio: 'pipe',
       detached: true,
-      env: {
-        ...process.env,
-        RUST_LOG: 'debug',
-      },
     },
   );
 
