@@ -31,8 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [guard]
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Run linter'
         run: yarn check:idea
@@ -67,8 +67,8 @@ jobs:
     needs: ['changes']
     if: ${{ needs.changes.outputs.gear == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build backend'
         run: yarn build:gear-idea-backend
@@ -81,8 +81,8 @@ jobs:
     needs: ['changes']
     if: ${{ needs.changes.outputs.vara-eth == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build frontend'
         run: yarn build:varaeth-idea-frontend
@@ -97,8 +97,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: ['build-gear-idea']
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build'
         run: yarn build:gear-idea-backend

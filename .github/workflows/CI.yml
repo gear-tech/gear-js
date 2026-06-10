@@ -64,8 +64,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [guard]
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Run linter'
         run: yarn lint
@@ -75,8 +75,8 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.utils-ui == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build frontend-configs'
         run: yarn build:frontend-configs
@@ -105,8 +105,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-ui-utils]
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build @gear-js/frontend-configs'
         run: yarn build:frontend-configs
@@ -119,8 +119,8 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.tools == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build'
         run: yarn build:tools
@@ -129,8 +129,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-tools]
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Test: run'
         run: yarn test:txwrapper
@@ -141,8 +141,8 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js-util gear-js
 

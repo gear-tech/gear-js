@@ -41,8 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [guard]
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js
 
@@ -93,8 +93,8 @@ jobs:
     needs: ["changes"]
     if: ${{ needs.changes.outputs.gear-api == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @gear-js/api
 
@@ -106,8 +106,8 @@ jobs:
     needs: ["changes"]
     if: ${{ needs.changes.outputs.vara-eth-api == 'true' || inputs.force }}
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @vara-eth/api
 
@@ -120,8 +120,8 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @gear-js/api
 
@@ -158,8 +158,8 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: Setup
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           node-version: 24.x
           install-command: yarn workspaces focus gear-js @vara-eth/api @gear-js/api
