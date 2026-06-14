@@ -30,6 +30,18 @@ ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
 
 RUN yarn build:gear-idea-frontend
 
-FROM nginx:alpine
-RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /src/idea/gear/frontend/dist /usr/share/nginx/html
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN npm install -g serve@14
+
+COPY --from=builder --chown=node:node /src/idea/gear/frontend/dist ./dist
+
+USER node
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "dist", "-l", "3000"]
