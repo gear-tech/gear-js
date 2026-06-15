@@ -32,6 +32,6 @@ function shutdownVaraEth() {
   }
 }
 
-export default async () => {
+export async function teardown() {
   shutdownVaraEth();
-};
+}
