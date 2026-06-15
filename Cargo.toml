@@ -18,4 +18,4 @@ gstd = { git = "https://github.com/gear-tech/gear" }
 scale-info = { version = "=2.11", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "=3.7.5", default-features = false, features = ["derive", "full"] }
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear" }
-primitive-types = { version = "0.12.2", default-features = false }
+primitive-types = { version = "0.13.1", default-features = false }
