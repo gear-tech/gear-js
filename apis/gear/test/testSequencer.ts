@@ -1,5 +1,5 @@
-import { BaseSequencer } from 'vitest/node';
 import type { TestSpecification } from 'vitest/node';
+import { BaseSequencer } from 'vitest/node';
 
 export default class CustomSequencer extends BaseSequencer {
   override async sort(files: TestSpecification[]): Promise<TestSpecification[]> {
