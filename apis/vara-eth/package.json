@@ -11,9 +11,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "vitest run",
-    "test:only": "vitest run",
-    "test:unit": "vitest run test/unit",
+    "test": "npx vitest run",
+    "test:only": "npx vitest run",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",

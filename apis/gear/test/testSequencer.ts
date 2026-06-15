@@ -1,7 +1,8 @@
-import type { TestSequencer, TestSpecification } from 'vitest/node';
+import { BaseSequencer } from 'vitest/node';
+import type { TestSpecification } from 'vitest/node';
 
-export default class CustomSequencer implements TestSequencer {
-  async sort(files: TestSpecification[]): Promise<TestSpecification[]> {
+export default class CustomSequencer extends BaseSequencer {
+  override async sort(files: TestSpecification[]): Promise<TestSpecification[]> {
     return [...files].sort((a, b) => {
       const priority = (spec: TestSpecification): number => {
         if (spec.moduleId.endsWith('GearApi.test.ts')) return 0;
@@ -11,9 +12,5 @@ export default class CustomSequencer implements TestSequencer {
       };
       return priority(a) - priority(b);
     });
-  }
-
-  async shard(files: TestSpecification[]): Promise<TestSpecification[]> {
-    return files;
   }
 }
