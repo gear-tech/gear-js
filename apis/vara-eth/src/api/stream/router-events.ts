@@ -38,8 +38,14 @@ function decodeRouterLog(log: Log): RouterEvent | null {
         threshold: args.threshold as bigint,
         wvaraPerSecond: args.wvaraPerSecond as bigint,
       };
+    case 'EBCommitted':
+      return { ...meta, type: 'EBCommitted', ethBlockHash: args.ethBlockHash as Hex };
+    case 'EIP712DomainChanged':
+      return { ...meta, type: 'EIP712DomainChanged' };
     case 'Initialized':
       return { ...meta, type: 'Initialized', version: args.version as bigint };
+    case 'MBCommitted':
+      return { ...meta, type: 'MBCommitted', head: args.head as Hex };
     case 'OwnershipTransferred':
       return {
         ...meta,

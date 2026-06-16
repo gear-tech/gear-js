@@ -233,7 +233,10 @@ describe('watchRouterEvents', () => {
         args: { threshold: 1n, wvaraPerSecond: 2n },
         expectedType: 'ComputationSettingsChanged',
       },
+      { eventName: 'EBCommitted', args: { ethBlockHash: '0x10' }, expectedType: 'EBCommitted' },
+      { eventName: 'EIP712DomainChanged', args: {}, expectedType: 'EIP712DomainChanged' },
       { eventName: 'Initialized', args: { version: 3n }, expectedType: 'Initialized' },
+      { eventName: 'MBCommitted', args: { head: '0x11' }, expectedType: 'MBCommitted' },
       {
         eventName: 'OwnershipTransferred',
         args: { previousOwner: '0xaa', newOwner: '0xbb' },
