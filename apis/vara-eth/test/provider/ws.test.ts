@@ -262,7 +262,7 @@ describe('WsVaraEthProvider - Connection Management', () => {
       await connectPromise;
       await delay(10);
 
-      const callback = jest.fn();
+      const callback = vi.fn();
       await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
       await provider.disconnect();
@@ -532,7 +532,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('should create and handle subscription when connected', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', ['param'], callback);
 
     // First message initializes subscription (returns subscription ID)
@@ -556,7 +556,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
 
     const connectPromise = provider.connect();
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     const subscribePromise = provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     const ws = mock.getLastInstance()!;
@@ -592,7 +592,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
       await expect(connectPromise).rejects.toThrow();
     }
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow(
       expectedError,
     );
@@ -601,7 +601,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('should invoke callback with camelCase data and handle errors', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     ws.simulateMessage(createJsonRpcResponse(1, 103));
@@ -632,8 +632,8 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
   test('unsubscribe function should stop receiving updates', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const callback1 = jest.fn();
-    const callback2 = jest.fn();
+    const callback1 = vi.fn();
+    const callback2 = vi.fn();
 
     const unsubscribe1 = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback1);
     await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback2);
@@ -667,8 +667,8 @@ describe('WsVaraEthProvider - Event System', () => {
   test('should register and trigger event listeners', async () => {
     const provider = new WsVaraEthProvider(TEST_WS_URL, { autoConnect: false });
 
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
 
     provider.on('connected', listener1);
     provider.on('connected', listener2);
@@ -694,9 +694,9 @@ describe('WsVaraEthProvider - Event System', () => {
   test('should remove specific listener or all listeners', async () => {
     const provider = new WsVaraEthProvider(TEST_WS_URL, { autoConnect: false });
 
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
-    const listener3 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
+    const listener3 = vi.fn();
 
     provider.on('connected', listener1);
     provider.on('connected', listener2);
@@ -727,11 +727,11 @@ describe('WsVaraEthProvider - Event System', () => {
       reconnectDelay: 50,
     });
 
-    const connectingListener = jest.fn();
-    const connectedListener = jest.fn();
-    const disconnectedListener = jest.fn();
-    const errorListener = jest.fn();
-    const retryListener = jest.fn();
+    const connectingListener = vi.fn();
+    const connectedListener = vi.fn();
+    const disconnectedListener = vi.fn();
+    const errorListener = vi.fn();
+    const retryListener = vi.fn();
 
     provider.on('connecting', connectingListener);
     provider.on('connected', connectedListener);
@@ -848,7 +848,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
       reconnectAttempts: 1,
     });
 
-    const errorListener = jest.fn();
+    const errorListener = vi.fn();
     provider.on('error', errorListener);
 
     const connectPromise = provider.connect();
@@ -881,7 +881,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
   test('should gracefully handle JSON parse errors', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
 
     // Simulate invalid JSON message
     const event = new MessageEvent('message', { data: 'invalid json' });
@@ -899,10 +899,10 @@ describe('WsVaraEthProvider - Error Handling', () => {
   test('should handle errors in event listeners and subscription callbacks', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
 
     let badCallbackCallCount = 0;
-    const badCallback = jest.fn((_error) => {
+    const badCallback = vi.fn((_error) => {
       badCallbackCallCount++;
       // Only throw on first call (message), not on second call (cleanup)
       if (badCallbackCallCount === 1) {
@@ -910,10 +910,10 @@ describe('WsVaraEthProvider - Error Handling', () => {
       }
     });
 
-    const badListener = jest.fn(() => {
+    const badListener = vi.fn(() => {
       throw new Error('Listener error');
     });
-    const goodListener = jest.fn();
+    const goodListener = vi.fn();
 
     provider.on('disconnected', badListener);
     provider.on('disconnected', goodListener);
@@ -962,7 +962,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   ])('should handle WebSocket close: code=%i wasClean=%s', async (code, reason, wasClean) => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const disconnectListener = jest.fn();
+    const disconnectListener = vi.fn();
     provider.on('disconnected', disconnectListener);
 
     ws.simulateClose(code, reason, wasClean);
@@ -989,8 +989,8 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should clean up all resources on disconnect', async () => {
     const { provider } = await createConnectedProvider(mock);
 
-    const callback1 = jest.fn();
-    const callback2 = jest.fn();
+    const callback1 = vi.fn();
+    const callback2 = vi.fn();
 
     await provider.subscribe('sub1', 'unsub1', [], callback1);
     await provider.subscribe('sub2', 'unsub2', [], callback2);
@@ -1063,7 +1063,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
 
     ws.shouldThrowOnSend = true;
 
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow();
 
@@ -1139,7 +1139,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should handle removal of non-existent event listener', () => {
     const provider = new WsVaraEthProvider(TEST_WS_URL, { autoConnect: false });
 
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     // Remove listener that was never added
     provider.off('connected', listener);
@@ -1158,8 +1158,8 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should clean up event listener map when last listener is removed', () => {
     const provider = new WsVaraEthProvider(TEST_WS_URL, { autoConnect: false });
 
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
 
     // Add two listeners to the same event
     provider.on('connected', listener1);
@@ -1172,7 +1172,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
     provider.off('connected', listener2);
 
     // Adding a new listener should work fine (verifies cleanup worked)
-    const listener3 = jest.fn();
+    const listener3 = vi.fn();
     expect(() => provider.on('connected', listener3)).not.toThrow();
   });
 
@@ -1244,7 +1244,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
   test('should handle unsubscribe of non-existent subscription', async () => {
     const { provider } = await createConnectedProvider(mock);
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     // Unsubscribe twice
