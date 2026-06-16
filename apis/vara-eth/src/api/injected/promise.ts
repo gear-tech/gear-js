@@ -1,4 +1,4 @@
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hash, Hex } from 'viem';
 import { bytesToHex, concatBytes, hexToBytes, recoverMessageAddress } from 'viem';
