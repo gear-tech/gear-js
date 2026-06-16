@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Changed
-- `@noble/hashes` bumped to 2.2.0
+- `@noble/hashes` bumped to 2.2.0 (https://github.com/gear-tech/gear-js/pull/2528)
 
 ## [0.5.1]
 
