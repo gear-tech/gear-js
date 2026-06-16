@@ -1,4 +1,8 @@
-import { execSync } from 'node:child_process';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execAsync = promisify(exec);
+
 import fs from 'node:fs';
 import { SailsProgram } from 'sails-js';
 import { SailsIdlParser } from 'sails-js/parser';
@@ -114,12 +118,10 @@ describe('Injected Transactions', () => {
       return value;
     };
 
-    beforeAll(() => {
-      const result = execSync(`cargo run --manifest-path ${INJECTED_TEST_PROGRAM_MANIFEST_PATH}`, {
-        stdio: 'pipe',
-      });
+    beforeAll(async () => {
+      const { stdout } = await execAsync(`cargo run --manifest-path ${INJECTED_TEST_PROGRAM_MANIFEST_PATH}`);
 
-      const resultStr = result.toString();
+      const resultStr = stdout;
 
       injectedTxHash = getAndValidateValueByRegexp(resultStr, `hash: ${HASH_REGEXP}`);
       injectedTxSignature = getAndValidateValueByRegexp(resultStr, `signature: ${HEX_REGEXP}`);
