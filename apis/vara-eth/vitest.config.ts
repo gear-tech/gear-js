@@ -10,6 +10,7 @@ export default defineConfig({
       sequencer: CustomSequencer,
     },
     testTimeout: 60_000,
+    hookTimeout: 60_000,
     fileParallelism: false,
     clearMocks: true,
     include: ['test/**/*.test.ts'],
