@@ -1,5 +1,10 @@
 export * from './bigint.js';
-export { initKzgLoading } from './blob.js';
+export {
+  calculateBlobVersionedHashesAndCommitments,
+  initKzgLoading,
+  simpleSidecarEncode,
+  waitForKzg,
+} from './blob.js';
 export * from './error.js';
 export * from './event.js';
 export * from './hash.js';

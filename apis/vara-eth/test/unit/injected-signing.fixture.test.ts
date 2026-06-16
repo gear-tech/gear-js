@@ -27,8 +27,8 @@ const PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf
 const DESTINATION = '0x1111111111111111111111111111111111111111' as const;
 const PAYLOAD = '0xdeadbeef' as const;
 const VALUE = 0n;
-const REFERENCE_BLOCK = ('0x' + '22'.repeat(32)) as `0x${string}`;
-const SALT = ('0x' + '33'.repeat(32)) as `0x${string}`;
+const REFERENCE_BLOCK = `0x${'22'.repeat(32)}` as `0x${string}`;
+const SALT = `0x${'33'.repeat(32)}` as `0x${string}`;
 
 // Hardcoded expected outputs. Recorded 2026-05-16 from this exact preimage + key.
 // Changing either side of an = breaks the gate — that's the point.

@@ -4,51 +4,70 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.5.0-rc.1] — typed contract reverts
+## [0.6.0-rc.0] - wallet helpers, streams, and typed errors
 
 ### Added
-- **`MessageRevertedError`** — thrown by `MirrorClient.sendMessage` and `MirrorClient.sendReply` when the on-chain simulation reverts. Carries `reason` (decoded `ErrorName(args)`), `functionName`, the stable `MESSAGE_REVERTED` code, and the original viem error as `cause`. Closes the typed-error gap previously bridged by generic `INTERNAL_ERROR` surfaces in downstream wallets.
+- **`MessageRevertedError`** - thrown by `MirrorClient.sendMessage` and `MirrorClient.sendReply` when on-chain simulation reverts. Carries `reason`, `functionName`, the stable `MESSAGE_REVERTED` code, and the original viem error as `cause`.
+- **`api.stream` namespace** - typed event subscriptions for Router events, Mirror events, and block headers, plus standalone `watchProgramEvents`, `watchRouterEvents`, and `watchBlocks` exports.
+- **High-level wallet helpers** - `api.programs.deploy(code, opts)`, `api.programs.sendAndWait(mirror, payload, opts)`, and `api.fees.estimate(op)`.
+- **Typed public errors** - `VaraEthError` plus named subclasses for viem-fork checks, stale injected transactions, promise timeouts/signature failures, permits, blob pricing, code-validation timeouts, missing Sails IDL, RPC connection failures, chain mismatches, and message reverts.
+- **`LocalSigner`** and `privateKeyToLocalSigner(privateKey, publicClient)` for scripts, CLIs, and agent flows.
+- **Sails IDL extraction** via `extractSailsIdl(wasm)` and `extractSailsIdlOrThrow(wasm)`.
+- **Viem-fork runtime check** via `assertViemFork()` on code-validation write paths.
+- **Phase 0 dev script** at `scripts/poc-wallet.ts`, with `yarn poc:ethexe` and `yarn typecheck:poc`.
 
-## [0.5.0-rc.0] — wallet-CLI primitives (Phase 0 + Phase 1 + Phase 2)
-
-### Fixed — review feedback on the initial rc.0 push
-- **`api.programs.sendAndWait({ via: 'eth' })`** — the default on-chain path now actually submits the transaction. Previously skipped `tx.send()` between `sendMessage()` and `setupReplyListener()`, so `getReceipt()` threw immediately.
-- **`new LocalSigner(privateKey, publicClient)`** — no longer throws at construction. The constructor was feeding `publicClient.transport` (a constructed `Transport`) to `createWalletClient`, which calls it as a factory. Routes through viem's `custom({ request: publicClient.request })` now.
-- **`@vara-eth/api` is importable from browser bundles.** Removed the top-level `import { createRequire } from 'node:module'` in `src/util/viem-fork.ts`; the Node-only probe is now gated on a runtime `process.versions.node` check and accesses `require` via opaque indirection so esbuild/webpack don't try to resolve `node:module` at bundle time.
-- **`deployProgram` no longer hangs forever** when `CodeGotValidated` doesn't fire. New option `codeValidationTimeoutMs` (default 120s); on expiry throws `CodeValidationTimeoutError` carrying `{ codeId, txHash, timeoutMs }` so callers can resume via `router.createProgramBuilder(codeId).build()` once validators commit out-of-band.
-- **`deployProgram` permit lifecycle** — the executable-balance permit is now signed AFTER `CodeGotValidated` resolves, with a fresh `now`-based deadline. Previously shared the code-fee permit's deadline; the executable-balance permit could expire during long validator waits, reverting `createProgramWithExecutableBalance` and burning code-validation fees.
-- **`InjectedTx.setReferenceBlock(suppliedHash)`** — when the caller supplies an explicit reference block, the SDK now pre-checks it against the chain head and throws `InjectedTxStaleError` if it's outside the 32-block validity window. Transient RPC failure during the check falls through to signing rather than blocking.
-
-### Fixed — alignment with ethexe Rust/Solidity source review
-- **`deployProgram` no longer over-permits.** The direct `Router.requestCodeValidation` variant charges only `requestCodeValidationBaseFee` (the `+ extraFee` surcharge applies exclusively to `requestCodeValidationOnBehalf`). `deployProgram` now signs the permit for `baseFee` only — previously it signed for `baseFee + extraFee`, leaking an unused `extraFee`-sized WVARA allowance to the router. Same correction applied to `api.fees.estimate({ type: 'uploadCode' })`. `RouterClient.requestCodeValidation` JSDoc corrected.
-- **`api.programs.sendAndWait({ via: 'injected', value: > 0n })` now throws client-side.** The ethexe-rpc relay rejects non-zero value on the injected path with a bad-request error (`ethexe/rpc/src/apis/injected/relay.rs`). The helper pre-validates before signing so the failure surfaces at the call site, not as an opaque RPC error.
-- **`SendAndWaitOptions` JSDoc — recipient semantics.** Zero-address recipient is documented correctly as "auto-route to next-slot producer via the relay's slot calendar," not "broadcast / any validator picks up." The server picks one validator deterministically.
-- **`PermitExpiredError` JSDoc.** Notes that `Router.requestCodeValidation` wraps `WVARA.permit()` in `try {} catch {}`, so an expired permit on-chain does not revert at the permit step when the user has standing allowance — `transferFrom` failure is the real signal. The typed error is most useful for client-side pre-checks and first-time-deploy paths.
-
-### Added — Phase 2 (event streams)
-- **`api.stream` namespace** — typed event subscriptions wrapping viem's `watchContractEvent` / `watchBlocks`. Each method returns an `Unsubscribe` function and accepts `{ onEvent, onError }` handlers.
-  - `api.stream.programEvents(mirror, handlers, opts?)` — emits every Mirror event as a discriminated union (`ProgramEvent`): `Message`, `MessageQueueingRequested`, `MessageCallFailed`, `Reply`, `ReplyQueueingRequested`, `ReplyCallFailed`, `ReplyTransferFailed`, `StateChanged`, `ValueClaimed`, `ValueClaimingRequested`, `ValueClaimFailed`, `ExecutableBalanceTopUpRequested`, `OwnedBalanceTopUpRequested`, `TransferLockedValueToInheritorFailed`. Every event carries `EventMeta` (blockNumber, blockHash, txHash, txIndex, logIndex).
-  - `api.stream.routerEvents(handlers, opts?)` — emits every Router event as a discriminated union (`RouterEvent`): `AnnouncesCommitted`, `BatchCommitted`, `CodeGotValidated`, `CodeValidationRequested`, `ComputationSettingsChanged`, `Initialized`, `OwnershipTransferred`, `Paused`/`Unpaused`, `ProgramCreated`, `StorageSlotChanged`, `Upgraded`, `ValidatorsCommittedForEra`.
-  - `api.stream.blocks(handlers, opts?)` — emits new block headers (`StreamedBlockHeader`: number/hash/parentHash/timestamp/baseFeePerGas). `includePending: true` follows pending blocks; pending blocks with `number === null` are filtered out.
-  - Standalone exports for non-namespace callers: `watchProgramEvents`, `watchRouterEvents`, `watchBlocks`.
-
-### Added — Phase 0 + Phase 1 (originally shipped)
-- **High-level helpers** for the common wallet flows:
-  - `api.programs.deploy(code, opts)` — one call covers WVARA permit signing, `requestCodeValidation`, `CodeGotValidated` wait, and the appropriate `createProgram*` variant (incl. optional `salt` / `abiInterface` / `executableBalance`).
-  - `api.programs.sendAndWait(mirror, payload, opts)` — supports both the on-chain `Mirror.sendMessage` path and the `injected_sendTransactionAndWatch` path; returns a uniform `{messageId, reply, txHash, validator?}` shape with `code` parsed as `ReplyCode` regardless of rail.
-  - `api.fees.estimate(op)` — viem-backed gas estimate plus WVARA fee for code uploads.
-- **Typed error taxonomy** at public API boundaries (`src/errors/vara-eth-error.ts`): `VaraEthError` base class + named subclasses (`ViemForkRequiredError`, `InjectedTxStaleError`, `PromiseTimeoutError`, `PromiseSignatureInvalidError`, `PermitExpiredError`, `BlobUnderpricedError`, `CodeValidationTimeoutError`, `NoSailsIdlError`, `RpcConnectionError`, `ChainIdMismatchError`). Wallet-only errors (`WalletLockedError`, `KeystoreDecryptError`) remain in consumer code by design — the lib stays adapter-shaped.
-- **`LocalSigner`** (`src/signer/adapters/local.ts`) + `privateKeyToLocalSigner(privateKey, publicClient)` — self-contained `ITransactionSigner` backed by a raw secp256k1 key in process memory, for scripts/CLI/agent flows.
-- **Sails IDL extractor** (`extractSailsIdl(wasm)` / `extractSailsIdlOrThrow(wasm)`) — pure-function WASM custom-section parser; tolerates both `sails_idl` and `sails-idl` naming.
-- **Viem-fork runtime check** (`assertViemFork()`) — invoked at the entry of `RouterClient.requestCodeValidation*` paths so consumers of read-only contract calls never pay the cost. Throws `ViemForkRequiredError` with remediation message when upstream viem is installed instead of `@vara-eth/viem`.
-- **Phase 0 dev script** at `scripts/poc-wallet.ts` (run with `yarn poc:ethexe`) — end-to-end smoke against a local `ethexe run --dev` devnet: upload → create → send-injected → wait promise → print reply. Backed by `yarn typecheck:poc` (CI-friendly typecheck without needing a devnet).
-
-### Tests
-- Unit tests for the IDL extractor (`test/unit/idl-extract.test.ts`) — happy path, alt naming, missing section, truncated WASM, non-WASM bytes.
-- **JS-side signing golden fixture** (`test/unit/injected-signing.fixture.test.ts`, P0c gate) — pins the preimage byte layout, keccak256 hash, blake2b messageId, and deterministic ECDSA signature against known inputs. Locks `InjectedTx` byte layout against silent drift from the Rust verifier in `ethexe/common/src/injected.rs`. A full cross-impl gate via Rust subprocess is tracked as follow-up work.
+### Changed
+- `@noble/hashes` bumped to 2.2.0 (https://github.com/gear-tech/gear-js/pull/2528)
 
 ### Fixed
-- Pre-existing TS warning on `feeHistory.baseFeePerBlobGas` in `router.contract.ts` (the `@vara-eth/viem` fork populates this field but upstream viem types do not declare it; narrowed via `unknown` cast).
+- `api.programs.sendAndWait({ via: 'eth' })` now explicitly submits the transaction before wiring the reply listener.
+- `LocalSigner` construction now routes through viem's `custom({ request: publicClient.request })` instead of reusing a constructed transport as a factory.
+- Browser bundles no longer try to resolve `node:module` from `src/util/viem-fork.ts`.
+- `deployProgram` now bounds `CodeGotValidated` waits with `codeValidationTimeoutMs` and throws `CodeValidationTimeoutError` with resume data.
+- `deployProgram` signs executable-balance permits after code validation resolves so the deadline is fresh.
+- `InjectedTx.setReferenceBlock(suppliedHash)` pre-checks explicit reference blocks against the 32-block validity window.
+- `deployProgram` and `api.fees.estimate({ type: 'uploadCode' })` use only `requestCodeValidationBaseFee` for the direct validation path.
+- `api.programs.sendAndWait({ via: 'injected', value: > 0n })` throws client-side before signing.
+- `SendAndWaitOptions` documents zero-address injected recipient semantics as next-slot producer routing.
+- `PermitExpiredError` docs clarify Router permit fallback behavior.
+- `feeHistory.baseFeePerBlobGas` access is narrowed for the `@vara-eth/viem` fork.
+
+### Tests
+- Added unit coverage for IDL extraction, JS-side injected signing fixtures, injected stale-block checks, local signer construction, deploy timeout behavior, send-and-wait behavior, streams, and typed message reverts.
+
+## [0.5.1]
+
+### Changed
+- Updated `Router` abi (https://github.com/gear-tech/gear-js/pull/2518)
+
+## [0.5.0]
+
+### Added
+- `InjectedTxReceipt` class — signed receipt returned after an injected transaction is processed. Supports `Promise` (transaction executed, reply available) and `Purged` (transaction dropped before execution) variants. Exposes `hash`, `replyHash`, `promise`, `error`, `purgedReason`, `txHash`, `address`, `signature`, and `validateSignature()`. (https://github.com/gear-tech/gear-js/pull/2516)
+- `TransactionPurgedReason` enum — mirrors the Rust `#[repr(u8)]` enum: `Outdated = 1`, `UnknownReferenceBlock = 2`, `NonZeroValue = 255`. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InjectedTx.sendAndWaitForReceipt()` — sends the transaction and waits for the validator's signed `InjectedTxReceipt`. Replaces `sendAndWaitForPromise()` on versioned nodes. (https://github.com/gear-tech/gear-js/pull/2516)
+- `api.query.info` namespace with `version()` method — returns the node's RPC version string, or `null` if the node does not implement the `version` RPC method. (https://github.com/gear-tech/gear-js/pull/2516)
+- `VaraEthApi.create()` static async factory — fetches the RPC version at construction time to configure the injected transaction format. Used internally by `createVaraEthApi()`. (https://github.com/gear-tech/gear-js/pull/2516)
+
+### Changed
+- `program_calculateReplyForHandle` RPC response is now expected in a `{ reply, messages }` wrapper; callers receive the same flat `ReplyInfo` shape as before. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InjectedTx` hash and `messageId` computation: when connected to a versioned node, `payload` and `salt` are pre-hashed with blake2b-256 before being fed into the outer hash function. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InjectedTx` RPC payload: on versioned nodes the `{ recipient, tx }` wrapper is removed — data is sent as `{ data, signature, address }` directly. (https://github.com/gear-tech/gear-js/pull/2516)
+- `VaraEthApi` no longer starts background async initialization in the constructor. Use `createVaraEthApi()` (which calls `VaraEthApi.create()` internally) to get a fully initialized instance. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InfoQueries.version()` return type changed from `string` to `string | null`. (https://github.com/gear-tech/gear-js/pull/2516)
+- Updated Router abi (https://github.com/gear-tech/gear-js/pull/2486)
+
+### Deprecated
+- `InjectedTxPromise` — use `InjectedTxReceipt` instead. (https://github.com/gear-tech/gear-js/pull/2516)
+- `LegacyInjectedTransactionPromiseRaw` (previously exported as `InjectedTransactionPromiseRaw` from `promise.ts`) — use `InjectedTransactionReceiptRaw` from `receipt.ts`. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InjectedTx.sendAndWaitForPromise()` — use `sendAndWaitForReceipt()` instead. (https://github.com/gear-tech/gear-js/pull/2516)
+- `InjectedTx.setRecipient()`, `setSlotValidator()`, `setDefaultValidator()` — the `recipient` field has been removed from the versioned RPC format; these methods remain for legacy node connections. (https://github.com/gear-tech/gear-js/pull/2516)
+- `IInjectedTransaction.recipient` field — silently ignored when connecting to a versioned node. (https://github.com/gear-tech/gear-js/pull/2516)
+
+### Removed
+- `api.query.block.outcome()` — removed server-side, no replacement. (https://github.com/gear-tech/gear-js/pull/2516)
+- `VaraEthApi.waitForInitialization()` — superseded by the `VaraEthApi.create()` factory pattern. (https://github.com/gear-tech/gear-js/pull/2516)
+- `normalizeStateTransition` internal utility function. (https://github.com/gear-tech/gear-js/pull/2516)
 
 ## [0.4.0]
 

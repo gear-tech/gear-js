@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.5.0-rc.1",
+  "version": "0.6.0-rc.0",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",
@@ -11,10 +11,9 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "npx jest --runInBand",
-    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
-    "test:no-setup": "npx jest",
-    "test:unit": "npx jest --config jest.unit.config.ts",
+    "test": "npx vitest run",
+    "test:only": "npx vitest run",
+    "test:unit": "npx vitest run --config vitest.unit.config.ts",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
@@ -61,15 +60,18 @@
     "viem": "*"
   },
   "devDependencies": {
+    "@gear-js/api": "workspace:*",
+    "@polkadot/api": "^16.5.1",
     "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
+    "sails-js": "^1.0.0",
     "viem": "npm:@vara-eth/viem@2.48.11",
-    "ws": "8.20.0"
+    "ws": "8.21.0"
   },
   "files": [
     "lib"
   ],
   "dependencies": {
-    "@noble/hashes": "1.8.0"
+    "@noble/hashes": "2.2.0"
   }
 }

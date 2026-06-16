@@ -10,9 +10,9 @@ import type { Hex } from 'viem';
 import { InjectedTx } from '../../src/api/injected/tx.js';
 import { InjectedTxStaleError, VaraEthErrorCode } from '../../src/errors/vara-eth-error.js';
 
-const STALE_HASH = ('0x' + 'aa'.repeat(32)) as Hex;
-const FRESH_HASH = ('0x' + 'bb'.repeat(32)) as Hex;
-const HEAD_HASH = ('0x' + 'cc'.repeat(32)) as Hex;
+const STALE_HASH = `0x${'aa'.repeat(32)}` as Hex;
+const FRESH_HASH = `0x${'bb'.repeat(32)}` as Hex;
+const HEAD_HASH = `0x${'cc'.repeat(32)}` as Hex;
 
 function makeMockEthClient(blockNumberByHash: Map<Hex, bigint>, headNumber: number) {
   return {
@@ -34,16 +34,12 @@ function makeMockEthClient(blockNumberByHash: Map<Hex, bigint>, headNumber: numb
 
 function makeTx(ethClient: never): InjectedTx {
   // Provider is unused on the path under test; cast through never.
-  return new InjectedTx(
-    {} as never,
-    ethClient,
-    {
-      destination: '0x' + '11'.repeat(20) as `0x${string}`,
-      payload: '0xdead' as `0x${string}`,
-      value: 0n,
-      salt: '0x' + '00'.repeat(32) as `0x${string}`,
-    } as never,
-  );
+  return new InjectedTx({} as never, ethClient, {
+    destination: `0x${'11'.repeat(20)}` as `0x${string}`,
+    payload: '0xdead' as `0x${string}`,
+    value: 0n,
+    salt: `0x${'00'.repeat(32)}` as `0x${string}`,
+  } as never);
 }
 
 describe('InjectedTx.setReferenceBlock staleness pre-check (Fix 2.3)', () => {

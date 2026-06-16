@@ -1,4 +1,4 @@
-module.exports = class Data1721908575703 {
+export default class Data1721908575703 {
   name = 'Data1721908575703';
 
   async up(db) {
@@ -38,4 +38,4 @@ module.exports = class Data1721908575703 {
     await db.query(`DROP TABLE "event"`);
     await db.query(`DROP INDEX "public"."IDX_155b245dee66708209ac2883de"`);
   }
-};
+}

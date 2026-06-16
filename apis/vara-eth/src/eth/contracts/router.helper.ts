@@ -1,4 +1,4 @@
-import { randomBytes } from '@noble/hashes/utils';
+import { randomBytes } from '@noble/hashes/utils.js';
 import { type Address, type Hash, toHex } from 'viem';
 
 import { ZERO_ADDRESS } from '../../util/constants.js';

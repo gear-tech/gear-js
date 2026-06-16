@@ -1,421 +1,143 @@
-name: 'Gear Idea Release'
+name: Build and Deploy Gear Idea
 
 on:
   push:
-    branches: ['main', 'prod/gear-idea']
+    branches: [main, master]
     paths:
-      - idea/gear/frontend/**
-      - idea/gear/faucet/**
-      - idea/gear/meta-storage/**
-      - idea/gear/squid/**
-      - idea/gear/explorer/**
-      - idea/gear/indexer-db/**
+      - 'idea/gear/**'
+    tags: ["gear-idea-v*"]
   workflow_dispatch:
     inputs:
-      service:
+      env:
         type: choice
-        description: Service to release
+        description: Target environment
+        required: false
         options:
-          - frontend
-          - faucet
-          - squid
-          - meta-storage
-          - explorer
-          - all
-          - backend
-        required: true
-      environment:
-        type: choice
-        description: Environment to deploy
-        options:
-          - gear-idea-staging
-          - gear-idea-production
-        required: true
-        default: gear-idea-staging
+          - dev
+          - stg
+          - prod
+      deploy_indexer:
+        type: boolean
+        description: Deploy indexer (mainnet + testnet)
+        default: true
+      deploy_explorer:
+        type: boolean
+        description: Deploy explorer
+        default: true
+      deploy_faucet:
+        type: boolean
+        description: Deploy faucet
+        default: true
+      deploy_meta-storage:
+        type: boolean
+        description: Deploy meta-storage
+        default: true
+      deploy_frontend:
+        type: boolean
+        description: Deploy frontend
+        default: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write
+  packages: write
+  actions: write
+  id-token: write
 
 jobs:
-  set-env-tag:
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.get_env.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+  deploy_indexer:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: gear-idea
+      component: indexer-mainnet
+      extra_components: |
+        indexer-testnet
+      registry: ghcr.io/gear-tech/gear-idea-indexer
+      dockerfile: idea/gear/squid/Dockerfile
+      context: .
+      paths_filter: |
+        idea/gear/squid/**
+        idea/gear/common/**
+        idea/gear/indexer-db/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-      - name: Get environment
-        id: get_env
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          else
-            if [[ "${{ github.ref }}" == "refs/heads/prod/gear-idea" ]]; then
-              echo "environment=gear-idea-production" >> $GITHUB_OUTPUT
-            else
-              echo "environment=gear-idea-staging" >> $GITHUB_OUTPUT
-            fi
-          fi
+  deploy_explorer:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: gear-idea
+      component: explorer
+      registry: ghcr.io/gear-tech/gear-idea-explorer
+      dockerfile: idea/gear/explorer/Dockerfile
+      context: .
+      paths_filter: |
+        idea/gear/explorer/**
+        idea/gear/common/**
+        idea/gear/indexer-db/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend: ${{ steps.should-build.outputs.frontend }}
-      faucet: ${{ steps.should-build.outputs.faucet }}
-      meta-storage: ${{ steps.should-build.outputs.meta-storage }}
-      squid: ${{ steps.should-build.outputs.squid }}
-      explorer: ${{ steps.should-build.outputs.explorer }}
-    steps:
-      - uses: actions/checkout@v6
+  deploy_faucet:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: gear-idea
+      component: faucet
+      registry: ghcr.io/gear-tech/gear-idea-faucet
+      dockerfile: idea/gear/faucet/Dockerfile
+      context: .
+      paths_filter: |
+        idea/gear/faucet/**
+        idea/gear/common/**
+        idea/gear/indexer-db/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-      - name: Check frontend changes
-        id: frontend
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/frontend/**'
+  deploy_meta-storage:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: gear-idea
+      component: meta-storage
+      registry: ghcr.io/gear-tech/gear-idea-meta-storage
+      dockerfile: idea/gear/meta-storage/Dockerfile
+      context: .
+      paths_filter: |
+        idea/gear/meta-storage/**
+        idea/gear/common/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-      - name: Check faucet changes
-        id: faucet
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/faucet/**'
-
-      - name: Check meta-storage changes
-        id: meta_storage
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/meta-storage/**'
-
-      - name: Check squid changes
-        id: squid
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/squid/**'
-              - 'idea/gear/indexer-db/**'
-
-      - name: Check explorer changes
-        id: explorer
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/gear/explorer/**'
-              - 'idea/gear/indexer-db/**'
-
-      - name: Determine what should be built
-        id: should-build
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
-              echo "frontend=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "frontend=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "faucet" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "faucet=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "faucet=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "meta-storage" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "meta-storage=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "meta-storage=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "squid" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "squid=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "squid=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "explorer" || "${{ github.event.inputs.service }}" == "all" || "${{ github.event.inputs.service }}" == "backend" ]]; then
-              echo "explorer=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "explorer=false" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "faucet=${{ steps.faucet.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "meta-storage=${{ steps.meta_storage.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "squid=${{ steps.squid.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "explorer=${{ steps.explorer.outputs.changed }}" >> "$GITHUB_OUTPUT"
-          fi
-
-  build-frontend-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.frontend == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "gear-idea-frontend" Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/gear/frontend/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-          build-args: |
-            VITE_NODE_ADDRESS=${{ secrets.VITE_NODE_ADDRESS }}
-            VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.VITE_DEFAULT_TRANSFER_BALANCE_VALUE }}
-            VITE_TURNSTILE_SITEKEY=${{ secrets.VITE_TURNSTILE_SITEKEY }}
-            VITE_NODES_API_URL=${{ secrets.VITE_NODES_API_URL }}
-            VITE_FAUCET_API_URL=${{ secrets.VITE_FAUCET_API_URL }}
-            VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
-            VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
-            VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
-            VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
-            VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
-            VITE_MAINNET_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
-            VITE_CODE_VERIFIER_API_URL=${{ secrets.VITE_CODE_VERIFIER_API_URL }}
-            VITE_VFT_WHITELIST_API_URL=${{ secrets.VITE_VFT_WHITELIST_API_URL }}
-
-  build-faucet-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.faucet == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "gear-idea-faucet" Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/gear/faucet/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
-  build-meta-storage-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.meta-storage == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "gear-idea-meta-storage" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/gear/meta-storage/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
-  build-squid-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.squid == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "gear-idea-squid" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/gear/squid/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
-  build-explorer-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.explorer == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "gear-idea-explorer" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/gear/explorer/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
-  deploy-frontend:
-    needs: [build-frontend-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
-
-  deploy-faucet:
-    needs: [build-faucet-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.FAUCET_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
-
-  deploy-meta-storage:
-    needs: [build-meta-storage-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.META_STORAGE_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
-
-  deploy-squid:
-    needs: [build-squid-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.SQUID_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
-
-  deploy-explorer:
-    needs: [build-explorer-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.EXPLORER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+  deploy_frontend:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: gear-idea
+      component: frontend
+      registry: ghcr.io/gear-tech/gear-idea-frontend
+      dockerfile: idea/gear/frontend/Dockerfile
+      context: .
+      paths_filter: |
+        idea/gear/frontend/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}

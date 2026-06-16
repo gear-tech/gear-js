@@ -2,7 +2,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
 import { QueryTransactionsDto } from './dto/query-transactions.dto.js';
 import { TransactionDetailResponseDto } from './dto/transaction-detail-response.dto.js';
 import { TransactionListResponseDto } from './dto/transaction-list-response.dto.js';
@@ -35,7 +37,7 @@ export class TransactionsController {
     type: TransactionDetailResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Transaction not found' })
-  async findOne(@Param('hash') hash: string) {
+  async findOne(@Param('hash', ParseByteaPipe) hash: PgByteaString) {
     return this.transactionsService.findOne(hash);
   }
 }

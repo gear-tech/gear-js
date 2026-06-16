@@ -1,37 +1,18 @@
-import { logger } from 'gear-idea-common';
+import { type DataCache, hash } from 'gear-idea-common';
 
-import { client, hash, isRedisConnected } from './redis.js';
+let _cache: DataCache;
+
+export function initCache(cache: DataCache) {
+  _cache = cache;
+}
 
 export function Cache(ttl: number) {
   return (_target: any, propKey: string, descriptor: PropertyDescriptor) => {
-    const originalMethod = descriptor.value;
+    const original = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      const params = args[0];
-
-      if (!isRedisConnected) {
-        return originalMethod.apply(this, args);
-      }
-
-      const key = hash(propKey, params);
-
-      const cached = await client.get(key);
-
-      if (cached && typeof cached === 'string') {
-        return JSON.parse(cached);
-      }
-
-      const result = await originalMethod.apply(this, args);
-
-      client
-        .set(key, JSON.stringify(result), {
-          EX: ttl,
-        })
-        .catch((err) => {
-          logger.error('Redis set error', { error: err.message });
-        });
-
-      return result;
+      const key = hash(propKey, args[0]);
+      return _cache.get(key, () => original.apply(this, args), ttl);
     };
   };
 }

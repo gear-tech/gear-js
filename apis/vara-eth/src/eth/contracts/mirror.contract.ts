@@ -1,10 +1,9 @@
 import type { Address, Hex, Signature, TransactionRequest, TransactionRequestBase } from 'viem';
 import { encodeFunctionData } from 'viem';
-
+import { MessageRevertedError } from '../../errors/vara-eth-error.js';
 import { decodeContractError } from '../../util/error.js';
 import { convertEventParams } from '../../util/index.js';
 import { getRVSComponents } from '../../util/signature.js';
-import { MessageRevertedError } from '../../errors/vara-eth-error.js';
 import { IMIRROR_ABI, type IMirrorContract } from '../abi/IMirror.js';
 import { IROUTER_ABI } from '../abi/IRouter.js';
 import type {

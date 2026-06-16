@@ -1,16 +1,17 @@
+import { type PgByteaString, toPgByteaString } from '@vara-eth/idea-indexer-db';
+
 import { MirrorAbi } from '../abi/mirror.abi.js';
 import { RouterAbi } from '../abi/router.abi.js';
 import { config } from '../config.js';
 import { EntityType, MessageRequest, Program, ReplyRequest } from '../model/index.js';
 import type { Context, Log } from '../processor.js';
 import type { BlockDataCommon } from '../types/index.js';
-import { toPgBytea } from '../util/index.js';
 import { BaseHandler } from './base.js';
 
 export class MirrorHandler extends BaseHandler {
-  private _programAddresses: Set<string>;
-  private _messageRequests: Map<string, MessageRequest>;
-  private _replyRequests: Map<string, ReplyRequest>;
+  private _programAddresses: Set<PgByteaString>;
+  private _messageRequests: Map<PgByteaString, MessageRequest>;
+  private _replyRequests: Map<PgByteaString, ReplyRequest>;
 
   constructor() {
     super();
@@ -51,15 +52,16 @@ export class MirrorHandler extends BaseHandler {
       const common: BlockDataCommon = {
         blockNumber: BigInt(block.header.height),
         timestamp: new Date(block.header.timestamp),
-        blockHash: toPgBytea(block.header.hash),
+        blockHash: toPgByteaString(block.header.hash),
       };
 
       for (const log of block.logs as Log[]) {
-        const programId = log.address.toLowerCase();
+        const programId = toPgByteaString(log.address);
 
         if (!this._programAddresses.has(programId)) {
           continue;
         }
+        console.log(programId);
 
         const topic = log.topics[0].toLowerCase();
         switch (topic) {
@@ -94,7 +96,7 @@ export class MirrorHandler extends BaseHandler {
         if (log.address.toLowerCase() !== config.routerAddr.toLowerCase()) continue;
         if (log.topics[0].toLowerCase() !== RouterAbi.events.ProgramCreated.topic) continue;
         const data = RouterAbi.events.ProgramCreated.decode(log);
-        const programId = data.args.actorId.toLowerCase();
+        const programId = toPgByteaString(data.args.actorId);
 
         if (!this._programAddresses.has(programId)) {
           this._programAddresses.add(programId);
@@ -108,40 +110,40 @@ export class MirrorHandler extends BaseHandler {
     }
   }
 
-  private _handleMessageQueueingRequested(log: Log, common: BlockDataCommon, programId: string): void {
+  private _handleMessageQueueingRequested(log: Log, common: BlockDataCommon, programId: PgByteaString): void {
     const data = MirrorAbi.events.MessageQueueingRequested.decode(log);
 
-    const id = data.args.id.toLowerCase();
+    const id = toPgByteaString(data.args.id);
 
     const messageRequest = new MessageRequest({
       id,
-      sourceAddress: toPgBytea(data.args.source),
+      sourceAddress: toPgByteaString(data.args.source),
       programId,
-      payload: Buffer.from(data.args.payload.slice(2), 'hex'),
+      payload: toPgByteaString(data.args.payload),
       value: data.args.value,
       callReply: data.args.callReply,
-      txHash: toPgBytea(log.transactionHash),
+      txHash: toPgByteaString(log.transactionHash),
       blockNumber: common.blockNumber,
       createdAt: common.timestamp,
     });
 
     this._messageRequests.set(id, messageRequest);
     this._addHashEntry(EntityType.MessageRequest, id, common.timestamp);
-    this._logger.info({ messageId: data.args.id, programId }, 'Message queuing requested');
+    this._logger.info({ messageId: id, programId }, 'Message queuing requested');
   }
 
-  private _handleReplyQueueingRequested(log: Log, common: BlockDataCommon, programId: string): void {
+  private _handleReplyQueueingRequested(log: Log, common: BlockDataCommon, programId: PgByteaString): void {
     const data = MirrorAbi.events.ReplyQueueingRequested.decode(log);
 
-    const id = data.args.repliedTo.toLowerCase();
+    const id = toPgByteaString(data.args.repliedTo);
 
     const replyRequest = new ReplyRequest({
       id,
-      sourceAddress: toPgBytea(data.args.source),
+      sourceAddress: toPgByteaString(data.args.source),
       programId,
-      payload: Buffer.from(data.args.payload.slice(2), 'hex'),
+      payload: toPgByteaString(data.args.payload),
       value: data.args.value,
-      txHash: toPgBytea(log.transactionHash),
+      txHash: toPgByteaString(log.transactionHash),
       blockNumber: common.blockNumber,
       createdAt: common.timestamp,
     });

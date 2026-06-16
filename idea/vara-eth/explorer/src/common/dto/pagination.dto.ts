@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { IsNumber, IsOptional, Max, Min } from 'class-validator';
+
 import { API_CONSTANTS } from '../constants.js';
 
 export class PaginationDto {
@@ -27,15 +28,6 @@ export class PaginationDto {
   @IsNumber()
   @Min(0)
   offset?: number = API_CONSTANTS.PAGINATION.DEFAULT_OFFSET;
-
-  @ApiPropertyOptional({
-    description: 'Sort order',
-    enum: ['asc', 'desc'],
-    default: 'desc',
-  })
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  order?: 'asc' | 'desc' = 'desc';
 }
 
 export class BlockRangeDto {

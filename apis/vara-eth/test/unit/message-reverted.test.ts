@@ -12,9 +12,8 @@
  */
 
 import { BaseError } from 'viem';
-
-import { MirrorClient } from '../../src/eth/contracts/mirror.contract.js';
 import { MessageRevertedError, VaraEthErrorCode } from '../../src/errors/vara-eth-error.js';
+import { MirrorClient } from '../../src/eth/contracts/mirror.contract.js';
 import type { ITransactionSigner } from '../../src/types/signer.js';
 
 class FakeRevertError extends BaseError {
@@ -73,9 +72,7 @@ describe('MirrorClient surfaces MessageRevertedError', () => {
     const mirror = makeMirror(() => {
       throw new FakeRevertError('custom error 0x06b51a0b: ');
     });
-    await expect(
-      mirror.sendReply('0x' + '00'.repeat(32), '0xbeef', 0n),
-    ).rejects.toMatchObject({
+    await expect(mirror.sendReply(`0x${'00'.repeat(32)}`, '0xbeef', 0n)).rejects.toMatchObject({
       name: 'MessageRevertedError',
       functionName: 'sendReply',
     });

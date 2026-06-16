@@ -1,10 +1,10 @@
 import type { Address, Hex } from 'viem';
-
-import type { EthereumClient } from '../../eth/index.js';
-import { getMirrorClient } from '../../eth/index.js';
 import { ReplyCode } from '../../errors/index.js';
 import { PromiseSignatureInvalidError, PromiseTimeoutError } from '../../errors/vara-eth-error.js';
+import type { EthereumClient } from '../../eth/index.js';
+import { getMirrorClient } from '../../eth/index.js';
 import { withTimeout } from '../../util/promise.js';
+import type { InjectedTxPromise, InjectedTxReceipt } from '../injected/index.js';
 import type { CreateInjectedTransaction } from './index.js';
 
 /**
@@ -69,6 +69,10 @@ export interface ReplyResult {
 const DEFAULT_INJECTED_TIMEOUT_MS = 240_000; // slot_duration * 20 @ 12s slots
 const DEFAULT_ETH_TIMEOUT_MS = 120_000;
 
+function isInjectedTxReceipt(result: InjectedTxPromise | InjectedTxReceipt): result is InjectedTxReceipt {
+  return 'error' in result && 'promise' in result && 'address' in result;
+}
+
 /**
  * One-call helper: submit a message to a program and wait for its reply.
  * Supports both the on-chain Mirror.sendMessage path and the off-chain
@@ -110,11 +114,7 @@ async function sendViaEth(
   const { txHash, message, waitForReply } = await tx.setupReplyListener();
   const txHashHex = txHash as Hex;
 
-  const reply = await withTimeout(
-    waitForReply(),
-    timeoutMs,
-    () => new PromiseTimeoutError(txHashHex, timeoutMs),
-  );
+  const reply = await withTimeout(waitForReply(), timeoutMs, () => new PromiseTimeoutError(txHashHex, timeoutMs));
 
   return {
     messageId: message.id as Hex,
@@ -154,7 +154,7 @@ async function sendViaInjected(
     recipient: options.recipient,
   });
 
-  const promise = await withTimeout(
+  const result = await withTimeout(
     injectedTx.sendAndWaitForPromise(),
     timeoutMs,
     () => new PromiseTimeoutError(injectedTx.messageId, timeoutMs),
@@ -162,21 +162,37 @@ async function sendViaInjected(
 
   if (validate) {
     try {
-      await promise.validateSignature();
+      await result.validateSignature();
     } catch (cause) {
       throw new PromiseSignatureInvalidError(undefined, cause);
     }
   }
 
+  if (isInjectedTxReceipt(result)) {
+    if (result.error !== null) {
+      throw new Error(`Injected transaction was purged: ${result.error}`);
+    }
+
+    return {
+      messageId: injectedTx.messageId,
+      reply: {
+        payload: result.promise.payload,
+        value: result.promise.value,
+        code: result.promise.code,
+      },
+      txHash: result.txHash,
+      validator: validate ? result.address : undefined,
+    };
+  }
+
   return {
     messageId: injectedTx.messageId,
     reply: {
-      payload: promise.payload,
-      value: promise.value,
-      code: promise.code,
+      payload: result.payload,
+      value: result.value,
+      code: result.code,
     },
-    txHash: promise.txHash,
-    validator: validate ? promise.validatorAddress : undefined,
+    txHash: result.txHash,
+    validator: validate ? result.validatorAddress : undefined,
   };
 }
-

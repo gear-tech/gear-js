@@ -1,7 +1,13 @@
 import type { Address, Hex, Log, PublicClient } from 'viem';
 
 import { IMIRROR_ABI } from '../../eth/abi/IMirror.js';
-import { decodeEventHeader, type ProgramEvent, type StreamHandlers, type Unsubscribe, type WatchEventsOptions } from './types.js';
+import {
+  decodeEventHeader,
+  type ProgramEvent,
+  type StreamHandlers,
+  type Unsubscribe,
+  type WatchEventsOptions,
+} from './types.js';
 
 export type WatchProgramEventsOptions = WatchEventsOptions;
 

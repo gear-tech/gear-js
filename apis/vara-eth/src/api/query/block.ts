@@ -1,5 +1,5 @@
-import type { BlockHeader, BlockRequestEvent, IVaraEthProvider, StateTransition } from '../../types/index.js';
-import { normalizeBlockEvent, normalizeStateTransition } from '../../util/normalize.js';
+import type { BlockHeader, BlockRequestEvent, IVaraEthProvider } from '../../types/index.js';
+import { normalizeBlockEvent } from '../../util/normalize.js';
 
 export class BlockQueries {
   constructor(private _provider: IVaraEthProvider) {}
@@ -20,12 +20,5 @@ export class BlockQueries {
     const events = await this._provider.send<BlockRequestEvent[]>('block_events', parameters);
     events.forEach(normalizeBlockEvent);
     return events;
-  }
-
-  async outcome(hash?: string): Promise<StateTransition[]> {
-    const parameters = hash ? [hash] : [];
-    const transitions = await this._provider.send<StateTransition[]>('block_outcome', parameters);
-    transitions.forEach(normalizeStateTransition);
-    return transitions;
   }
 }

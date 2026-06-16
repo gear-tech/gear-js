@@ -1,17 +1,23 @@
 export type { VaraEthApi } from './api.js';
 export * from './factory.js';
-export { Injected, InjectedTx, InjectedTxPromise } from './injected/index.js';
+export { estimateFee, type FeeEstimate, FeesNamespace, type WalletOp } from './fees/index.js';
 export {
-  deployProgram,
+  Injected,
+  InjectedTx,
+  InjectedTxPromise,
+  InjectedTxReceipt,
+  TransactionPurgedReason,
+} from './injected/index.js';
+export {
   type DeployProgramOptions,
   type DeployProgramResult,
+  deployProgram,
   ProgramsNamespace,
   type ReplyResult,
-  sendAndWaitForReply,
   type SendAndWaitOptions,
   type SendPath,
+  sendAndWaitForReply,
 } from './programs/index.js';
-export { estimateFee, type FeeEstimate, FeesNamespace, type WalletOp } from './fees/index.js';
 export {
   buildEventMeta,
   type EventMeta,
@@ -21,11 +27,11 @@ export {
   type StreamHandlers,
   StreamNamespace,
   type Unsubscribe,
-  watchBlocks,
   type WatchBlocksOptions,
   type WatchEventsOptions,
-  watchProgramEvents,
   type WatchProgramEventsOptions,
-  watchRouterEvents,
   type WatchRouterEventsOptions,
+  watchBlocks,
+  watchProgramEvents,
+  watchRouterEvents,
 } from './stream/index.js';

@@ -1,14 +1,14 @@
 import type { Address, Hex } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
-import type { InjectedTx } from '../injected/tx.js';
 import type { IInjectedTransaction } from '../../types/index.js';
-import { deployProgram, type DeployProgramOptions, type DeployProgramResult } from './deploy.js';
-import { sendAndWaitForReply, type ReplyResult, type SendAndWaitOptions } from './send-and-wait.js';
+import type { InjectedTx } from '../injected/tx.js';
+import { type DeployProgramOptions, type DeployProgramResult, deployProgram } from './deploy.js';
+import { type ReplyResult, type SendAndWaitOptions, sendAndWaitForReply } from './send-and-wait.js';
 
 export type { DeployProgramOptions, DeployProgramResult } from './deploy.js';
-export type { ReplyResult, SendAndWaitOptions, SendPath } from './send-and-wait.js';
 export { deployProgram } from './deploy.js';
+export type { ReplyResult, SendAndWaitOptions, SendPath } from './send-and-wait.js';
 export { sendAndWaitForReply } from './send-and-wait.js';
 
 /**

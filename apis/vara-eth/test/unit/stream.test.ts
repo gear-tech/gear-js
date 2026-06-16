@@ -7,9 +7,8 @@
  */
 
 import type { PublicClient } from 'viem';
-
-import { watchBlocks, watchProgramEvents, watchRouterEvents } from '../../src/api/stream/index.js';
 import type { ProgramEvent, RouterEvent, StreamedBlockHeader } from '../../src/api/stream/index.js';
+import { watchBlocks, watchProgramEvents, watchRouterEvents } from '../../src/api/stream/index.js';
 
 type ContractEventCall = {
   address: `0x${string}`;
@@ -28,7 +27,7 @@ function makeStubPublicClient() {
   const watchContractEventCalls: ContractEventCall[] = [];
   const watchBlocksCalls: BlocksCall[] = [];
 
-  const unwatch = jest.fn();
+  const unwatch = vi.fn();
 
   const stub = {
     watchContractEvent: (params: ContractEventCall) => {
@@ -56,7 +55,12 @@ describe('watchProgramEvents', () => {
   it('passes mirror address and fromBlock through to watchContractEvent', () => {
     const { stub, watchContractEventCalls, unwatch } = makeStubPublicClient();
 
-    const stop = watchProgramEvents(stub, '0x1234567890123456789012345678901234567890', { onEvent: jest.fn() }, { fromBlock: 999n });
+    const stop = watchProgramEvents(
+      stub,
+      '0x1234567890123456789012345678901234567890',
+      { onEvent: vi.fn() },
+      { fromBlock: 999n },
+    );
 
     expect(watchContractEventCalls).toHaveLength(1);
     expect(watchContractEventCalls[0].address).toBe('0x1234567890123456789012345678901234567890');
@@ -67,7 +71,7 @@ describe('watchProgramEvents', () => {
 
   it('decodes Message events with full args', () => {
     const { stub, watchContractEventCalls } = makeStubPublicClient();
-    const onEvent = jest.fn<void, [ProgramEvent]>();
+    const onEvent = vi.fn<void, [ProgramEvent]>();
     watchProgramEvents(stub, '0x1111111111111111111111111111111111111111', { onEvent });
 
     watchContractEventCalls[0].onLogs([
@@ -103,7 +107,11 @@ describe('watchProgramEvents', () => {
     });
 
     const cases: Array<{ eventName: string; args: Record<string, unknown>; expectedType: ProgramEvent['type'] }> = [
-      { eventName: 'ExecutableBalanceTopUpRequested', args: { value: 1n }, expectedType: 'ExecutableBalanceTopUpRequested' },
+      {
+        eventName: 'ExecutableBalanceTopUpRequested',
+        args: { value: 1n },
+        expectedType: 'ExecutableBalanceTopUpRequested',
+      },
       {
         eventName: 'MessageCallFailed',
         args: { id: '0x01', destination: '0xaa', value: 2n },
@@ -115,14 +123,26 @@ describe('watchProgramEvents', () => {
         expectedType: 'MessageQueueingRequested',
       },
       { eventName: 'OwnedBalanceTopUpRequested', args: { value: 4n }, expectedType: 'OwnedBalanceTopUpRequested' },
-      { eventName: 'Reply', args: { payload: '0x0', value: 5n, replyTo: '0x03', replyCode: '0x00000000' }, expectedType: 'Reply' },
-      { eventName: 'ReplyCallFailed', args: { value: 6n, replyTo: '0x04', replyCode: '0x11111111' }, expectedType: 'ReplyCallFailed' },
+      {
+        eventName: 'Reply',
+        args: { payload: '0x0', value: 5n, replyTo: '0x03', replyCode: '0x00000000' },
+        expectedType: 'Reply',
+      },
+      {
+        eventName: 'ReplyCallFailed',
+        args: { value: 6n, replyTo: '0x04', replyCode: '0x11111111' },
+        expectedType: 'ReplyCallFailed',
+      },
       {
         eventName: 'ReplyQueueingRequested',
         args: { repliedTo: '0x05', source: '0xdd', payload: '0xab', value: 7n },
         expectedType: 'ReplyQueueingRequested',
       },
-      { eventName: 'ReplyTransferFailed', args: { destination: '0xee', value: 8n }, expectedType: 'ReplyTransferFailed' },
+      {
+        eventName: 'ReplyTransferFailed',
+        args: { destination: '0xee', value: 8n },
+        expectedType: 'ReplyTransferFailed',
+      },
       { eventName: 'StateChanged', args: { stateHash: '0x06' }, expectedType: 'StateChanged' },
       {
         eventName: 'TransferLockedValueToInheritorFailed',
@@ -131,7 +151,11 @@ describe('watchProgramEvents', () => {
       },
       { eventName: 'ValueClaimFailed', args: { claimedId: '0x07', value: 10n }, expectedType: 'ValueClaimFailed' },
       { eventName: 'ValueClaimed', args: { claimedId: '0x08', value: 11n }, expectedType: 'ValueClaimed' },
-      { eventName: 'ValueClaimingRequested', args: { claimedId: '0x09', source: '0x99' }, expectedType: 'ValueClaimingRequested' },
+      {
+        eventName: 'ValueClaimingRequested',
+        args: { claimedId: '0x09', source: '0x99' },
+        expectedType: 'ValueClaimingRequested',
+      },
     ];
 
     watchContractEventCalls[0].onLogs(cases.map((c) => ({ ...META_LOG, eventName: c.eventName, args: c.args })));
@@ -144,7 +168,7 @@ describe('watchProgramEvents', () => {
 
   it('skips logs with null blockNumber/blockHash/txHash (pending logs)', () => {
     const { stub, watchContractEventCalls } = makeStubPublicClient();
-    const onEvent = jest.fn();
+    const onEvent = vi.fn();
     watchProgramEvents(stub, '0x1111111111111111111111111111111111111111', { onEvent });
 
     watchContractEventCalls[0].onLogs([
@@ -164,7 +188,7 @@ describe('watchProgramEvents', () => {
 
   it('skips logs with unknown eventName', () => {
     const { stub, watchContractEventCalls } = makeStubPublicClient();
-    const onEvent = jest.fn();
+    const onEvent = vi.fn();
     watchProgramEvents(stub, '0x1111111111111111111111111111111111111111', { onEvent });
 
     watchContractEventCalls[0].onLogs([{ ...META_LOG, eventName: 'SomeNewEvent', args: {} }]);
@@ -173,8 +197,8 @@ describe('watchProgramEvents', () => {
 
   it('forwards onError to viem', () => {
     const { stub, watchContractEventCalls } = makeStubPublicClient();
-    const onError = jest.fn();
-    watchProgramEvents(stub, '0x1111111111111111111111111111111111111111', { onEvent: jest.fn(), onError });
+    const onError = vi.fn();
+    watchProgramEvents(stub, '0x1111111111111111111111111111111111111111', { onEvent: vi.fn(), onError });
     expect(watchContractEventCalls[0].onError).toBe(onError);
   });
 });
@@ -182,7 +206,12 @@ describe('watchProgramEvents', () => {
 describe('watchRouterEvents', () => {
   it('passes router address and fromBlock through', () => {
     const { stub, watchContractEventCalls, unwatch } = makeStubPublicClient();
-    const stop = watchRouterEvents(stub, '0xrouterrouterrouterrouterrouterrouterrouter' as `0x${string}`, { onEvent: jest.fn() }, { fromBlock: 555n });
+    const stop = watchRouterEvents(
+      stub,
+      '0xrouterrouterrouterrouterrouterrouterrouter' as `0x${string}`,
+      { onEvent: vi.fn() },
+      { fromBlock: 555n },
+    );
     expect(watchContractEventCalls[0].address).toBe('0xrouterrouterrouterrouterrouterrouterrouter');
     expect(watchContractEventCalls[0].fromBlock).toBe(555n);
     stop();
@@ -205,7 +234,11 @@ describe('watchRouterEvents', () => {
         expectedType: 'ComputationSettingsChanged',
       },
       { eventName: 'Initialized', args: { version: 3n }, expectedType: 'Initialized' },
-      { eventName: 'OwnershipTransferred', args: { previousOwner: '0xaa', newOwner: '0xbb' }, expectedType: 'OwnershipTransferred' },
+      {
+        eventName: 'OwnershipTransferred',
+        args: { previousOwner: '0xaa', newOwner: '0xbb' },
+        expectedType: 'OwnershipTransferred',
+      },
       { eventName: 'Paused', args: { account: '0xcc' }, expectedType: 'Paused' },
       { eventName: 'ProgramCreated', args: { actorId: '0xdd', codeId: '0x05' }, expectedType: 'ProgramCreated' },
       { eventName: 'StorageSlotChanged', args: { slot: '0x06' }, expectedType: 'StorageSlotChanged' },
@@ -247,10 +280,10 @@ describe('watchBlocks', () => {
 
   it('honours includePending option', () => {
     const { stub, watchBlocksCalls } = makeStubPublicClient();
-    watchBlocks(stub, { onEvent: jest.fn() });
+    watchBlocks(stub, { onEvent: vi.fn() });
     expect(watchBlocksCalls[0].blockTag).toBe('latest');
 
-    watchBlocks(stub, { onEvent: jest.fn() }, { includePending: true });
+    watchBlocks(stub, { onEvent: vi.fn() }, { includePending: true });
     expect(watchBlocksCalls[1].blockTag).toBe('pending');
   });
 });

@@ -394,14 +394,24 @@ export class RouterClient extends EIP712ContractClient<typeof IROUTER_ABI> imple
     return this._createRequestCodeValidationTxManager(data, code, codeId);
   }
 
-  async prepareAndSignRequestCodeValidationPermitData(code: Uint8Array, deadline: bigint) {
+  async prepareAndSignRequestCodeValidationPermitData(
+    code: Uint8Array,
+    deadline: bigint,
+    preComputedBlobHashes?: Hex[],
+  ) {
     assertViemFork();
     const signer = this._ensureSigner();
     const requester = await signer.getAddress();
 
-    await waitForKzg();
-    const blobs = simpleSidecarEncode(code);
-    const { blobVersionedHashes: blobHashes } = calculateBlobVersionedHashesAndCommitments(blobs);
+    let blobHashes: Hex[];
+    if (preComputedBlobHashes) {
+      blobHashes = preComputedBlobHashes;
+    } else {
+      await waitForKzg();
+      const blobs = simpleSidecarEncode(code);
+      ({ blobVersionedHashes: blobHashes } = calculateBlobVersionedHashesAndCommitments(blobs));
+    }
+
     const codeId = generateCodeHash(code);
 
     const [nonce, domain] = await Promise.all([this.nonces(requester), this.eip712Domain()]);

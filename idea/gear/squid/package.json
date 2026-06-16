@@ -2,11 +2,12 @@
   "name": "gear-idea-squid",
   "version": "1.4.26",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "start": "node lib/main.js",
+    "start": "node --no-experimental-websocket --trace-deprecation lib/main.js",
     "run-with-migrations": "squid-typeorm-migration apply && node lib/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "build": "rm -rf lib && npx tsc --build",
@@ -22,17 +23,17 @@
     "@subsquid/typeorm-migration": "1.3.1",
     "@subsquid/typeorm-store": "1.9.1",
     "dotenv": "17.4.2",
+    "gear-idea-common": "1.4.26",
     "gear-idea-indexer-db": "1.4.26",
     "pg": "8.20.0",
-    "redis": "5.12.1",
     "reflect-metadata": "0.2.2",
-    "sails-js": "0.5.1",
+    "sails-js": "1.0.0",
+    "sails-js-parser": "^0.5.1",
     "typeorm": "0.3.29"
   },
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "3.2.0",
     "@subsquid/substrate-typegen": "8.1.0",
-    "@subsquid/typeorm-codegen": "2.2.0",
-    "@types/redis": "^4.0.11"
+    "@subsquid/typeorm-codegen": "2.2.0"
   }
 }

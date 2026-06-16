@@ -159,9 +159,7 @@ export class RpcConnectionError extends VaraEthError {
   constructor(endpoint: string | undefined, cause?: unknown) {
     super(
       VaraEthErrorCode.RpcConnectionFailed,
-      endpoint
-        ? `Failed to reach Vara.Eth RPC at ${endpoint}.`
-        : 'Failed to reach Vara.Eth RPC.',
+      endpoint ? `Failed to reach Vara.Eth RPC at ${endpoint}.` : 'Failed to reach Vara.Eth RPC.',
       { cause },
     );
     this.endpoint = endpoint;
@@ -191,11 +189,7 @@ export class MessageRevertedError extends VaraEthError {
   public readonly functionName: string;
 
   constructor(reason: string, functionName: string, cause?: unknown) {
-    super(
-      VaraEthErrorCode.MessageReverted,
-      `${functionName} reverted: ${reason}`,
-      { cause },
-    );
+    super(VaraEthErrorCode.MessageReverted, `${functionName} reverted: ${reason}`, { cause });
     this.reason = reason;
     this.functionName = functionName;
   }

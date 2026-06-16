@@ -28,9 +28,7 @@ function probe(): { ok: boolean; detail: string } {
     // a top-level `import 'node:module'`. The indirect call form keeps the
     // expression opaque to static analysers, so bundlers don't try to
     // resolve `node:module` at bundle time.
-    const globalRequire = Function(
-      'return typeof require !== "undefined" ? require : null',
-    )() as NodeRequire | null;
+    const globalRequire = Function('return typeof require !== "undefined" ? require : null')() as NodeRequire | null;
 
     if (!globalRequire) {
       // ESM Node without a captured `require`. Without `createRequire` we

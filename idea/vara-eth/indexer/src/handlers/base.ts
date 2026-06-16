@@ -1,5 +1,6 @@
 import type { Logger } from '@subsquid/logger';
 import type { Entity } from '@subsquid/typeorm-store/lib/store.js';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
 
 import { type EntityType, HashRegistry } from '../model/index.js';
 import type { Context } from '../processor.js';
@@ -43,10 +44,10 @@ export abstract class BaseHandler {
     await this._defaultSave(this._hashes);
   }
 
-  protected _addHashEntry(ty: EntityType, hash: string, createdAt: Date) {
+  protected _addHashEntry(ty: EntityType, hash: PgByteaString, createdAt: Date) {
     const entry = new HashRegistry({
-      type: ty,
       id: hash,
+      type: ty,
       createdAt,
     });
 

@@ -1,17 +1,14 @@
 import type { Address } from 'viem';
 
 import type { EthereumClient } from '../../eth/index.js';
-import { watchBlocks, type WatchBlocksOptions } from './blocks.js';
-import { watchProgramEvents, type WatchProgramEventsOptions } from './program-events.js';
-import { watchRouterEvents, type WatchRouterEventsOptions } from './router-events.js';
-import type {
-  ProgramEvent,
-  RouterEvent,
-  StreamedBlockHeader,
-  StreamHandlers,
-  Unsubscribe,
-} from './types.js';
+import { type WatchBlocksOptions, watchBlocks } from './blocks.js';
+import { type WatchProgramEventsOptions, watchProgramEvents } from './program-events.js';
+import { type WatchRouterEventsOptions, watchRouterEvents } from './router-events.js';
+import type { ProgramEvent, RouterEvent, StreamedBlockHeader, StreamHandlers, Unsubscribe } from './types.js';
 
+export type { WatchBlocksOptions } from './blocks.js';
+export type { WatchProgramEventsOptions } from './program-events.js';
+export type { WatchRouterEventsOptions } from './router-events.js';
 export type {
   EventMeta,
   ProgramEvent,
@@ -22,9 +19,6 @@ export type {
   WatchEventsOptions,
 } from './types.js';
 export { buildEventMeta } from './types.js';
-export type { WatchBlocksOptions } from './blocks.js';
-export type { WatchProgramEventsOptions } from './program-events.js';
-export type { WatchRouterEventsOptions } from './router-events.js';
 export { watchBlocks, watchProgramEvents, watchRouterEvents };
 
 /**

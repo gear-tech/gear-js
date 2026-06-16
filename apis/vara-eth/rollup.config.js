@@ -21,9 +21,9 @@ function writeCjsPackageJson() {
   return {
     name: 'write-cjs-package-json',
     writeBundle(options) {
-      if (options.dir && options.dir.includes('cjs')) {
+      if (options.dir?.includes('cjs')) {
         mkdirSync(options.dir, { recursive: true });
-        writeFileSync(`${options.dir}/package.json`, JSON.stringify({ type: 'commonjs' }, null, 2) + '\n');
+        writeFileSync(`${options.dir}/package.json`, `${JSON.stringify({ type: 'commonjs' }, null, 2)}\n`);
       }
     },
   };

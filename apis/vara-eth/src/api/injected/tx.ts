@@ -11,6 +11,7 @@ import { isPoolProvider } from '../../provider/util.js';
 // Ethexe validators reject injected txs whose `reference_block` is older than
 // this many blocks. See `ethexe/common/src/injected.rs::REFERENCE_BLOCK_WINDOW`.
 const REFERENCE_BLOCK_WINDOW = 32;
+
 import type {
   IInjectedTransaction,
   IMessageSigner,
@@ -19,7 +20,8 @@ import type {
 } from '../../types/index.js';
 import { bigint128ToBytes } from '../../util/index.js';
 import { VARA_ETH_RPC_METHODS } from '../rpc.js';
-import { type InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
+import { InjectedTxPromise, type LegacyInjectedTransactionPromiseRaw } from './promise.js';
+import { type InjectedTransactionReceiptRaw, InjectedTxReceipt } from './receipt.js';
 
 export class InjectedTx {
   private _destination: Address;
@@ -35,6 +37,7 @@ export class InjectedTx {
     private _varaethProvider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
     private _ethClient: EthereumClient,
     tx: IInjectedTransaction,
+    private _apiVersion?: string | null,
   ) {
     this._destination = tx.destination;
     this._payload = tx.payload;
@@ -43,7 +46,7 @@ export class InjectedTx {
       this._referenceBlock = tx.referenceBlock;
     }
     this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
-    if (tx.recipient) {
+    if (tx.recipient && !this._apiVersion) {
       this._recipient = tx.recipient.toLowerCase() as Address;
       this._trySetActiveValidator(this._recipient);
     }
@@ -77,6 +80,10 @@ export class InjectedTx {
     return hexToBytes(this._payload);
   }
 
+  private get _payloadHashU8a(): Uint8Array {
+    return blake2b(this._payloadU8a, { dkLen: 32 });
+  }
+
   public get value(): bigint {
     return this._value;
   }
@@ -104,6 +111,20 @@ export class InjectedTx {
     return hexToBytes(this._salt);
   }
 
+  private get _saltHashU8a(): Uint8Array {
+    return blake2b(this._saltU8a, { dkLen: 32 });
+  }
+
+  private get _hashableBytes() {
+    return concatBytes([
+      this._destinationU8a,
+      this._payloadHashU8a,
+      this._valueU8a,
+      this._referenceBlockU8a,
+      this._saltHashU8a,
+    ]);
+  }
+
   private get _bytes() {
     return concatBytes([
       this._destinationU8a,
@@ -114,14 +135,18 @@ export class InjectedTx {
     ]);
   }
 
+  private get _bytesBasedOnVersion() {
+    return !this._apiVersion ? this._bytes : this._hashableBytes;
+  }
+
   public get hash(): Hex {
-    const hash = keccak_256(this._bytes);
+    const hash = keccak_256(this._bytesBasedOnVersion);
 
     return bytesToHex(hash);
   }
 
   public get messageId(): Hex {
-    const hash = blake2b(this._bytes, { dkLen: 32 });
+    const hash = blake2b(this._bytesBasedOnVersion, { dkLen: 32 });
 
     return bytesToHex(hash);
   }
@@ -187,6 +212,7 @@ export class InjectedTx {
   }
 
   /**
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Specify validator address the transaction is intended for
    * @param address - (optional) the validator address. If omitted, defaults to the validator assigned to the current slot via {@link setSlotValidator}. Use {@link setDefaultValidator} to explicitly target no specific validator.
    * @returns the validator address
@@ -209,6 +235,7 @@ export class InjectedTx {
   }
 
   /**
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Target the validator assigned to the current slot
    *
    * Computes the validator scheduled to process the imminent block using slot-based
@@ -248,6 +275,7 @@ export class InjectedTx {
   }
 
   /**
+   * @deprecated recipient field was removed from the transaction data. The method is to be removed in the next release
    * ## Let any validator process the transaction
    *
    * Sets the recipient to the zero address, signalling that no specific validator is
@@ -265,16 +293,26 @@ export class InjectedTx {
   }
 
   private get _rpcData() {
-    return [
-      {
-        recipient: this._recipient,
-        tx: {
+    if (!this._apiVersion) {
+      return [
+        {
+          recipient: this._recipient,
+          tx: {
+            data: this._data,
+            signature: this._signature,
+            address: this._account,
+          },
+        },
+      ];
+    } else {
+      return [
+        {
           data: this._data,
           signature: this._signature,
           address: this._account,
         },
-      },
-    ];
+      ];
+    }
   }
 
   /**
@@ -301,7 +339,7 @@ export class InjectedTx {
       await this.sign();
     }
 
-    if (!this._recipient) {
+    if (!this._recipient && !this._apiVersion) {
       await this.setRecipient();
     }
 
@@ -313,7 +351,18 @@ export class InjectedTx {
     return result;
   }
 
-  public async sendAndWaitForPromise(): Promise<InjectedTxPromise> {
+  /**
+   * Send the transaction and wait for the validator's signed receipt.
+   *
+   * Automatically signs and sets a reference block if not already done.
+   * Opens a subscription to `sendTransactionAndWatch` and resolves with an
+   * {@link InjectedTxReceipt} on the first notification. The subscription is
+   * cancelled immediately after the receipt arrives.
+   *
+   * Check {@link InjectedTxReceipt.error} to distinguish a successful Promise
+   * receipt from a Purged receipt before accessing reply data.
+   */
+  public async sendAndWaitForReceipt(): Promise<InjectedTxReceipt> {
     if (!this._referenceBlock) {
       await this.setReferenceBlock();
     }
@@ -322,15 +371,15 @@ export class InjectedTx {
       await this.sign();
     }
 
-    if (!this._recipient) {
+    if (!this._recipient && !this._apiVersion) {
       await this.setRecipient();
     }
 
     let unsub: (() => void) | undefined;
 
-    const promise = new Promise<InjectedTxPromise>((resolve, reject) => {
+    const promise = new Promise<InjectedTxReceipt>((resolve, reject) => {
       this._varaethProvider
-        .subscribe<unknown, InjectedTransactionPromiseRaw>(
+        .subscribe<unknown, unknown>(
           VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.subscribe,
           VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.unsubscribe,
           this._rpcData,
@@ -338,7 +387,60 @@ export class InjectedTx {
             if (error) {
               reject(error);
             } else {
-              resolve(new InjectedTxPromise(result, this._ethClient));
+              resolve(new InjectedTxReceipt(result as InjectedTransactionReceiptRaw, this._ethClient));
+            }
+          },
+        )
+        .then((unsubFn) => {
+          unsub = unsubFn;
+        })
+        .catch(reject);
+    });
+
+    try {
+      return await promise;
+    } finally {
+      if (unsub) {
+        unsub();
+      }
+    }
+  }
+
+  /**
+   *
+   * @deprecated The RPC method has been changed and is to be removed in the next release.
+   * Use {@link sendAndWaitForReceipt} instead
+   */
+  public async sendAndWaitForPromise(): Promise<InjectedTxPromise | InjectedTxReceipt> {
+    if (!this._referenceBlock) {
+      await this.setReferenceBlock();
+    }
+
+    if (!this._signature) {
+      await this.sign();
+    }
+
+    if (!this._recipient && !this._apiVersion) {
+      await this.setRecipient();
+    }
+
+    let unsub: (() => void) | undefined;
+
+    const promise = new Promise<InjectedTxPromise | InjectedTxReceipt>((resolve, reject) => {
+      this._varaethProvider
+        .subscribe<unknown, unknown>(
+          VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.subscribe,
+          VARA_ETH_RPC_METHODS.injected.sendTransactionAndWatch.unsubscribe,
+          this._rpcData,
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              if (!this._apiVersion) {
+                resolve(new InjectedTxPromise(result as LegacyInjectedTransactionPromiseRaw, this._ethClient));
+              } else {
+                resolve(new InjectedTxReceipt(result as InjectedTransactionReceiptRaw, this._ethClient));
+              }
             }
           },
         )

@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MessageRequest, MessageSent } from '@vara-eth/idea-indexer-db';
+import { MessageRequest, MessageSent, type PgByteaString } from '@vara-eth/idea-indexer-db';
+import { plainToInstance } from 'class-transformer';
 import { Between, type FindOptionsWhere, type Repository } from 'typeorm';
 
 import type { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toByteaBuffer } from '../../common/utils/hex.util.js';
+import { MessageRequestResponseDto } from './dto/message-request-response.dto.js';
+import { MessageSentResponseDto } from './dto/message-sent-response.dto.js';
 import type { QueryMessagesDto } from './dto/query-messages.dto.js';
 
 @Injectable()
@@ -16,17 +18,17 @@ export class MessagesService {
     private readonly _messageSentRepository: Repository<MessageSent>,
   ) {}
 
-  async findAllRequests(query: QueryMessagesDto): Promise<PaginatedResponse<MessageRequest>> {
-    const { limit, offset, sortBy, order, programId, sourceAddress, fromBlock, toBlock } = query;
+  async findAllRequests(query: QueryMessagesDto): Promise<PaginatedResponse<MessageRequestResponseDto>> {
+    const { limit, offset, programId, sourceAddress, fromBlock, toBlock } = query;
 
     const where: FindOptionsWhere<MessageRequest> = {};
 
     if (programId) {
-      where.programId = programId.toLowerCase();
+      where.programId = programId;
     }
 
     if (sourceAddress) {
-      where.sourceAddress = toByteaBuffer(sourceAddress);
+      where.sourceAddress = sourceAddress;
     }
 
     if (fromBlock !== undefined && toBlock !== undefined) {
@@ -42,25 +44,25 @@ export class MessagesService {
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        createdAt: 'DESC',
       },
     });
 
     return {
-      data,
+      data: plainToInstance(MessageRequestResponseDto, data, { excludeExtraneousValues: true }),
       total,
       limit: limit!,
       offset: offset!,
     };
   }
 
-  async findAllSent(query: QueryMessagesDto): Promise<PaginatedResponse<MessageSent>> {
-    const { limit, offset, order, programId } = query;
+  async findAllSent(query: QueryMessagesDto): Promise<PaginatedResponse<MessageSentResponseDto>> {
+    const { limit, offset, programId } = query;
 
     const where: FindOptionsWhere<MessageSent> = {};
 
     if (programId) {
-      where.sourceProgramId = programId.toLowerCase();
+      where.sourceProgramId = programId;
     }
 
     const [data, total] = await this._messageSentRepository.findAndCount({
@@ -68,21 +70,21 @@ export class MessagesService {
       take: limit,
       skip: offset,
       order: {
-        createdAt: order,
+        createdAt: 'DESC',
       },
     });
 
     return {
-      data,
+      data: plainToInstance(MessageSentResponseDto, data, { excludeExtraneousValues: true }),
       total,
       limit: limit!,
       offset: offset!,
     };
   }
 
-  async findOneRequest(id: string): Promise<MessageRequest> {
+  async findOneRequest(id: PgByteaString): Promise<MessageRequestResponseDto> {
     const message = await this._messageRequestRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
       relations: ['program'],
     });
 
@@ -90,12 +92,12 @@ export class MessagesService {
       throw new NotFoundException(`Message request with ID ${id} not found`);
     }
 
-    return message;
+    return plainToInstance(MessageRequestResponseDto, message, { excludeExtraneousValues: true });
   }
 
-  async findOneSent(id: string): Promise<MessageSent> {
+  async findOneSent(id: PgByteaString): Promise<MessageSentResponseDto> {
     const message = await this._messageSentRepository.findOne({
-      where: { id: id.toLowerCase() },
+      where: { id },
       relations: ['sourceProgram', 'stateTransition'],
     });
 
@@ -103,6 +105,6 @@ export class MessagesService {
       throw new NotFoundException(`Message sent with ID ${id} not found`);
     }
 
-    return message;
+    return plainToInstance(MessageSentResponseDto, message, { excludeExtraneousValues: true });
   }
 }

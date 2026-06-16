@@ -1,4 +1,4 @@
-module.exports = class ReplyCodeField1744186453021 {
+export default class ReplyCodeField1744186453021 {
   name = 'ReplyCodeField1744186453021';
 
   async up(db) {
@@ -8,4 +8,4 @@ module.exports = class ReplyCodeField1744186453021 {
   async down(db) {
     await db.query(`ALTER TABLE "message_from_program" DROP COLUMN "reply_code"`);
   }
-};
+}

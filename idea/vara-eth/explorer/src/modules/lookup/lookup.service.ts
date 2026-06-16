@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityType, HashRegistry } from '@vara-eth/idea-indexer-db';
+import { EntityType, HashRegistry, type PgByteaString } from '@vara-eth/idea-indexer-db';
 import type { Repository } from 'typeorm';
 
 import { BatchesService } from '../batches/batches.service.js';
@@ -36,17 +36,15 @@ export class LookupService {
     private readonly transactionsService: TransactionsService,
   ) {}
 
-  async lookupByHash(hash: string): Promise<EntityResult> {
-    // Step 1: Look up the hash in the registry
+  async lookupByHash(hash: PgByteaString): Promise<EntityResult> {
     const registry = await this.hashRegistryRepository.findOne({
-      where: { id: hash.toLowerCase() },
+      where: { id: hash },
     });
 
     if (!registry) {
       throw new NotFoundException(`Hash ${hash} not found`);
     }
 
-    // Step 2: Find the corresponding entity in the target table based on type
     switch (registry.type) {
       case EntityType.Batch: {
         const data = await this.batchesService.findOne(hash);
@@ -84,7 +82,6 @@ export class LookupService {
       }
 
       case EntityType.Announces: {
-        // Announces are not stored in a separate table
         return { type: 'Announces', data: null };
       }
 

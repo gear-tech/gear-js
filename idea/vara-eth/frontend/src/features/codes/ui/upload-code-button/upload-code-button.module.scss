@@ -1,0 +1,23 @@
+.input {
+  display: none;
+}
+
+.feeInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.insufficientBalance {
+  font-size: 12px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--destructive) 10%, transparent);
+
+  a {
+    color: var(--primary);
+  }
+}

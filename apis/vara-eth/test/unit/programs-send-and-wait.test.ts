@@ -21,7 +21,7 @@ function makeMockEthClient() {
     publicClient: {} as never,
     signer: { getAddress: async () => '0xabc' as Address },
     getBlockNumber: async () => 100,
-    getBlock: async () => ({ hash: '0x' + '00'.repeat(32) }),
+    getBlock: async () => ({ hash: `0x${'00'.repeat(32)}` }),
     router: { address: '0xrouter' as Address },
   } as never;
 }
@@ -53,7 +53,7 @@ function makeFakeTx(log: CallLog) {
 }
 
 // Patch the `getMirrorClient` re-export by mocking the contracts module entry.
-jest.mock('../../src/eth/contracts/mirror.contract.js', () => {
+vi.mock('../../src/eth/contracts/mirror.contract.js', () => {
   let captured: { log: CallLog } | null = null;
   return {
     __setCallLog(log: CallLog) {
@@ -69,8 +69,11 @@ jest.mock('../../src/eth/contracts/mirror.contract.js', () => {
   };
 });
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mirrorMock = require('../../src/eth/contracts/mirror.contract.js');
+const mirrorMock = (await import(
+  '../../src/eth/contracts/mirror.contract.js'
+)) as typeof import('../../src/eth/contracts/mirror.contract.js') & {
+  __setCallLog(log: CallLog): void;
+};
 
 describe('sendAndWaitForReply (Fix 1.1 + ethexe-alignment value reject)', () => {
   it('rejects non-zero value on via=injected before signing (ethexe-rpc relay rejects it server-side)', async () => {
@@ -78,13 +81,13 @@ describe('sendAndWaitForReply (Fix 1.1 + ethexe-alignment value reject)', () => 
     mirrorMock.__setCallLog(log);
 
     const ethClient = makeMockEthClient();
-    const createInjectedTransaction = jest.fn();
+    const createInjectedTransaction = vi.fn();
 
     await expect(
       sendAndWaitForReply(
         createInjectedTransaction as never,
         ethClient,
-        ('0x' + '11'.repeat(20)) as Address,
+        `0x${'11'.repeat(20)}` as Address,
         '0xfeed' as Hex,
         { via: 'injected', value: 1n },
       ),
@@ -106,7 +109,7 @@ describe('sendAndWaitForReply (Fix 1.1 + ethexe-alignment value reject)', () => 
     const result = await sendAndWaitForReply(
       createInjectedTransaction,
       ethClient,
-      '0x' + '11'.repeat(20) as Address,
+      `0x${'11'.repeat(20)}` as Address,
       '0xfeed' as Hex,
       { via: 'eth' },
     );

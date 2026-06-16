@@ -6,11 +6,13 @@ import {
   Code,
   EthereumTx,
   HashRegistry,
+  InjectedTransaction,
   MessageRequest,
   MessageSent,
   Program,
   ReplyRequest,
   ReplySent,
+  RouterImplementation,
   StateTransition,
 } from './entities/index.js';
 
@@ -26,6 +28,7 @@ const AppDataSource = new DataSource({
     Code,
     Batch,
     HashRegistry,
+    InjectedTransaction,
     Program,
     StateTransition,
     EthereumTx,
@@ -33,6 +36,7 @@ const AppDataSource = new DataSource({
     MessageSent,
     ReplyRequest,
     ReplySent,
+    RouterImplementation,
   ],
   migrations: ['db/migrations/*.js'],
 });

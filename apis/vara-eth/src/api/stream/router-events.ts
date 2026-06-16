@@ -1,7 +1,13 @@
 import type { Address, Hex, Log, PublicClient } from 'viem';
 
 import { IROUTER_ABI } from '../../eth/abi/IRouter.js';
-import { decodeEventHeader, type RouterEvent, type StreamHandlers, type Unsubscribe, type WatchEventsOptions } from './types.js';
+import {
+  decodeEventHeader,
+  type RouterEvent,
+  type StreamHandlers,
+  type Unsubscribe,
+  type WatchEventsOptions,
+} from './types.js';
 
 export type WatchRouterEventsOptions = WatchEventsOptions;
 

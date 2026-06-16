@@ -1,6 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+import { IsOptional, IsString } from 'class-validator';
+
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
+import { TransformToBytea } from '../../../common/utils/hex.util.js';
 
 export class QueryRepliesDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -8,21 +11,14 @@ export class QueryRepliesDto extends PaginationDto {
   })
   @IsOptional()
   @IsString()
-  programId?: string;
+  @TransformToBytea()
+  programId?: PgByteaString;
 
   @ApiPropertyOptional({
     description: 'Filter by replied to message ID (for sent replies)',
   })
   @IsOptional()
   @IsString()
-  repliedToId?: string;
-
-  @ApiPropertyOptional({
-    description: 'Sort field',
-    enum: ['createdAt', 'blockNumber'],
-    default: 'createdAt',
-  })
-  @IsOptional()
-  @IsIn(['createdAt', 'blockNumber'])
-  sortBy?: 'createdAt' | 'blockNumber' = 'createdAt';
+  @TransformToBytea()
+  repliedToId?: PgByteaString;
 }

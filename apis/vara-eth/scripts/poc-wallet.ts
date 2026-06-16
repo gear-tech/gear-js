@@ -31,7 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
-import { createPublicClient, http, type Address, type Hex } from 'viem';
+import { type Address, createPublicClient, type Hex, http } from 'viem';
 
 import { createVaraEthApi, WsVaraEthProvider } from '../src/index.js';
 import { privateKeyToLocalSigner } from '../src/signer/adapters/local.js';

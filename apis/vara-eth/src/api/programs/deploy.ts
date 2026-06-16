@@ -94,11 +94,7 @@ export async function deployProgram(
   // leak unused WVARA allowance to the router.
   const codeFee = await router.requestCodeValidationBaseFee();
 
-  const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(
-    router.address,
-    codeFee,
-    codeFeeDeadline,
-  );
+  const { signature: codePermitSig } = await wvara.prepareAndSignPermitData(router.address, codeFee, codeFeeDeadline);
 
   const codeTx = await router.requestCodeValidation(code, codeFeeDeadline, codePermitSig);
   const codeValidationReceipt = await codeTx.sendAndWaitForReceipt();
@@ -122,11 +118,7 @@ export async function deployProgram(
   let executableBalancePermit: { amount: bigint; deadline: bigint; signature: Hex } | undefined;
   if (executableBalanceAmount > 0n) {
     const execDeadline = makePermitDeadline();
-    const { signature } = await wvara.prepareAndSignPermitData(
-      router.address,
-      executableBalanceAmount,
-      execDeadline,
-    );
+    const { signature } = await wvara.prepareAndSignPermitData(router.address, executableBalanceAmount, execDeadline);
     executableBalancePermit = {
       amount: executableBalanceAmount,
       deadline: execDeadline,

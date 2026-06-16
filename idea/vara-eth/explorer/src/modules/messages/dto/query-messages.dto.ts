@@ -1,7 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+import { IsOptional, IsString } from 'class-validator';
 
 import { PaginatedBlockRangeDTO } from '../../../common/dto/range.dto.js';
+import { TransformToBytea } from '../../../common/utils/hex.util.js';
 
 export class QueryMessagesDto extends PaginatedBlockRangeDTO {
   @ApiPropertyOptional({
@@ -9,21 +11,14 @@ export class QueryMessagesDto extends PaginatedBlockRangeDTO {
   })
   @IsOptional()
   @IsString()
-  programId?: string;
+  @TransformToBytea()
+  programId?: PgByteaString;
 
   @ApiPropertyOptional({
     description: 'Filter by source address (for requests)',
   })
   @IsOptional()
   @IsString()
-  sourceAddress?: string;
-
-  @ApiPropertyOptional({
-    description: 'Sort field',
-    enum: ['createdAt', 'blockNumber'],
-    default: 'createdAt',
-  })
-  @IsOptional()
-  @IsIn(['createdAt', 'blockNumber'])
-  sortBy?: 'createdAt' | 'blockNumber' = 'createdAt';
+  @TransformToBytea()
+  sourceAddress?: PgByteaString;
 }

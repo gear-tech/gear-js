@@ -1,5 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
+import type { PgByteaString } from '../helpers/index.js';
+
+@Index('idx_eth_tx_sender_created_at', ['sender', 'createdAt'])
+@Index('idx_eth_tx_created_at', ['createdAt'])
 @Entity('ethereum_tx')
 export class EthereumTx {
   constructor(props?: Partial<EthereumTx>) {
@@ -7,23 +11,23 @@ export class EthereumTx {
   }
 
   @PrimaryColumn()
-  id: string;
+  id: PgByteaString;
 
-  @Column({ name: 'contract_address', type: 'bytea' })
-  contractAddress: Buffer;
-
-  @Column({ type: 'varchar', length: 10 })
-  selector: string;
+  @Column({ type: 'bytea', name: 'contract_address' })
+  contractAddress: PgByteaString;
 
   @Column({ type: 'bytea' })
-  data: Buffer;
+  sender: PgByteaString;
 
   @Column({ type: 'bytea' })
-  sender: Buffer;
+  selector: PgByteaString;
 
   @Column({ type: 'bigint', name: 'block_number' })
   blockNumber: bigint;
 
-  @Column({ type: 'timestamp without time zone', name: 'created_at' })
+  @Column({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
+
+  @Column({ type: 'bytea' })
+  data: PgByteaString;
 }
