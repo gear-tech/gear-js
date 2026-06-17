@@ -99,7 +99,7 @@ jobs:
       - name: "Build frontends"
         run: |
             yarn lerna run build --scope @gear-js/api --scope @vara-eth/api
-            yarn lerna run build --scope gear-idea-frontend varaeth-idea-frontend
+            yarn lerna run build --scope gear-idea-frontend --scope varaeth-idea-frontend
 
   test-ui:
     runs-on: ubuntu-latest

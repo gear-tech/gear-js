@@ -125,8 +125,8 @@ function waitForPort(port: number, retries = 30, delayMs = 1000): Promise<void> 
   });
 }
 
-export default async () => {
+export async function setup() {
   setupCodeId();
 
   await setupVaraEth();
-};
+}

@@ -14,7 +14,7 @@
     "strict": true,
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "exclude": ["node_modules", "lib"]
 }
