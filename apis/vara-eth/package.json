@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.5.1",
+  "version": "0.6.0-rc.0",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",
@@ -13,11 +13,16 @@
   "scripts": {
     "test": "npx vitest run",
     "test:only": "npx vitest run",
+    "test:unit": "npx vitest run --config vitest.unit.config.ts",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
+    "poc:ethexe": "npx tsx scripts/poc-wallet.ts",
+    "typecheck:poc": "npx tsc --project scripts/tsconfig.poc.json",
     "pack": "mkdir -p ../../artifacts && yarn pack --out ../../artifacts/vara-eth-api.tgz"
   },
+  "main": "./lib/cjs/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -27,27 +32,27 @@
     "./abi": {
       "types": "./lib/eth/abi/index.d.ts",
       "import": "./lib/eth/abi/index.js",
-      "require": "./lib/eth/abi/index.cjs"
+      "require": "./lib/cjs/eth/abi/index.js"
     },
     "./signer": {
       "types": "./lib/signer/index.d.ts",
       "import": "./lib/signer/index.js",
-      "require": "./lib/signer/index.cjs"
+      "require": "./lib/cjs/signer/index.js"
     },
     "./eth/contracts": {
       "types": "./lib/eth/contracts/index.d.ts",
       "import": "./lib/eth/contracts/index.js",
-      "require": "./lib/eth/contracts/index.cjs"
+      "require": "./lib/cjs/eth/contracts/index.js"
     },
     "./eth/router": {
       "types": "./lib/eth/contracts/router.contract.d.ts",
       "import": "./lib/eth/contracts/router.contract.js",
-      "require": "./lib/eth/contracts/router.contract.cjs"
+      "require": "./lib/cjs/eth/contracts/router.contract.js"
     },
     "./util": {
       "types": "./lib/util/index.d.ts",
       "import": "./lib/util/index.js",
-      "require": "./lib/util/index.cjs"
+      "require": "./lib/cjs/util/index.js"
     }
   },
   "peerDependencies": {

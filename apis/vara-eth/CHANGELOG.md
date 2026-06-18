@@ -4,10 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.6.0-rc.0] - wallet helpers, streams, and typed errors
+
+### Added
+- **`MessageRevertedError`** - thrown by `MirrorClient.sendMessage` and `MirrorClient.sendReply` when on-chain simulation reverts. Carries `reason`, `functionName`, the stable `MESSAGE_REVERTED` code, and the original viem error as `cause`.
+- **`api.stream` namespace** - typed event subscriptions for Router events, Mirror events, and block headers, plus standalone `watchProgramEvents`, `watchRouterEvents`, and `watchBlocks` exports.
+- **High-level wallet helpers** - `api.programs.deploy(code, opts)`, `api.programs.sendAndWait(mirror, payload, opts)`, and `api.fees.estimate(op)`.
+- **Typed public errors** - `VaraEthError` plus named subclasses for viem-fork checks, stale injected transactions, promise timeouts/signature failures, permits, blob pricing, code-validation timeouts, missing Sails IDL, RPC connection failures, chain mismatches, and message reverts.
+- **`LocalSigner`** and `privateKeyToLocalSigner(privateKey, publicClient)` for scripts, CLIs, and agent flows.
+- **Sails IDL extraction** via `extractSailsIdl(wasm)` and `extractSailsIdlOrThrow(wasm)`.
+- **Viem-fork runtime check** via `assertViemFork()` on code-validation write paths.
+- **Phase 0 dev script** at `scripts/poc-wallet.ts`, with `yarn poc:ethexe` and `yarn typecheck:poc`.
 
 ### Changed
 - `@noble/hashes` bumped to 2.2.0 (https://github.com/gear-tech/gear-js/pull/2528)
+
+### Fixed
+- `api.programs.sendAndWait({ via: 'eth' })` now explicitly submits the transaction before wiring the reply listener.
+- `LocalSigner` construction now routes through viem's `custom({ request: publicClient.request })` instead of reusing a constructed transport as a factory.
+- Browser bundles no longer try to resolve `node:module` from `src/util/viem-fork.ts`.
+- `deployProgram` now bounds `CodeGotValidated` waits with `codeValidationTimeoutMs` and throws `CodeValidationTimeoutError` with resume data.
+- `deployProgram` signs executable-balance permits after code validation resolves so the deadline is fresh.
+- `InjectedTx.setReferenceBlock(suppliedHash)` pre-checks explicit reference blocks against the 32-block validity window.
+- `deployProgram` and `api.fees.estimate({ type: 'uploadCode' })` use only `requestCodeValidationBaseFee` for the direct validation path.
+- `api.programs.sendAndWait({ via: 'injected', value: > 0n })` throws client-side before signing.
+- `SendAndWaitOptions` documents zero-address injected recipient semantics as next-slot producer routing.
+- `PermitExpiredError` docs clarify Router permit fallback behavior.
+- `feeHistory.baseFeePerBlobGas` access is narrowed for the `@vara-eth/viem` fork.
+
+### Tests
+- Added unit coverage for IDL extraction, JS-side injected signing fixtures, injected stale-block checks, local signer construction, deploy timeout behavior, send-and-wait behavior, streams, and typed message reverts.
 
 ## [0.5.1]
 

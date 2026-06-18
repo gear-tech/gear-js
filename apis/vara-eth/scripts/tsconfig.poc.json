@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "./out",
+    "noEmit": true,
+    "declaration": false,
+    "allowJs": false
+  },
+  "include": ["./poc-wallet.ts", "../src/**/*.ts"],
+  "exclude": ["../node_modules", "../lib"]
+}

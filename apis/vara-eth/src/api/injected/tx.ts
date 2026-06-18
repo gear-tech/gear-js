@@ -4,8 +4,14 @@ import { randomBytes } from '@noble/hashes/utils.js';
 import type { Address, Hash, Hex } from 'viem';
 import { bytesToHex, concatBytes, hexToBytes, zeroAddress } from 'viem';
 
+import { InjectedTxStaleError } from '../../errors/vara-eth-error.js';
 import type { EthereumClient } from '../../eth/index.js';
 import { isPoolProvider } from '../../provider/util.js';
+
+// Ethexe validators reject injected txs whose `reference_block` is older than
+// this many blocks. See `ethexe/common/src/injected.rs::REFERENCE_BLOCK_WINDOW`.
+const REFERENCE_BLOCK_WINDOW = 32;
+
 import type {
   IInjectedTransaction,
   IMessageSigner,
@@ -171,12 +177,35 @@ export class InjectedTx {
 
   public async setReferenceBlock(blockHash?: Hash) {
     if (blockHash) {
+      // Reject reference blocks outside the 32-block validity window before
+      // signing. Without this pre-check, validator-side rejection surfaces as
+      // an opaque RPC error far from the call site. Fetch supplied-block and
+      // head-number in parallel — saves an RTT on the success (in-window) path.
+      // Transient RPC failures fall through silently so downstream signing can
+      // surface the real cause; programmer errors (TypeError/RangeError) are
+      // re-thrown so bugs in this path aren't masked.
+      try {
+        const [block, headNumber] = await Promise.all([
+          this._ethClient.publicClient.getBlock({ blockHash }),
+          this._ethClient.getBlockNumber(),
+        ]);
+        if (block.number !== null && headNumber - Number(block.number) > REFERENCE_BLOCK_WINDOW) {
+          throw new InjectedTxStaleError(blockHash as Hex, BigInt(headNumber));
+        }
+      } catch (err) {
+        if (err instanceof InjectedTxStaleError) throw err;
+        if (err instanceof TypeError || err instanceof RangeError) throw err;
+        // Transient RPC failure — proceed and let signing/submission surface it.
+      }
       this._referenceBlock = blockHash;
       return;
     }
 
     const latestBlockNumber = await this._ethClient.getBlockNumber();
-    const blockNumber = latestBlockNumber - 3; // TODO: move to consts, explain why such value
+    // Anchor 3 blocks back from head to tolerate small reorgs at the tip while
+    // staying inside the 32-block validity window. Tunable if reorg depth on
+    // the target chain ever exceeds 3.
+    const blockNumber = latestBlockNumber - 3;
 
     const block = await this._ethClient.getBlock(blockNumber);
     this._referenceBlock = block.hash;
