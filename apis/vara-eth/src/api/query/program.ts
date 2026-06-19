@@ -123,11 +123,15 @@ export class ProgramQueries {
       VARA_ETH_RPC_METHODS.program.subscribeBestState.subscribe,
       VARA_ETH_RPC_METHODS.program.subscribeBestState.unsubscribe,
       [programId],
-      (error, result) => {
-        if (result != null) {
-          Promise.resolve(onState(new ProgramBestState(result))).catch((err) => onError?.(err));
-        } else if (error) {
+      async (error, result) => {
+        if (error) {
           onError?.(error);
+        } else if (result != null) {
+          try {
+            await onState(new ProgramBestState(result));
+          } catch (err) {
+            onError?.(err);
+          }
         }
       },
     );

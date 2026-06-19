@@ -6,9 +6,24 @@ import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
-import { createVaraEthApi, getMirrorClient, type MirrorClient, type ProgramBestState, type VaraEthApi, WsVaraEthProvider } from '../src';
+import {
+  createVaraEthApi,
+  getMirrorClient,
+  type MirrorClient,
+  type ProgramBestState,
+  type VaraEthApi,
+  WsVaraEthProvider,
+} from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { expectDispatch, expectHex, expectMaybeHash, expectMessage, expectNumeric, hasProps, waitNBlocks } from './common';
+import {
+  expectDispatch,
+  expectHex,
+  expectMaybeHash,
+  expectMessage,
+  expectNumeric,
+  hasProps,
+  waitNBlocks,
+} from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -428,24 +443,19 @@ describe('Program Queries', () => {
     test(
       'should receive ProgramBestState on subscribeBestState after a message is sent',
       async () => {
-        let unsub: (() => void) | undefined;
-
-        const bestState = await new Promise<ProgramBestState>((resolve, reject) => {
-          api.query.program
-            .subscribeBestState(programId, resolve, reject)
-            .then((fn) => {
-              unsub = fn;
-            })
-            .catch(reject);
-
-          const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
-          api
-            .createInjectedTransaction({ destination: programId, payload })
-            .then((tx) => tx.sendAndWaitForReceipt())
-            .catch(reject);
+        let resolveState!: (state: ProgramBestState) => void;
+        const received = new Promise<ProgramBestState>((res) => {
+          resolveState = res;
         });
 
-        unsub?.();
+        const unsub = await api.query.program.subscribeBestState(programId, resolveState);
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+
+        const bestState = await received;
+        unsub();
 
         expectHex(bestState.mbHash);
         expectHex(bestState.newStateHash);
@@ -459,33 +469,25 @@ describe('Program Queries', () => {
       'should stop receiving updates after unsubscribing',
       async () => {
         let callCount = 0;
-        let unsub: (() => void) | undefined;
-
-        const firstUpdate = new Promise<void>((resolve, reject) => {
-          api.query.program
-            .subscribeBestState(
-              programId,
-              () => { callCount++; resolve(); },
-              reject,
-            )
-            .then((fn) => {
-              unsub = fn;
-            })
-            .catch(reject);
-
-          const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
-          api
-            .createInjectedTransaction({ destination: programId, payload })
-            .then((tx) => tx.sendAndWaitForReceipt())
-            .catch(reject);
+        let resolveFirst!: () => void;
+        const firstUpdate = new Promise<void>((res) => {
+          resolveFirst = res;
         });
 
-        await firstUpdate;
-        unsub?.();
+        const unsub = await api.query.program.subscribeBestState(programId, () => {
+          callCount++;
+          resolveFirst();
+        });
 
         const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
         const tx = await api.createInjectedTransaction({ destination: programId, payload });
         await tx.sendAndWaitForReceipt();
+
+        await firstUpdate;
+        unsub();
+
+        const tx2 = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx2.sendAndWaitForReceipt();
         await waitNBlocks(2);
 
         expect(callCount).toBe(1);
