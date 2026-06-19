@@ -1,9 +1,10 @@
 import type { Address } from 'viem';
 
-export type ISubscriptionCallback<Error = unknown, Result = unknown> = (
+export type ISubscriptionCallback<Error = unknown, Result = unknown> = ((
   error: Error,
-  result: Result,
-) => void | Promise<void>;
+  result: null,
+) => void | Promise<void>) &
+  ((error: null, result: Result) => void | Promise<void>);
 
 export interface IVaraEthProvider {
   connect(): Promise<void>;
