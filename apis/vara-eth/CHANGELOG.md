@@ -4,12 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.5.2]
 
 ### Added
-- `api.query.program.subscribeBestState(programId, onState, onError?)` — WebSocket subscription that delivers a `ProgramBestState` update on every micro-block that produces a state transition for the given program. Returns an unsubscribe function.
-- `ProgramBestState` — type representing a program's state transition within a computed MB: `mbHash`, `newStateHash`, and `messages`.
-- `Message` — type for outgoing messages in a `ProgramBestState`: `id`, `destination`, `payload`, `value` (bigint), `replyDetails`, and `call`.
+- `api.query.program.subscribeBestState(programId, onState, onError?)` — WebSocket subscription that delivers a `ProgramBestState` update on every micro-block that produces a state transition for the given program. Returns an unsubscribe function. (https://github.com/gear-tech/gear-js/pull/2539)
+- `ProgramBestState` — type representing a program's state transition within a computed MB: `mbHash`, `newStateHash`, and `messages`. (https://github.com/gear-tech/gear-js/pull/2539)
+- `Message` — type for outgoing messages in a `ProgramBestState`: `id`, `destination`, `payload`, `value` (bigint), `replyDetails`, and `call`. (https://github.com/gear-tech/gear-js/pull/2539)
 
 ### Changed
 - `@noble/hashes` bumped to 2.2.0 (https://github.com/gear-tech/gear-js/pull/2528)
