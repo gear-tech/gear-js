@@ -1,3 +1,5 @@
+import type { Message } from '../src';
+
 import { config } from './config';
 
 export const hasProps = (obj: object, props: string[]) => {
@@ -46,6 +48,16 @@ export const expectDispatch = (d: unknown) => {
   expect('Direct' in payload || 'Stored' in payload).toBe(true);
   if ('Direct' in payload) expectHex(payload.Direct);
   if ('Stored' in payload) expectHex(payload.Stored);
+};
+
+/** Asserts a Message object has the expected shape and field types. */
+export const expectMessage = (m: Message) => {
+  expectHex(m.id);
+  expectHex(m.destination);
+  expectHex(m.payload);
+  expect(typeof m.value).toBe('bigint');
+  expect(typeof m.call).toBe('boolean');
+  expect(m.replyDetails === null || typeof m.replyDetails === 'object').toBe(true);
 };
 
 /** Asserts a BlockRequestEvent has the expected shape. */

@@ -6,9 +6,9 @@ import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
-import { createVaraEthApi, getMirrorClient, type MirrorClient, type VaraEthApi, WsVaraEthProvider } from '../src';
+import { createVaraEthApi, getMirrorClient, type MirrorClient, type ProgramBestState, type VaraEthApi, WsVaraEthProvider } from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { expectDispatch, expectHex, expectMaybeHash, expectNumeric, hasProps } from './common';
+import { expectDispatch, expectHex, expectMaybeHash, expectMessage, expectNumeric, hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -419,6 +419,76 @@ describe('Program Queries', () => {
         const data = await api.query.program.readPageData(pageHash);
         expectHex(data);
         expect(data.length).toBeGreaterThan(2);
+      },
+      config.longRunningTestTimeout,
+    );
+  });
+
+  describe('subscription methods', () => {
+    test(
+      'should receive ProgramBestState on subscribeBestState after a message is sent',
+      async () => {
+        let unsub: (() => void) | undefined;
+
+        const bestState = await new Promise<ProgramBestState>((resolve, reject) => {
+          api.query.program
+            .subscribeBestState(programId, resolve, reject)
+            .then((fn) => {
+              unsub = fn;
+            })
+            .catch(reject);
+
+          const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+          api
+            .createInjectedTransaction({ destination: programId, payload })
+            .then((tx) => tx.sendAndWaitForReceipt())
+            .catch(reject);
+        });
+
+        unsub?.();
+
+        expectHex(bestState.mbHash);
+        expectHex(bestState.newStateHash);
+        expect(Array.isArray(bestState.messages)).toBe(true);
+        for (const msg of bestState.messages) expectMessage(msg);
+      },
+      config.longRunningTestTimeout,
+    );
+
+    test(
+      'should stop receiving updates after unsubscribing',
+      async () => {
+        let callCount = 0;
+        let unsub: (() => void) | undefined;
+
+        const firstUpdate = new Promise<void>((resolve, reject) => {
+          api.query.program
+            .subscribeBestState(
+              programId,
+              () => { callCount++; resolve(); },
+              reject,
+            )
+            .then((fn) => {
+              unsub = fn;
+            })
+            .catch(reject);
+
+          const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+          api
+            .createInjectedTransaction({ destination: programId, payload })
+            .then((tx) => tx.sendAndWaitForReceipt())
+            .catch(reject);
+        });
+
+        await firstUpdate;
+        unsub?.();
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+        await waitNBlocks(2);
+
+        expect(callCount).toBe(1);
       },
       config.longRunningTestTimeout,
     );

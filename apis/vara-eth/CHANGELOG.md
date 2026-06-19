@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `api.query.program.subscribeBestState(programId, onState, onError?)` — WebSocket subscription that delivers a `ProgramBestState` update on every micro-block that produces a state transition for the given program. Returns an unsubscribe function.
+- `ProgramBestState` — type representing a program's state transition within a computed MB: `mbHash`, `newStateHash`, and `messages`.
+- `Message` — type for outgoing messages in a `ProgramBestState`: `id`, `destination`, `payload`, `value` (bigint), `replyDetails`, and `call`.
+
 ### Changed
 - `@noble/hashes` bumped to 2.2.0 (https://github.com/gear-tech/gear-js/pull/2528)
 
