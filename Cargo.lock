@@ -522,7 +522,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "gear-dlmalloc",
  "gear-workspace-hack",
@@ -531,7 +531,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "arrayvec",
  "gear-core-errors",
@@ -546,7 +546,7 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "blake2",
  "bytemuck",
@@ -573,7 +573,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "enum-iterator",
  "gear-workspace-hack",
@@ -600,7 +600,7 @@ dependencies = [
 [[package]]
 name = "gear-ss58"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "blake2",
  "bs58",
@@ -611,7 +611,7 @@ dependencies = [
 [[package]]
 name = "gear-stack-buffer"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "gear-workspace-hack",
 ]
@@ -619,7 +619,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -640,7 +640,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "derive_more 2.1.1",
  "enum-iterator",
@@ -653,7 +653,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-optimizer"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "anyhow",
  "colored",
@@ -685,7 +685,7 @@ dependencies = [
 [[package]]
 name = "gprimitives"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "bytemuck",
  "derive_more 2.1.1",
@@ -702,7 +702,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "arrayvec",
  "const_format",
@@ -724,7 +724,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "gear-workspace-hack",
  "gprimitives",
@@ -736,7 +736,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "2.0.0"
-source = "git+https://github.com/gear-tech/gear#d7fd0f69c2ed2591982c78f08aa3fa0ff7389be5"
+source = "git+https://github.com/gear-tech/gear#85a0df1a1ba1a3af118184c21d3cbb3652e637a2"
 dependencies = [
  "bytemuck",
  "gear-workspace-hack",
