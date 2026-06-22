@@ -16,8 +16,8 @@
     "@gear-js/api": "0.45.0",
     "@polkadot/api": "16.5.6",
     "chalk": "4.1.2",
-    "commander": "14.0.3",
-    "inquirer": "13.4.3",
+    "commander": "15.0.0",
+    "inquirer": "14.0.2",
     "winston": "3.19.0",
     "yaml": "2.9.0"
   },
