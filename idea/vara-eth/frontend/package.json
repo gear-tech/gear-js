@@ -25,7 +25,7 @@
     "react-hook-form": "7.75.0",
     "react-router-dom": "7.15.0",
     "react-syntax-highlighter": "16.1.1",
-    "sails-js": "0.5.1",
+    "sails-js": "1.0.0",
     "sails-js-parser": "0.5.1",
     "viem": "npm:@vara-eth/viem@2.48.11",
     "wagmi": "3.6.14",

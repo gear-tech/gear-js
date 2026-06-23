@@ -2433,7 +2433,7 @@ __metadata:
     react: "npm:19.2.6"
     react-dom: "npm:19.2.6"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.5.1"
+    sails-js: "npm:1.0.0"
     sails-js-parser: "npm:0.5.1"
   peerDependencies:
     "@gear-js/api": ^0.45.0
@@ -15282,7 +15282,7 @@ __metadata:
     react-number-format: "npm:5.4.5"
     react-router-dom: "npm:7.15.0"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.5.1"
+    sails-js: "npm:1.0.0"
     sails-js-parser: "npm:0.5.1"
     sails-js-types: "npm:0.5.1"
     simplebar-react: "npm:3.3.2"
@@ -21746,30 +21746,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-util@npm:0.5.1":
-  version: 0.5.1
-  resolution: "sails-js-util@npm:0.5.1"
-  checksum: 10c0/95f794a97a4c24a8172f5ee5f539ffed2f5a047f63ee05c3ef2aaaf141d6c92f9a216f8d19394e13e8ceca1eb8de8280d10f306ec33a57dba6e11df6c5a4635f
-  languageName: node
-  linkType: hard
-
-"sails-js@npm:0.5.1":
-  version: 0.5.1
-  resolution: "sails-js@npm:0.5.1"
-  dependencies:
-    sails-js-types: "npm:0.5.1"
-    sails-js-util: "npm:0.5.1"
-  peerDependencies:
-    "@gear-js/api": ^0.44.1
-    "@polkadot/api": ^16.4.1
-    "@polkadot/util": ^13.5.1
-  dependenciesMeta:
-    sails-js-types:
-      optional: true
-  checksum: 10c0/164761939feeed3fa411057d8b59e7ab09a470f7e5b8224de1a87cc8af11a24f98c81da969cd482c62e2da631e6f7e0eb05ea419278256f4a30913fee59476cc
-  languageName: node
-  linkType: hard
-
 "sails-js@npm:1.0.0, sails-js@npm:^1.0.0":
   version: 1.0.0
   resolution: "sails-js@npm:1.0.0"
@@ -24181,7 +24157,7 @@ __metadata:
     react-hook-form: "npm:7.75.0"
     react-router-dom: "npm:7.15.0"
     react-syntax-highlighter: "npm:16.1.1"
-    sails-js: "npm:0.5.1"
+    sails-js: "npm:1.0.0"
     sails-js-parser: "npm:0.5.1"
     viem: "npm:@vara-eth/viem@2.48.11"
     wagmi: "npm:3.6.14"

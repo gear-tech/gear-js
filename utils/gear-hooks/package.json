@@ -52,7 +52,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-transition-group": "4.4.5",
-    "sails-js": "0.5.1"
+    "sails-js": "1.0.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
