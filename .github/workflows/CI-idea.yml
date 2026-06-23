@@ -43,6 +43,8 @@ jobs:
     outputs:
       gear: ${{ steps.changes.outputs.gear }}
       vara-eth: ${{ steps.changes.outputs.vara-eth }}
+      vara-eth-migrations: ${{ steps.changes.outputs.vara-eth-migrations }}
+      vara-eth-dump: ${{ steps.changes.outputs.vara-eth-dump }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -61,6 +63,21 @@ jobs:
               vara-eth:
                 - 'idea/vara-eth/**'
                 - package.json
+              vara-eth-migrations:
+                - 'idea/vara-eth/indexer-db/db/migrations/**'
+              vara-eth-dump:
+                - 'idea/vara-eth/explorer/dump.sql'
+
+  check-explorer-dump:
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ needs.changes.outputs.vara-eth-migrations == 'true' && needs.changes.outputs.vara-eth-dump == 'false' }}
+    steps:
+      - name: 'Migrations changed without dump.sql update'
+        run: |
+          echo "::error::Migration files changed but dump.sql was not regenerated."
+          echo "Run idea/vara-eth/explorer/scripts/generate-dump.sh and commit the updated dump.sql."
+          exit 1
 
   build-gear-idea:
     runs-on: ubuntu-latest
@@ -92,6 +109,23 @@ jobs:
 
       - name: 'Build explorer'
         run: yarn build:varaeth-idea-explorer
+
+  test-vara-eth-idea-backend:
+    runs-on: ubuntu-latest
+    needs: ['build-vara-eth-idea']
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.13.1
+
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: 'Build'
+        run: yarn run build:varaeth-idea-explorer
+
+      - name: 'Test: explorer'
+        timeout-minutes: 5
+        run: yarn test:varaeth-idea-explorer
 
   test-gear-idea-backend:
     runs-on: ubuntu-latest

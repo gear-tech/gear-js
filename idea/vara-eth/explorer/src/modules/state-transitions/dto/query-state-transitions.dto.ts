@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import type { PgByteaString } from '@vara-eth/idea-indexer-db';
-import { Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { PaginationDto } from '../../../common/dto/pagination.dto.js';
@@ -28,7 +28,11 @@ export class QueryStateTransitionsDto extends PaginationDto {
     type: Boolean,
   })
   @IsOptional()
-  @Type(() => Boolean)
+  @Transform(({ value }) => {
+    if (value === true || value === 'true') return true;
+    if (value === false || value === 'false') return false;
+    return value;
+  })
   @IsBoolean()
   exited?: boolean;
 }
