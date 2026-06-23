@@ -4,13 +4,14 @@ authors = ["Gear Technologies"]
 edition = "2024"
 license = "GPL-3.0"
 repository = "https://github.com/gear-tech/gear-js"
+rust-version = "1.91"
 
 [workspace]
 resolver = "3"
 members = ["programs/counter", "programs/counter-idl", "programs/injected", "programs/ping"]
 
 [workspace.dependencies]
-sails-rs = "0.10.3"
+sails-rs = "1.0.0"
 ethexe-common = { git = "https://github.com/gear-tech/gear" }
 gear-core = { git = "https://github.com/gear-tech/gear" }
 gear-core-errors = { git = "https://github.com/gear-tech/gear" }

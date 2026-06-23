@@ -32,7 +32,8 @@ TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepape
   - [2. Validator Pool](#2-validator-pool)
   - [3. Injected Transactions](#3-injected-transactions)
   - [4. Querying Program Data](#4-querying-program-data)
-  - [5. Reading Program State via calculateReplyForHandle](#5-reading-program-state-via-calculatereplyforhandle)
+  - [5. Subscribing to Program Best State](#5-subscribing-to-program-best-state)
+  - [6. Reading Program State via calculateReplyForHandle](#6-reading-program-state-via-calculatereplyforhandle)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -143,13 +144,15 @@ const wvara = api.eth.wvara;
 
 ### VaraEthApi
 
-Main API class for interacting with the Vara.Eth network. Provides methods for querying program state and performing read-only operations. Use `createVaraEthApi()` to instantiate it.
+Main API class for interacting with the Vara.Eth network. Always instantiate via `createVaraEthApi()` — it wires up `EthereumClient` and detects the node's RPC version.
 
 ```typescript
 // Query methods
 await api.query.program.getIds(); // List all program IDs
 await api.query.program.readState(hash); // Read program state
 await api.query.program.codeId(programId); // Get program's code ID
+await api.query.block.events(blockHash); // Fetch block request events
+await api.query.info.version(); // Node RPC version (string | null)
 
 // Call methods (read-only)
 await api.call.program.calculateReplyForHandle(source, programId, payload);
@@ -534,7 +537,8 @@ Each transaction type can have specific helper methods:
 
 ### 1. Instantiating VaraEthApi
 
-Use `createVaraEthApi()` with an HTTP or WebSocket provider:
+Use `createVaraEthApi()` with an HTTP or WebSocket provider. It fetches the node's RPC version
+on construction, which selects the correct injected transaction format automatically:
 
 ```typescript
 import { createVaraEthApi, HttpVaraEthProvider, WsVaraEthProvider } from '@vara-eth/api';
@@ -597,41 +601,9 @@ const inPool = pool.hasValidator('0xValidator2...');
 
 **How routing works with injected transactions:**
 
-When you call `setRecipient()`, `setSlotValidator()` (or the deprecated but still supported `setNextValidator()`), or `setDefaultValidator()` on an `InjectedTx`, the library:
+When using a validator pool, the pool routes each send/subscribe call through the WebSocket connection of the validator that is scheduled to produce the next block. If the scheduled validator is not in the pool (e.g. a newly added on-chain validator), the call falls back to the currently active pool connection and the receiving node forwards it.
 
-1. Computes the target validator address (either the one you specified, the slot-scheduled validator, or the zero address)
-2. Sets that address as the transaction `recipient` field
-3. If the provider is a pool **and** the target address is in the pool, routes the send/subscribe calls through that validator's dedicated WebSocket connection
-4. If the address is not in the pool (e.g. a new validator added on-chain that hasn't been added to the pool yet), the transaction is sent via the currently active pool connection — the receiving node will forward it to the intended validator
-
-**Targeting a specific validator:**
-
-```typescript
-const injected = await api.createInjectedTransaction({ destination: programId, payload });
-
-// Target the validator scheduled to produce the imminent block
-await injected.setSlotValidator();
-
-// Or target a specific validator by address
-await injected.setRecipient('0xValidator1...');
-
-await injected.send();
-```
-
-`setSlotValidator()` derives the assigned validator from the current slot (`floor(timestamp / blockDuration) % validators.length`), where `timestamp` is projected two blocks ahead to account for network propagation.
-
-**Sending without targeting a specific validator:**
-
-```typescript
-const injected = await api.createInjectedTransaction({ destination: programId, payload });
-
-// Set zero address — any validator can process this transaction
-injected.setDefaultValidator();
-
-await injected.send();
-```
-
-Use `setDefaultValidator()` when validator targeting is not important. The transaction will be processed by whichever validator produces the next available slot.
+> **Note**: `setRecipient()`, `setSlotValidator()`, and `setDefaultValidator()` are deprecated — the `recipient` field has been removed from the versioned RPC format. On versioned nodes the pool routes internally without requiring an explicit recipient on the transaction. These methods remain available for connections to legacy nodes.
 
 ### 3. Injected Transactions
 
@@ -655,22 +627,29 @@ const injected = await api.createInjectedTransaction({
   payload: '0x1c436f756e74657224496e6372656d656e74', // Encoded message payload
   value: 0n, // Optional value to send
   // These are auto-populated if not provided:
-  // recipient: validator address (auto-selected)
   // referenceBlock: recent Ethereum block hash (auto-fetched)
   // salt: random salt for uniqueness
 });
 
-// Send transaction
-const result = await injected.send();
+// Send transaction (fire and forget)
+await injected.send();
 
-// Wait for full transaction promise (includes reply)
-const promise = await injected.sendAndWaitForPromise();
+// Send and wait for the validator's signed receipt
+const receipt = await injected.sendAndWaitForReceipt();
 
-// Validate the promise signature
-await promise.validateSignature(); // Throws if signature is invalid
+// Check whether the transaction was executed or purged
+if (receipt.error !== null) {
+  console.error('Transaction purged:', receipt.error);
+  console.log('Purge reason code:', receipt.purgedReason);
+} else {
+  const { payload, code, value } = receipt.promise;
+  console.log('Reply code success:', code.isSuccess);
+  console.log('Reply payload:', payload);
+}
+
+// Validate the receipt signature (verify it came from a registered validator)
+await receipt.validateSignature(); // Throws if signature is invalid
 ```
-
-> **Note**: The `Injected` class has been renamed to `InjectedTx`. For backward compatibility, `Injected` is still available as an alias.
 
 **Configuring Transaction Properties:**
 
@@ -679,28 +658,49 @@ await promise.validateSignature(); // Throws if signature is invalid
 const injected = await api.createInjectedTransaction({
   destination: programId,
   payload: encodedPayload,
-  value: 1000n,
+  value: 0n,
   referenceBlock: blockHash, // Specific Ethereum block
   salt: '0x030405', // Custom salt
-  recipient: validatorAddress, // Specific validator
 });
 
 // Modify transaction using fluent API
 injected
-  .setValue(2000n) // Update value
+  .setValue(1000n)  // Update value
   .setSalt('0x060708'); // Update salt
 
 // Access transaction properties
 const messageId = injected.messageId; // Vara.Eth message ID
 
-// Update transaction fields
-await injected.setReferenceBlock(); // Fetch latest Ethereum block
-await injected.setRecipient(); // Auto-select next validator
-// or specify a validator
-await injected.setRecipient(validatorAddress);
+// Refresh the reference block
+await injected.setReferenceBlock();
 
 // Send transaction
 await injected.send();
+```
+
+**Handling Purged Transactions:**
+
+A transaction may be purged (dropped without execution) by the validator for several reasons:
+
+```typescript
+import { TransactionPurgedReason } from '@vara-eth/api';
+
+const receipt = await injected.sendAndWaitForReceipt();
+
+if (receipt.purgedReason !== null) {
+  switch (receipt.purgedReason) {
+    case TransactionPurgedReason.Outdated:
+      // Reference block is too old — refresh and retry
+      await injected.setReferenceBlock();
+      break;
+    case TransactionPurgedReason.UnknownReferenceBlock:
+      // Validator doesn't know the reference block yet — retry later
+      break;
+    case TransactionPurgedReason.NonZeroValue:
+      // Non-zero value not supported
+      break;
+  }
+}
 ```
 
 ### 4. Querying Program Data
@@ -725,7 +725,49 @@ if ('Active' in state.program) {
 }
 ```
 
-### 5. Reading Program State via `calculateReplyForHandle`
+### 5. Subscribing to Program Best State
+
+Subscribe to real-time state transitions for a specific program. `subscribeBestState` delivers a `ProgramBestState` update every time the node computes an MB (micro-block) that produces a state transition for the given program.
+
+> **Note**: Requires a `WsVaraEthProvider` — HTTP providers do not support subscriptions.
+
+```typescript
+const unsubscribe = await api.query.program.subscribeBestState(
+  programId,
+  (bestState) => {
+    console.log('MB hash:', bestState.mbHash);
+    console.log('New state hash:', bestState.newStateHash);
+    console.log('Outgoing messages:', bestState.messages);
+  },
+  (error) => {
+    console.error('Subscription error:', error);
+  },
+);
+
+// Cancel the subscription when no longer needed
+unsubscribe();
+```
+
+**`ProgramBestState` fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mbHash` | `Hash` | Hash of the micro-block that triggered this transition |
+| `newStateHash` | `Hash` | The program's new state hash after execution |
+| `messages` | `Message[]` | Outgoing messages produced by this execution |
+
+**`Message` fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `Hash` | Message ID |
+| `destination` | `Address` | Recipient address |
+| `payload` | `Hex` | Encoded message payload |
+| `value` | `bigint` | Value attached to the message |
+| `replyDetails` | `ReplyDetails \| null` | Reply context, if this is a reply message |
+| `call` | `boolean` | Whether this message calls an Ethereum contract |
+
+### 6. Reading Program State via `calculateReplyForHandle`
 
 Perform read-only queries on program state without sending transactions:
 

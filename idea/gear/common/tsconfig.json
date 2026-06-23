@@ -4,8 +4,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
-    "module": "commonjs",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
-  },
+    "strict": false
+  }
 }

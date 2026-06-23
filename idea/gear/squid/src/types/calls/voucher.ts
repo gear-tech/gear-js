@@ -1,6 +1,7 @@
-import type { Call } from '../../processor';
-import type { AUploadCode } from './code';
-import type { ASendMessage, ASendReply } from './message';
+import type { Hex } from 'gear-idea-indexer-db';
+import type { Call } from '../../processor.js';
+import type { AUploadCode } from './code.js';
+import type { ASendMessage, ASendReply } from './message.js';
 
 interface AVoucherSendMessage extends ASendMessage {
   __kind: 'SendMessage';
@@ -23,9 +24,9 @@ export type CVoucherCall = Omit<Call, 'args'> & { args: AVoucherCall };
 export const isVoucherCall = (obj: any): obj is CVoucherCall => obj.name === 'GearVoucher.call';
 
 export interface AIssueVoucherTx {
-  spender: string;
+  spender: Hex;
   balance: string;
-  programs: string[];
+  programs: Hex[];
   codeUploading: boolean;
   duration: number;
 }
@@ -33,11 +34,11 @@ export interface AIssueVoucherTx {
 export type CVoucherIssued = Omit<Call, 'args'> & { args: AIssueVoucherTx };
 
 export interface AUpdateVoucherTx {
-  spender: string;
-  voucherId: string;
-  moveOwnership?: string;
+  spender: Hex;
+  voucherId: Hex;
+  moveOwnership?: Hex;
   balanceTopUp?: string;
-  appendPrograms: { __kind: 'None' | 'Some'; value: string[] };
+  appendPrograms: { __kind: 'None' | 'Some'; value: Hex[] };
   codeUploading?: boolean;
   prolongDuration?: number;
 }

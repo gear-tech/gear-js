@@ -1,8 +1,10 @@
-import { Events } from '../../common';
-import type { Event } from '../../processor';
+import type { Hex } from 'gear-idea-indexer-db';
+
+import { Events } from '../../common/index.js';
+import type { Event } from '../../processor.js';
 
 export interface ACodeChanged {
-  id: string;
+  id: Hex;
   change: {
     __kind: 'Active';
   };

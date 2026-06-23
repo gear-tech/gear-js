@@ -1,25 +1,31 @@
-import { MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
+import type { DataCache } from 'gear-idea-common';
+import { cacheKey, MessageFromProgram, MessageToProgram } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
 
-import { Pagination } from '../decorators';
-import { RequiredParams } from '../decorators/required';
-import { InvalidParams, MessageNotFound } from '../errors';
+import { Pagination } from '../decorators/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { InvalidParams, MessageNotFound } from '../errors/index.js';
+import { ENTRY_REVERSE, serializeMsgFromProgram, serializeMsgToProgram } from '../serializers.js';
 import type {
   ParamGetMsgsFromProgram,
   ParamGetMsgsToProgram,
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ResManyResult,
-} from '../types';
-import { isHex } from '../utils';
+} from '../types/index.js';
+import { hexToBuffer, isHex } from '../utils.js';
 
 export class MessageService {
   private _repoTo: Repository<MessageToProgram>;
   private _repoFrom: Repository<MessageFromProgram>;
+  private readonly _genesis: string;
+  private readonly _dataCache: DataCache;
 
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource, genesis: string, dataCache: DataCache) {
     this._repoTo = dataSource.getRepository(MessageToProgram);
     this._repoFrom = dataSource.getRepository(MessageFromProgram);
+    this._genesis = genesis;
+    this._dataCache = dataCache;
   }
 
   @RequiredParams(['id'])
@@ -30,7 +36,7 @@ export class MessageService {
       throw new MessageNotFound();
     }
 
-    return m;
+    return serializeMsgToProgram(m) as MessageToProgram;
   }
 
   @RequiredParams(['id'])
@@ -41,7 +47,7 @@ export class MessageService {
       throw new MessageNotFound();
     }
 
-    return m;
+    return serializeMsgFromProgram(m) as MessageFromProgram;
   }
 
   @Pagination()
@@ -60,15 +66,15 @@ export class MessageService {
     const qb = this._repoTo.createQueryBuilder('msg');
 
     if (source) {
-      qb.andWhere('msg.source = :source', { source });
+      qb.andWhere('msg.source = :source', { source: hexToBuffer(source) });
     }
 
     if (destination) {
-      qb.andWhere('msg.destination = :destination', { destination });
+      qb.andWhere('msg.destination = :destination', { destination: hexToBuffer(destination) });
     }
 
     if (entry) {
-      qb.andWhere('msg.entry = :entry', { entry });
+      qb.andWhere('msg.entry = :entry', { entry: ENTRY_REVERSE[entry] ?? entry });
     }
 
     if (service) {
@@ -82,7 +88,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
+      qb.andWhere('msg.id = :query', { query });
     }
 
     if (from) {
@@ -95,12 +101,14 @@ export class MessageService {
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
 
-    const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
+    const simpleDestQuery = destination && !source && !entry && !service && !fn && !from && !to && !query;
+    const getCount = simpleDestQuery
+      ? () => this._dataCache.getNumber(cacheKey.messagesToDestination(this._genesis, destination), () => qb.getCount())
+      : () => qb.getCount();
 
-    return {
-      result,
-      count,
-    };
+    const [result, count] = await Promise.all([qb.getMany(), getCount()]);
+
+    return { result: result.map(serializeMsgToProgram) as MessageToProgram[], count };
   }
 
   @Pagination()
@@ -120,19 +128,19 @@ export class MessageService {
     const qb = this._repoFrom.createQueryBuilder('msg');
 
     if (source) {
-      qb.andWhere('msg.source = :source', { source });
+      qb.andWhere('msg.source = :source', { source: hexToBuffer(source) });
     }
 
     if (destination) {
-      qb.andWhere('msg.destination = :destination', { destination });
+      qb.andWhere('msg.destination = :destination', { destination: hexToBuffer(destination) });
     }
 
     if (parentId) {
-      qb.andWhere('msg.parent_id = :parentId', { parentId });
+      qb.andWhere('msg.parentId = :parentId', { parentId: hexToBuffer(parentId) });
     }
 
     if (isInMailbox) {
-      qb.andWhere('msg.readReson = NULL').andWhere('msg.expiration != NULL');
+      qb.andWhere('msg.readReason IS NULL').andWhere('msg.expiration IS NOT NULL');
     }
 
     if (service) {
@@ -146,7 +154,7 @@ export class MessageService {
     if (query) {
       if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
 
-      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
+      qb.andWhere('msg.id = :query', { query });
     }
 
     if (from) {
@@ -159,11 +167,14 @@ export class MessageService {
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
 
-    const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
+    const simpleSourceQuery =
+      source && !destination && !parentId && !isInMailbox && !service && !fn && !from && !to && !query;
+    const getCount = simpleSourceQuery
+      ? () => this._dataCache.getNumber(cacheKey.messagesFromSource(this._genesis, source), () => qb.getCount())
+      : () => qb.getCount();
 
-    return {
-      result,
-      count,
-    };
+    const [result, count] = await Promise.all([qb.getMany(), getCount()]);
+
+    return { result: result.map(serializeMsgFromProgram) as MessageFromProgram[], count };
   }
 }

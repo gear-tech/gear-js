@@ -5,7 +5,8 @@ import {
   type ValidationArguments,
   type ValidationOptions,
 } from 'class-validator';
-import { FaucetType } from '../model/enums';
+
+import { FaucetType } from '../model/enums.js';
 
 export function isValidAddress(validationOptions?: ValidationOptions) {
   return (object: object, propertyName: string) => {

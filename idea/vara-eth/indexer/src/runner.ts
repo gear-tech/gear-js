@@ -1,6 +1,7 @@
 import { createLogger } from '@gear-js/logger';
 import type { LogRequest } from '@subsquid/evm-processor/lib/interfaces/data-request.js';
 import { TypeormDatabase } from '@subsquid/typeorm-store';
+
 import { BaseHandler } from './handlers/base.js';
 import { handlers } from './handlers/index.js';
 import { processor } from './processor.js';

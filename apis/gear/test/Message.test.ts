@@ -176,7 +176,7 @@ describe('Message Transactions', () => {
 
 describe('Subscriptions', () => {
   test('should subscribe to user messages sent with empty filter', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const unsub = await api.message.subscribeUserMessageSent({}, callback);
 
     expect(unsub).toBeDefined();
@@ -213,7 +213,7 @@ describe('Subscriptions', () => {
   });
 
   test('should subscribe with source filter', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const sourceAddress = programId;
 
     const unsub = await api.message.subscribeUserMessageSent({ source: sourceAddress }, callback);
@@ -256,7 +256,7 @@ describe('Subscriptions', () => {
   });
 
   test('should subscribe with destination filter', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({ destination: aliceRaw }, callback);
 
@@ -283,7 +283,7 @@ describe('Subscriptions', () => {
   });
 
   test('should subscribe with both source and destination filters', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({ source: programId, destination: aliceRaw }, callback);
 
@@ -320,7 +320,7 @@ describe('Subscriptions', () => {
   });
 
   test('should subscribe with payload filters', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({ payloadFilters: [new PayloadFilter('0x01')] }, callback);
 
@@ -358,7 +358,7 @@ describe('Subscriptions', () => {
   });
 
   test('should subscribe with fromBlock filter', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const tx1 = api.message.send({
       destination: programId,
@@ -394,7 +394,7 @@ describe('Subscriptions', () => {
 
   test('should subscribe with finalizedOnly filter', async () => {
     await sleep(15_000);
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({ source: programId2, finalizedOnly: true }, callback);
 
@@ -435,7 +435,7 @@ describe('Subscriptions', () => {
   }, 50000);
 
   test('should receive reply details when program sends a reply', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({}, callback);
 
@@ -465,7 +465,7 @@ describe('Subscriptions', () => {
   });
 
   test('should unsubscribe properly', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const unsub = await api.message.subscribeUserMessageSent({}, callback);
 
@@ -484,8 +484,8 @@ describe('Subscriptions', () => {
   });
 
   test('should handle multiple subscriptions', async () => {
-    const callback1 = jest.fn();
-    const callback2 = jest.fn();
+    const callback1 = vi.fn();
+    const callback2 = vi.fn();
 
     const unsub1 = await api.message.subscribeUserMessageSent({}, callback1);
     const unsub2 = await api.message.subscribeUserMessageSent({ source: programId }, callback2);

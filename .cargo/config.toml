@@ -1,0 +1,2 @@
+[target.wasm32v1-none]
+rustflags = ["-C", "link-arg=--allow-undefined"]

@@ -1,12 +1,16 @@
 import express, { type Express } from 'express';
-import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
-import { Cache } from './middlewares/caching';
-import { redisConnect } from './middlewares/redis';
-import { Retry } from './middlewares/retry';
-import type { AllInOneService } from './services/all-in-one';
+
+import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method.js';
+import { Cache } from './middlewares/caching.js';
+import { Retry } from './middlewares/retry.js';
+import type { AllInOneService } from './services/all-in-one.js';
 import type {
   ParamGetCode,
   ParamGetCodes,
+  ParamGetDnsByAddress,
+  ParamGetDnsByName,
+  ParamGetDnsContract,
+  ParamGetDnsPrograms,
   ParamGetEvent,
   ParamGetEvents,
   ParamGetMsgsFromProgram,
@@ -18,7 +22,7 @@ import type {
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ParamSetProgramMeta,
-} from './types';
+} from './types/index.js';
 
 export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;
@@ -37,7 +41,6 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   }
 
   public async run() {
-    await redisConnect();
     this._app.listen(3000, () => {
       console.log('Server is running on port 3000');
     });
@@ -62,13 +65,11 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   }
 
   @JsonRpcMethod('program.all')
-  @Cache(15)
   async programAll(params: ParamGetPrograms) {
     return this._services.get(params.genesis).program.getPrograms(params);
   }
 
   @JsonRpcMethod('program.data')
-  @Cache(300)
   async programData(params: ParamGetProgram) {
     return this._services.get(params.genesis).program.getProgram(params);
   }
@@ -127,5 +128,33 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   @Cache(300)
   async voucherData(params: ParamGetVoucher) {
     return this._services.get(params.genesis).voucher.getVoucher(params);
+  }
+
+  @RestHandler('get', '/api/dns/contract')
+  async dnsContract(params: ParamGetDnsContract) {
+    return this._services.get(params.genesis).dns.getDnsContract();
+  }
+
+  @RestHandler('get', '/api/dns')
+  async dnsAll(params: ParamGetDnsPrograms) {
+    return this._services.get(params.genesis).dns.getPrograms(params);
+  }
+
+  @RestHandler('get', '/api/dns/by_name/:name')
+  async dnsByName(params: ParamGetDnsByName) {
+    const result = await this._services.get(params.genesis).dns.getProgramByName(params);
+    if (!result) {
+      return { error: `Program with name ${params.name} not found` };
+    }
+    return result;
+  }
+
+  @RestHandler('get', '/api/dns/by_address/:address')
+  async dnsByAddress(params: ParamGetDnsByAddress) {
+    const result = await this._services.get(params.genesis).dns.getProgramByAddress(params);
+    if (!result) {
+      return { error: `Program with address ${params.address} not found` };
+    }
+    return result;
   }
 }

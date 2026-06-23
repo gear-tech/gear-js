@@ -1,0 +1,42 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
+import { ProgramResponseDto } from './dto/program-response.dto.js';
+import { QueryProgramsDto } from './dto/query-programs.dto.js';
+import { ProgramsService } from './programs.service.js';
+
+@ApiTags('programs')
+@Controller('programs')
+@UseGuards(ThrottlerGuard)
+export class ProgramsController {
+  constructor(private readonly programsService: ProgramsService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Get all programs' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated list of programs',
+    type: ProgramResponseDto,
+    isArray: true,
+  })
+  async findAll(@Query() query: QueryProgramsDto) {
+    return this.programsService.findAll(query);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get program by ID' })
+  @ApiParam({ name: 'id', description: 'Program ID (hex with 0x prefix)', example: '0x1234...' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the program',
+    type: ProgramResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Program not found' })
+  async findOne(@Param('id', ParseByteaPipe) id: PgByteaString) {
+    return this.programsService.findOne(id);
+  }
+}

@@ -39,5 +39,5 @@ export async function createVaraEthApi(
 ): Promise<VaraEthApi> {
   const ethClient = new EthereumClient(publicClient, routerAddress, signer);
   await ethClient.waitForInitialization();
-  return new VaraEthApi(provider, ethClient);
+  return VaraEthApi.create(provider, ethClient);
 }

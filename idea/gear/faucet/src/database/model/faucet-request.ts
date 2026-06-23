@@ -1,7 +1,7 @@
-import 'reflect-metadata';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { isValidAddress } from '../validators';
-import { FaucetType, RequestStatus } from './enums';
+
+import { isValidAddress } from '../validators/index.js';
+import { FaucetType, RequestStatus } from './enums.js';
 
 @Entity()
 export class FaucetRequest {

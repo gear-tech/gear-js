@@ -1,6 +1,7 @@
 {
   "name": "gear-idea-meta-storage",
   "private": true,
+  "type": "module",
   "version": "1.4.26",
   "devDependencies": {
     "@types/express": "5.0.6",
@@ -16,12 +17,12 @@
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "swagger-ui-express": "5.0.1",
-    "typeorm": "0.3.28",
+    "typeorm": "0.3.29",
     "yamljs": "0.3.0"
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "test": "npx jest --clearCache && npx jest --runInBand --silent",
+    "test": "vitest run",
     "start": "node dist/server.js",
     "watch": "clear && npx ts-node-dev src/server.ts",
     "clean": "echo \"clean gear-idea-meta-storage\" && rm -rf dist"

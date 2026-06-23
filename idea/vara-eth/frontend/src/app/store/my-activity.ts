@@ -1,4 +1,5 @@
 import { atom, useSetAtom } from 'jotai';
+import { useCallback } from 'react';
 import type { Hex, TransactionReceipt } from 'viem';
 import { useConfig } from 'wagmi';
 import { getBlock, getBlockNumber } from 'wagmi/actions';
@@ -17,6 +18,7 @@ const TransactionTypes = {
 } as const;
 
 type ResultStatus = 'success' | 'error';
+type CodeValidationResultStatus = 'pending' | ResultStatus;
 
 type ReceiptActivity = {
   blockHash: Hex;
@@ -82,10 +84,10 @@ type ApproveActivity = ReceiptActivity & {
   value: string;
 };
 
-type UploadCodeActivity = ReceiptActivity & {
+type UploadCodeActivity = {
   type: typeof TransactionTypes.codeValidation;
   codeId: string;
-  resultStatus: ResultStatus;
+  resultStatus: CodeValidationResultStatus;
   error: string | undefined;
 };
 
@@ -139,27 +141,30 @@ const useAddMyActivity = () => {
   const config = useConfig();
   const setMyActivity = useSetAtom(myActivityAtom);
 
-  return async (value: MyActivity) => {
-    const activity = { ...value, timestamp: Date.now() } as StoredMyActivity;
+  return useCallback(
+    async (value: MyActivity) => {
+      const activity = { ...value, timestamp: Date.now() } as StoredMyActivity;
 
-    if (!activity.blockNumber && !activity.blockHash) {
-      const blockNumber = await getBlockNumber(config);
-      const block = await getBlock(config, { blockNumber });
+      if (!activity.blockNumber && !activity.blockHash) {
+        const blockNumber = await getBlockNumber(config);
+        const block = await getBlock(config, { blockNumber });
 
-      activity.blockNumber = blockNumber;
-      activity.blockHash = block.hash;
-    } else if (activity.blockNumber && !activity.blockHash) {
-      const block = await getBlock(config, { blockNumber: activity.blockNumber });
+        activity.blockNumber = blockNumber;
+        activity.blockHash = block.hash;
+      } else if (activity.blockNumber && !activity.blockHash) {
+        const block = await getBlock(config, { blockNumber: activity.blockNumber });
 
-      activity.blockHash = block.hash;
-    } else if (!activity.blockNumber && activity.blockHash) {
-      const block = await getBlock(config, { blockHash: activity.blockHash });
+        activity.blockHash = block.hash;
+      } else if (!activity.blockNumber && activity.blockHash) {
+        const block = await getBlock(config, { blockHash: activity.blockHash });
 
-      activity.blockNumber = block.number;
-    }
+        activity.blockNumber = block.number;
+      }
 
-    setMyActivity((prev) => [activity, ...prev]);
-  };
+      setMyActivity((prev) => [activity, ...prev]);
+    },
+    [config, setMyActivity],
+  );
 };
 
 export { type MyActivity, myActivityAtom, TransactionTypes, unpackReceipt, useAddMyActivity };

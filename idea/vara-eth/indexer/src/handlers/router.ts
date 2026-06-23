@@ -1,7 +1,16 @@
+import { type PgByteaString, toPgByteaString } from '@vara-eth/idea-indexer-db';
 import { In } from 'typeorm';
 import { type Address, zeroAddress, zeroHash } from 'viem';
 
-import { RouterAbi } from '../abi/router.abi.js';
+import {
+  decodeUpgradedEvent,
+  getAllRouterEventTopics,
+  getAllRouterFunctionSelectors,
+  ROUTER_UPGRADED_TOPIC,
+  ROUTER_VERSION_TO_ABI,
+  RouterAbi,
+  type RouterAbiShape,
+} from '../abi/router.abi.js';
 import { config } from '../config.js';
 import {
   Batch,
@@ -12,24 +21,28 @@ import {
   MessageSent,
   Program,
   ReplySent,
+  RouterImplementation,
   StateTransition,
 } from '../model/index.js';
 import type { Context, Log } from '../processor.js';
 import type { BlockDataCommon } from '../types/block.js';
-import { createHash, fromPgBytea, mapKeys, mapValues, toPgBytea, toPgByteaString } from '../util/index.js';
+import { createHash, mapKeys, mapValues } from '../util/index.js';
 import { BaseHandler } from './base.js';
 
 export class RouterHandler extends BaseHandler {
   private _address: Address;
 
-  private _codes: Map<string, Code>;
-  private _codeStatuses: Map<string, CodeStatus>;
-  private _programs: Map<string, Program>;
-  private _txs: Map<string, EthereumTx>;
-  private _stateTransitions: Map<string, StateTransition>;
-  private _batches: Map<string, Batch>;
-  private _messagesSent: Map<string, MessageSent>;
-  private _repliesSent: Map<string, ReplySent>;
+  private _codes: Map<PgByteaString, Code>;
+  private _codeStatuses: Map<PgByteaString, CodeStatus>;
+  private _programs: Map<PgByteaString, Program>;
+  private _txs: Map<PgByteaString, EthereumTx>;
+  private _stateTransitions: Map<PgByteaString, StateTransition>;
+  private _batches: Map<PgByteaString, Batch>;
+  private _messagesSent: Map<PgByteaString, MessageSent>;
+  private _repliesSent: Map<PgByteaString, ReplySent>;
+
+  // Sorted ascending by fromBlock. Populated from DB on init().
+  private _implHistory: Array<{ id: string; fromBlock: bigint; abi: RouterAbiShape }> = [];
 
   constructor() {
     super();
@@ -37,25 +50,13 @@ export class RouterHandler extends BaseHandler {
     this._logs = [
       {
         addr: config.routerAddr,
-        topic0: [
-          RouterAbi.events.AnnouncesCommitted.topic,
-          RouterAbi.events.BatchCommitted.topic,
-          RouterAbi.events.CodeGotValidated.topic,
-          RouterAbi.events.CodeValidationRequested.topic,
-          RouterAbi.events.ProgramCreated.topic,
-          RouterAbi.events.ValidatorsCommittedForEra.topic,
-        ],
+        topic0: [...getAllRouterEventTopics(), ROUTER_UPGRADED_TOPIC],
       },
     ];
     this._transactions = [
       {
         addr: config.routerAddr,
-        sighash: [
-          RouterAbi.functions.commitBatch.selector,
-          RouterAbi.functions.createProgram.selector,
-          RouterAbi.functions.createProgramWithAbiInterface.selector,
-          RouterAbi.functions.requestCodeValidation.selector,
-        ],
+        sighash: getAllRouterFunctionSelectors(),
       },
     ];
   }
@@ -84,6 +85,15 @@ export class RouterHandler extends BaseHandler {
     this._repliesSent.clear();
   }
 
+  private _getAbi(blockNumber: number): RouterAbiShape {
+    const bn = BigInt(blockNumber);
+    for (let i = this._implHistory.length - 1; i >= 0; i--) {
+      if (this._implHistory[i].fromBlock <= bn) return this._implHistory[i].abi;
+    }
+    this._logger.error('No ABI version found for block, using latest');
+    return RouterAbi;
+  }
+
   public async save(): Promise<void> {
     await Promise.all([
       super.save(),
@@ -102,10 +112,9 @@ export class RouterHandler extends BaseHandler {
     const codes = mapValues(this._codes);
 
     for (const code of codes) {
-      const id = fromPgBytea(code.id);
-      if (this._codeStatuses.has(id)) {
-        code.status = this._codeStatuses.get(id)!;
-        this._codeStatuses.delete(id);
+      if (this._codeStatuses.has(code.id)) {
+        code.status = this._codeStatuses.get(code.id)!;
+        this._codeStatuses.delete(code.id);
       }
     }
 
@@ -122,14 +131,39 @@ export class RouterHandler extends BaseHandler {
     this._logger.info(`${this._codes.size} codes saved`);
   }
 
+  private async _loadImplHistory(): Promise<void> {
+    const records = await this._ctx.store.find(RouterImplementation, { order: { fromBlock: 'ASC' } });
+
+    if (records.length === 0) {
+      this._logger.error('No router implementations found in DB — seed the initial implementation and redeploy');
+      process.exit(1);
+    }
+
+    this._implHistory = records.map((r) => {
+      const abi = ROUTER_VERSION_TO_ABI[r.version];
+      if (!abi) {
+        this._logger.error(
+          { implementation: r.id, version: r.version },
+          'Router ABI version in DB not found in ROUTER_VERSION_TO_ABI — add it and redeploy',
+        );
+        process.exit(1);
+      }
+      return { id: r.id.toLowerCase(), fromBlock: r.fromBlock, abi: abi! };
+    });
+  }
+
   public async process(_ctx: Context): Promise<void> {
     await super.process(_ctx);
+
+    if (this._implHistory.length === 0) {
+      await this._loadImplHistory();
+    }
 
     for (const block of this._ctx.blocks) {
       const common: BlockDataCommon = {
         blockNumber: BigInt(block.header.height),
         timestamp: new Date(block.header.timestamp),
-        blockHash: toPgBytea(block.header.hash),
+        blockHash: toPgByteaString(block.header.hash),
       };
 
       for (const tx of block.transactions) {
@@ -141,14 +175,14 @@ export class RouterHandler extends BaseHandler {
         const id = toPgByteaString(tx.hash);
 
         this._txs.set(
-          tx.hash,
+          id,
           new EthereumTx({
             id,
-            contractAddress: toPgBytea(tx.to),
-            sender: toPgBytea(tx.from),
-            data: Buffer.from(tx.input.slice(2), 'hex'),
+            contractAddress: toPgByteaString(tx.to),
+            sender: toPgByteaString(tx.from),
+            data: toPgByteaString(tx.input),
             blockNumber: common.blockNumber,
-            selector,
+            selector: toPgByteaString(selector),
             createdAt: common.timestamp,
           }),
         );
@@ -162,6 +196,48 @@ export class RouterHandler extends BaseHandler {
         if (log.address.toLowerCase() !== this._address) continue;
 
         const topic = log.topics[0].toLowerCase();
+
+        if (topic === ROUTER_UPGRADED_TOPIC) {
+          const { implementation } = decodeUpgradedEvent(log);
+          const implLower = implementation.toLowerCase();
+          const record = await this._ctx.store.findOne(RouterImplementation, { where: { id: implLower } });
+          if (!record) {
+            this._logger.error(
+              { implementation: implLower, block: log.block.height },
+              `Router upgraded to unknown implementation. Pre-seed the DB and restart: ` +
+                `INSERT INTO router_implementation (id, from_block, version) VALUES ('${implLower}', ${log.block.height}, '<version>');`,
+            );
+            process.exit(1);
+          }
+          const nextAbi = ROUTER_VERSION_TO_ABI[record.version];
+          if (!nextAbi) {
+            this._logger.error(
+              { implementation: implLower, version: record.version },
+              'Router ABI version in DB not found in ROUTER_VERSION_TO_ABI — add it and redeploy',
+            );
+            process.exit(1);
+          }
+          record.fromBlock = BigInt(log.block.height);
+          await this._ctx.store.save(record);
+
+          const existingIndex = this._implHistory.findIndex((h) => h.id === implLower);
+          if (existingIndex !== -1) {
+            this._implHistory[existingIndex].fromBlock = record.fromBlock;
+          } else {
+            this._implHistory.push({ id: implLower, fromBlock: record.fromBlock, abi: nextAbi });
+          }
+          this._implHistory.sort((a, b) => (a.fromBlock < b.fromBlock ? -1 : a.fromBlock > b.fromBlock ? 1 : 0));
+
+          this._logger.info(
+            { implementation: implLower, version: record.version, fromBlock: log.block.height },
+            'Router upgraded — switched ABI version',
+          );
+          continue;
+        }
+
+        // NOTE: case labels are derived from the latest RouterAbi topics.
+        // If a future upgrade changes a topic, add an additional case for the old topic
+        // pointing to the same handler — _getAbi() will select the correct decoder.
         switch (topic) {
           case RouterAbi.events.CodeValidationRequested.topic: {
             this._handleCodeValidationRequested(log, common);
@@ -185,8 +261,8 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleCodeValidationRequested(log: Log, common: BlockDataCommon) {
-    const data = RouterAbi.events.CodeValidationRequested.decode(log);
-    const id = data.args.codeId.toLowerCase();
+    const data = this._getAbi(log.block.height).events.CodeValidationRequested.decode(log);
+    const id = toPgByteaString(data.args.codeId);
     this._codes.set(
       id,
       new Code({
@@ -200,32 +276,36 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleCodeGotValidated(log: Log) {
-    const data = RouterAbi.events.CodeGotValidated.decode(log);
+    const data = this._getAbi(log.block.height).events.CodeGotValidated.decode(log);
     const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
-    this._codeStatuses.set(data.args.codeId.toLowerCase(), status);
+    this._codeStatuses.set(toPgByteaString(data.args.codeId), status);
     this._logger.info({ codeId: data.args.codeId, status }, 'Code validation completed');
   }
 
   private _handleProgramCreated(log: Log, common: BlockDataCommon) {
-    const data = RouterAbi.events.ProgramCreated.decode(log);
+    const abi = this._getAbi(log.block.height);
+    const data = abi.events.ProgramCreated.decode(log);
 
-    const id = data.args.actorId.toLowerCase();
+    const id = toPgByteaString(data.args.actorId);
 
     const program = new Program({
       id,
-      codeId: data.args.codeId.toLowerCase(),
+      codeId: toPgByteaString(data.args.codeId),
       blockNumber: BigInt(log.block.height),
-      txHash: toPgBytea(log.transaction.hash),
+      txHash: toPgByteaString(log.transaction.hash),
       createdAt: common.timestamp,
     });
     this._addHashEntry(EntityType.Program, id, common.timestamp);
 
-    if (log.transaction.input.startsWith(RouterAbi.functions.createProgramWithAbiInterface.selector)) {
-      const {
-        args: [_codeId, _salt, _overrideInitializer, abiInterface],
-      } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
-      program.abiInterfaceAddress = toPgBytea(abiInterface);
+    if (log.transaction.input.startsWith(abi.functions.createProgramWithAbiInterface.selector)) {
+      const { args } = abi.functions.createProgramWithAbiInterface.decode(log.transaction);
+      program.abiInterfaceAddress = toPgByteaString(args[3]);
+    } else if (
+      log.transaction.input.startsWith(abi.functions.createProgramWithAbiInterfaceAndExecutableBalance.selector)
+    ) {
+      const { args } = abi.functions.createProgramWithAbiInterfaceAndExecutableBalance.decode(log.transaction);
+      program.abiInterfaceAddress = toPgByteaString(args[3]);
     }
 
     this._programs.set(program.id, program);
@@ -233,20 +313,21 @@ export class RouterHandler extends BaseHandler {
   }
 
   private _handleBatchCommitted(log: Log, common: BlockDataCommon) {
+    const abi = this._getAbi(log.block.height);
     const {
       args: { hash },
-    } = RouterAbi.events.BatchCommitted.decode(log);
+    } = abi.events.BatchCommitted.decode(log);
 
-    const txData = RouterAbi.functions.commitBatch.decode(log.transaction);
+    const txData = abi.functions.commitBatch.decode(log.transaction);
 
     const batch = new Batch({
-      id: hash.toLowerCase(),
+      id: toPgByteaString(hash),
       committedAt: common.timestamp,
       committedAtBlock: common.blockNumber,
-      blockHash: toPgBytea(txData.args[0].blockHash),
+      blockHash: toPgByteaString(txData.args[0].blockHash),
       blockTimestamp: BigInt(txData.args[0].blockTimestamp),
-      previousCommittedBatchHash: toPgBytea(txData.args[0].previousCommittedBatchHash),
-      expiry: txData.args[0].expiry,
+      previousCommittedBatchHash: toPgByteaString(txData.args[0].previousCommittedBatchHash),
+      expiry: BigInt(txData.args[0].expiry),
     });
 
     this._batches.set(batch.id, batch);
@@ -261,45 +342,45 @@ export class RouterHandler extends BaseHandler {
 
       const stateTransition = new StateTransition({
         id: transitionId,
-        hash: toPgBytea(trans.newStateHash),
+        hash: toPgByteaString(trans.newStateHash),
         batch: batch,
-        timestamp: common.timestamp,
-        programId: trans.actorId.toLowerCase(),
+        programId: toPgByteaString(trans.actorId),
         exited: trans.exited,
-        inheritor: trans.inheritor === zeroAddress ? null : toPgBytea(trans.inheritor),
+        inheritor: trans.inheritor === zeroAddress ? null : toPgByteaString(trans.inheritor),
         valueToReceive: trans.valueToReceive * (trans.valueToReceiveNegativeSign ? -1n : 1n),
+        createdAt: common.timestamp,
       });
       this._stateTransitions.set(stateTransition.id, stateTransition);
       this._logger.info(
         { id: stateTransition.id, hash: trans.newStateHash, block: common.blockNumber },
         'State transition created',
       );
-      this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.timestamp);
+      this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.createdAt);
 
       for (const message of trans.messages) {
-        this._processMessageFromTransition(message, trans.actorId.toLowerCase(), common, stateTransition.id);
+        this._processMessageFromTransition(message, toPgByteaString(trans.actorId), common, stateTransition.id);
       }
     }
   }
 
   private _processMessageFromTransition(
     message: any,
-    sourceProgramId: string,
+    sourceProgramId: PgByteaString,
     common: BlockDataCommon,
-    stateTransitionId: string,
+    stateTransitionId: PgByteaString,
   ): void {
-    const id = message.id.toLowerCase();
+    const id = toPgByteaString(message.id);
 
     const isReply = message.replyDetails.to !== zeroHash;
 
     if (isReply) {
       const replySent = new ReplySent({
         id,
-        repliedToId: toPgBytea(message.replyDetails.to),
+        repliedToId: toPgByteaString(message.replyDetails.to),
         replyCode: message.replyDetails.code,
         sourceProgramId,
-        destination: toPgBytea(message.destination),
-        payload: Buffer.from(message.payload.slice(2), 'hex'),
+        destination: toPgByteaString(message.destination),
+        payload: toPgByteaString(message.payload),
         value: message.value,
         isCall: message.call,
         stateTransitionId,
@@ -315,8 +396,8 @@ export class RouterHandler extends BaseHandler {
       const messageSent = new MessageSent({
         id,
         sourceProgramId: sourceProgramId,
-        destination: toPgBytea(message.destination),
-        payload: Buffer.from(message.payload.slice(2), 'hex'),
+        destination: toPgByteaString(message.destination),
+        payload: toPgByteaString(message.payload),
         value: message.value,
         isCall: message.call,
         stateTransitionId,

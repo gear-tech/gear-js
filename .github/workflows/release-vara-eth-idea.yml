@@ -1,220 +1,125 @@
-name: 'Vara.Eth Idea Release'
+name: Build and Deploy Vara.Eth Idea
 
 on:
   push:
-    branches: ['main', 'prod/vara-eth-idea']
+    branches: [main, master]
     paths:
-      - idea/vara-eth/**
+      - 'idea/vara-eth/**'
+    tags: ["vara-eth-idea-v*"]
   workflow_dispatch:
     inputs:
-      service:
+      env:
         type: choice
-        description: Service to release
+        description: Target environment
+        required: false
         options:
-          - frontend
-          - indexer
-          - all
-        required: true
-      environment:
-        type: choice
-        description: Environment to deploy
-        options:
-          - vara-eth-idea-staging
-          - vara-eth-idea-production
-        required: true
-        default: vara-eth-idea-staging
+          - dev
+          - stg
+          - prod
+      deploy_frontend:
+        type: boolean
+        description: Deploy frontend
+        default: true
+      deploy_indexer:
+        type: boolean
+        description: Deploy indexer (mainnet + testnet)
+        default: true
+      deploy_explorer:
+        type: boolean
+        description: Deploy explorer (mainnet + testnet)
+        default: true
+      deploy_upload-code:
+        type: boolean
+        description: Deploy upload-code
+        default: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write
+  packages: write
+  actions: write
+  id-token: write
 
 jobs:
-  set-env-tag:
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.get_env.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+  deploy_frontend:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: vara-eth-idea
+      component: frontend
+      registry: ghcr.io/gear-tech/vara-eth-idea-frontend
+      dockerfile: idea/vara-eth/frontend/Dockerfile
+      context: .
+      paths_filter: |
+        idea/vara-eth/frontend/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-      - name: Get environment
-        id: get_env
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          else
-            # For push events, determine environment based on branch
-            if [[ "${{ github.ref }}" == "refs/heads/prod/vara-eth-idea" ]]; then
-              echo "environment=vara-eth-idea-production" >> $GITHUB_OUTPUT
-            else
-              echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
-            fi
-          fi
+  deploy_explorer:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: vara-eth-idea
+      component: explorer-mainnet
+      extra_components: |
+        explorer-testnet
+      registry: ghcr.io/gear-tech/vara-eth-idea-explorer
+      dockerfile: idea/vara-eth/explorer/Dockerfile
+      context: .
+      paths_filter: |
+        idea/vara-eth/explorer/**
+        idea/vara-eth/indexer-db/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend: ${{ steps.should-build.outputs.frontend }}
-      indexer: ${{ steps.should-build.outputs.indexer }}
-    steps:
-      - uses: actions/checkout@v6
+  deploy_indexer:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: vara-eth-idea
+      component: indexer-mainnet
+      extra_components: |
+        indexer-testnet
+      init_containers: |
+        migrations
+      registry: ghcr.io/gear-tech/vara-eth-idea-indexer
+      dockerfile: idea/vara-eth/indexer/Dockerfile
+      context: .
+      paths_filter: |
+        idea/vara-eth/indexer/**
+        idea/vara-eth/indexer-db/**
+        apis/vara-eth/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}
 
-      - name: Check frontend changes
-        id: frontend
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/vara-eth/frontend/**'
-
-      - name: Check indexer changes
-        id: indexer
-        uses: dorny/paths-filter@v4
-        with:
-          base: ${{ github.event.before }}
-          filters: |
-            changed:
-              - 'idea/vara-eth/indexer/**'
-
-      - name: Determine what should be built
-        id: should-build
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            # For manual trigger, check the input
-            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
-              echo "frontend=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "frontend=false" >> "$GITHUB_OUTPUT"
-            fi
-
-            if [[ "${{ github.event.inputs.service }}" == "indexer" || "${{ github.event.inputs.service }}" == "all" ]]; then
-              echo "indexer=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "indexer=false" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            # For push events, use the file change detection
-            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
-            echo "indexer=${{ steps.indexer.outputs.changed }}" >> "$GITHUB_OUTPUT"
-          fi
-
-  build-frontend-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.frontend == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "vara-eth-idea-frontend" Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/vara-eth/frontend/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-          build-args: |
-            VITE_WALLET_CONNECT_PROJECT_ID=${{ secrets.VITE_WALLET_CONNECT_PROJECT_ID }}
-            VITE_VARA_ETH_NODE_ADDRESSES_TESTNET=${{ secrets.VITE_VARA_ETH_NODE_ADDRESSES_TESTNET }}
-            VITE_VARA_ETH_NODE_ADDRESSES_MAINNET=${{ secrets.VITE_VARA_ETH_NODE_ADDRESSES_MAINNET }}
-            VITE_ETH_NODE_ADDRESS_TESTNET=${{ secrets.VITE_ETH_NODE_ADDRESS_TESTNET }}
-            VITE_ETH_NODE_ADDRESS_MAINNET=${{ secrets.VITE_ETH_NODE_ADDRESS_MAINNET }}
-            VITE_ETH_CHAIN_ID_TESTNET=${{ secrets.VITE_ETH_CHAIN_ID_TESTNET }}
-            VITE_ETH_CHAIN_ID_MAINNET=${{ secrets.VITE_ETH_CHAIN_ID_MAINNET }}
-            VITE_EXPLORER_URL_TESTNET=${{ secrets.VITE_EXPLORER_URL_TESTNET }}
-            VITE_EXPLORER_URL_MAINNET=${{ secrets.VITE_EXPLORER_URL_MAINNET }}
-            VITE_ROUTER_CONTRACT_ADDRESS_TESTNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_TESTNET }}
-            VITE_ROUTER_CONTRACT_ADDRESS_MAINNET=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS_MAINNET }}
-            VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
-
-  build-indexer-image:
-    runs-on: ubuntu-latest
-    needs: [set-env-tag, check-changes]
-    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push "vara-eth-idea-indexer" image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/vara-eth/indexer/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
-
-  deploy-indexer:
-    needs: [build-indexer-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.INDEXER_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
-
-  deploy-frontend:
-    needs: [build-frontend-image, set-env-tag]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.set-env-tag.outputs.environment }}
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment ${{ vars.FRONTEND_DEPLOYMENTS }} -n ${{ vars.NAMESPACE }}
+  deploy_upload-code:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      argocd_server: ${{ vars.ARGOCD_SERVER }}
+      vault_server: ${{ vars.VAULT_SERVER }}
+      env: ${{ inputs.env }}
+      app: vara-eth-idea
+      component: upload-code
+      init_containers: |
+        migrations
+      registry: ghcr.io/gear-tech/vara-eth-idea-upload-code
+      dockerfile: idea/vara-eth/upload-code-service/Dockerfile
+      context: .
+      paths_filter: |
+        idea/vara-eth/upload-code-service/**
+        apis/vara-eth/**
+    secrets:
+      WORKLOADS_REPO_TOKEN: ${{ secrets.WORKLOADS_REPO_TOKEN }}
+      ARGOCD_TOKEN:         ${{ secrets.ARGOCD_TOKEN }}

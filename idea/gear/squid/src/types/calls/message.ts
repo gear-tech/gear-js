@@ -1,9 +1,11 @@
-import { Calls } from '../../common';
-import type { Call } from '../../processor';
+import type { Hex } from 'gear-idea-indexer-db';
+
+import { Calls } from '../../common/index.js';
+import type { Call } from '../../processor.js';
 
 export interface ASendMessage {
-  destination: string;
-  payload: string;
+  destination: Hex;
+  payload: Hex;
   gasLimit: string;
   value: string;
 }
@@ -13,7 +15,7 @@ export type CSendMessage = Omit<Call, 'args'> & { args: ASendMessage };
 export const isSendMessageCall = (obj: any): obj is CSendMessage => obj.name === Calls.SendMessage;
 
 export interface ASendReply extends Omit<ASendMessage, 'destination'> {
-  replyToId: string;
+  replyToId: Hex;
 }
 
 export type CSendReply = Omit<Call, 'args'> & { args: ASendReply };

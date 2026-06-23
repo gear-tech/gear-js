@@ -1,5 +1,5 @@
 import type { Abi, Hex } from 'viem';
-import { BaseError } from 'viem';
+import { BaseError, RawContractError } from 'viem';
 import { decodeErrorResult } from 'viem/utils';
 
 /**
@@ -15,6 +15,22 @@ function extractDetails(error: unknown): string {
 }
 
 /**
+ * Walks the viem error cause chain to find a RawContractError carrying the raw
+ * revert data as a hex string. estimateGas is ABI-unaware so viem never decodes
+ * the revert automatically — the data is only available here.
+ */
+function extractRawData(error: unknown): Hex | null {
+  let current: unknown = error;
+  while (current instanceof BaseError) {
+    if (current instanceof RawContractError && current.data) {
+      return current.data as Hex;
+    }
+    current = current.cause;
+  }
+  return null;
+}
+
+/**
  * Decodes a revert error from a failed contract call (e.g. estimateGas, simulateContract).
  *
  * Tries each supplied ABI in order, then falls back to an empty ABI so that standard
@@ -25,24 +41,39 @@ function extractDetails(error: unknown): string {
  * @param abis  - Contract ABIs to search for the error selector, in priority order
  */
 export function decodeContractError(error: unknown, abis: Abi[] = []): Error {
-  const details = extractDetails(error);
-  const match = details.match(/custom error (0x[0-9a-fA-F]+): ([0-9a-fA-F]*)/);
+  const rawData = extractRawData(error);
 
-  if (match) {
-    const errorData = (match[1] + match[2]) as Hex;
+  if (rawData) {
+    for (const abi of abis) {
+      try {
+        const decoded = decodeErrorResult({ abi, data: rawData });
+        return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
+      } catch {}
+    }
+    try {
+      const decoded = decodeErrorResult({ abi: [], data: rawData });
+      return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
+    } catch {}
+    return new Error(`Unknown contract error ${rawData}`, { cause: error });
+  }
+
+  // Fallback: parse the human-readable details string (format varies by node)
+  const details = extractDetails(error);
+  const hexMatch = details.match(/custom error (0x[0-9a-fA-F]+): ([0-9a-fA-F]*)/);
+  if (hexMatch) {
+    const errorData = (hexMatch[1] + hexMatch[2]) as Hex;
     for (const abi of abis) {
       try {
         const decoded = decodeErrorResult({ abi, data: errorData });
-        return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`);
+        return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
       } catch {}
     }
-    // fallback: handles built-in Error(string) and Panic(uint256)
     try {
       const decoded = decodeErrorResult({ abi: [], data: errorData });
-      return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`);
+      return new Error(`${decoded.errorName}(${decoded.args?.join(', ') ?? ''})`, { cause: error });
     } catch {}
-    return new Error(`Unknown contract error ${match[1]}: ${match[2]}`);
+    return new Error(`Unknown contract error ${hexMatch[1]}: ${hexMatch[2]}`, { cause: error });
   }
 
-  return new Error(details || 'unknown contract error');
+  return new Error(details || 'unknown contract error', { cause: error });
 }

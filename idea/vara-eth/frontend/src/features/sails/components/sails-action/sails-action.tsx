@@ -1,7 +1,7 @@
 import { useAppKit } from '@reown/appkit/react';
 import { type MouseEvent, useState } from 'react';
 import type { Sails } from 'sails-js';
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button, SplitButton, Tooltip } from '@/components';
@@ -29,7 +29,7 @@ const SailsAction = ({
   splitAction,
   requiresAccount = true,
 }: Props) => {
-  const account = useAccount();
+  const account = useConnection();
   const { open } = useAppKit();
 
   const [isOpen, setIsOpen] = useState(false);

@@ -1,11 +1,29 @@
+import fs from 'node:fs';
+import { SailsProgram } from 'sails-js';
+import { SailsIdlParser } from 'sails-js/parser';
 import type { Hex, PublicClient, WalletClient } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
-import { createVaraEthApi, getMirrorClient, type MirrorClient, type VaraEthApi, WsVaraEthProvider } from '../src';
+import {
+  createVaraEthApi,
+  getMirrorClient,
+  type MirrorClient,
+  type ProgramBestState,
+  type VaraEthApi,
+  WsVaraEthProvider,
+} from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { expectDispatch, expectHex, expectMaybeHash, expectNumeric, hasProps } from './common';
+import {
+  expectDispatch,
+  expectHex,
+  expectMaybeHash,
+  expectMessage,
+  expectNumeric,
+  hasProps,
+  waitNBlocks,
+} from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -16,11 +34,18 @@ let signer: ReturnType<typeof walletClientToSigner>;
 let mirror: MirrorClient;
 
 let programId: `0x${string}`;
+let sailsParser: SailsIdlParser;
+let counterProgram: SailsProgram;
 
 const stateHashes: Hex[] = [];
 const messageIds: Hex[] = [];
 
 beforeAll(async () => {
+  sailsParser = new SailsIdlParser();
+  await sailsParser.init();
+  const idl = fs.readFileSync('./programs/counter-idl/counter_idl.idl', 'utf-8');
+  counterProgram = new SailsProgram(sailsParser.parse(idl));
+
   const transport = webSocket(config.wsRpc);
 
   publicClient = createPublicClient({
@@ -111,8 +136,8 @@ describe('Program Queries', () => {
     test(
       'should send init message',
       async () => {
-        expect(programId).toBeDefined();
-        const payload = '0x24437265617465507267';
+        if (!counterProgram.ctors) throw new Error('No ctors');
+        const payload = counterProgram.ctors.CreatePrg.encodePayload();
 
         const tx = await mirror.sendMessage(payload);
 
@@ -133,8 +158,7 @@ describe('Program Queries', () => {
   describe('send messages', () => {
     let unwatch: () => void;
 
-    // Counter::Increment payload
-    const PAYLOAD = '0x1c436f756e74657224496e6372656d656e74';
+    // const PAYLOAD = counterProgram.services.Counter.functions.Increment.encodePayload();
 
     test('should subscribe to StateChanged events', () => {
       unwatch = mirror.watchStateChangedEvent((stateHash) => {
@@ -145,28 +169,29 @@ describe('Program Queries', () => {
     test(
       'should send 5 messages concurrently (mix of injected and mirror)',
       async () => {
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
         const [injected1, injected2, injected3] = await Promise.all(
-          [0, 1, 2].map(() => api.createInjectedTransaction({ destination: programId, payload: PAYLOAD })),
+          [0, 1, 2].map(() => api.createInjectedTransaction({ destination: programId, payload })),
         );
         const startingNonce = await publicClient.getTransactionCount({
           address: await signer.getAddress(),
           blockTag: 'pending',
         });
         const [mirror1, mirror2] = await Promise.all(
-          [0, 1].map((i) => mirror.sendMessage(PAYLOAD, 0n, { nonce: startingNonce + i })),
+          [0, 1].map((i) => mirror.sendMessage(payload, 0n, { nonce: startingNonce + i })),
         );
 
         messageIds.push(injected1.messageId, injected2.messageId, injected3.messageId);
 
         const [injectedResult1, injectedResult2, injectedResult3] = await Promise.all([
-          injected1.sendAndWaitForPromise(),
-          injected2.sendAndWaitForPromise(),
-          injected3.sendAndWaitForPromise(),
+          injected1.sendAndWaitForReceipt(),
+          injected2.sendAndWaitForReceipt(),
+          injected3.sendAndWaitForReceipt(),
         ]);
 
-        expect(injectedResult1.code.isSuccess).toBeTruthy();
-        expect(injectedResult2.code.isSuccess).toBeTruthy();
-        expect(injectedResult3.code.isSuccess).toBeTruthy();
+        expect(injectedResult1.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult2.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult3.promise.code.isSuccess).toBeTruthy();
 
         await Promise.all([mirror1.send(), mirror2.send()]);
 
@@ -186,14 +211,15 @@ describe('Program Queries', () => {
     test(
       'should send 5 messages sequentially (alternating injected and mirror)',
       async () => {
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
         for (let i = 0; i < 5; i++) {
           if (i % 2 === 0) {
-            const tx = await api.createInjectedTransaction({ destination: programId, payload: PAYLOAD });
+            const tx = await api.createInjectedTransaction({ destination: programId, payload });
             messageIds.push(tx.messageId);
-            const result = await tx.sendAndWaitForPromise();
-            expect(result.code.isSuccess).toBeTruthy();
+            const result = await tx.sendAndWaitForReceipt();
+            expect(result.promise.code.isSuccess).toBeTruthy();
           } else {
-            const tx = await mirror.sendMessage(PAYLOAD);
+            const tx = await mirror.sendMessage(payload);
             await tx.send();
             const { message, waitForReply } = await tx.setupReplyListener();
             messageIds.push(message.id);
@@ -408,6 +434,63 @@ describe('Program Queries', () => {
         const data = await api.query.program.readPageData(pageHash);
         expectHex(data);
         expect(data.length).toBeGreaterThan(2);
+      },
+      config.longRunningTestTimeout,
+    );
+  });
+
+  describe('subscription methods', () => {
+    test(
+      'should receive ProgramBestState on subscribeBestState after a message is sent',
+      async () => {
+        let resolveState!: (state: ProgramBestState) => void;
+        const received = new Promise<ProgramBestState>((res) => {
+          resolveState = res;
+        });
+
+        const unsub = await api.query.program.subscribeBestState(programId, resolveState);
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+
+        const bestState = await received;
+        unsub();
+
+        expectHex(bestState.mbHash);
+        expectHex(bestState.newStateHash);
+        expect(Array.isArray(bestState.messages)).toBe(true);
+        for (const msg of bestState.messages) expectMessage(msg);
+      },
+      config.longRunningTestTimeout,
+    );
+
+    test(
+      'should stop receiving updates after unsubscribing',
+      async () => {
+        let callCount = 0;
+        let resolveFirst!: () => void;
+        const firstUpdate = new Promise<void>((res) => {
+          resolveFirst = res;
+        });
+
+        const unsub = await api.query.program.subscribeBestState(programId, () => {
+          callCount++;
+          resolveFirst();
+        });
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+
+        await firstUpdate;
+        unsub();
+
+        const tx2 = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx2.sendAndWaitForReceipt();
+        await waitNBlocks(2);
+
+        expect(callCount).toBe(1);
       },
       config.longRunningTestTimeout,
     );

@@ -1,14 +1,16 @@
 {
   "name": "gear-idea-indexer-db",
   "private": true,
+  "type": "module",
   "version": "1.4.26",
   "dependencies": {
-    "typeorm": "0.3.28"
+    "typeorm": "0.3.29"
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",
-    "clean": "echo \"clean gear-idea-indexer-db\" && rm -rf lib"
+    "clean": "echo \"clean gear-idea-indexer-db\" && rm -rf lib",
+    "migration:generate": "npx typeorm migration:generate -n $NAME"
   },
-  "main": "lib/index.js",
-  "types": "src/index.ts"
+  "main": "./lib/index.js",
+  "types": "./src/index.ts"
 }

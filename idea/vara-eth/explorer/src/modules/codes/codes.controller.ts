@@ -1,0 +1,42 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
+import { CodesService } from './codes.service.js';
+import { CodeResponseDto } from './dto/code-response.dto.js';
+import { QueryCodesDto } from './dto/query-codes.dto.js';
+
+@ApiTags('codes')
+@Controller('codes')
+@UseGuards(ThrottlerGuard)
+export class CodesController {
+  constructor(private readonly codesService: CodesService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Get all codes' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated list of codes',
+    type: CodeResponseDto,
+    isArray: true,
+  })
+  async findAll(@Query() query: QueryCodesDto) {
+    return this.codesService.findAll(query);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get code by ID' })
+  @ApiParam({ name: 'id', description: 'Code ID (hex with 0x prefix)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the code',
+    type: CodeResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Code not found' })
+  async findOne(@Param('id', ParseByteaPipe) id: PgByteaString) {
+    return this.codesService.findOne(id);
+  }
+}

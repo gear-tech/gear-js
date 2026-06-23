@@ -1,7 +1,8 @@
 import { Contains, IsDateString, IsString } from 'class-validator';
 import { MessageEntryPoint } from 'gear-idea-indexer-db';
-import { IsOneOf } from '../../decorators';
-import { ParamGenesis, ParamPagination } from './common';
+
+import { IsOneOf } from '../../decorators/index.js';
+import { ParamGenesis, ParamPagination } from './common.js';
 
 export class ParamMsgToProgram extends ParamGenesis {
   @IsString()
@@ -14,7 +15,10 @@ export class ParamMsgFromProgram extends ParamMsgToProgram {}
 export class ParamGetMsgsToProgram extends ParamPagination {
   readonly destination?: string;
   readonly source?: string;
-  @IsOneOf(Object.values(MessageEntryPoint), false)
+  @IsOneOf(
+    Object.keys(MessageEntryPoint).map((v) => v.toLowerCase()),
+    false,
+  )
   readonly entry?: MessageEntryPoint;
   readonly service?: string;
   readonly fn?: string;

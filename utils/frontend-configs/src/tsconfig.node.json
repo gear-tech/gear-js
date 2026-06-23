@@ -18,7 +18,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": true
   },
   "include": ["${configDir}/vite.config.ts"],
+  "exclude": ["${configDir}/src//*.test.ts", "${configDir}/src//*.test.tsx", "${configDir}/src/vitest.setup.ts"]
 }

@@ -1,18 +1,18 @@
-import type { HexString } from '@gear-js/api';
+import type { Hex } from 'gear-idea-indexer-db';
 
-import { Calls } from '../../common';
-import type { Call } from '../../processor';
+import { Calls } from '../../common/index.js';
+import type { Call } from '../../processor.js';
 
 export interface AUploadProgram {
-  code: HexString;
-  salt: string;
-  initPayload: string;
+  code: Hex;
+  salt: Hex;
+  initPayload: Hex;
   gasLimit: string;
   value: string;
 }
 
 export interface ACreateProgram extends Omit<AUploadProgram, 'code'> {
-  codeId: string;
+  codeId: Hex;
 }
 
 export type CUploadProgram = Omit<Call, 'args'> & { args: AUploadProgram };

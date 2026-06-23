@@ -1,9 +1,12 @@
-import { Code } from 'gear-idea-indexer-db';
+import { Code, CodeStatus } from 'gear-idea-indexer-db';
 import type { DataSource, Repository } from 'typeorm';
-import { Pagination } from '../decorators';
-import { RequiredParams } from '../decorators/required';
-import { CodeNotFound } from '../errors';
-import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types';
+
+import { Pagination } from '../decorators/index.js';
+import { RequiredParams } from '../decorators/required.js';
+import { CodeNotFound } from '../errors/index.js';
+import { serializeCode } from '../serializers.js';
+import type { ParamGetCode, ParamGetCodes, ParamSetCodeMeta, ResManyResult } from '../types/index.js';
+import { hexToBuffer } from '../utils.js';
 
 export class CodeService {
   private _repo: Repository<Code>;
@@ -20,7 +23,7 @@ export class CodeService {
       throw new CodeNotFound();
     }
 
-    return c;
+    return serializeCode(c) as Code;
   }
 
   @Pagination()
@@ -28,7 +31,7 @@ export class CodeService {
     const qb = this._repo.createQueryBuilder('code');
 
     if (uploadedBy) {
-      qb.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy });
+      qb.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy: hexToBuffer(uploadedBy) });
     }
 
     if (name) {
@@ -36,22 +39,25 @@ export class CodeService {
     }
 
     if (status) {
+      const toNumeric = (s: string) => CodeStatus[s as keyof typeof CodeStatus];
       if (Array.isArray(status)) {
-        qb.andWhere('code.status IN (:...status)', { status });
+        qb.andWhere('code.status IN (:...status)', { status: status.map(toNumeric) });
       } else {
-        qb.andWhere('code.status = :status', { status });
+        qb.andWhere('code.status = :status', { status: toNumeric(status as string) });
       }
     }
 
     if (query) {
-      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', { query: `%${query.toLowerCase()}%` });
+      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', {
+        query: `%${query.toLowerCase()}%`,
+      });
     }
 
     qb.orderBy('code.timestamp', 'DESC').limit(limit).offset(offset);
 
     const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
 
-    return { result, count };
+    return { result: result.map(serializeCode) as Code[], count };
   }
 
   @RequiredParams(['id'])
