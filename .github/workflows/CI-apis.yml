@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [guard]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js
@@ -60,7 +60,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.13.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 'Detect changes'
         id: changes
@@ -93,7 +93,7 @@ jobs:
     needs: ["changes"]
     if: ${{ needs.changes.outputs.gear-api == 'true' || inputs.force }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @gear-js/api
@@ -106,7 +106,7 @@ jobs:
     needs: ["changes"]
     if: ${{ needs.changes.outputs.vara-eth-api == 'true' || inputs.force }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @vara-eth/api
@@ -120,7 +120,7 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js @gear-js/api
@@ -158,7 +158,7 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           node-version: 24.x
