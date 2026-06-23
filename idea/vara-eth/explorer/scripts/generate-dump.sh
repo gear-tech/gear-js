@@ -60,6 +60,12 @@ if [ "$(db_exists "$TMP_DB")" != "1" ]; then
   psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "CREATE DATABASE \"$TMP_DB\""
 fi
 
+cleanup() {
+  printf 'Dropping temporary database "%s"...\n' "$TMP_DB"
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "DROP DATABASE IF EXISTS \"$TMP_DB\"" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT INT TERM
+
 # ── Copy schema ────────────────────────────────────────────────────────────────
 
 printf 'Copying schema from "%s"...\n' "$DB_NAME"
@@ -102,10 +108,5 @@ pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$TMP_DB" \
   strip_transaction_timeout > "$DUMP_FILE"
 
 printf 'Dump written to %s\n' "$DUMP_FILE"
-
-# ── Cleanup ────────────────────────────────────────────────────────────────────
-
-printf 'Dropping temporary database "%s"...\n' "$TMP_DB"
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "DROP DATABASE IF EXISTS \"$TMP_DB\""
 
 printf 'Done.\n'

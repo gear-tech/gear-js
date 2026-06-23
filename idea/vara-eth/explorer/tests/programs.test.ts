@@ -79,7 +79,7 @@ describe('GET /api/programs', () => {
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(3);
     res.body.data.forEach((p: any) => {
-      expect(p.id).toBeOneOf([PROGRAM_1_ID, PROGRAM_2_ID, PROGRAM_3_ID]);
+      expect([PROGRAM_1_ID, PROGRAM_2_ID, PROGRAM_3_ID]).toContain(p.id);
     });
   });
 

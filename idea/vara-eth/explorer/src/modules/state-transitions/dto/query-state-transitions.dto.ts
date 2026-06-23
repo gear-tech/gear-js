@@ -29,8 +29,9 @@ export class QueryStateTransitionsDto extends PaginationDto {
   })
   @IsOptional()
   @Transform(({ value }) => {
-    if (value === undefined || value === null) return undefined;
-    return value === true || value === 'true';
+    if (value === true || value === 'true') return true;
+    if (value === false || value === 'false') return false;
+    return value;
   })
   @IsBoolean()
   exited?: boolean;

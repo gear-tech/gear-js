@@ -31,7 +31,7 @@ async function loadDump(host: string, port: number, user: string, password: stri
   const { join } = await import('node:path');
 
   const dump = readFileSync(DUMP_PATH, 'utf8');
-  const lines = dump.split('\n');
+  const lines = dump.split(/\r?\n/);
   const out: string[] = [];
   let skipBlock = false;
 
