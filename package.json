@@ -80,6 +80,7 @@
     "test:gear-idea-meta-storage": "lerna run test --scope gear-idea-meta-storage",
     "test:gear-idea-faucet": "lerna run test --scope gear-idea-faucet",
     "test:gear-idea-explorer": "lerna run test --scope gear-idea-explorer",
+    "test:varaeth-idea-explorer": "lerna run test --scope @vara-eth/idea-explorer",
     "test:txwrapper": "lerna run test --scope @gear-js/txwrapper",
     "test:ui": "lerna run test --scope @gear-js/ui",
     "test": "lerna run test --parallel",

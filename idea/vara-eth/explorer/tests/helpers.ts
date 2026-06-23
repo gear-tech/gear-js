@@ -5,8 +5,7 @@ export type Agent = ReturnType<typeof import('supertest').default>;
 export const getList = (agent: Agent, path: string, query: Record<string, unknown> = {}) =>
   agent.get(path).query(query).set('Accept', 'application/json').timeout(5000);
 
-export const getOne = (agent: Agent, path: string) =>
-  agent.get(path).set('Accept', 'application/json').timeout(5000);
+export const getOne = (agent: Agent, path: string) => agent.get(path).set('Accept', 'application/json').timeout(5000);
 
 // ── Response shape assertions ──────────────────────────────────────────────────
 
@@ -96,7 +95,15 @@ export function validateProgramDto(p: any, expectCode = false) {
 
 /** Validate a BatchResponseDto */
 export function validateBatchDto(b: any) {
-  expect(Object.keys(b).sort()).toEqual(['blockHash', 'blockTimestamp', 'committedAt', 'committedAtBlock', 'expiry', 'id', 'previousCommittedBatchHash']);
+  expect(Object.keys(b).sort()).toEqual([
+    'blockHash',
+    'blockTimestamp',
+    'committedAt',
+    'committedAtBlock',
+    'expiry',
+    'id',
+    'previousCommittedBatchHash',
+  ]);
   assertHex(b.id, 32);
   assertHex(b.blockHash);
   assertHex(b.previousCommittedBatchHash);
@@ -119,7 +126,15 @@ export function validateTransactionListDto(t: any) {
 
 /** Validate a TransactionDetailResponseDto */
 export function validateTransactionDetailDto(t: any) {
-  expect(Object.keys(t).sort()).toEqual(['blockNumber', 'contractAddress', 'createdAt', 'data', 'id', 'selector', 'sender']);
+  expect(Object.keys(t).sort()).toEqual([
+    'blockNumber',
+    'contractAddress',
+    'createdAt',
+    'data',
+    'id',
+    'selector',
+    'sender',
+  ]);
   assertHex(t.id, 32);
   assertHex(t.contractAddress);
   assertHex(t.sender);
@@ -155,7 +170,17 @@ export function validateStateTransitionDto(st: any, expectRelations = false) {
 
 /** Validate a MessageRequestResponseDto */
 export function validateMessageRequestDto(m: any, expectRelation = false) {
-  const keys = ['blockNumber', 'callReply', 'createdAt', 'id', 'payload', 'programId', 'sourceAddress', 'txHash', 'value'];
+  const keys = [
+    'blockNumber',
+    'callReply',
+    'createdAt',
+    'id',
+    'payload',
+    'programId',
+    'sourceAddress',
+    'txHash',
+    'value',
+  ];
   if (expectRelation && m.program !== undefined) keys.push('program');
   expect(Object.keys(m).sort()).toEqual(keys.sort());
 
@@ -210,7 +235,18 @@ export function validateReplyRequestDto(r: any, expectRelation = false) {
 
 /** Validate a ReplySentResponseDto */
 export function validateReplySentDto(r: any, expectRelation = false) {
-  const keys = ['createdAt', 'destination', 'id', 'isCall', 'payload', 'repliedToId', 'replyCode', 'sourceProgramId', 'stateTransitionId', 'value'];
+  const keys = [
+    'createdAt',
+    'destination',
+    'id',
+    'isCall',
+    'payload',
+    'repliedToId',
+    'replyCode',
+    'sourceProgramId',
+    'stateTransitionId',
+    'value',
+  ];
   if (expectRelation && r.sourceProgram !== undefined) keys.push('sourceProgram');
   expect(Object.keys(r).sort()).toEqual(keys.sort());
 
@@ -230,7 +266,18 @@ export function validateReplySentDto(r: any, expectRelation = false) {
 
 /** Validate an InjectedTransactionResponseDto */
 export function validateInjectedTransactionDto(t: any) {
-  expect(Object.keys(t).sort()).toEqual(['createdAt', 'destination', 'id', 'payload', 'referenceBlock', 'replyId', 'salt', 'senderAddress', 'signature', 'value']);
+  expect(Object.keys(t).sort()).toEqual([
+    'createdAt',
+    'destination',
+    'id',
+    'payload',
+    'referenceBlock',
+    'replyId',
+    'salt',
+    'senderAddress',
+    'signature',
+    'value',
+  ]);
   assertHex(t.id, 32);
   assertHex(t.replyId);
   assertHex(t.destination);

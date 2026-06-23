@@ -79,4 +79,4 @@ export const REPLY_SENT_4_ID = '0x387e9551abe3568f95152ca5da245ce2ca3f39a02c7cf8
 // Tests verify empty-list behavior and 404 on unknown IDs.
 
 // ── Non-existent IDs (used for "not found" tests) ───────────────────────────────
-export const UNKNOWN_ID = '0x' + 'ff'.repeat(32);
+export const UNKNOWN_ID = `0x${'ff'.repeat(32)}`;
