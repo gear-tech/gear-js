@@ -32,7 +32,8 @@ TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepape
   - [2. Validator Pool](#2-validator-pool)
   - [3. Injected Transactions](#3-injected-transactions)
   - [4. Querying Program Data](#4-querying-program-data)
-  - [5. Reading Program State via calculateReplyForHandle](#5-reading-program-state-via-calculatereplyforhandle)
+  - [5. Subscribing to Program Best State](#5-subscribing-to-program-best-state)
+  - [6. Reading Program State via calculateReplyForHandle](#6-reading-program-state-via-calculatereplyforhandle)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -724,7 +725,49 @@ if ('Active' in state.program) {
 }
 ```
 
-### 5. Reading Program State via `calculateReplyForHandle`
+### 5. Subscribing to Program Best State
+
+Subscribe to real-time state transitions for a specific program. `subscribeBestState` delivers a `ProgramBestState` update every time the node computes an MB (micro-block) that produces a state transition for the given program.
+
+> **Note**: Requires a `WsVaraEthProvider` — HTTP providers do not support subscriptions.
+
+```typescript
+const unsubscribe = await api.query.program.subscribeBestState(
+  programId,
+  (bestState) => {
+    console.log('MB hash:', bestState.mbHash);
+    console.log('New state hash:', bestState.newStateHash);
+    console.log('Outgoing messages:', bestState.messages);
+  },
+  (error) => {
+    console.error('Subscription error:', error);
+  },
+);
+
+// Cancel the subscription when no longer needed
+unsubscribe();
+```
+
+**`ProgramBestState` fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mbHash` | `Hash` | Hash of the micro-block that triggered this transition |
+| `newStateHash` | `Hash` | The program's new state hash after execution |
+| `messages` | `Message[]` | Outgoing messages produced by this execution |
+
+**`Message` fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `Hash` | Message ID |
+| `destination` | `Address` | Recipient address |
+| `payload` | `Hex` | Encoded message payload |
+| `value` | `bigint` | Value attached to the message |
+| `replyDetails` | `ReplyDetails \| null` | Reply context, if this is a reply message |
+| `call` | `boolean` | Whether this message calls an Ethereum contract |
+
+### 6. Reading Program State via `calculateReplyForHandle`
 
 Perform read-only queries on program state without sending transactions:
 

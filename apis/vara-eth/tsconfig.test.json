@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "node"],
     "paths": {
       "sails-js": ["../../node_modules/sails-js/lib/index.d.ts"],
       "sails-js/*": ["../../node_modules/sails-js/lib/*.d.ts"]

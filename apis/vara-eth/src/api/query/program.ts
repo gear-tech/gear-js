@@ -1,4 +1,5 @@
 import type { Hex } from 'viem';
+import type { ProgramBestStateRpc } from '../../types/api/internal.js';
 import type {
   DispatchStash,
   FullProgramState,
@@ -11,6 +12,8 @@ import type {
 } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
 import { normalizeDispatch } from '../../util/normalize.js';
+import { VARA_ETH_RPC_METHODS } from '../rpc.js';
+import { ProgramBestState } from '../types/program.js';
 
 function normalizeProgramBalances(state: any): void {
   state.balance = BigInt(state.balance);
@@ -98,5 +101,41 @@ export class ProgramQueries {
 
   async readPageData(hash: string): Promise<Hex> {
     return this._provider.send<Hex>('program_readPageData', [hash]);
+  }
+
+  /**
+   * Subscribes to the best state of a program, receiving a {@link ProgramBestState} update
+   * on every newly computed MB that produces a state transition for the given program.
+   *
+   * @param programId - The program's Ethereum address to subscribe to.
+   * @param onState - Called with the latest {@link ProgramBestState} each time the program's
+   *   state transitions in a computed MB.
+   * @param onError - Optional. Called when the subscription encounters an error.
+   *   The subscription remains open — call the returned unsubscribe function to stop it.
+   * @returns A function that cancels the subscription when called.
+   */
+  async subscribeBestState(
+    programId: Hex,
+    onState: (value: ProgramBestState) => void | Promise<void>,
+    onError?: (error: unknown) => void,
+  ): Promise<() => void> {
+    const unsub = await this._provider.subscribe<unknown, ProgramBestStateRpc>(
+      VARA_ETH_RPC_METHODS.program.subscribeBestState.subscribe,
+      VARA_ETH_RPC_METHODS.program.subscribeBestState.unsubscribe,
+      [programId],
+      async (error, result) => {
+        if (error) {
+          onError?.(error);
+        } else if (result != null) {
+          try {
+            await onState(new ProgramBestState(result));
+          } catch (err) {
+            onError?.(err);
+          }
+        }
+      },
+    );
+
+    return unsub;
   }
 }

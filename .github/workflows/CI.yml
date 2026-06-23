@@ -37,7 +37,7 @@ jobs:
       tools: ${{ steps.changes.outputs.tools }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Detect changes
         uses: dorny/paths-filter@v4
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [guard]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: 'Run linter'
@@ -75,7 +75,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.utils-ui == 'true' || inputs.force }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: 'Build frontend-configs'
@@ -99,13 +99,13 @@ jobs:
       - name: "Build frontends"
         run: |
             yarn lerna run build --scope @gear-js/api --scope @vara-eth/api
-            yarn lerna run build --scope gear-idea-frontend varaeth-idea-frontend
+            yarn lerna run build --scope gear-idea-frontend --scope varaeth-idea-frontend
 
   test-ui:
     runs-on: ubuntu-latest
     needs: [build-ui-utils]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: 'Build @gear-js/frontend-configs'
@@ -119,7 +119,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.tools == 'true' || inputs.force }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: 'Build'
@@ -129,7 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-tools]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: 'Test: run'
@@ -141,7 +141,7 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           install-command: yarn workspaces focus gear-js-util gear-js

@@ -1,6 +1,6 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Typescript library for interacting with Vara.Eth network",
   "repository": {
     "type": "git",
@@ -11,10 +11,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "npx jest --runInBand",
-    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
-    "test:no-setup": "npx jest",
-    "test:unit": "npx jest --config jest.unit.config.ts",
+    "test": "npx vitest run",
+    "test:only": "npx vitest run",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
@@ -69,6 +67,6 @@
     "lib"
   ],
   "dependencies": {
-    "@noble/hashes": "1.8.0"
+    "@noble/hashes": "2.2.0"
   }
 }
