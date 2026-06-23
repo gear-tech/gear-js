@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - D4-dependencies
     directory: '/'
@@ -9,8 +9,15 @@ updates:
       interval: weekly
       day: monday
       time: "09:00"
+      timezone: "UTC"
     commit-message:
       prefix: "chore(ci)"
+    groups:
+      github-actions:
+        update-types:
+          - minor
+          - patch
+          - major
 
   - package-ecosystem: 'cargo'
     directory: '/'
@@ -21,8 +28,15 @@ updates:
       interval: weekly
       day: monday
       time: "09:00"
+      timezone: "UTC"
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      cargo-updates:
+        update-types:
+          - minor
+          - patch
+          - major
 
   - package-ecosystem: 'cargo'
     directory: '/apis/vara-eth'
@@ -33,6 +47,7 @@ updates:
       interval: weekly
       day: monday
       time: "09:00"
+      timezone: "UTC"
     commit-message:
       prefix: "chore(deps)"
     groups:
@@ -40,17 +55,18 @@ updates:
         update-types:
           - minor
           - patch
-          - 'major'
+          - major
 
   - package-ecosystem: 'npm'
     directory: '/'
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 6
     labels:
       - D4-dependencies
     schedule:
       interval: weekly
       day: monday
       time: "09:00"
+      timezone: "UTC"
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
@@ -61,30 +77,18 @@ updates:
           - '@polkadot/*'
           - 'sails-js*'
         update-types:
-          - "minor"
-          - "patch"
-      development-major:
-        dependency-type: 'development'
-        exclude-patterns:
-          - '@polkadot/*'
-          - 'sails-js*'
-        update-types:
-          - "major"
+          - minor
+          - patch
+          - major
       production:
         dependency-type: 'production'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
         update-types:
-          - "patch"
-          - "minor"
-      production-major:
-        dependency-type: 'production'
-        exclude-patterns:
-          - '@polkadot/*'
-          - 'sails-js*'
-        update-types:
-          - "major"
+          - patch
+          - minor
+          - major
       polkadot:
         patterns:
           - '@polkadot/*'
