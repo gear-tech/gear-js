@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
+import { isHex } from 'viem';
 
-import { Tabs, UploadIdlButton } from '@/components';
+import { useApi, useMirrorContract } from '@/app/api';
+import { SplitButton, Tabs, UploadIdlButton } from '@/components';
+import { Input as UIInput } from '@/components/form/input';
 import { ProgramMessagesTable } from '@/features/messages';
 import {
   useInitProgram,
   useReadProgramMessage,
   useSendInjectedTransaction,
   useSendProgramMessage,
+  useSendRawInjectedTransaction,
+  useSendRawProgramMessage,
 } from '@/features/programs/lib';
 
 import { type FormattedPayloadValue, useSails } from '../../lib';
@@ -28,7 +33,7 @@ const WRITE_MODE_OFFCHAIN = 'offchain';
 type WriteMode = typeof WRITE_MODE_ONCHAIN | typeof WRITE_MODE_OFFCHAIN;
 
 const TABS_LOADING = [MESSAGES_TAB];
-const TABS_NO_IDL = [MESSAGES_TAB, IDL_TAB];
+const TABS_NO_IDL = [MESSAGES_TAB, WRITE_TAB, IDL_TAB];
 const TABS_WITH_INITIALIZE = [MESSAGES_TAB, INITIALIZE_TAB];
 const TABS_WITH_IDL = [MESSAGES_TAB, READ_TAB, WRITE_TAB];
 
@@ -51,6 +56,8 @@ type Props = {
 const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExecutableBalance }: Props) => {
   const { data: sails } = useSails(idl ?? '');
   const [tabIndex, setTabIndex] = useState(0);
+  const [rawPayload, setRawPayload] = useState('0x');
+  const [rawPayloadError, setRawPayloadError] = useState<string | undefined>();
   const [writeMode, setWriteMode] = useState<WriteMode>(() => {
     const mode = localStorage.getItem(WRITE_MODE_STORAGE_KEY);
     return mode === WRITE_MODE_OFFCHAIN ? WRITE_MODE_OFFCHAIN : WRITE_MODE_ONCHAIN;
@@ -67,12 +74,22 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
   const sendMessage = useSendProgramMessage(programId, sails);
   const readMessage = useReadProgramMessage(programId, sails);
 
+  const sendRawInjectedTx = useSendRawInjectedTransaction(programId);
+  const sendRawMessage = useSendRawProgramMessage(programId);
+
+  const { data: api, isLoading: isApiLoading } = useApi();
+  const mirrorContract = useMirrorContract(programId);
+
+  const isRawServiceReady = writeMode === WRITE_MODE_OFFCHAIN ? !!api : !!mirrorContract;
+  const isRawServiceLoading = writeMode === WRITE_MODE_OFFCHAIN && isApiLoading;
+
   const initProgram = useInitProgram(programId, sails);
 
   const isMessagesTab = activeTab === MESSAGES_TAB;
   const isInitializeTab = activeTab === INITIALIZE_TAB;
   const isReadTab = activeTab === READ_TAB;
   const isWriteTab = activeTab === WRITE_TAB;
+  const isIdlTab = activeTab === IDL_TAB;
 
   const setWriteModePreference = (mode: string) => {
     if (mode !== WRITE_MODE_ONCHAIN && mode !== WRITE_MODE_OFFCHAIN) return;
@@ -160,18 +177,75 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
     );
   };
 
+  const handleRawPayloadChange = (value: string) => {
+    setRawPayload(value);
+
+    if (!value.trim() || isHex(value)) {
+      setRawPayloadError(undefined);
+    }
+  };
+
+  const handleRawPayloadSubmit = async () => {
+    if (!isHex(rawPayload)) {
+      setRawPayloadError('Payload should be a valid hex string, e.g. 0x1234');
+      return;
+    }
+
+    setRawPayloadError(undefined);
+
+    const send = writeMode === WRITE_MODE_OFFCHAIN ? sendRawInjectedTx : sendRawMessage;
+
+    await send.mutateAsync({ payload: rawPayload });
+  };
+
+  const isRawMessageSending = sendRawMessage.isPending || sendRawInjectedTx.isPending;
+
+  const renderNoIdlWrite = () => (
+    <div className={styles.rawPayloadContainer}>
+      <p className={styles.rawPayloadDescription}>
+        No IDL uploaded. You can still send bytes directly as a pre-encoded payload.
+      </p>
+
+      <UIInput
+        name="payload"
+        label="Payload (hex)"
+        value={rawPayload}
+        onChange={(event) => handleRawPayloadChange(event.target.value)}
+        placeholder="0x"
+        error={rawPayloadError}
+      />
+
+      <SplitButton
+        className={styles.rawPayloadButton}
+        selectedValue={writeMode}
+        options={writeModeOptions}
+        isLoading={isRawMessageSending || isRawServiceLoading}
+        disabled={!isRawServiceReady && !isRawServiceLoading}
+        primaryButtonProps={{ onClick: handleRawPayloadSubmit }}
+        onOptionClick={setWriteModePreference}>
+        Send bytes message
+      </SplitButton>
+    </div>
+  );
+
+  const renderNoIdlUpload = () => (
+    <div className={styles.emptyState}>
+      <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
+      <UploadIdlButton onSaveIdl={onSaveIdl} />
+    </div>
+  );
+
   const renderContent = () => {
     if (isMessagesTab) return <ProgramMessagesTable programId={programId} sails={sails} />;
 
     if (isLoading) return null;
 
-    if (!idl)
-      return (
-        <div className={styles.emptyState}>
-          <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
-          <UploadIdlButton onSaveIdl={onSaveIdl} />
-        </div>
-      );
+    if (!idl) {
+      if (isWriteTab) return renderNoIdlWrite();
+      if (isIdlTab) return renderNoIdlUpload();
+
+      return null;
+    }
 
     if (!sails) return null;
     if (isInitializeTab) return renderCtors();
