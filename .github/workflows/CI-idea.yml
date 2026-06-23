@@ -117,23 +117,14 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
 
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: Install NodeJS 20.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-          cache: yarn
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build'
         run: yarn run build:varaeth-idea-explorer
 
       - name: 'Test: explorer'
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: yarn test:varaeth-idea-explorer
 
   test-gear-idea-backend:

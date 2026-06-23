@@ -65,6 +65,11 @@ describe('GET /api/state-transitions', () => {
     });
   });
 
+  it('invalid exited value returns 400', async () => {
+    const res = await getList(getAgent(), '/api/state-transitions', { exited: 'notabool' });
+    expect(res.status).toBe(400);
+  });
+
   it('exited filter returns only matching', async () => {
     const exited = await getList(getAgent(), '/api/state-transitions', { exited: true });
     expect(exited.status).toBe(200);

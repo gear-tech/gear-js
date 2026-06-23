@@ -105,7 +105,8 @@ copy_table "hash_registry" 20
 printf 'Running pg_dump...\n'
 pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$TMP_DB" \
   --data-only --no-owner --no-privileges --no-comments | \
-  strip_transaction_timeout > "$DUMP_FILE"
+  strip_transaction_timeout | \
+  grep -v '^\\\(restrict\|unrestrict\) ' > "$DUMP_FILE"
 
 printf 'Dump written to %s\n' "$DUMP_FILE"
 
