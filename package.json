@@ -127,7 +127,7 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3",
     "unplugin-swc": "^1.5.9",
-    "vite": "^8.0.12",
+    "vite": "^8.0.16",
     "vitest": "^4.1.4"
   }
 }
