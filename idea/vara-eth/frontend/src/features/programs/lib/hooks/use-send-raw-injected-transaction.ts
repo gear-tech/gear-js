@@ -21,7 +21,7 @@ const useSendRawInjectedTransaction = (programId: Hex) => {
       value: 0n,
     });
 
-    const response = await tx.sendAndWaitForPromise();
+    const response = await tx.sendAndWaitForReceipt();
 
     await addMyActivity({
       type: TransactionTypes.injectedTx,
@@ -32,7 +32,7 @@ const useSendRawInjectedTransaction = (programId: Hex) => {
       params: { payload },
     });
 
-    const { value, code } = response;
+    const { value, code } = response.promise;
 
     await addMyActivity({
       type: TransactionTypes.injectedTxResponse,
@@ -40,7 +40,7 @@ const useSendRawInjectedTransaction = (programId: Hex) => {
       messageName: 'Bytes',
       replyCode: code.isSuccess ? 'success' : 'error',
       from: programId,
-      params: { payload: response.payload },
+      params: { payload: response.promise.payload },
       value: String(value),
     });
 
