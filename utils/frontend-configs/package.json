@@ -30,7 +30,7 @@
   ],
   "peerDependencies": {
     "typescript": "^5.5",
-    "vite": "^7"
+    "vite": "^8"
   },
   "dependencies": {
     "@eslint/js": "10.0.1",
