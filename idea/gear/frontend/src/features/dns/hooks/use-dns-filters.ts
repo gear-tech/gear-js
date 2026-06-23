@@ -1,18 +1,15 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useMemo, useState } from 'react';
 
-import type { SortDirection } from '../types';
-
 const DEFAULT_FILTER_VALUES = {
   owner: 'all',
-  orderByField: 'updatedAt',
-  orderByDirection: 'DESC' as SortDirection,
+  sort: 'desc' as const,
 };
 
 function useDnsFilters() {
   const { account } = useAccount();
   const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
-  const { orderByField, orderByDirection } = values;
+  const { sort } = values;
 
   const getOwnerParams = () => {
     if (!account) return {};
@@ -23,7 +20,7 @@ function useDnsFilters() {
     return owner === 'all' ? {} : { createdBy: decodedAddress };
   };
 
-  const params = useMemo(() => ({ ...getOwnerParams(), orderByField, orderByDirection }), [values, account]);
+  const params = useMemo(() => ({ ...getOwnerParams(), sort }), [values, account]);
 
   return [values, params, setValues] as const;
 }

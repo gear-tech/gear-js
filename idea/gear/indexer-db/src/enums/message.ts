@@ -1,11 +1,11 @@
 export enum MessageReadReason {
-  OutOfRent = 'OutOfRent',
-  Claimed = 'Claimed',
-  Replied = 'Replied',
+  OutOfRent = 0,
+  Claimed = 1,
+  Replied = 2,
 }
 
 export enum MessageEntryPoint {
-  Init = 'init',
-  Handle = 'handle',
-  Reply = 'reply',
+  Init = 0,
+  Handle = 1,
+  Reply = 2,
 }

@@ -1,7 +1,7 @@
 import { Contains, IsString } from 'class-validator';
-import type { ProgramStatus } from 'gear-idea-indexer-db';
-import { IsOneOf } from '../../decorators';
-import { ParamGenesis, ParamPagination } from './common';
+
+import { IsOneOf } from '../../decorators/index.js';
+import { ParamGenesis, ParamPagination } from './common.js';
 
 export class ParamGetProgram extends ParamGenesis {
   @IsString()
@@ -13,7 +13,7 @@ export class ParamGetPrograms extends ParamPagination {
   readonly owner?: string;
   readonly name?: string;
   readonly codeId?: string;
-  readonly status?: ProgramStatus | ProgramStatus[];
+  readonly status?: string | string[];
   readonly query?: string;
 }
 

@@ -1,0 +1,48 @@
+/** biome-ignore-all lint/style/useImportType: NestJS emitDecoratorMetadata requires runtime class references for DI */
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import type { PgByteaString } from '@vara-eth/idea-indexer-db';
+
+import { ParseByteaPipe } from '../../common/pipes/parse-bytea.pipe.js';
+import { QueryMessagesDto } from './dto/query-messages.dto.js';
+import { MessagesService } from './messages.service.js';
+
+@ApiTags('messages')
+@Controller('messages')
+@UseGuards(ThrottlerGuard)
+export class MessagesController {
+  constructor(private readonly messagesService: MessagesService) {}
+
+  @Get('requests')
+  @ApiOperation({ summary: 'Get all message requests (user to program)' })
+  @ApiResponse({ status: 200, description: 'Returns paginated list of message requests' })
+  async findAllRequests(@Query() query: QueryMessagesDto) {
+    return this.messagesService.findAllRequests(query);
+  }
+
+  @Get('sent')
+  @ApiOperation({ summary: 'Get all sent messages (program to user/program)' })
+  @ApiResponse({ status: 200, description: 'Returns paginated list of sent messages' })
+  async findAllSent(@Query() query: QueryMessagesDto) {
+    return this.messagesService.findAllSent(query);
+  }
+
+  @Get('requests/:id')
+  @ApiOperation({ summary: 'Get message request by ID' })
+  @ApiParam({ name: 'id', description: 'Message ID (hex with 0x prefix)' })
+  @ApiResponse({ status: 200, description: 'Returns the message request' })
+  @ApiResponse({ status: 404, description: 'Message request not found' })
+  async findOneRequest(@Param('id', ParseByteaPipe) id: PgByteaString) {
+    return this.messagesService.findOneRequest(id);
+  }
+
+  @Get('sent/:id')
+  @ApiOperation({ summary: 'Get sent message by ID' })
+  @ApiParam({ name: 'id', description: 'Message ID (hex with 0x prefix)' })
+  @ApiResponse({ status: 200, description: 'Returns the sent message' })
+  @ApiResponse({ status: 404, description: 'Sent message not found' })
+  async findOneSent(@Param('id', ParseByteaPipe) id: PgByteaString) {
+    return this.messagesService.findOneSent(id);
+  }
+}

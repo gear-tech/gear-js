@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import type { Address } from 'viem';
 
-dotenv.config({ quiet: true, path: ['.env', '../../../.env'] });
+dotenv.config({ quiet: true, path: ['.env', '../.env', '../../../.env'] });
 
 const getEnv = (key: string, _default?: string): string => {
   const value = process.env[key] || _default;
@@ -17,4 +17,5 @@ export const config = {
   rateLimit: Number(getEnv('RPC_RATE_LIMIT', '20')),
   fromBlock: Number(getEnv('FROM_BLOCK', '0')),
   routerAddr: getEnv('ROUTER_ADDR') as Address,
+  apiKey: getEnv('API_KEY'),
 };

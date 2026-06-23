@@ -37,7 +37,7 @@ jobs:
       vara-eth-api-code-modified: ${{ steps.vara-eth-api-code-modified.outputs.code-changed }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
@@ -111,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -163,7 +163,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -189,7 +189,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.gear-hooks == 'true' && !cancelled() }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -215,7 +215,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -241,7 +241,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -267,7 +267,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check-changes.outputs.wallet-connect == 'true' && !cancelled() }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
@@ -296,7 +296,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -355,7 +355,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 

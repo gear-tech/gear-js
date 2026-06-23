@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 
 import LogoSVG from '@/assets/logo.svg?react';
 import { HeaderBalance } from '@/components';
@@ -11,7 +11,7 @@ import { WalletButton } from '../wallet/wallet-button';
 import styles from './header.module.scss';
 
 const Header = () => {
-  const ethAccount = useAccount();
+  const ethAccount = useConnection();
   const isConnected = Boolean(ethAccount.address);
 
   return (

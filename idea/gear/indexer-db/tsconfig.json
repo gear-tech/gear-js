@@ -9,6 +9,7 @@
     "strict": false,
     "moduleResolution": "nodenext",
     "module": "NodeNext",
+    "types": ["node"]
   },
-  "include": ["./src"],
+  "include": ["./src"]
 }

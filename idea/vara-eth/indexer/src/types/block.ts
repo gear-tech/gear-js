@@ -1,5 +1,5 @@
 export interface BlockDataCommon {
   blockNumber: bigint;
-  blockHash: Buffer;
+  blockHash: string;
   timestamp: Date;
 }

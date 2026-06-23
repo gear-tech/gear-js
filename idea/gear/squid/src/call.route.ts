@@ -1,18 +1,19 @@
 import { generateCodeHash } from '@gear-js/api';
-import type { IHandleEventProps } from './event.route';
-import { type MessageToProgram, Program, ProgramStatus } from './model';
-import type { Call } from './processor';
-import type { EMessageQueuedEvent } from './types';
-import type { CCreateProgram, CSendMessage, CSendReply, CUploadProgram, CVoucherCall } from './types/calls';
+
+import type { IHandleEventProps } from './event.route.js';
+import { type MessageToProgram, Program, ProgramStatus } from './model/index.js';
+import type { Call } from './processor.js';
+import type { CCreateProgram, CSendMessage, CSendReply, CUploadProgram, CVoucherCall } from './types/calls/index.js';
+import type { EMessageQueuedEvent } from './types/index.js';
 
 export interface IHandleCallProps<C = Call> extends IHandleEventProps<EMessageQueuedEvent> {
   msg: MessageToProgram;
   call: C;
 }
 
-export function handleUploadProgram({ msg, event, common, tempState, call }: IHandleCallProps<CUploadProgram>) {
+export function handleUploadProgram({ msg, event, common, batchState, call }: IHandleCallProps<CUploadProgram>) {
   const codeId = generateCodeHash(call.args.code);
-  tempState.addProgram(
+  batchState.addProgram(
     new Program({
       ...common,
       id: event.args.destination,
@@ -23,29 +24,29 @@ export function handleUploadProgram({ msg, event, common, tempState, call }: IHa
     }),
   );
   msg.payload = call.args.initPayload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleSendMessageCall({ msg, call }: IHandleCallProps<CSendMessage>) {
   msg.payload = call.args.payload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps<CVoucherCall>) {
   if (call.args.call.__kind === 'SendMessage') {
     msg.payload = call.args.call.payload;
-    msg.value = call.args.call.value;
+    msg.value = String(call.args.call.value);
   } else if (call.args.call.__kind === 'SendReply') {
     msg.payload = call.args.call.payload;
     msg.replyToMessageId = call.args.call.replyToId;
-    msg.value = call.args.call.value;
+    msg.value = String(call.args.call.value);
   } else {
     ctx.log.error(call, 'Unknown voucher call');
   }
 }
 
-export function handleCreateProgram({ msg, event, common, tempState, call }: IHandleCallProps<CCreateProgram>) {
-  tempState.addProgram(
+export function handleCreateProgram({ msg, event, common, batchState, call }: IHandleCallProps<CCreateProgram>) {
+  batchState.addProgram(
     new Program({
       ...common,
       id: event.args.destination,
@@ -57,11 +58,11 @@ export function handleCreateProgram({ msg, event, common, tempState, call }: IHa
   );
 
   msg.payload = call.args.initPayload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
 }
 
 export function handleSendReplyCall({ msg, call }: IHandleCallProps<CSendReply>) {
   msg.payload = call.args.payload;
-  msg.value = call.args.value;
+  msg.value = String(call.args.value);
   msg.replyToMessageId = call.args.replyToId;
 }

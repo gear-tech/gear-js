@@ -5,4 +5,4 @@ export {
   useSendProgramMessage,
   useWatchProgramStateChange,
 } from './lib';
-export { CreateProgramButton, ProgramsTable, TopUpExecBalance } from './ui';
+export { ProgramsTable, TopUpExecBalance } from './ui';

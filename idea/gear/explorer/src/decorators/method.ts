@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors';
-import type { JsonRpcRequest, JsonRpcResponse } from '../types';
+import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors/index.js';
+import type { JsonRpcRequest, JsonRpcResponse } from '../types/index.js';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 type AllowedMethods = 'get' | 'post';
@@ -97,7 +97,8 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
 
       for (const { method, path, handler } of restHandlers) {
         router[method](path, async (req, res) => {
-          const { genesis } = req.body;
+          const rawGenesis = req.body?.genesis ?? req.query?.genesis;
+          const genesis = typeof rawGenesis === 'string' ? rawGenesis : undefined;
           if (!genesis) {
             res.status(400).json({ error: 'Genesis not found in the request' });
             return;
@@ -109,7 +110,7 @@ export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase)
           }
 
           try {
-            const result = await handler.apply(this, [{ ...req.body, ...req.params, genesis }]);
+            const result = await handler.apply(this, [{ ...req.query, ...req.body, ...req.params, genesis }]);
             res.json(result);
           } catch (err) {
             if (err instanceof VoucherNotFound) {

@@ -1,5 +1,6 @@
 import { BlockQueries } from './block.js';
 import { CodeQueries } from './code.js';
+import { InfoQueries } from './info.js';
 import { InjectedQueries } from './injected.js';
 import { ProgramQueries } from './program.js';
 
@@ -8,6 +9,7 @@ export const query = {
   code: CodeQueries,
   program: ProgramQueries,
   injected: InjectedQueries,
+  info: InfoQueries,
 } as const;
 
 export type Query = {
@@ -15,4 +17,5 @@ export type Query = {
   code: CodeQueries;
   program: ProgramQueries;
   injected: InjectedQueries;
+  info: InfoQueries;
 };

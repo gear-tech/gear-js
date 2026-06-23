@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { Sails } from 'sails-js';
 import { type Hex, zeroAddress } from 'viem';
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 
 import { useApi } from '@/app/api';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
@@ -15,7 +15,7 @@ type ReadMessageParams = {
 
 const useReadProgramMessage = (programId: Hex, sails: Sails | undefined) => {
   const { data: api } = useApi();
-  const account = useAccount();
+  const account = useConnection();
   const addMyActivity = useAddMyActivity();
 
   const readProgramMessage = async ({ serviceName, messageName, payload }: ReadMessageParams) => {

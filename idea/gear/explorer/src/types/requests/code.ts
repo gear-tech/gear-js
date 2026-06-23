@@ -1,7 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { CodeStatus, type MetaType } from 'gear-idea-indexer-db';
-import { IsOneOf } from '../../decorators';
-import { ParamGenesis, ParamPagination } from './common';
+import type { MetaType } from 'gear-idea-indexer-db';
+
+import { IsOneOf } from '../../decorators/index.js';
+import { ParamGenesis, ParamPagination } from './common.js';
 
 export class ParamGetCode extends ParamGenesis {
   @IsString()
@@ -9,11 +10,14 @@ export class ParamGetCode extends ParamGenesis {
   readonly id: string;
 }
 
+const CODE_STATUSES = ['Active', 'Inactive', 'Unknown'] as const;
+export type CodeStatusString = (typeof CODE_STATUSES)[number];
+
 export class ParamGetCodes extends ParamPagination {
   readonly uploadedBy?: string;
   readonly name?: string;
-  @IsOneOf(Object.values(CodeStatus), false)
-  readonly status?: CodeStatus | CodeStatus[];
+  @IsOneOf(CODE_STATUSES as unknown as string[], false)
+  readonly status?: CodeStatusString | CodeStatusString[];
   readonly query?: string;
 }
 

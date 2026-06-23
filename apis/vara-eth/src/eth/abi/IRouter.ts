@@ -6,6 +6,20 @@ export const IROUTER_ABI = [
   ...EIP712_ABI,
   {
     type: 'function',
+    name: 'DOMAIN_SEPARATOR',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'UPGRADE_INTERFACE_VERSION',
+    inputs: [],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'areValidators',
     inputs: [
       {
@@ -181,7 +195,16 @@ export const IROUTER_ABI = [
                   },
                 ],
               },
-              { name: 'head', type: 'bytes32', internalType: 'bytes32' },
+              {
+                name: 'head',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'lastAdvancedEthBlock',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
             ],
           },
           {
@@ -261,6 +284,11 @@ export const IROUTER_ABI = [
             type: 'tuple[]',
             internalType: 'struct Gear.ValidatorsCommitment[]',
             components: [
+              {
+                name: 'hasAggregatedPublicKey',
+                type: 'bool',
+                internalType: 'bool',
+              },
               {
                 name: 'aggregatedPublicKey',
                 type: 'tuple',
@@ -481,6 +509,13 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'paused',
     inputs: [],
     outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
@@ -519,6 +554,20 @@ export const IROUTER_ABI = [
     inputs: [],
     outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'reinitialize',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'renounceOwnership',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -589,6 +638,237 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
+    name: 'storageView',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct IRouter.StorageView',
+        components: [
+          {
+            name: 'genesisBlock',
+            type: 'tuple',
+            internalType: 'struct Gear.GenesisBlockInfo',
+            components: [
+              {
+                name: 'hash',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'number',
+                type: 'uint32',
+                internalType: 'uint32',
+              },
+              {
+                name: 'timestamp',
+                type: 'uint48',
+                internalType: 'uint48',
+              },
+            ],
+          },
+          {
+            name: 'latestCommittedBatch',
+            type: 'tuple',
+            internalType: 'struct Gear.CommittedBatchInfo',
+            components: [
+              {
+                name: 'hash',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'timestamp',
+                type: 'uint48',
+                internalType: 'uint48',
+              },
+            ],
+          },
+          {
+            name: 'implAddresses',
+            type: 'tuple',
+            internalType: 'struct Gear.AddressBook',
+            components: [
+              {
+                name: 'mirror',
+                type: 'address',
+                internalType: 'address',
+              },
+              {
+                name: 'wrappedVara',
+                type: 'address',
+                internalType: 'address',
+              },
+              {
+                name: 'middleware',
+                type: 'address',
+                internalType: 'address',
+              },
+            ],
+          },
+          {
+            name: 'validationSettings',
+            type: 'tuple',
+            internalType: 'struct Gear.ValidationSettingsView',
+            components: [
+              {
+                name: 'thresholdNumerator',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+              {
+                name: 'thresholdDenominator',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+              {
+                name: 'validators0',
+                type: 'tuple',
+                internalType: 'struct Gear.ValidatorsView',
+                components: [
+                  {
+                    name: 'aggregatedPublicKey',
+                    type: 'tuple',
+                    internalType: 'struct Gear.AggregatedPublicKey',
+                    components: [
+                      {
+                        name: 'x',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                      {
+                        name: 'y',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'verifiableSecretSharingCommitmentPointer',
+                    type: 'address',
+                    internalType: 'address',
+                  },
+                  {
+                    name: 'list',
+                    type: 'address[]',
+                    internalType: 'address[]',
+                  },
+                  {
+                    name: 'useFromTimestamp',
+                    type: 'uint256',
+                    internalType: 'uint256',
+                  },
+                ],
+              },
+              {
+                name: 'validators1',
+                type: 'tuple',
+                internalType: 'struct Gear.ValidatorsView',
+                components: [
+                  {
+                    name: 'aggregatedPublicKey',
+                    type: 'tuple',
+                    internalType: 'struct Gear.AggregatedPublicKey',
+                    components: [
+                      {
+                        name: 'x',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                      {
+                        name: 'y',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'verifiableSecretSharingCommitmentPointer',
+                    type: 'address',
+                    internalType: 'address',
+                  },
+                  {
+                    name: 'list',
+                    type: 'address[]',
+                    internalType: 'address[]',
+                  },
+                  {
+                    name: 'useFromTimestamp',
+                    type: 'uint256',
+                    internalType: 'uint256',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'computeSettings',
+            type: 'tuple',
+            internalType: 'struct Gear.ComputationSettings',
+            components: [
+              {
+                name: 'threshold',
+                type: 'uint64',
+                internalType: 'uint64',
+              },
+              {
+                name: 'wvaraPerSecond',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+            ],
+          },
+          {
+            name: 'timelines',
+            type: 'tuple',
+            internalType: 'struct Gear.Timelines',
+            components: [
+              { name: 'era', type: 'uint256', internalType: 'uint256' },
+              {
+                name: 'election',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+              {
+                name: 'validationDelay',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+            ],
+          },
+          {
+            name: 'programsCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'validatedCodesCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxValidators',
+            type: 'uint16',
+            internalType: 'uint16',
+          },
+          {
+            name: 'requestCodeValidationBaseFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'requestCodeValidationExtraFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'timelines',
     inputs: [],
     outputs: [
@@ -612,6 +892,34 @@ export const IROUTER_ABI = [
       },
     ],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'transferOwnership',
+    inputs: [{ name: 'newOwner', type: 'address', internalType: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'unpause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'upgradeToAndCall',
+    inputs: [
+      {
+        name: 'newImplementation',
+        type: 'address',
+        internalType: 'address',
+      },
+      { name: 'data', type: 'bytes', internalType: 'bytes' },
+    ],
+    outputs: [],
+    stateMutability: 'payable',
   },
   {
     type: 'function',
@@ -671,19 +979,6 @@ export const IROUTER_ABI = [
     inputs: [],
     outputs: [{ name: '', type: 'address', internalType: 'address' }],
     stateMutability: 'view',
-  },
-  {
-    type: 'event',
-    name: 'AnnouncesCommitted',
-    inputs: [
-      {
-        name: 'head',
-        type: 'bytes32',
-        indexed: false,
-        internalType: 'bytes32',
-      },
-    ],
-    anonymous: false,
   },
   {
     type: 'event',
@@ -751,6 +1046,19 @@ export const IROUTER_ABI = [
   },
   {
     type: 'event',
+    name: 'EBCommitted',
+    inputs: [
+      {
+        name: 'ethBlockHash',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'Initialized',
     inputs: [
       {
@@ -758,6 +1066,19 @@ export const IROUTER_ABI = [
         type: 'uint64',
         indexed: false,
         internalType: 'uint64',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MBCommitted',
+    inputs: [
+      {
+        name: 'head',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
       },
     ],
     anonymous: false,
@@ -921,6 +1242,14 @@ export const IROUTER_ABI = [
   { type: 'error', name: 'GenesisHashNotFound', inputs: [] },
   {
     type: 'error',
+    name: 'InvalidAccountNonce',
+    inputs: [
+      { name: 'account', type: 'address', internalType: 'address' },
+      { name: 'currentNonce', type: 'uint256', internalType: 'uint256' },
+    ],
+  },
+  {
+    type: 'error',
     name: 'InvalidBlobHash',
     inputs: [
       { name: 'index', type: 'uint256', internalType: 'uint256' },
@@ -933,6 +1262,22 @@ export const IROUTER_ABI = [
         name: 'expectedBlobHash',
         type: 'bytes32',
         internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'InvalidBlobHashesLength',
+    inputs: [
+      {
+        name: 'providedLength',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'expectedLength',
+        type: 'uint256',
+        internalType: 'uint256',
       },
     ],
   },
