@@ -17,7 +17,6 @@ updates:
         update-types:
           - minor
           - patch
-          - major
 
   - package-ecosystem: 'cargo'
     directory: '/'
@@ -36,7 +35,6 @@ updates:
         update-types:
           - minor
           - patch
-          - major
 
   - package-ecosystem: 'cargo'
     directory: '/apis/vara-eth'
@@ -55,7 +53,6 @@ updates:
         update-types:
           - minor
           - patch
-          - major
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -79,16 +76,14 @@ updates:
         update-types:
           - minor
           - patch
-          - major
       production:
         dependency-type: 'production'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
         update-types:
-          - patch
           - minor
-          - major
+          - patch
       polkadot:
         patterns:
           - '@polkadot/*'
