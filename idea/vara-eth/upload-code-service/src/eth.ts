@@ -15,24 +15,9 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { type NetworkConfig, PermanentJobError } from './shared/types.js';
+import { serializeError } from './util.js';
 
 const logger = createLogger('eth');
-
-function serializeError(err: unknown): unknown {
-  if (err instanceof BaseError) {
-    return {
-      name: err.name,
-      shortMessage: err.shortMessage,
-      details: err.details,
-      metaMessages: err.metaMessages,
-      cause: serializeError(err.cause),
-    };
-  }
-  if (err instanceof Error) {
-    return { name: err.name, message: err.message, cause: serializeError((err as NodeJS.ErrnoException).cause) };
-  }
-  return err;
-}
 
 type ClientPair = { routerClient: RouterClient; publicClient: PublicClient };
 

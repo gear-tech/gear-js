@@ -1,7 +1,7 @@
 import { createPublicClient, webSocket } from 'viem';
 
 import { createVaraEthApi, HttpVaraEthProvider, type VaraEthApi } from '../src';
-import { expectBlockRequestEvent, expectHex, expectStateTransition } from './common';
+import { expectBlockRequestEvent, expectHex } from './common';
 import { config } from './config';
 
 let provider: HttpVaraEthProvider;
@@ -36,16 +36,6 @@ describe('Block methods', () => {
 
     for (const event of events) {
       expectBlockRequestEvent(event);
-    }
-  });
-
-  test('should return state transitions array with correct field types', async () => {
-    const outcome = await api.query.block.outcome();
-
-    expect(Array.isArray(outcome)).toBe(true);
-
-    for (const transition of outcome) {
-      expectStateTransition(transition);
     }
   });
 });

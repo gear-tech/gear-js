@@ -12,6 +12,7 @@ config({ quiet: true });
 const BLOCK_TIME = 1;
 const COUNTER_CODE = 'target/wasm32-gear/release/counter.opt.wasm';
 const LOG_FILE = 'vara-eth.log';
+
 let routerAddress: string;
 let keyStore: string;
 
@@ -38,10 +39,6 @@ async function setupVaraEth() {
     {
       stdio: 'pipe',
       detached: true,
-      env: {
-        ...process.env,
-        RUST_LOG: 'debug',
-      },
     },
   );
 
@@ -128,8 +125,8 @@ function waitForPort(port: number, retries = 30, delayMs = 1000): Promise<void> 
   });
 }
 
-export default async () => {
+export async function setup() {
   setupCodeId();
 
   await setupVaraEth();
-};
+}

@@ -4,9 +4,19 @@ permissions:
   contents: read
 
 on:
+  workflow_call:
+    inputs:
+      force:
+        type: boolean
+        default: false
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [main]
+    paths:
+      - "apis/**"
+      - package.json
+      - Cargo.toml
+      - Cargo.lock
   workflow_dispatch:
     inputs:
       lib:
@@ -21,33 +31,30 @@ env:
   BINARYEN_VERSION: version_111
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+      - run: echo "Not a draft PR, proceeding"
+
   lint:
     runs-on: ubuntu-latest
+    needs: [guard]
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20.x
-          cache: 'yarn'
-
-      - name: 'Install dependencies'
-        run: yarn workspaces focus gear-js
+          install-command: yarn workspaces focus gear-js
 
       - name: 'Run linter'
         run: yarn check:apis
 
   changes:
     runs-on: ubuntu-latest
+    needs: [guard]
     outputs:
       gear-api: ${{ steps.run.outputs.gear-api }}
       vara-eth-api: ${{ steps.run.outputs.vara-eth-api }}
-
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.1
@@ -64,8 +71,10 @@ jobs:
               - 'apis/gear/**'
               - 'Cargo.toml'
               - 'Cargo.lock'
+              - package.json
             vara-eth-api:
               - 'apis/vara-eth/**'
+              - package.json
 
       - name: "Detect what should be running"
         id: run
@@ -81,46 +90,26 @@ jobs:
 
   build-gear-api:
     runs-on: ubuntu-latest
-    needs: changes
-    if: ${{ needs.changes.outputs.gear-api == 'true' }}
+    needs: ["changes"]
+    if: ${{ needs.changes.outputs.gear-api == 'true' || inputs.force }}
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20.x
-          cache: 'yarn'
-
-      - name: 'Install dependencies'
-        run: yarn workspaces focus gear-js @gear-js/api
+          install-command: yarn workspaces focus gear-js @gear-js/api
 
       - name: 'Build gear api'
         run: yarn build:gear-api
 
   build-vara-eth-api:
     runs-on: ubuntu-latest
-    needs: changes
-    if: ${{ needs.changes.outputs.vara-eth-api == 'true' }}
+    needs: ["changes"]
+    if: ${{ needs.changes.outputs.vara-eth-api == 'true' || inputs.force }}
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20.x
-          cache: 'yarn'
-
-      - name: 'Install dependencies'
-        run: yarn workspaces focus gear-js @vara-eth/api
+          install-command: yarn workspaces focus gear-js @vara-eth/api
 
       - name: 'Build vara-eth api'
         run: yarn build:vara-eth-api
@@ -131,57 +120,33 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install: NodeJS 20.x'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20.x
-          cache: 'yarn'
+          install-command: yarn workspaces focus gear-js @gear-js/api
 
       - name: Set up Rust
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-          components: clippy, rustfmt, llvm-tools, rust-src
+        uses: gear-tech/gear/.github/actions/install-rust@master
 
-      - name: 'Install: binaryen'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
-        run: |
-          wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
-          sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
-
-      - name: 'Install dependencies'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
-        run: yarn workspaces focus gear-js @gear-js/api
+      - name: Install Binaryen
+        uses: ./.github/actions/install-binaryen
 
       - name: 'Prepare: build programs'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
         run: cargo build --release
 
       - name: 'Prepare: download Gear node'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
 
       - name: 'Prepare: run Gear node'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
         run: |
           nohup ./gear --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
       - name: 'Prepare: sleep 3 min'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
         run: sleep 180
 
       - name: 'Test: run'
-        if: steps.changed-gear-api.outputs.any_changed == 'true'
         run: yarn test:gear-api
         env:
           SKIP_RUN_NODE: true
@@ -193,68 +158,49 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install: NodeJS 24.x'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
           node-version: 24.x
-          cache: 'yarn'
+          install-command: yarn workspaces focus gear-js @vara-eth/api @gear-js/api
 
       - name: Set up Rust
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-          components: clippy, rustfmt, llvm-tools, rust-src
+        uses: gear-tech/gear/.github/actions/install-rust@master
 
-      - name: 'Install: binaryen'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        run: |
-          wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
-          sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
+      - name: Install Binaryen
+        uses: ./.github/actions/install-binaryen
 
       - name: 'Install: Foundry'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: v1.7.0
 
-      - name: 'Install dependencies'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        run: yarn workspaces focus gear-js @vara-eth/api
-
       - name: 'Download ethexe bin from gear releases'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth
         run: |
           wget -O ./ethexe https://github.com/gear-tech/gear/releases/download/build/ethexe
           chmod +x ethexe
 
       - name: 'Build programs'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth
         run: cargo b -r
 
       - name: 'Compile contracts'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth
         run: forge compile
 
+      - name: 'Build @gear-js/api'
+        working-directory: apis/gear
+        run: yarn build
+
       - name: 'Test: run'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth
         run: yarn test
         env:
           PATH_TO_ETHEXE: ./ethexe
 
       - name: 'Upload vara-eth node log'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true' && always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: vara-eth-log

@@ -28,6 +28,7 @@ COPY --from=builder /src/idea/gear/squid/lib /src/idea/gear/squid/lib
 COPY --from=builder /src/idea/gear/indexer-db/lib /src/idea/gear/indexer-db/lib
 COPY --from=builder /src/idea/gear/common/dist /src/idea/gear/common/dist
 COPY --from=builder /src/idea/gear/squid/db /src/idea/gear/squid/db
+COPY --from=builder /src/idea/gear/squid/assets /src/idea/gear/squid/assets
 
 WORKDIR /src/idea/gear/squid
 

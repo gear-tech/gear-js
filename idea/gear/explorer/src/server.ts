@@ -7,6 +7,10 @@ import type { AllInOneService } from './services/all-in-one.js';
 import type {
   ParamGetCode,
   ParamGetCodes,
+  ParamGetDnsByAddress,
+  ParamGetDnsByName,
+  ParamGetDnsContract,
+  ParamGetDnsPrograms,
   ParamGetEvent,
   ParamGetEvents,
   ParamGetMsgsFromProgram,
@@ -124,5 +128,33 @@ export class HybridApiServer extends HybridApi(HybridApiBase) {
   @Cache(300)
   async voucherData(params: ParamGetVoucher) {
     return this._services.get(params.genesis).voucher.getVoucher(params);
+  }
+
+  @RestHandler('get', '/api/dns/contract')
+  async dnsContract(params: ParamGetDnsContract) {
+    return this._services.get(params.genesis).dns.getDnsContract();
+  }
+
+  @RestHandler('get', '/api/dns')
+  async dnsAll(params: ParamGetDnsPrograms) {
+    return this._services.get(params.genesis).dns.getPrograms(params);
+  }
+
+  @RestHandler('get', '/api/dns/by_name/:name')
+  async dnsByName(params: ParamGetDnsByName) {
+    const result = await this._services.get(params.genesis).dns.getProgramByName(params);
+    if (!result) {
+      return { error: `Program with name ${params.name} not found` };
+    }
+    return result;
+  }
+
+  @RestHandler('get', '/api/dns/by_address/:address')
+  async dnsByAddress(params: ParamGetDnsByAddress) {
+    const result = await this._services.get(params.genesis).dns.getProgramByAddress(params);
+    if (!result) {
+      return { error: `Program with address ${params.address} not found` };
+    }
+    return result;
   }
 }

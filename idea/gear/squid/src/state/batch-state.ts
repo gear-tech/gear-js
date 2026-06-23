@@ -9,6 +9,7 @@ import { In } from 'typeorm';
 import { Code, type CodeStatus, Program, type ProgramStatus } from '../model/index.js';
 import type { Block, ProcessorContext } from '../processor.js';
 import { SPEC_VERSION } from '../util.js';
+import { DnsState } from './dns-state.js';
 import { MessageState } from './message-state.js';
 import { VoucherState } from './voucher-state.js';
 
@@ -33,6 +34,7 @@ export class BatchState {
   private readonly _genesisHash: string;
   public readonly messages: MessageState;
   public readonly vouchers: VoucherState;
+  public readonly dns: DnsState;
 
   constructor(cache: DataCache, genesisHash: string) {
     this._cache = cache;
@@ -45,6 +47,7 @@ export class BatchState {
     this._codeStatusUpdates = new Map();
     this.messages = new MessageState(cache, genesisHash);
     this.vouchers = new VoucherState();
+    this.dns = new DnsState();
   }
 
   async newState(ctx: ProcessorContext<Store>) {
@@ -58,6 +61,7 @@ export class BatchState {
 
     await this.messages.newBatch(ctx);
     await this.vouchers.newBatch(ctx);
+    await this.dns.newBatch(ctx);
   }
 
   async save() {
@@ -79,6 +83,7 @@ export class BatchState {
 
       await this.messages.save();
       await this.vouchers.save();
+      await this.dns.save();
       await this._applyProgramStatusUpdates();
       await this._applyCodeStatusUpdates();
 

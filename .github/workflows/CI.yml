@@ -4,20 +4,33 @@ permissions:
   contents: read
 
 on:
+  workflow_call:
+    inputs:
+      force:
+        type: boolean
+        default: false
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [main]
     paths:
       - "utils/**"
       - "tools/**"
+      - package.json
   workflow_dispatch:
 
 env:
   BINARYEN_VERSION: version_111
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+      - run: echo "Not a draft PR, proceeding"
+
   changes:
     runs-on: ubuntu-latest
+    needs: [guard]
     outputs:
       utils-ui: ${{ steps.changes.outputs.utils-ui }}
       utils: ${{ steps.changes.outputs.utils }}
@@ -38,28 +51,21 @@ jobs:
               - 'utils/sails-payload-form/**'
               - 'utils/vara-ui/**'
               - 'utils/wallet-connect/**'
+              - package.json
             tools:
               - 'tools/**'
+              - package.json
             utils:
               - 'utils/util/**'
               - 'utils/logger/**'
+              - package.json
 
   lint:
     runs-on: ubuntu-latest
+    needs: [guard]
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Run linter'
         run: yarn lint
@@ -67,22 +73,10 @@ jobs:
   build-ui-utils:
     runs-on: ubuntu-latest
     needs: [changes]
-    if: ${{ steps.changes.outputs.utils-ui == 'true' }}
+    if: ${{ needs.changes.outputs.utils-ui == 'true' || inputs.force }}
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-          cache: yarn
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build frontend-configs'
         run: yarn build:frontend-configs
@@ -105,25 +99,14 @@ jobs:
       - name: "Build frontends"
         run: |
             yarn lerna run build --scope @gear-js/api --scope @vara-eth/api
-            yarn lerna run build --scope gear-idea-frontend varaeth-idea-frontend
+            yarn lerna run build --scope gear-idea-frontend --scope varaeth-idea-frontend
 
   test-ui:
     runs-on: ubuntu-latest
     needs: [build-ui-utils]
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: Install NodeJS 20.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build @gear-js/frontend-configs'
         run: yarn build:frontend-configs
@@ -134,22 +117,10 @@ jobs:
   build-tools:
     runs-on: ubuntu-latest
     needs: [changes]
-    if: ${{ steps.changes.outputs.tools == 'true' }}
+    if: ${{ needs.changes.outputs.tools == 'true' || inputs.force }}
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-          cache: yarn
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Build'
         run: yarn build:tools
@@ -158,19 +129,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-tools]
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.1
-
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20.x
-
-      - name: 'Install dependencies'
-        run: yarn install
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
       - name: 'Test: run'
         run: yarn test:txwrapper
@@ -181,16 +141,10 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v6
-
-      - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version: 20.x
-
-      - name: 'Install dependencies'
-        run: yarn workspaces focus gear-js-util gear-js
+          install-command: yarn workspaces focus gear-js-util gear-js
 
       - name: 'Test: run'
         run: yarn test:gear-js-util

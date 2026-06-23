@@ -1,6 +1,6 @@
 import { createLogger } from '@gear-js/logger';
 import type { Address, Hash, Hex } from 'viem';
-import { hexToBytes } from 'viem';
+import { BaseError, hexToBytes } from 'viem';
 
 import { getRequest, setStatus } from './shared/db.js';
 import { PermanentJobError } from './shared/types.js';
@@ -103,11 +103,12 @@ export function startQueue<T>(concurrency: number, prepareFn: PrepareFn<T>, send
       logger.info({ jobId, status: result.status }, 'Job completed');
     } catch (err) {
       const isPermanent = err instanceof PermanentJobError;
-      const errorMessage = err instanceof Error ? err.message : String(err);
+      const errorMessage =
+        err instanceof BaseError ? err.shortMessage : err instanceof Error ? err.message : String(err);
       if (isPermanent) {
-        logger.warn({ jobId, err }, 'Job permanently failed (contract rejected)');
+        logger.warn({ jobId, error: errorMessage }, 'Job permanently failed (contract rejected)');
       } else {
-        logger.error({ jobId, err }, 'Failed to process job');
+        logger.error({ jobId, error: errorMessage }, 'Failed to process job');
       }
       await setStatus(jobId, 'failed', undefined, errorMessage).catch(() => {});
     }

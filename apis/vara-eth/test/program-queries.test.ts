@@ -6,9 +6,24 @@ import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
-import { createVaraEthApi, getMirrorClient, type MirrorClient, type VaraEthApi, WsVaraEthProvider } from '../src';
+import {
+  createVaraEthApi,
+  getMirrorClient,
+  type MirrorClient,
+  type ProgramBestState,
+  type VaraEthApi,
+  WsVaraEthProvider,
+} from '../src';
 import { walletClientToSigner } from '../src/signer/index.js';
-import { expectDispatch, expectHex, expectMaybeHash, expectNumeric, hasProps } from './common';
+import {
+  expectDispatch,
+  expectHex,
+  expectMaybeHash,
+  expectMessage,
+  expectNumeric,
+  hasProps,
+  waitNBlocks,
+} from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -169,14 +184,14 @@ describe('Program Queries', () => {
         messageIds.push(injected1.messageId, injected2.messageId, injected3.messageId);
 
         const [injectedResult1, injectedResult2, injectedResult3] = await Promise.all([
-          injected1.sendAndWaitForPromise(),
-          injected2.sendAndWaitForPromise(),
-          injected3.sendAndWaitForPromise(),
+          injected1.sendAndWaitForReceipt(),
+          injected2.sendAndWaitForReceipt(),
+          injected3.sendAndWaitForReceipt(),
         ]);
 
-        expect(injectedResult1.code.isSuccess).toBeTruthy();
-        expect(injectedResult2.code.isSuccess).toBeTruthy();
-        expect(injectedResult3.code.isSuccess).toBeTruthy();
+        expect(injectedResult1.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult2.promise.code.isSuccess).toBeTruthy();
+        expect(injectedResult3.promise.code.isSuccess).toBeTruthy();
 
         await Promise.all([mirror1.send(), mirror2.send()]);
 
@@ -201,8 +216,8 @@ describe('Program Queries', () => {
           if (i % 2 === 0) {
             const tx = await api.createInjectedTransaction({ destination: programId, payload });
             messageIds.push(tx.messageId);
-            const result = await tx.sendAndWaitForPromise();
-            expect(result.code.isSuccess).toBeTruthy();
+            const result = await tx.sendAndWaitForReceipt();
+            expect(result.promise.code.isSuccess).toBeTruthy();
           } else {
             const tx = await mirror.sendMessage(payload);
             await tx.send();
@@ -419,6 +434,63 @@ describe('Program Queries', () => {
         const data = await api.query.program.readPageData(pageHash);
         expectHex(data);
         expect(data.length).toBeGreaterThan(2);
+      },
+      config.longRunningTestTimeout,
+    );
+  });
+
+  describe('subscription methods', () => {
+    test(
+      'should receive ProgramBestState on subscribeBestState after a message is sent',
+      async () => {
+        let resolveState!: (state: ProgramBestState) => void;
+        const received = new Promise<ProgramBestState>((res) => {
+          resolveState = res;
+        });
+
+        const unsub = await api.query.program.subscribeBestState(programId, resolveState);
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+
+        const bestState = await received;
+        unsub();
+
+        expectHex(bestState.mbHash);
+        expectHex(bestState.newStateHash);
+        expect(Array.isArray(bestState.messages)).toBe(true);
+        for (const msg of bestState.messages) expectMessage(msg);
+      },
+      config.longRunningTestTimeout,
+    );
+
+    test(
+      'should stop receiving updates after unsubscribing',
+      async () => {
+        let callCount = 0;
+        let resolveFirst!: () => void;
+        const firstUpdate = new Promise<void>((res) => {
+          resolveFirst = res;
+        });
+
+        const unsub = await api.query.program.subscribeBestState(programId, () => {
+          callCount++;
+          resolveFirst();
+        });
+
+        const payload = counterProgram.services.Counter.functions.Increment.encodePayload();
+        const tx = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx.sendAndWaitForReceipt();
+
+        await firstUpdate;
+        unsub();
+
+        const tx2 = await api.createInjectedTransaction({ destination: programId, payload });
+        await tx2.sendAndWaitForReceipt();
+        await waitNBlocks(2);
+
+        expect(callCount).toBe(1);
       },
       config.longRunningTestTimeout,
     );

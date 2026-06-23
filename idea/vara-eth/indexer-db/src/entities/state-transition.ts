@@ -41,6 +41,7 @@ export class StateTransition {
   @Column({ nullable: true, type: 'bytea' })
   inheritor?: PgByteaString | null;
 
+  // TODO: add timestamp field
   // TODO: valueClaims
   // TODO: messages
 }

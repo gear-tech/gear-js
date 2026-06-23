@@ -4,7 +4,12 @@ import { ReplyCode } from '../../errors/index.js';
 import type { IVaraEthProvider, ReplyInfo } from '../../types/index.js';
 
 interface IReplyInfoRpc extends Omit<ReplyInfo, 'code'> {
-  code: Hex;
+  readonly code: Hex;
+}
+
+interface ICalculateReplyForHandleResultRpc {
+  readonly reply: IReplyInfoRpc;
+  readonly messages: [];
 }
 
 export class ProgramCalls {
@@ -25,17 +30,18 @@ export class ProgramCalls {
     value = 0n,
     atBlock?: Hex,
   ): Promise<ReplyInfo> {
-    const { code, ...info } = await this._provider.send<IReplyInfoRpc>('program_calculateReplyForHandle', [
-      atBlock || null,
-      source,
-      programId,
-      payload,
-      value,
-    ]);
+    // TODO: return messages
+    const response = await this._provider.send<ICalculateReplyForHandleResultRpc | IReplyInfoRpc>(
+      'program_calculateReplyForHandle',
+      [atBlock || null, source, programId, payload, value],
+    );
+
+    // Legacy nodes return a flat IReplyInfoRpc; versioned nodes wrap it in { reply, messages }.
+    const reply = response && 'reply' in response ? response.reply : (response as IReplyInfoRpc);
 
     return {
-      ...info,
-      code: ReplyCode.fromBytes(code),
+      ...reply,
+      code: ReplyCode.fromBytes(reply.code),
     };
   }
 }

@@ -1,7 +1,7 @@
 use ethexe_common::{
     ecdsa::{PrivateKey, Signature, SignedMessage},
     gprimitives::{ActorId, H256},
-    injected::{InjectedTransaction, Promise},
+    injected::{InjectedTransaction, Promise, Receipt},
     ToDigest,
 };
 use gear_core::rpc::ReplyInfo;
@@ -46,13 +46,13 @@ pub fn main() {
         reply: reply_info,
     };
 
-    let compact_promise = promise.to_compact();
+    let receipt = Receipt::Promise(promise.to_compact());
 
-    let msg = SignedMessage::create(private_key, compact_promise).unwrap();
+    let msg = SignedMessage::create(private_key, receipt).unwrap();
 
     println!(
-        "promise_hash: <0x{}>",
+        "receipt_hash: <0x{}>",
         hex::encode(msg.data().to_digest().0)
     );
-    println!("promise_signature: <{}>", msg.signature());
+    println!("receipt_signature: <{}>", msg.signature());
 }

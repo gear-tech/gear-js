@@ -1,10 +1,13 @@
+import { useAtomValue } from 'jotai';
 import { useRef, useState } from 'react';
 import { useConnection } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
+import { nodeAtom } from '@/app/store';
 import { Button, Modal } from '@/components';
 import { useUploadCode, useUploadCodeFee } from '@/features/codes/lib';
 import { initKzgInWorker } from '@/features/codes/lib/kzg-worker-client';
+import { ETH_CHAIN_ID_MAINNET } from '@/shared/config';
 import { formatBalance } from '@/shared/utils';
 
 import styles from './upload-code-button.module.scss';
@@ -15,6 +18,7 @@ export const UploadCodeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { address } = useConnection();
+  const { ethChainId } = useAtomValue(nodeAtom);
   const close = () => setIsOpen(false);
 
   const openModal = () => {
@@ -37,6 +41,9 @@ export const UploadCodeButton = () => {
 
   const formattedBalance =
     balance !== undefined && balanceDecimals !== undefined ? formatBalance(balance, balanceDecimals) : null;
+  const wvaraSourceLink =
+    ethChainId === ETH_CHAIN_ID_MAINNET ? 'https://bridge.vara.network/' : 'https://eth.vara.network/faucet';
+  const wvaraSourceLabel = ethChainId === ETH_CHAIN_ID_MAINNET ? 'Vara Bridge' : 'Vara.eth Faucet';
 
   if (!address) return null;
 
@@ -88,8 +95,8 @@ export const UploadCodeButton = () => {
               Insufficient WVARA balance. <br /> Your balance: {formattedBalance} WVARA.
               <br />
               You can get WVARA via the{' '}
-              <a href="https://bridge.vara.network/" target="_blank" rel="noreferrer">
-                Vara Bridge
+              <a href={wvaraSourceLink} target="_blank" rel="noreferrer">
+                {wvaraSourceLabel}
               </a>
               .
             </p>

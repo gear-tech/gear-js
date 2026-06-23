@@ -10,6 +10,28 @@
   border-radius: 0 0 4px 4px;
 }
 
+.pendingValidation {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pendingSpinner {
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
 .data {
   padding: 24px;
 

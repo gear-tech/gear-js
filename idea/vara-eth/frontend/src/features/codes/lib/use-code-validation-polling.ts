@@ -1,8 +1,8 @@
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useAddMyActivity } from '@/app/store';
-import { TransactionTypes } from '@/app/store/my-activity';
+import { nodeAtom, TransactionTypes, useAddMyActivity } from '@/app/store';
 import { CODE_VALIDATION_SERVICE_URL, routes } from '@/shared/config';
 
 import { POLL_INTERVAL_MS } from './consts';
@@ -10,10 +10,12 @@ import { getCodeValidationStatus } from './requests';
 import { getValidationJobs, removeValidationJob } from './validation-jobs-storage';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const CODE_VALIDATION_JOB_RESOLVED_EVENT = 'code-validation-job-resolved';
 
 export const useCodeValidationPolling = () => {
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
+  const { ethChainId } = useAtomValue(nodeAtom);
 
   useEffect(() => {
     if (!CODE_VALIDATION_SERVICE_URL) {
@@ -25,7 +27,7 @@ export const useCodeValidationPolling = () => {
     const poll = async () => {
       while (!isCancelled) {
         try {
-          const jobs = getValidationJobs();
+          const jobs = getValidationJobs(ethChainId);
 
           if (!jobs.length) {
             await wait(POLL_INTERVAL_MS);
@@ -40,7 +42,11 @@ export const useCodeValidationPolling = () => {
                 continue;
               }
 
-              removeValidationJob(jobId);
+              removeValidationJob(ethChainId, jobId);
+
+              window.dispatchEvent(
+                new CustomEvent(CODE_VALIDATION_JOB_RESOLVED_EVENT, { detail: { codeId, status, jobId } }),
+              );
 
               if (codeId) {
                 await addMyActivity({
@@ -73,5 +79,5 @@ export const useCodeValidationPolling = () => {
     return () => {
       isCancelled = true;
     };
-  }, [addMyActivity, navigate]);
+  }, [addMyActivity, navigate, ethChainId]);
 };

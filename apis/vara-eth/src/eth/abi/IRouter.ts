@@ -6,6 +6,20 @@ export const IROUTER_ABI = [
   ...EIP712_ABI,
   {
     type: 'function',
+    name: 'DOMAIN_SEPARATOR',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'UPGRADE_INTERFACE_VERSION',
+    inputs: [],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'areValidators',
     inputs: [
       {
@@ -181,7 +195,16 @@ export const IROUTER_ABI = [
                   },
                 ],
               },
-              { name: 'head', type: 'bytes32', internalType: 'bytes32' },
+              {
+                name: 'head',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'lastAdvancedEthBlock',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
             ],
           },
           {
@@ -615,6 +638,237 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
+    name: 'storageView',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct IRouter.StorageView',
+        components: [
+          {
+            name: 'genesisBlock',
+            type: 'tuple',
+            internalType: 'struct Gear.GenesisBlockInfo',
+            components: [
+              {
+                name: 'hash',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'number',
+                type: 'uint32',
+                internalType: 'uint32',
+              },
+              {
+                name: 'timestamp',
+                type: 'uint48',
+                internalType: 'uint48',
+              },
+            ],
+          },
+          {
+            name: 'latestCommittedBatch',
+            type: 'tuple',
+            internalType: 'struct Gear.CommittedBatchInfo',
+            components: [
+              {
+                name: 'hash',
+                type: 'bytes32',
+                internalType: 'bytes32',
+              },
+              {
+                name: 'timestamp',
+                type: 'uint48',
+                internalType: 'uint48',
+              },
+            ],
+          },
+          {
+            name: 'implAddresses',
+            type: 'tuple',
+            internalType: 'struct Gear.AddressBook',
+            components: [
+              {
+                name: 'mirror',
+                type: 'address',
+                internalType: 'address',
+              },
+              {
+                name: 'wrappedVara',
+                type: 'address',
+                internalType: 'address',
+              },
+              {
+                name: 'middleware',
+                type: 'address',
+                internalType: 'address',
+              },
+            ],
+          },
+          {
+            name: 'validationSettings',
+            type: 'tuple',
+            internalType: 'struct Gear.ValidationSettingsView',
+            components: [
+              {
+                name: 'thresholdNumerator',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+              {
+                name: 'thresholdDenominator',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+              {
+                name: 'validators0',
+                type: 'tuple',
+                internalType: 'struct Gear.ValidatorsView',
+                components: [
+                  {
+                    name: 'aggregatedPublicKey',
+                    type: 'tuple',
+                    internalType: 'struct Gear.AggregatedPublicKey',
+                    components: [
+                      {
+                        name: 'x',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                      {
+                        name: 'y',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'verifiableSecretSharingCommitmentPointer',
+                    type: 'address',
+                    internalType: 'address',
+                  },
+                  {
+                    name: 'list',
+                    type: 'address[]',
+                    internalType: 'address[]',
+                  },
+                  {
+                    name: 'useFromTimestamp',
+                    type: 'uint256',
+                    internalType: 'uint256',
+                  },
+                ],
+              },
+              {
+                name: 'validators1',
+                type: 'tuple',
+                internalType: 'struct Gear.ValidatorsView',
+                components: [
+                  {
+                    name: 'aggregatedPublicKey',
+                    type: 'tuple',
+                    internalType: 'struct Gear.AggregatedPublicKey',
+                    components: [
+                      {
+                        name: 'x',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                      {
+                        name: 'y',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'verifiableSecretSharingCommitmentPointer',
+                    type: 'address',
+                    internalType: 'address',
+                  },
+                  {
+                    name: 'list',
+                    type: 'address[]',
+                    internalType: 'address[]',
+                  },
+                  {
+                    name: 'useFromTimestamp',
+                    type: 'uint256',
+                    internalType: 'uint256',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'computeSettings',
+            type: 'tuple',
+            internalType: 'struct Gear.ComputationSettings',
+            components: [
+              {
+                name: 'threshold',
+                type: 'uint64',
+                internalType: 'uint64',
+              },
+              {
+                name: 'wvaraPerSecond',
+                type: 'uint128',
+                internalType: 'uint128',
+              },
+            ],
+          },
+          {
+            name: 'timelines',
+            type: 'tuple',
+            internalType: 'struct Gear.Timelines',
+            components: [
+              { name: 'era', type: 'uint256', internalType: 'uint256' },
+              {
+                name: 'election',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+              {
+                name: 'validationDelay',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+            ],
+          },
+          {
+            name: 'programsCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'validatedCodesCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxValidators',
+            type: 'uint16',
+            internalType: 'uint16',
+          },
+          {
+            name: 'requestCodeValidationBaseFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'requestCodeValidationExtraFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'timelines',
     inputs: [],
     outputs: [
@@ -728,19 +982,6 @@ export const IROUTER_ABI = [
   },
   {
     type: 'event',
-    name: 'AnnouncesCommitted',
-    inputs: [
-      {
-        name: 'head',
-        type: 'bytes32',
-        indexed: false,
-        internalType: 'bytes32',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
     name: 'BatchCommitted',
     inputs: [
       {
@@ -805,6 +1046,19 @@ export const IROUTER_ABI = [
   },
   {
     type: 'event',
+    name: 'EBCommitted',
+    inputs: [
+      {
+        name: 'ethBlockHash',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'Initialized',
     inputs: [
       {
@@ -812,6 +1066,19 @@ export const IROUTER_ABI = [
         type: 'uint64',
         indexed: false,
         internalType: 'uint64',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MBCommitted',
+    inputs: [
+      {
+        name: 'head',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
       },
     ],
     anonymous: false,

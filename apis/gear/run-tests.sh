@@ -68,8 +68,8 @@ fi
 # Step 4: Run tests
 if [ -z "$test_case" ]; then
     echo "Running all tests..."
-    npx jest --runInBand
+    npx vitest run
 else
     echo "Running test case: $test_case"
-    npx jest --runInBand "$test_case"
+    npx vitest run "$test_case"
 fi

@@ -1,0 +1,30 @@
+name: 'CI-dependencies'
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [labeled, synchronize]
+    branches: [main]
+    paths:
+      - yarn.lock
+
+jobs:
+  call-ci:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'D4-dependencies') && !github.event.pull_request.draft }}
+    uses: ./.github/workflows/CI.yml
+    with:
+      force: true
+
+  call-ci-apis:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'D4-dependencies') && !github.event.pull_request.draft }}
+    uses: ./.github/workflows/CI-apis.yml
+    with:
+      force: true
+
+  call-ci-idea:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'D4-dependencies') && !github.event.pull_request.draft }}
+    uses: ./.github/workflows/CI-idea.yml
+    with:
+      force: true
