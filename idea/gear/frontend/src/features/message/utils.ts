@@ -1,6 +1,8 @@
-import { CreateType, type ProgramMetadata } from '@gear-js/api';
+import { CreateType, type HexString, type ProgramMetadata } from '@gear-js/api';
 import type { AnyJson } from '@polkadot/types/types';
-import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
+import { hexToU8a } from '@polkadot/util';
+import { getCtorNamePrefix, getFnNamePrefix, getServiceNamePrefix, type SailsProgram } from 'sails-js';
+import { SailsMessageHeader } from 'sails-js/parser';
 
 import type { ParsedSails } from '@/features/sails/types';
 
@@ -72,22 +74,74 @@ const getMetadataDecodedMessagePayload = (
   return isNullOrUndefined(typeIndex) ? payload : meta.createType(typeIndex, payload).toHuman();
 };
 
+const isIdlV2Program = (program: ParsedSails): program is SailsProgram => 'resolveInService' in program;
+
+const getSailsV2DecodedMessagePayload = (
+  program: SailsProgram,
+  payload: HexString,
+  isMessageQueued: boolean,
+): AnyJson => {
+  const parsed = SailsMessageHeader.tryFromBytes(hexToU8a(payload));
+
+  if (!parsed.ok || !parsed.header) throw new Error('Invalid Sails message header');
+
+  if (parsed.header.interfaceId.asU64() === 0n) {
+    const decoded = program.decodeCtor(payload);
+
+    if (decoded.kind === 'unknown') throw new Error(decoded.reason);
+
+    return decoded.args as AnyJson;
+  }
+
+  if (isMessageQueued) {
+    const decoded = program.decodeCall(payload);
+
+    if (decoded.kind === 'unknown') throw new Error(decoded.reason);
+
+    return decoded.args as AnyJson;
+  }
+
+  const decoded = program.decodeReply(payload);
+
+  if (decoded.kind === 'unknown') throw new Error(decoded.reason);
+
+  return decoded.result as AnyJson;
+};
+
+const getSailsV1DecodedMessagePayload = (
+  program: ParsedSails,
+  payload: HexString,
+  isMessageQueued: boolean,
+): AnyJson => {
+  const ctorName = getCtorNamePrefix(payload);
+  const constructor = program.ctors?.[ctorName];
+
+  const serviceName = getServiceNamePrefix(payload);
+  const functionName = getFnNamePrefix(payload);
+  const service = program.services[serviceName];
+  const method = service?.functions?.[functionName] ?? service?.queries?.[functionName];
+
+  if (constructor && !method) return constructor.decodePayload(payload);
+
+  const decodeMethod = isMessageQueued ? 'decodePayload' : 'decodeResult';
+
+  if (!method) {
+    throw new Error(`Unable to decode payload: service '${serviceName}', function '${functionName}' not found`);
+  }
+
+  return method[decodeMethod](payload);
+};
+
 const getSailsDecodedMessagePayload = (
   message: MessageToProgram | MessageFromProgram,
   isMessageQueued: boolean,
   program: ParsedSails,
 ): AnyJson => {
   const payload = getPayload(message);
-  const serviceName = getServiceNamePrefix(payload);
-  const functionName = getFnNamePrefix(payload);
 
-  const constructor = program.ctors?.[serviceName];
-  const func = program.services[serviceName]?.functions[functionName];
+  if (isIdlV2Program(program)) return getSailsV2DecodedMessagePayload(program, payload, isMessageQueued);
 
-  if (constructor && !func) return constructor.decodePayload(payload);
-
-  const method = isMessageQueued ? 'decodePayload' : 'decodeResult';
-  return func[method](payload);
+  return getSailsV1DecodedMessagePayload(program, payload, isMessageQueued);
 };
 
 const getDecodedMessagePayload = (
