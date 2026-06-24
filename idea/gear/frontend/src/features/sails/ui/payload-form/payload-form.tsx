@@ -1,16 +1,15 @@
 import { Fields, type ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { type InputProps, InputWrapper, Select } from '@gear-js/ui';
 import type { ComponentProps } from 'react';
-import type { Sails } from 'sails-js';
-
 import { Checkbox, Fieldset, Input, Textarea } from '@/shared/ui';
-
 import type { useConstructor, useService } from '../../hooks';
+import type { ParsedSails } from '../../types';
 
 import styles from './payload-form.module.scss';
 
 type BaseProps = Pick<InputProps, 'direction' | 'gap'> & {
-  sails: Sails;
+  program: ParsedSails;
+  serviceName?: string;
   args: ISailsFuncArg[];
 };
 
@@ -37,7 +36,7 @@ function PayloadTextarea(props: Omit<ComponentProps<typeof Textarea>, 'direction
   return <Textarea {...props} direction="y" />;
 }
 
-function PayloadForm({ sails, select, args, gap, direction = 'x', ...props }: Props) {
+function PayloadForm({ program, serviceName, select, args, gap, direction = 'x', ...props }: Props) {
   const isFunction = 'functionSelect' in props;
 
   return (
@@ -46,7 +45,8 @@ function PayloadForm({ sails, select, args, gap, direction = 'x', ...props }: Pr
       {isFunction && <PayloadSelect {...props.functionSelect} />}
 
       <Fields
-        sails={sails}
+        program={program}
+        serviceName={serviceName}
         args={args}
         render={{
           ui: { fieldset: Fieldset, select: PayloadSelect },

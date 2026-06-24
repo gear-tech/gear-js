@@ -1,3 +1,4 @@
+import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 import { isHex } from 'viem';
@@ -30,6 +31,11 @@ const WRITE_MODE_STORAGE_KEY = 'sails-write-mode';
 const WRITE_MODE_ONCHAIN = 'onchain';
 const WRITE_MODE_OFFCHAIN = 'offchain';
 
+type SailsMethodMeta = {
+  args: ISailsFuncArg[];
+  encodePayload: (...params: unknown[]) => Hex;
+};
+
 type WriteMode = typeof WRITE_MODE_ONCHAIN | typeof WRITE_MODE_OFFCHAIN;
 
 const TABS_LOADING = [MESSAGES_TAB];
@@ -48,7 +54,7 @@ type Props = {
   programId: Hex;
   idl: string | null | undefined;
   isLoading: boolean;
-  onSaveIdl: (idl: string) => void;
+  onSaveIdl: (idl: string) => string | null;
   init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
   hasExecutableBalance: boolean;
 };
@@ -114,37 +120,47 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
   const renderServiceActions = () =>
     Object.entries(sails!.services).map(([serviceName, service]) => {
       const queries = isReadTab
-        ? Object.entries(service.queries).map(([messageName, meta]) => ({
-            id: `query:${serviceName}:${messageName}`,
-            name: messageName,
-            action: 'Read',
-            args: meta.args,
-            encode: meta.encodePayload,
-            requiresAccount: false,
-            onSubmit: (payload: FormattedPayloadValue) =>
-              readMessage.mutateAsync({ serviceName, messageName, payload }),
-          }))
+        ? Object.entries(service.queries).map(([messageName, meta]) => {
+            const { args, encodePayload } = meta as SailsMethodMeta;
+
+            return {
+              id: `query:${serviceName}:${messageName}`,
+              name: messageName,
+              action: 'Read',
+              serviceName,
+              args,
+              encode: encodePayload,
+              requiresAccount: false,
+              onSubmit: (payload: FormattedPayloadValue) =>
+                readMessage.mutateAsync({ serviceName, messageName, payload }),
+            };
+          })
         : [];
 
       const functions = isWriteTab
-        ? Object.entries(service.functions).map(([messageName, meta]) => ({
-            id: `fn:${serviceName}:${messageName}`,
-            name: messageName,
-            action: writeMode === WRITE_MODE_OFFCHAIN ? 'Write offchain' : 'Write onchain',
-            args: meta.args,
-            encode: meta.encodePayload,
-            splitAction: {
-              selectedValue: writeMode,
-              options: writeModeOptions,
-              onOptionClick: setWriteModePreference,
-            },
-            onSubmit: (payload: FormattedPayloadValue) =>
-              (writeMode === WRITE_MODE_OFFCHAIN ? sendInjectedTx : sendMessage).mutateAsync({
-                serviceName,
-                messageName,
-                payload,
-              }),
-          }))
+        ? Object.entries(service.functions).map(([messageName, meta]) => {
+            const { args, encodePayload } = meta as SailsMethodMeta;
+
+            return {
+              id: `fn:${serviceName}:${messageName}`,
+              name: messageName,
+              action: writeMode === WRITE_MODE_OFFCHAIN ? 'Write offchain' : 'Write onchain',
+              serviceName,
+              args,
+              encode: encodePayload,
+              splitAction: {
+                selectedValue: writeMode,
+                options: writeModeOptions,
+                onOptionClick: setWriteModePreference,
+              },
+              onSubmit: (payload: FormattedPayloadValue) =>
+                (writeMode === WRITE_MODE_OFFCHAIN ? sendInjectedTx : sendMessage).mutateAsync({
+                  serviceName,
+                  messageName,
+                  payload,
+                }),
+            };
+          })
         : [];
 
       return (
@@ -153,17 +169,21 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
     });
 
   const renderCtors = () => {
-    const items = Object.entries(sails!.ctors).map(([ctorName, meta]) => ({
-      id: `ctor:${ctorName}`,
-      name: ctorName,
-      action: 'Initialize',
-      isEnabled: init.isEnabled && hasExecutableBalance,
-      tooltip: init.tooltip,
-      args: meta.args,
-      encode: meta.encodePayload,
-      onSubmit: (payload: FormattedPayloadValue) =>
-        initProgram.mutateAsync({ ctorName, payload }).then(() => init.onSuccess()),
-    }));
+    const items = Object.entries(sails!.ctors ?? {}).map(([ctorName, meta]) => {
+      const { args, encodePayload } = meta as SailsMethodMeta;
+
+      return {
+        id: `ctor:${ctorName}`,
+        name: ctorName,
+        action: 'Initialize',
+        isEnabled: init.isEnabled && hasExecutableBalance,
+        tooltip: init.tooltip,
+        args,
+        encode: encodePayload,
+        onSubmit: (payload: FormattedPayloadValue) =>
+          initProgram.mutateAsync({ ctorName, payload }).then(() => init.onSuccess()),
+      };
+    });
 
     return (
       <div className={styles.constructors}>

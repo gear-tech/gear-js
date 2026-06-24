@@ -1,16 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { Sails } from 'sails-js';
-import { SailsIdlParser } from 'sails-js-parser';
+
+import { createSailsParser } from './parse-idl';
 
 function useSailsInit() {
   const { data } = useQuery({
     queryKey: ['sails'],
 
-    queryFn: async () => {
-      const parser = await SailsIdlParser.new();
-
-      return new Sails(parser);
-    },
+    queryFn: createSailsParser,
 
     refetchOnMount: false,
     refetchOnReconnect: false,

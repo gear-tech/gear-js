@@ -1,21 +1,22 @@
 import type { HexString } from '@gear-js/api';
+import { useSailsInit } from '@gear-js/react-hooks';
 import { useState } from 'react';
-import type { Sails } from 'sails-js';
+
+import type { ParsedSails } from '../types';
 
 import { useSails } from './use-sails';
-import { useSailsInit } from './use-sails-init';
 
 function useSailsWithFile(codeId: HexString | undefined) {
-  const sails = useSailsInit();
+  const sailsInit = useSailsInit();
   const { sails: storageSails, isLoading: isStorageSailsLoading } = useSails(codeId);
 
-  const [fileSails, setFileSails] = useState<Sails>();
+  const [fileSails, setFileSails] = useState<ParsedSails>();
   const [fileIdl, setFileIdl] = useState<string>();
 
   const set = (_idl: string) => {
-    if (!sails) throw new Error('Sails is not initialized');
+    if (!sailsInit) throw new Error('Sails is not initialized');
 
-    setFileSails(sails.parseIdl(_idl));
+    setFileSails(sailsInit(_idl));
     setFileIdl(_idl);
   };
 

@@ -1,16 +1,15 @@
 import type { HexString, ProgramMetadata } from '@gear-js/api';
 import { useOutletContext } from 'react-router-dom';
-import type { Sails } from 'sails-js';
-
 import { ProgramMessages } from '@/features/message';
 import { MetadataTable } from '@/features/metadata';
 import { ProgramEvents, SailsPreview } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import { ProgramVouchers } from '@/features/voucher';
 import { Box } from '@/shared/ui';
 
 type TabsContext = {
   programId: HexString;
-  sails: Sails | undefined;
+  sails: ParsedSails | undefined;
   metadata: ProgramMetadata | undefined;
   isLoading: boolean;
 };

@@ -5,11 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import type { Sails } from 'sails-js';
 import { z } from 'zod';
-
 import { GasField } from '@/features/gasField';
 import { PayloadForm, useService } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
 import type { Result } from '@/hooks/useGasCalculate/types';
@@ -27,7 +26,7 @@ type Props = {
   id: HexString;
   programId: HexString | undefined;
   isReply: boolean;
-  sails: Sails;
+  program: ParsedSails;
 };
 
 const DEFAULT_VALUES = {
@@ -50,10 +49,12 @@ const useSchema = (payloadSchema: ReturnType<typeof useService>['schema']) => {
   });
 };
 
-const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
+const SailsMessageForm = ({ id, programId, isReply, program }: Props) => {
+  if (programId) program.setProgramId(programId);
+
   const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
-  const service = useService(sails, 'functions');
+  const service = useService(program, 'functions');
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
   const schema = useSchema(service.schema);
@@ -73,7 +74,7 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
   const resetForm = () => {
     const values = form.getValues();
-    const resetValue = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
+    const resetValue = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload as Record<string, unknown>) };
 
     form.reset(resetValue);
     enableSubmitButton();
@@ -118,7 +119,8 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
           <PayloadForm
             gap="1/5"
-            sails={sails}
+            program={program}
+            serviceName={service.serviceName}
             select={service.select}
             functionSelect={service.functionSelect}
             args={service.args}

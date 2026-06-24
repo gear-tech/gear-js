@@ -1,56 +1,38 @@
 import type { JSX, PropsWithChildren } from 'react';
-import type { Sails } from 'sails-js';
-import type { ISailsTypeDef } from 'sails-js-types';
+import type { Sails, SailsProgram } from 'sails-js';
 
 import type { FieldProps, ISailsFuncArg } from '../types';
-import { getNestedName } from '../utils';
-
-import { EnumField } from './enum-field';
-import { FixedSizeArrayField } from './fixed-size-array-field';
-import { MapField } from './map-field';
-import { OptionalField } from './optional-field';
-import { PrimitiveField } from './primitive-field';
-import { ResultField } from './result-field';
-import { StructField } from './struct-field';
-import { UserDefinedField } from './user-defined-field';
-import { VecField } from './vec-field';
+import { isIdlV2Program } from '../utils/program';
+import { FieldsV2 } from './fields-v2';
+import { LegacyFields } from './legacy/fields';
 
 type Props = {
-  sails: Sails;
+  program?: Sails | SailsProgram;
+  sails?: Sails;
+  serviceName?: string;
   args: ISailsFuncArg[];
   render: FieldProps['render'];
   renderContainer?: (props: PropsWithChildren) => JSX.Element;
 };
 
-function Fields({ sails, args, render, renderContainer }: Props) {
-  const getFieldComponent = (def: ISailsTypeDef) => {
-    if (def.isEnum) return EnumField;
-    if (def.isStruct) return StructField;
-    if (def.isOptional) return OptionalField;
-    if (def.isResult) return ResultField;
-    if (def.isVec) return VecField;
-    if (def.isMap) return MapField;
-    if (def.isFixedSizeArray) return FixedSizeArrayField;
-    if (def.isUserDefined) return UserDefinedField;
-    if (def.isPrimitive) return PrimitiveField;
+function Fields({ program, sails, serviceName, args, render, renderContainer }: Props) {
+  const instance = program ?? sails;
 
-    throw new Error(`Unknown field type: ${JSON.stringify(def)}`);
-  };
+  if (!instance) throw new Error('program or sails is required');
 
-  const renderField = (def: ISailsTypeDef, label = '', name = '') => {
-    if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
-
-    const Field = getFieldComponent(def);
-
+  if (isIdlV2Program(instance)) {
     return (
-      <Field key={name} def={def} sails={sails} name={name} label={label} render={render} renderField={renderField} />
+      <FieldsV2
+        program={instance}
+        serviceName={serviceName}
+        args={args}
+        render={render}
+        renderContainer={renderContainer}
+      />
     );
-  };
+  }
 
-  const renderFields = () =>
-    args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
-
-  return args.length && renderContainer ? renderContainer({ children: renderFields() }) : renderFields();
+  return <LegacyFields sails={instance} args={args} render={render} renderContainer={renderContainer} />;
 }
 
 export { Fields };

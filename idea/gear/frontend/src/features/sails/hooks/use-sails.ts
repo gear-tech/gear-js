@@ -1,30 +1,34 @@
 import type { HexString } from '@gear-js/api';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi, useSailsInit } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { getIdl } from '../api';
 import { errorMessage } from '../api/consts';
 
-import { useSailsInit } from './use-sails-init';
-
-function useSails(codeId: HexString | null | undefined) {
-  const sails = useSailsInit();
+function useSails(codeId: HexString | null | undefined, programId?: HexString) {
+  const sailsInit = useSailsInit();
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
 
   const getSails = async () => {
-    if (!sails) throw new Error('Sails is not initialized');
+    if (!sailsInit) throw new Error('Sails is not initialized');
+    if (!isApiReady) throw new Error('API is not initialized');
     if (!codeId) throw new Error('Code ID is not found');
 
     const { data } = await getIdl(codeId);
+    const program = sailsInit(data);
 
-    return sails.parseIdl(data);
+    program.setApi(api);
+    if (programId) program.setProgramId(programId);
+
+    return program;
   };
 
   const { data, isPending, error, refetch } = useQuery({
-    queryKey: ['idl', codeId],
+    queryKey: ['idl', codeId, programId, api?.provider.endpoint],
     queryFn: getSails,
-    enabled: Boolean(codeId && sails),
+    enabled: Boolean(codeId && sailsInit && isApiReady),
   });
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import type { Sails } from 'sails-js';
+import type { ParsedSails } from '../types';
 
 const getParsedFilterValue = (value: string) => {
   const [group, item = ''] = value.split('.');
@@ -13,17 +13,17 @@ const getParsedSailsFilterValue = (value: string) => {
 };
 
 const getValidSailsFilterValue = (
-  sails: Sails | undefined,
+  program: ParsedSails | undefined,
   type: 'events' | 'functions',
   value: string,
   defaultValue: string,
 ) => {
-  const serviceNames = Object.keys(sails?.services || {});
+  const serviceNames = Object.keys(program?.services || {});
   const serviceNameValues = [defaultValue, ...serviceNames];
 
   const { serviceName, functionName } = getParsedSailsFilterValue(value);
 
-  const functionNames = Object.keys(sails?.services?.[serviceName]?.[type] || {});
+  const functionNames = Object.keys(program?.services?.[serviceName]?.[type] || {});
   const functionNameValues = [defaultValue, ...functionNames];
 
   return serviceNameValues.includes(serviceName) && functionNameValues.includes(functionName) ? value : defaultValue;

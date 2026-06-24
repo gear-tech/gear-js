@@ -5,11 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import type { Sails } from 'sails-js';
 import { z } from 'zod';
-
 import { GasField } from '@/features/gasField';
 import { PayloadForm, useConstructor } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import type { Result } from '@/hooks/useGasCalculate/types';
 import type { GasMethod } from '@/shared/config';
@@ -37,7 +36,7 @@ type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 type Props = {
   source: Buffer | HexString;
-  sails: Sails;
+  program: ParsedSails;
   gasMethod: GasMethod;
   fileName?: string;
   onSubmit: (values: FormattedValues, helpers: SubmitHelpers) => void;
@@ -50,11 +49,11 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
-const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }: Props) => {
+const SailsProgramForm = ({ gasMethod, program, source, fileName = '', onSubmit }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
   const alert = useAlert();
 
-  const constructor = useConstructor(sails);
+  const constructor = useConstructor(program);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
   const schema = useSchema(constructor.schema);
   const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
@@ -66,7 +65,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
 
   const resetForm = () => {
     const values = form.getValues();
-    const resetValues = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
+    const resetValues = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload as Record<string, unknown>) };
 
     form.reset(resetValues);
     setGasinfo(undefined);
@@ -122,7 +121,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
         </Box>
 
         <Box>
-          <PayloadForm direction="y" sails={sails} select={constructor.select} args={constructor.args} />
+          <PayloadForm direction="y" program={program} select={constructor.select} args={constructor.args} />
         </Box>
       </form>
     </FormProvider>

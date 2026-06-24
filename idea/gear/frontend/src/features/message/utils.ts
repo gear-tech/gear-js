@@ -1,6 +1,8 @@
 import { CreateType, type ProgramMetadata } from '@gear-js/api';
 import type { AnyJson } from '@polkadot/types/types';
-import { getFnNamePrefix, getServiceNamePrefix, type Sails } from 'sails-js';
+import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
+
+import type { ParsedSails } from '@/features/sails/types';
 
 import { getReplyErrorReason, isNullOrUndefined } from '@/shared/helpers';
 
@@ -73,14 +75,14 @@ const getMetadataDecodedMessagePayload = (
 const getSailsDecodedMessagePayload = (
   message: MessageToProgram | MessageFromProgram,
   isMessageQueued: boolean,
-  sails: Sails,
+  program: ParsedSails,
 ): AnyJson => {
   const payload = getPayload(message);
   const serviceName = getServiceNamePrefix(payload);
   const functionName = getFnNamePrefix(payload);
 
-  const constructor = sails.ctors[serviceName];
-  const func = sails.services[serviceName]?.functions[functionName];
+  const constructor = program.ctors?.[serviceName];
+  const func = program.services[serviceName]?.functions[functionName];
 
   if (constructor && !func) return constructor.decodePayload(payload);
 
@@ -92,7 +94,7 @@ const getDecodedMessagePayload = (
   message: MessageToProgram | MessageFromProgram,
   isMessageQueued: boolean,
   metadata: ProgramMetadata | undefined,
-  sails: Sails | undefined,
+  program: ParsedSails | undefined,
   onError: (value: string) => void,
   specVersion: number,
 ) => {
@@ -106,7 +108,7 @@ const getDecodedMessagePayload = (
     }
 
     if (metadata) return { value: getMetadataDecodedMessagePayload(message, isMessageQueued, metadata) };
-    if (sails) return getSailsDecodedMessagePayload(message, isMessageQueued, sails);
+    if (program) return getSailsDecodedMessagePayload(message, isMessageQueued, program);
 
     return CreateType.create('Bytes', payload).toHuman();
   } catch (error) {

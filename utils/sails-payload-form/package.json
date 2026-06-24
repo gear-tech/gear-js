@@ -7,12 +7,12 @@
     "react": "^19",
     "react-dom": "^19",
     "react-hook-form": "^7.71.2",
-    "sails-js": "^0.5",
+    "sails-js": "^1.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@polkadot/types": "16.5.6",
-    "sails-js-types": "0.5.1"
+    "sails-js": "1.0.0"
   },
   "exports": {
     ".": "./src/index.ts"

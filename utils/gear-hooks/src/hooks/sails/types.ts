@@ -1,7 +1,7 @@
 import type { HexString } from '@gear-js/api';
 import type { SignerOptions } from '@polkadot/api/types';
 import type { IKeyringPair } from '@polkadot/types/types';
-import type { QueryBuilder, TransactionBuilder } from 'sails-js';
+import type { QueryBuilder, QueryBuilderWithHeader, TransactionBuilder, TransactionBuilderWithHeader } from 'sails-js';
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
 
@@ -12,7 +12,7 @@ type FunctionName<T, TReturn> = {
 }[keyof T];
 
 // transactions
-type GenericTransactionReturn<T = any> = TransactionBuilder<T>;
+type GenericTransactionReturn<T = any> = TransactionBuilderWithHeader<T> | TransactionBuilder<T>;
 
 type Transaction<T> = T extends (...args: infer P) => GenericTransactionReturn<infer R>
   ? (...args: P) => GenericTransactionReturn<R>
@@ -61,7 +61,7 @@ type EventCallbackArgs<T> = Parameters<Event<T>>[0] extends (...args: infer P) =
 
 // queries
 
-type GenericQueryReturn<T = any> = QueryBuilder<T>;
+type GenericQueryReturn<T = any> = QueryBuilderWithHeader<T> | QueryBuilder<T>;
 
 type Query<T> = T extends (...args: infer P) => GenericQueryReturn<infer R>
   ? (...args: P) => GenericQueryReturn<R>

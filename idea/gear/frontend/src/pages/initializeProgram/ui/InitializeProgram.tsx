@@ -48,7 +48,7 @@ const InitializeProgram = () => {
         {sails.value ? (
           <SailsProgramForm
             source={codeId}
-            sails={sails.value}
+            program={sails.value}
             gasMethod={GasMethod.InitCreate}
             onSubmit={handleSubmit}
           />

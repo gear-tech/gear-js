@@ -1,6 +1,7 @@
-import type { Sails } from 'sails-js';
+import type { Sails, SailsProgram } from 'sails-js';
 
-// TODO: import from sails-js
-type ISailsFuncArg = InstanceType<typeof Sails>['services'][string]['functions'][string]['args'][number];
+type ISailsFuncArg =
+  | SailsProgram['services'][string]['functions'][string]['args'][number]
+  | Sails['services'][string]['functions'][string]['args'][number];
 
 export type { ISailsFuncArg };

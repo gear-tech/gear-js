@@ -1,7 +1,12 @@
 .wrapper {
   display: inline-flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
+}
+
+.control {
+  display: inline-flex;
 }
 
 .input {
@@ -11,4 +16,6 @@
 .error {
   color: rgba(247, 58, 61, 0.75);
   font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
 }

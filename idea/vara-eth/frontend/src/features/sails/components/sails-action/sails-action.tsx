@@ -1,19 +1,16 @@
 import { useAppKit } from '@reown/appkit/react';
 import { type MouseEvent, useState } from 'react';
-import type { Sails } from 'sails-js';
 import { useConnection } from 'wagmi';
-
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Button, SplitButton, Tooltip } from '@/components';
 import { cx } from '@/shared/utils';
-
-import type { FormattedPayloadValue, SailsAction as SailsActionType } from '../../lib';
+import type { FormattedPayloadValue, ParsedSails, SailsAction as SailsActionType } from '../../lib';
 import { SailsPayloadForm } from '../sails-payload-form';
 
 import styles from './sails-action.module.scss';
 
 type Props = SailsActionType & {
-  sails: Sails;
+  sails: ParsedSails;
 };
 
 const SailsAction = ({
@@ -28,6 +25,7 @@ const SailsAction = ({
   onSubmit,
   splitAction,
   requiresAccount = true,
+  serviceName,
 }: Props) => {
   const account = useConnection();
   const { open } = useAppKit();
@@ -110,7 +108,14 @@ const SailsAction = ({
           </Tooltip>
         </header>
 
-        <SailsPayloadForm id={id} sails={sails} args={args} encode={encode} onSubmit={handleSubmit} />
+        <SailsPayloadForm
+          id={id}
+          sails={sails}
+          serviceName={serviceName}
+          args={args}
+          encode={encode}
+          onSubmit={handleSubmit}
+        />
       </div>
     );
 
@@ -128,7 +133,14 @@ const SailsAction = ({
 
       {isOpen && (
         <div className={styles.body}>
-          <SailsPayloadForm id={id} sails={sails} args={args} encode={encode} onSubmit={handleSubmit} />
+          <SailsPayloadForm
+            id={id}
+            sails={sails}
+            serviceName={serviceName}
+            args={args}
+            encode={encode}
+            onSubmit={handleSubmit}
+          />
         </div>
       )}
     </div>

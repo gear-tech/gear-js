@@ -1,10 +1,9 @@
 import type { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { parseAsString, parseAsStringEnum } from 'nuqs';
-import type { Sails } from 'sails-js';
-
 import { DateFilter, FilterGroup, Filters, parseAsIsoString, Radio } from '@/features/filters';
 import { getParsedSailsFilterValue, getValidSailsFilterValue, SailsFilter } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { isHex } from '@/shared/helpers';
@@ -15,7 +14,7 @@ import { MessageCard } from '../message-card';
 
 type Props = {
   programId: HexString;
-  sails: Sails | undefined;
+  sails: ParsedSails | undefined;
 };
 
 const FILTER_NAME = {
@@ -62,7 +61,7 @@ const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.TO_DATE]: DEFAULT_VALUE.TO_DATE,
 } as const;
 
-function useFilters(sails: Sails | undefined) {
+function useFilters(program: ParsedSails | undefined) {
   const { account } = useAccount();
 
   // fallback to default value on no account,
@@ -80,7 +79,12 @@ function useFilters(sails: Sails | undefined) {
   const validFilters = {
     ...filters,
 
-    [FILTER_NAME.SAILS]: getValidSailsFilterValue(sails, 'functions', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
+    [FILTER_NAME.SAILS]: getValidSailsFilterValue(
+      program,
+      'functions',
+      filters[FILTER_NAME.SAILS],
+      DEFAULT_VALUE.SAILS,
+    ),
   };
 
   useChangeEffect(() => {

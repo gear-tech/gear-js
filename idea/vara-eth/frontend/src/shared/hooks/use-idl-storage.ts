@@ -2,17 +2,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Hex } from 'viem';
 
 import { addIdl, getIdl } from '@/features/sails/lib';
+import { useSailsInit } from '@/features/sails/lib/use-sails-init';
 
 const IDL_QUERY_KEY = 'idl';
 
 type UseIdlStorageReturn = {
   idl: string | null;
   isLoading: boolean;
-  saveIdl: (idlContent: string) => void;
+  saveIdl: (idlContent: string) => string | null;
 };
 
 export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
   const queryClient = useQueryClient();
+  const parseIdl = useSailsInit();
 
   const queryKey = [IDL_QUERY_KEY, codeId];
 
@@ -35,13 +37,24 @@ export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
     },
   });
 
-  const saveIdl = (idlContent: string) => {
+  const saveIdl = (idlContent: string): string | null => {
     if (!codeId) {
-      console.error('Code ID is not found');
-      return;
+      return 'Code ID is not found';
+    }
+
+    if (!parseIdl) {
+      return 'Sails parser is not initialized. Please try again.';
+    }
+
+    try {
+      parseIdl(idlContent);
+    } catch (error) {
+      return error instanceof Error ? error.message : 'Invalid IDL file';
     }
 
     mutation.mutate({ codeId, idlContent });
+
+    return null;
   };
 
   return { idl: data?.data ?? null, isLoading, saveIdl };

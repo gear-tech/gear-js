@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { InjectedTxReceipt } from '@vara-eth/api';
-import type { Sails } from 'sails-js';
 import type { Hex } from 'viem';
-
 import { useApi } from '@/app/api';
 import { TransactionTypes, useAddMyActivity } from '@/app/store';
-import type { FormattedPayloadValue } from '@/features/sails/lib';
+import type { FormattedPayloadValue, ParsedSails } from '@/features/sails/lib';
 
 type SendMessageParams = {
   serviceName: string;
@@ -13,7 +11,7 @@ type SendMessageParams = {
   payload: FormattedPayloadValue;
 };
 
-const useSendInjectedTransaction = (programId: Hex, sails: Sails | undefined) => {
+const useSendInjectedTransaction = (programId: Hex, sails: ParsedSails | undefined) => {
   const { data: api } = useApi();
   const addMyActivity = useAddMyActivity();
 

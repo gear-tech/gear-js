@@ -4,14 +4,31 @@ import { useSetPayloadValue } from '../hooks';
 import type { FieldProps } from '../types';
 import { getDefaultValue, getNestedName } from '../utils';
 
-function EnumField({ sails, def, name, render, renderField }: FieldProps) {
-  const { variants } = def.asEnum;
-  const options = variants.map((variant, index) => ({ label: variant.name, value: index }));
+function EnumField({ program, serviceName, resolvedType, name, render, renderField }: FieldProps) {
+  if (!resolvedType || resolvedType.kind !== 'enum') throw new Error('Enum type is not resolved');
+
+  const { variants } = resolvedType;
+  const options = variants.map((variant, index) => ({
+    label: variant.name,
+    value: index,
+  }));
 
   const [variantIndex, setVariantIndex] = useState(options[0].value);
   const variant = variants[variantIndex];
 
-  useSetPayloadValue(name, { [variant.name]: variant.def ? getDefaultValue(sails)(variant.def) : null }, variantIndex);
+  const getVariantDefault = () => {
+    if (!variant.fields.length) return null;
+
+    if (variant.fields.length === 1) return getDefaultValue(program, serviceName)(variant.fields[0].type);
+
+    const fields = variant.fields.map(
+      ({ name: fieldName, type }, index) => [fieldName || index, getDefaultValue(program, serviceName)(type)] as const,
+    );
+
+    return Object.fromEntries(fields);
+  };
+
+  useSetPayloadValue(name, { [variant.name]: getVariantDefault() }, variantIndex);
 
   return (
     <>
@@ -21,7 +38,12 @@ function EnumField({ sails, def, name, render, renderField }: FieldProps) {
         onChange: ({ target }) => setVariantIndex(Number(target.value)),
       })}
 
-      {renderField(variant.def, '', getNestedName(name, variant.name))}
+      {variant.fields.length === 1 && renderField(variant.fields[0].type, '', getNestedName(name, variant.name))}
+
+      {variant.fields.length > 1 &&
+        variant.fields.map((field, index) =>
+          renderField(field.type, field.name || '', getNestedName(name, `${variant.name}.${field.name || index}`)),
+        )}
     </>
   );
 }
