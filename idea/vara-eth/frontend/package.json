@@ -32,7 +32,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@gear-js/frontend-configs": "*",
+    "@gear-js/frontend-configs": "workspace:*",
     "@types/react-syntax-highlighter": "15.5.13"
   }
 }

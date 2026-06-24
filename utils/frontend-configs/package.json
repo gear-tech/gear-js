@@ -18,7 +18,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/frontend-configs#readme",
   "scripts": {
-    "build": "yarn clean && npx tsc && cp src/*.json .",
+    "build": "pnpm run clean && npx tsc && cp src/*.json .",
     "clean": "echo \"clean @gear-js/frontend-configs\" && rm -rf dist tsconfig.app.json tsconfig.node.json"
   },
   "main": "dist/index.js",

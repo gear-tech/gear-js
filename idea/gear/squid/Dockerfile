@@ -2,27 +2,19 @@ FROM node:20-alpine AS builder
 
 WORKDIR /src
 
+RUN corepack enable
+
 COPY . .
 
-RUN yarn workspaces focus @gear-js/api gear-idea-squid gear-idea-indexer-db gear-idea-common gear-js
-RUN yarn build:gear-idea-squid
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build:gear-idea-squid
+RUN pnpm deploy --filter gear-idea-squid /deploy --prod
 
-FROM node:20-alpine AS deps
-WORKDIR /src
+FROM node:20-alpine
 
-COPY package.json .
-COPY yarn.lock .
-COPY .yarn .yarn
-COPY .yarnrc.yml .
-COPY apis/gear/package.json apis/gear/package.json
-COPY idea/gear/squid/package.json idea/gear/squid/package.json
-COPY idea/gear/indexer-db/package.json idea/gear/indexer-db/package.json
-COPY idea/gear/common/package.json idea/gear/common/package.json
+RUN corepack enable
 
-RUN yarn workspaces focus @gear-js/api gear-idea-squid gear-idea-indexer-db gear-idea-common gear-js --production
-
-FROM deps
-
+COPY --from=builder /deploy /src/idea/gear/squid
 COPY --from=builder /src/apis/gear/lib /src/apis/gear/lib
 COPY --from=builder /src/idea/gear/squid/lib /src/idea/gear/squid/lib
 COPY --from=builder /src/idea/gear/indexer-db/lib /src/idea/gear/indexer-db/lib
@@ -32,4 +24,4 @@ COPY --from=builder /src/idea/gear/squid/assets /src/idea/gear/squid/assets
 
 WORKDIR /src/idea/gear/squid
 
-CMD ["yarn", "run-with-migrations"]
+CMD ["pnpm", "run", "run-with-migrations"]

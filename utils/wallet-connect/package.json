@@ -30,14 +30,14 @@
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
-    "@gear-js/ui": "*",
-    "@gear-js/vara-ui": "*",
+    "@gear-js/ui": "workspace:*",
+    "@gear-js/vara-ui": "workspace:*",
     "@polkadot/react-identicon": "3.16.7",
     "clsx": "2.1.1"
   },
   "devDependencies": {
-    "@gear-js/frontend-configs": "*",
-    "@gear-js/react-hooks": "*",
+    "@gear-js/frontend-configs": "workspace:*",
+    "@gear-js/react-hooks": "workspace:*",
     "@tanstack/react-query": "5.100.10",
     "react": "19.2.6",
     "react-dom": "19.2.6"

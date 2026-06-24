@@ -2,9 +2,11 @@ FROM node:20-slim AS builder
 
 WORKDIR /src
 
+RUN corepack enable
+
 COPY . .
 
-RUN yarn workspaces focus gear-idea-frontend @gear-js/api @gear-js/react-hooks @gear-js/ui @gear-js/wallet-connect @gear-js/vara-ui @gear-js/sails-payload-form gear-js
+RUN pnpm install --frozen-lockfile
 
 ARG VITE_NODE_ADDRESS \
     VITE_NODES_API_URL \
@@ -28,7 +30,7 @@ ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
     VITE_CODE_VERIFIER_API_URL=${VITE_CODE_VERIFIER_API_URL} \
     VITE_VFT_WHITELIST_API_URL=${VITE_VFT_WHITELIST_API_URL}
 
-RUN yarn build:gear-idea-frontend
+RUN pnpm run build:gear-idea-frontend
 
 FROM node:20-alpine AS runner
 

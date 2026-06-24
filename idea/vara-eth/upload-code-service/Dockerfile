@@ -4,28 +4,18 @@ WORKDIR /src
 
 RUN apk add --no-cache python3 make g++
 
+RUN corepack enable
+
 COPY . .
 
-RUN yarn workspaces focus @vara-eth/api @vara-eth/idea-upload-code @gear-js/logger gear-js
-RUN yarn build:vara-eth-api
-RUN yarn workspace @vara-eth/idea-upload-code run build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build:vara-eth-api
+RUN pnpm --filter @vara-eth/idea-upload-code run build
+RUN pnpm deploy --filter @vara-eth/idea-upload-code /deploy --prod
 
-FROM node:24-alpine AS deps
+FROM node:24-alpine
 
-WORKDIR /src
-
-RUN apk add --no-cache python3 make g++
-
-COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn .yarn
-COPY idea/vara-eth/upload-code-service/package.json idea/vara-eth/upload-code-service/package.json
-COPY apis/vara-eth/package.json apis/vara-eth/package.json
-COPY utils/logger/package.json utils/logger/package.json
-
-RUN yarn workspaces focus @vara-eth/api @vara-eth/idea-upload-code @gear-js/logger gear-js --production
-
-FROM deps
-
+COPY --from=builder /deploy /src/idea/vara-eth/upload-code-service
 COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 COPY --from=builder /src/idea/vara-eth/upload-code-service/dist /src/idea/vara-eth/upload-code-service/dist
 COPY --from=builder /src/utils/logger/src /src/utils/logger/src

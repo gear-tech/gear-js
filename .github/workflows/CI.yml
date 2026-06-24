@@ -68,7 +68,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: 'Run linter'
-        run: yarn lint
+        run: pnpm run lint
 
   build-ui-utils:
     runs-on: ubuntu-latest
@@ -79,27 +79,27 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: 'Build frontend-configs'
-        run: yarn build:frontend-configs
+        run: pnpm run build:frontend-configs
 
       - name: 'Build gear-hooks'
-        run: yarn build:hooks
+        run: pnpm run build:hooks
 
       - name: 'Build gear-ui'
-        run: yarn build:ui
+        run: pnpm run build:ui
 
       - name: 'Build sails-payload-form'
-        run: yarn build:sails-payload-form
+        run: pnpm run build:sails-payload-form
 
       - name: 'Build vara-ui'
-        run: yarn build:vara-ui
+        run: pnpm run build:vara-ui
 
       - name: 'Build wallet-connect'
-        run: yarn build:wallet-connect
+        run: pnpm run build:wallet-connect
 
       - name: "Build frontends"
         run: |
-            yarn lerna run build --scope @gear-js/api --scope @vara-eth/api
-            yarn lerna run build --scope gear-idea-frontend --scope varaeth-idea-frontend
+            pnpm --filter @gear-js/api --filter @vara-eth/api build
+            pnpm --filter gear-idea-frontend --filter varaeth-idea-frontend build
 
   test-ui:
     runs-on: ubuntu-latest
@@ -109,10 +109,10 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: 'Build @gear-js/frontend-configs'
-        run: yarn build:frontend-configs
+        run: pnpm run build:frontend-configs
 
       - name: 'gear-ui: Run tests'
-        run: yarn test:ui
+        run: pnpm run test:ui
 
   build-tools:
     runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: 'Build'
-        run: yarn build:tools
+        run: pnpm run build:tools
 
   test-txwrapper:
     runs-on: ubuntu-latest
@@ -133,7 +133,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: 'Test: run'
-        run: yarn test:txwrapper
+        run: pnpm run test:txwrapper
 
   test-util:
     runs-on: ubuntu-22.04
@@ -144,7 +144,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
-          install-command: yarn workspaces focus gear-js-util gear-js
+          install-command: pnpm install --frozen-lockfile
 
       - name: 'Test: run'
-        run: yarn test:gear-js-util
+        run: pnpm run test:gear-js-util

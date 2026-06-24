@@ -12,10 +12,10 @@
   "dependencies": {
     "@base-ui/react": "1.4.1",
     "@gear-js/api": "0.45.0",
-    "@gear-js/react-hooks": "*",
-    "@gear-js/sails-payload-form": "*",
-    "@gear-js/ui": "*",
-    "@gear-js/wallet-connect": "*",
+    "@gear-js/react-hooks": "workspace:*",
+    "@gear-js/sails-payload-form": "workspace:*",
+    "@gear-js/ui": "workspace:*",
+    "@gear-js/wallet-connect": "workspace:*",
     "@hookform/resolvers": "5.2.2",
     "@marsidev/react-turnstile": "1.5.2",
     "@polkadot/api": "16.5.6",
@@ -51,7 +51,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@gear-js/frontend-configs": "*",
+    "@gear-js/frontend-configs": "workspace:*",
     "@types/lodash.isequal": "4.5.8",
     "@types/lodash.isplainobject": "4.0.9",
     "@types/lodash.isstring": "4.0.9",

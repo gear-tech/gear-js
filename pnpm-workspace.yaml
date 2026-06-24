@@ -1,0 +1,40 @@
+packages:
+  - "apis/gear"
+  - "apis/vara-eth"
+  - "idea/gear/common"
+  - "idea/gear/explorer"
+  - "idea/gear/faucet"
+  - "idea/gear/frontend"
+  - "idea/gear/indexer-db"
+  - "idea/gear/meta-storage"
+  - "idea/gear/squid"
+  - "idea/vara-eth/explorer"
+  - "idea/vara-eth/frontend"
+  - "idea/vara-eth/indexer"
+  - "idea/vara-eth/upload-code-service"
+  - "idea/vara-eth/indexer-db"
+  - "tools/cli"
+  - "tools/txwrapper"
+  - "utils/frontend-configs"
+  - "utils/gear-hooks"
+  - "utils/gear-ui"
+  - "utils/logger"
+  - "utils/util"
+  - "utils/vara-ui"
+  - "utils/wallet-connect"
+  - "utils/sails-payload-form"
+allowBuilds:
+  '@apollo/protobufjs': set this to true or false
+  '@parcel/watcher': set this to true or false
+  '@reown/appkit': set this to true or false
+  '@scarf/scarf': set this to true or false
+  '@swc/core': set this to true or false
+  bufferutil: set this to true or false
+  cpu-features: set this to true or false
+  es5-ext: set this to true or false
+  esbuild: set this to true or false
+  protobufjs: set this to true or false
+  ssh2: set this to true or false
+  unrs-resolver: set this to true or false
+  utf-8-validate: set this to true or false
+  xxhash-addon: set this to true or false

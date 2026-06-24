@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",
-    "migration:generate": "yarn build && npx typeorm migration:generate -d lib/dataSource.js -o db/migrations/$NAME",
+    "migration:generate": "pnpm run build && npx typeorm migration:generate -d lib/dataSource.js -o db/migrations/$NAME",
     "migration:apply": "npx typeorm migration:run -d lib/dataSource.js"
   },
   "dependencies": {

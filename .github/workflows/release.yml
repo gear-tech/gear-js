@@ -113,20 +113,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/api
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:gear-api
+        run: pnpm run build:gear-api
 
       - name: Publish gear-api
         run: npm publish --access=public --provenance
@@ -139,20 +142,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @vara-eth/api
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:vara-eth-api
+        run: pnpm run build:vara-eth-api
 
       - name: Publish vara-eth-api
         run: npm publish --access=public --provenance
@@ -165,20 +171,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/frontend-configs
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:frontend-configs
+        run: pnpm run build:frontend-configs
 
       - name: Publish frontend-configs
         run: npm publish --access=public --provenance
@@ -191,20 +200,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/react-hooks
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:gear-hooks
+        run: pnpm run build:hooks
 
       - name: Publish gear-hooks
         run: npm publish --access=public --provenance
@@ -217,20 +229,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/ui
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:gear-ui
+        run: pnpm run build:ui
 
       - name: Publish gear-ui
         run: npm publish --access=public --provenance
@@ -243,20 +258,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/vara-ui
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:vara-ui
+        run: pnpm run build:vara-ui
 
       - name: Publish vara-ui
         run: npm publish --access=public --provenance
@@ -269,20 +287,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@latest
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn workspaces focus gear-js @gear-js/wallet-connect
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:wallet-connect
+        run: pnpm run build:wallet-connect
 
       - name: Publish wallet-connect
         run: npm publish --access=public --provenance
@@ -300,20 +321,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:gear-api
+        run: pnpm run build:gear-api
 
       - name: Prepare artifact
         working-directory: apis/gear
-        run: yarn run pack
+        run: pnpm run pack
 
       - name: Get @gear-js/api version
         id: get-version
@@ -359,20 +386,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build:vara-eth-api
+        run: pnpm run build:vara-eth-api
 
       - name: Prepare artifact
         working-directory: apis/vara-eth
-        run: yarn run pack
+        run: pnpm run pack
 
       - name: Get @vara-eth/api version
         id: get-version

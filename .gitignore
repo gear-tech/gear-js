@@ -1,9 +1,4 @@
-**/.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.pnpm-store/
 
 node_modules/
 dist/
@@ -18,7 +13,8 @@ tmp/
 .env
 temp/
 *.log
-.npmrc
+
+utils/vara-ui/.npmrc
 
 idea/gear/squid/lib/
 idea/gear/indexer-db/lib/
@@ -48,3 +44,4 @@ apis/vara-eth/out/
 apis/vara-eth/broadcast
 
 *.tsbuildinfo
+.superpowers/

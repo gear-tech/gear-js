@@ -20,7 +20,6 @@
   "scripts": {
     "build": "rm -rf dist && rm -rf *.scss || true && rm -rf fonts && cp -R ./src/assets/styles/. . && npx vite build",
     "test": "npx vitest",
-    "prepare": "yarn build",
     "clean": "echo \"clean @gear-js/gear-ui\" && rm -rf dist"
   },
   "peerDependencies": {
@@ -32,7 +31,7 @@
     "clsx": "2.1.1"
   },
   "devDependencies": {
-    "@gear-js/frontend-configs": "*",
+    "@gear-js/frontend-configs": "workspace:*",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "happy-dom": "20.9.0"

@@ -2,11 +2,13 @@ FROM node:20-bookworm AS builder
 
 WORKDIR /src
 
+RUN corepack enable
+
 COPY . .
 
-RUN yarn workspaces focus varaeth-idea-frontend @vara-eth/api @gear-js/api @gear-js/sails-payload-form gear-js
+RUN pnpm install --frozen-lockfile
 
-RUN yarn add -D storybook@8
+RUN pnpm add -D -w storybook@8
 
 ARG VITE_WALLET_CONNECT_PROJECT_ID \
     VITE_VARA_ETH_NODE_ADDRESSES_TESTNET \
@@ -42,7 +44,7 @@ ENV VITE_WALLET_CONNECT_PROJECT_ID=${VITE_WALLET_CONNECT_PROJECT_ID} \
     DISABLE_ESLINT_PLUGIN=true \
     ESLINT_NO_DEV_ERRORS=true
 
-RUN yarn build:varaeth-idea-frontend
+RUN pnpm run build:varaeth-idea-frontend
 
 FROM node:20-alpine AS runner
 

@@ -6,18 +6,23 @@ inputs:
     default: '20.x'
   install-command:
     description: 'Dependency install command'
-    default: 'yarn install'
+    default: 'pnpm install --frozen-lockfile'
 runs:
   using: composite
   steps:
     - name: Cancel Previous Runs
       uses: styfle/cancel-workflow-action@0.13.1
 
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        run_install: false
+
     - name: Install Node.js
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
-        cache: yarn
+        cache: pnpm
 
     - name: Install dependencies
       shell: bash

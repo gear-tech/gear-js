@@ -18,7 +18,6 @@
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-hooks#readme",
   "scripts": {
     "build": "rm -rf dist && npx vite build",
-    "prepare": "yarn build",
     "clean": "echo \"clean @gear-js/react-hooks\" && rm -rf dist"
   },
   "peerDependencies": {
@@ -43,7 +42,7 @@
   },
   "devDependencies": {
     "@gear-js/api": "0.45.0",
-    "@gear-js/frontend-configs": "*",
+    "@gear-js/frontend-configs": "workspace:*",
     "@polkadot/api": "16.5.6",
     "@polkadot/api-derive": "16.5.6",
     "@polkadot/types": "16.5.6",

@@ -1,10 +1,10 @@
 pre-commit:
-	@yarn install
-	@yarn lint:fix
-	@yarn build
-	@yarn test
+	@pnpm install
+	@pnpm run lint:fix
+	@pnpm run build
+	@pnpm run test
 
 pre-commit-no-test:
-	@yarn install
-	@yarn lint:fix
-	@yarn build
+	@pnpm install
+	@pnpm run lint:fix
+	@pnpm run build

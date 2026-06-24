@@ -23,7 +23,7 @@
     "build-deprecated": "rm -rf dist-temp && npx vite build --mode deprecated",
     "copy-deprecated-css": "cp dist-temp/style.css dist/style-deprecated.css",
     "rm-deprecated-dts": "rm -f dist/index-deprecated.d.ts",
-    "build": "yarn run build-base && yarn run build-deprecated && yarn run copy-deprecated-css && yarn run rm-deprecated-dts",
+    "build": "pnpm run build-base && pnpm run build-deprecated && pnpm run copy-deprecated-css && pnpm run rm-deprecated-dts",
     "build-sb": "storybook build",
     "preview": "npx vite preview",
     "clean": "echo \"clean @gear-js/vara-ui\" && rm -rf dist dist-temp"
@@ -37,7 +37,7 @@
     "non.geist": "2.0.1"
   },
   "devDependencies": {
-    "@gear-js/frontend-configs": "*",
+    "@gear-js/frontend-configs": "workspace:*",
     "@storybook/addon-links": "10.4.0",
     "@storybook/addon-onboarding": "10.4.0",
     "@storybook/react-vite": "10.4.0",

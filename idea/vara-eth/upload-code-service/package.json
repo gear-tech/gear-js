@@ -16,7 +16,7 @@
     "@types/pg": "^8"
   },
   "scripts": {
-    "build": "yarn clean && npx tsc",
+    "build": "pnpm run clean && npx tsc",
     "clean": "rm -rf dist",
     "start": "node dist/main.js",
     "migrate": "node dist/migrate.js"
