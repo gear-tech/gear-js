@@ -7,7 +7,9 @@ function UserDefinedField({ program, serviceName, def, name, label, render, rend
 
   const resolved = resolveNamedType(program, serviceName, def);
 
-  if (resolved?.kind === 'alias') return renderField(resolved.target, label, name);
+  if (!resolved) throw new Error(`Failed to resolve user-defined type: ${def.name}`);
+
+  if (resolved.kind === 'alias') return renderField(resolved.target, label, name);
 
   return render.ui.fieldset({
     legend: getLabel(label, def, resolved),

@@ -48,7 +48,8 @@ function useService(program: ParsedSails, key: 'functions' | 'queries') {
             ...queryArgs: unknown[]
           ) => QueryBuilderWithHeader<unknown> | QueryBuilder<unknown>;
 
-          const builder = queryFn(...Object.values(payload));
+          const queryArgs = args.map((_, index) => payload[index]);
+          const builder = queryFn(...queryArgs);
           if (address) builder.withAddress(address);
 
           return builder.call();
