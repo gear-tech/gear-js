@@ -17,7 +17,7 @@ function useSails(codeId: HexString | null | undefined, programId?: HexString) {
     if (!codeId) throw new Error('Code ID is not found');
 
     const { data } = await getIdl(codeId);
-    const program = sailsInit(data);
+    const program = await sailsInit(data);
 
     program.setApi(api);
     if (programId) program.setProgramId(programId);

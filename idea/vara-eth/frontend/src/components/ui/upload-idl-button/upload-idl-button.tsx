@@ -5,7 +5,7 @@ import { Button } from '../button';
 import styles from './upload-idl-button.module.scss';
 
 type Props = {
-  onSaveIdl: (idlContent: string) => string | null;
+  onSaveIdl: (idlContent: string) => Promise<string | null>;
 };
 
 const UploadIdlButton = ({ onSaveIdl }: Props) => {
@@ -30,11 +30,11 @@ const UploadIdlButton = ({ onSaveIdl }: Props) => {
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const content = e.target?.result as string;
       if (!content) return;
 
-      const saveError = onSaveIdl(content);
+      const saveError = await onSaveIdl(content);
       if (saveError) {
         setError(saveError);
         event.target.value = '';

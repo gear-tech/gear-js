@@ -10,7 +10,7 @@ type SailsMessageRoute = {
 
 const getSailsMethod = (sails: ParsedSails, payload: Hex) => {
   const serviceName = getServiceNamePrefix(payload);
-  const constructor = (sails.ctors ?? {})[serviceName];
+  const constructor = sails.ctors?.[serviceName];
   if (constructor) {
     return { constructor, hasMethod: false, constructorName: serviceName };
   }

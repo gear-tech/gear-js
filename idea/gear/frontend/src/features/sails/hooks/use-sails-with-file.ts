@@ -13,10 +13,11 @@ function useSailsWithFile(codeId: HexString | undefined) {
   const [fileSails, setFileSails] = useState<ParsedSails>();
   const [fileIdl, setFileIdl] = useState<string>();
 
-  const set = (_idl: string) => {
+  const set = async (_idl: string) => {
     if (!sailsInit) throw new Error('Sails is not initialized');
 
-    setFileSails(sailsInit(_idl));
+    const parsedIdl = await sailsInit(_idl);
+    setFileSails(parsedIdl);
     setFileIdl(_idl);
   };
 

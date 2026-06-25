@@ -54,7 +54,7 @@ type Props = {
   programId: Hex;
   idl: string | null | undefined;
   isLoading: boolean;
-  onSaveIdl: (idl: string) => string | null;
+  onSaveIdl: (idl: string) => Promise<string | null>;
   init: { isRequired: boolean; isEnabled: boolean; tooltip: string; onSuccess: () => void };
   hasExecutableBalance: boolean;
 };

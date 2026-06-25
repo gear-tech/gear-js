@@ -27,7 +27,7 @@ function useSails<T = ParsedSails>({ programId, idl, query }: UseSailsParameters
     if (!isApiReady) throw new Error('API is not initialized');
     if (!parseIdl) throw new Error('Sails parser is not initialized');
 
-    const program = parseIdl(idl || '');
+    const program = await parseIdl(idl || '');
 
     program.setApi(api);
     if (programId) program.setProgramId(programId);

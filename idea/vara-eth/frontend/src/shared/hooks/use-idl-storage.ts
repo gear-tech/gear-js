@@ -9,7 +9,7 @@ const IDL_QUERY_KEY = 'idl';
 type UseIdlStorageReturn = {
   idl: string | null;
   isLoading: boolean;
-  saveIdl: (idlContent: string) => string | null;
+  saveIdl: (idlContent: string) => Promise<string | null>;
 };
 
 export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
@@ -37,7 +37,7 @@ export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
     },
   });
 
-  const saveIdl = (idlContent: string): string | null => {
+  const saveIdl = async (idlContent: string): Promise<string | null> => {
     if (!codeId) {
       return 'Code ID is not found';
     }
@@ -47,7 +47,7 @@ export const useIdlStorage = (codeId?: Hex): UseIdlStorageReturn => {
     }
 
     try {
-      parseIdl(idlContent);
+      await parseIdl(idlContent);
     } catch (error) {
       return error instanceof Error ? error.message : 'Invalid IDL file';
     }
