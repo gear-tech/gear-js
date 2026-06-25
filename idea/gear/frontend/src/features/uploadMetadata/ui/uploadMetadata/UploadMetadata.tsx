@@ -1,10 +1,9 @@
 import type { ProgramMetadata } from '@gear-js/api';
 import { FileInput } from '@gear-js/ui';
 import cx from 'clsx';
-import type { Sails } from 'sails-js';
-
 import { MetadataPreview } from '@/features/metadata';
 import { SailsPreview } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import { FileTypes } from '@/shared/config';
 import { Box } from '@/shared/ui/box';
 
@@ -14,7 +13,7 @@ type Props = {
   value: File | undefined;
   onChange: (file: File | undefined) => void;
   metadata: ProgramMetadata | undefined;
-  sails: Sails | undefined;
+  sails: ParsedSails | undefined;
   isDisabled?: boolean;
   isLoading?: boolean;
 };

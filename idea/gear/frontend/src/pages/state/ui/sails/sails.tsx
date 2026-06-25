@@ -1,5 +1,5 @@
 import type { HexString } from '@gear-js/api';
-import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import { useAccount, useAlert } from '@gear-js/react-hooks';
 import type { PayloadValue } from '@gear-js/sails-payload-form';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,11 +7,10 @@ import type { AnyJson } from '@polkadot/types/types';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { type Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
-
 import { useProgram } from '@/features/program';
 import { PayloadForm, useSails, useService } from '@/features/sails';
+import type { ParsedSails } from '@/features/sails/types';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { getPreformattedText, isUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
@@ -22,12 +21,13 @@ import { useProgramId } from '../../hooks';
 import { INITIAL_VALUES } from '../../model';
 import styles from '../full/Full.module.scss';
 
-const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsType }) => {
-  const { api } = useApi();
+const StateForm = ({ programId, program }: { programId: HexString; program: ParsedSails }) => {
   const { account } = useAccount();
   const alert = useAlert();
-  // would be better if useService could accept undefined sails?
-  const { select, functionSelect, args, decodeResult, ...query } = useService(sails, 'queries');
+
+  program.setProgramId(programId);
+
+  const { select, functionSelect, args, serviceName, callQuery, ...query } = useService(program, 'queries');
 
   const defaultValues = { ...INITIAL_VALUES, payload: query.defaultValues };
   const schema = query.schema ? z.object({ payload: query.schema }) : undefined;
@@ -37,21 +37,12 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
   const payloadValue = useWatch({ control: form.control, name: 'payload' });
 
   const readQuery = async (payload: PayloadValue | undefined): Promise<AnyJson> => {
-    if (!api) throw new Error('API is not initialized');
-    if (!decodeResult) throw new Error('Sails is not found');
+    if (!callQuery) throw new Error('Query is not found');
+    if (!account?.decodedAddress) throw new Error('Account is not connected');
 
-    const result = await api.message.calculateReply({
-      destination: programId,
-      origin: account?.decodedAddress || ZERO_ADDRESS,
-      value: 0,
-      gasLimit: api.blockGasLimit.toBigInt(),
-      payload,
-    });
-
-    return decodeResult(result.payload.toHex());
+    return (await callQuery(payload as Record<string, unknown>, account?.decodedAddress)) as AnyJson;
   };
 
-  // decode numbers bigger than 64 bits (BigInt)?
   const state = useMutation({ mutationFn: readQuery, onError: ({ message }) => alert.error(message) });
   const isStateExists = !isUndefined(state.data);
 
@@ -67,8 +58,15 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
         <Box className={styles.box}>
           <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-          {sails && args && (
-            <PayloadForm gap="1/5" sails={sails} select={select} functionSelect={functionSelect} args={args} />
+          {args && (
+            <PayloadForm
+              gap="1/5"
+              program={program}
+              serviceName={serviceName}
+              select={select}
+              functionSelect={functionSelect}
+              args={args}
+            />
           )}
 
           {state.isPending ? (
@@ -97,12 +95,12 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
 const Sails = () => {
   const programId = useProgramId();
   const { data: program } = useProgram(programId);
-  const { sails } = useSails(program?.codeId);
+  const { sails } = useSails(program?.codeId, programId);
 
   return (
     <>
       <h2 className={styles.heading}>Read Program State</h2>
-      {sails ? <StateForm programId={programId} sails={sails} /> : null}
+      {sails ? <StateForm programId={programId} program={sails} /> : null}
     </>
   );
 };

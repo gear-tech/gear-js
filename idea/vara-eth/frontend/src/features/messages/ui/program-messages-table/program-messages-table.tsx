@@ -1,11 +1,10 @@
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
-import type { Sails } from 'sails-js';
 import type { Hex } from 'viem';
-
 import { HashLink, Pagination, Table } from '@/components';
 import type { TableColumn } from '@/components/ui/table/table';
+import type { ParsedSails } from '@/features/sails/lib';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
 
@@ -86,7 +85,7 @@ const OUTGOING_COLUMNS: readonly TableColumn<OutgoingRow>[] = [
 
 type Props = {
   programId: Hex;
-  sails?: Sails;
+  sails?: ParsedSails;
   pageSize?: number;
 };
 

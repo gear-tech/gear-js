@@ -1,9 +1,9 @@
-import type { ISailsTypeDef } from 'sails-js-types';
+import type { Type, TypeDecl } from 'sails-js/types';
 
 import { getType } from './type';
 
-const getLabel = (name: string, def: ISailsTypeDef) => {
-  const type = getType(def);
+const getLabel = (name: string, def: TypeDecl, resolvedType?: Type) => {
+  const type = getType(def, resolvedType);
 
   return name ? `${name} (${type})` : type;
 };

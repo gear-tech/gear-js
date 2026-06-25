@@ -1,6 +1,6 @@
-import type { Sails } from 'sails-js';
 import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
 import type { Hex } from 'viem';
+import type { ParsedSails } from '@/features/sails/lib';
 
 type SailsMessageRoute = {
   service?: string;
@@ -8,9 +8,9 @@ type SailsMessageRoute = {
   name: string;
 };
 
-const getSailsMethod = (sails: Sails, payload: Hex) => {
+const getSailsMethod = (sails: ParsedSails, payload: Hex) => {
   const serviceName = getServiceNamePrefix(payload);
-  const constructor = sails.ctors[serviceName];
+  const constructor = sails.ctors?.[serviceName];
   if (constructor) {
     return { constructor, hasMethod: false, constructorName: serviceName };
   }
@@ -28,7 +28,7 @@ const getSailsMethod = (sails: Sails, payload: Hex) => {
   return { serviceName, functionName, method, hasMethod, kind };
 };
 
-const getDecodedPayload = (payload: Hex, sails: Sails | undefined) => {
+const getDecodedPayload = (payload: Hex, sails: ParsedSails | undefined) => {
   if (!sails) return null;
 
   try {
@@ -45,7 +45,7 @@ const getDecodedPayload = (payload: Hex, sails: Sails | undefined) => {
   }
 };
 
-const getMessageName = (payload: Hex, sails: Sails | undefined) => {
+const getMessageName = (payload: Hex, sails: ParsedSails | undefined) => {
   if (!sails) return null;
 
   try {
@@ -60,7 +60,7 @@ const getMessageName = (payload: Hex, sails: Sails | undefined) => {
   }
 };
 
-const getMessageRoute = (payload: Hex, sails: Sails | undefined): SailsMessageRoute | null => {
+const getMessageRoute = (payload: Hex, sails: ParsedSails | undefined): SailsMessageRoute | null => {
   if (!sails) return null;
 
   try {

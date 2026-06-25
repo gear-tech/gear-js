@@ -1,7 +1,7 @@
 import type { OptionHTMLAttributes, PropsWithChildren, SelectHTMLAttributes } from 'react';
 import type { JSX } from 'react/jsx-runtime';
-import type { Sails } from 'sails-js';
-import type { ISailsTypeDef } from 'sails-js-types';
+import type { SailsProgram } from 'sails-js';
+import type { Type, TypeDecl } from 'sails-js/types';
 
 type FieldsetProps = PropsWithChildren & { legend: string };
 
@@ -12,8 +12,10 @@ type SelectProps = Pick<SelectHTMLAttributes<HTMLSelectElement>, 'value' | 'onCh
 type RHFProps = { name: string; label: string };
 
 type FieldProps = {
-  sails: Sails;
-  def: ISailsTypeDef;
+  program: SailsProgram;
+  serviceName?: string;
+  def: TypeDecl;
+  resolvedType?: Type;
   name: string;
   label: string;
 
@@ -30,7 +32,7 @@ type FieldProps = {
     };
   };
 
-  renderField: (def: ISailsTypeDef, label: string, name: string) => JSX.Element | undefined;
+  renderField: (def: TypeDecl, label: string, name: string, resolvedType?: Type) => JSX.Element | undefined;
 };
 
 export type { FieldProps };

@@ -1,18 +1,23 @@
 import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import cx from 'clsx';
 import { type ReactNode, useState } from 'react';
-import type { Sails } from 'sails-js';
 
 import { getPreformattedText, isAnyKey } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
 import ArrowSVG from '../../assets/arrow.svg?react';
-import type { ISailsCtorFuncParams, SailsServiceEvent, SailsServiceFunc, SailsServiceQuery } from '../../types';
+import type {
+  ISailsCtorFuncParams,
+  ParsedSails,
+  SailsServiceEvent,
+  SailsServiceFunc,
+  SailsServiceQuery,
+} from '../../types';
 
 import styles from './sails-preview.module.scss';
 
 type Props = {
-  value: Sails;
+  value: ParsedSails;
 };
 
 function Accordion({ heading, children }: { heading: string; children: ReactNode }) {
@@ -33,7 +38,8 @@ function Accordion({ heading, children }: { heading: string; children: ReactNode
 }
 
 function SailsPreview({ value }: Props) {
-  const { scaleCodecTypes, ctors, services } = value;
+  const { ctors, services } = value;
+  const typesObject = 'programTypes' in value ? Object.fromEntries(value.programTypes) : value.scaleCodecTypes;
 
   const getArgs = (args: ISailsFuncArg[]) => args.map(({ name, type }) => `${name}: ${type}`).join(', ');
   const getReturnType = (type: unknown) => JSON.stringify(type).replace(/"/g, '');
@@ -81,12 +87,14 @@ function SailsPreview({ value }: Props) {
   return (
     <div>
       <Accordion heading="Types">
-        <PreformattedBlock text={getPreformattedText(scaleCodecTypes)} />
+        <PreformattedBlock text={getPreformattedText(typesObject)} />
       </Accordion>
 
-      <Accordion heading="Constructors">
-        <PreformattedBlock text={getFunctions(ctors, getConstructorFunction)} />
-      </Accordion>
+      {ctors && (
+        <Accordion heading="Constructors">
+          <PreformattedBlock text={getFunctions(ctors, getConstructorFunction)} />
+        </Accordion>
+      )}
 
       <Accordion heading={`Services (${serviceEntries.length})`}>{renderServices()}</Accordion>
     </div>

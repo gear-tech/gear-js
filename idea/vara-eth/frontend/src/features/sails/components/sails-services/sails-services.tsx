@@ -1,12 +1,11 @@
-import type { Sails } from 'sails-js';
-
 import { Badge } from '@/components';
 import { cx } from '@/shared/utils';
+import type { ParsedSails } from '../../lib';
 
 import styles from './sails-services.module.scss';
 
 type Props = {
-  value: Sails['services'];
+  value: ParsedSails['services'];
 };
 
 const getHash = (value: string) => {

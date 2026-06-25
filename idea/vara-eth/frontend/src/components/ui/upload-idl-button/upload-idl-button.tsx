@@ -5,7 +5,7 @@ import { Button } from '../button';
 import styles from './upload-idl-button.module.scss';
 
 type Props = {
-  onSaveIdl: (idlContent: string) => void;
+  onSaveIdl: (idlContent: string) => Promise<string | null>;
 };
 
 const UploadIdlButton = ({ onSaveIdl }: Props) => {
@@ -30,12 +30,18 @@ const UploadIdlButton = ({ onSaveIdl }: Props) => {
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const content = e.target?.result as string;
-      if (content) {
-        onSaveIdl(content);
-        setError(null);
+      if (!content) return;
+
+      const saveError = await onSaveIdl(content);
+      if (saveError) {
+        setError(saveError);
+        event.target.value = '';
+        return;
       }
+
+      setError(null);
     };
     reader.onerror = () => {
       setError('Failed to read file. Please try again.');
@@ -46,10 +52,12 @@ const UploadIdlButton = ({ onSaveIdl }: Props) => {
 
   return (
     <div className={styles.wrapper}>
-      <input ref={fileInputRef} type="file" accept=".idl" onChange={handleFileChange} className={styles.input} />
-      <Button size="xs" onClick={handleButtonClick}>
-        Upload IDL
-      </Button>
+      <div className={styles.control}>
+        <input ref={fileInputRef} type="file" accept=".idl" onChange={handleFileChange} className={styles.input} />
+        <Button size="xs" onClick={handleButtonClick}>
+          Upload IDL
+        </Button>
+      </div>
       {error && <div className={styles.error}>{error}</div>}
     </div>
   );

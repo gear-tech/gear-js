@@ -1,13 +1,14 @@
 import type { HexString } from '@gear-js/api';
-import { Sails } from 'sails-js';
-import { SailsIdlParser } from 'sails-js-parser';
 
 import { useApi } from '@/context';
 
 import type { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
-type UseSailsParameters<T> = QueryParameters<Sails, T> & {
+import type { ParsedSails } from './parse-idl';
+import { useSailsInit } from './use-sails-init';
+
+type UseSailsParameters<T> = QueryParameters<ParsedSails, T> & {
   programId?: HexString | undefined;
   idl?: string | undefined;
 };
@@ -18,27 +19,27 @@ const DEFAULT_PARAMETERS = {
   query: {},
 } as const;
 
-function useSails<T = Sails>({ programId, idl, query }: UseSailsParameters<T> = DEFAULT_PARAMETERS) {
+function useSails<T = ParsedSails>({ programId, idl, query }: UseSailsParameters<T> = DEFAULT_PARAMETERS) {
   const { api, isApiReady } = useApi();
+  const parseIdl = useSailsInit();
 
   const getSails = async () => {
     if (!isApiReady) throw new Error('API is not initialized');
+    if (!parseIdl) throw new Error('Sails parser is not initialized');
 
-    const parser = await SailsIdlParser.new();
-    const sails = new Sails(parser);
+    const program = await parseIdl(idl || '');
 
-    sails.setApi(api);
-    if (programId) sails.setProgramId(programId);
-    if (idl) sails.parseIdl(idl);
+    program.setApi(api);
+    if (programId) program.setProgramId(programId);
 
-    return sails;
+    return program;
   };
 
   return useQuery({
     ...query,
     queryKey: ['sails', api?.provider.endpoint, programId, idl],
     queryFn: getSails,
-    enabled: isApiReady && (query?.enabled ?? true),
+    enabled: isApiReady && Boolean(parseIdl) && (query?.enabled ?? true),
   });
 }
 

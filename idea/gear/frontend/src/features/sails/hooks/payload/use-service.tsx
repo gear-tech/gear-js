@@ -1,13 +1,17 @@
+import type { HexString } from '@gear-js/api';
 import { getDefaultPayloadValue, getPayloadSchema } from '@gear-js/sails-payload-form';
 import { type ChangeEvent, useMemo } from 'react';
-import type { Sails } from 'sails-js';
+import type { QueryBuilder, QueryBuilderWithHeader } from 'sails-js';
+import type { z } from 'zod';
 
 import { isAnyKey } from '@/shared/helpers';
 
+import type { ParsedSails } from '../../types';
+
 import { useSelect } from './use-select';
 
-function useService(sails: Sails, key: 'functions' | 'queries') {
-  const { services } = sails;
+function useService(program: ParsedSails, key: 'functions' | 'queries') {
+  const { services } = program;
 
   const onSelectChange = (value: string) => {
     const [defaultFunction] = Object.keys(services[value][key]);
@@ -19,18 +23,40 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
 
   const select = useSelect(nonEmptyServices, { onChange: onSelectChange, label: 'Service' });
 
-  const functions = services[select.value][key];
-  const functionSelect = useSelect(functions, { label: key === 'functions' ? 'Function' : 'Query' });
-  const { args, encodePayload, decodeResult } = functions[functionSelect.value];
+  const serviceName = select.value;
+  const serviceMethods = services[serviceName][key];
+  const functionSelect = useSelect(serviceMethods, { label: key === 'functions' ? 'Function' : 'Query' });
+  const { args, encodePayload } = serviceMethods[functionSelect.value];
 
-  const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [select.value, functionSelect.value]);
-
-  const schema = useMemo(
-    () => getPayloadSchema(sails, args, encodePayload).transform((value) => value.encoded),
-    [select.value, functionSelect.value],
+  const defaultValues = useMemo(
+    () => getDefaultPayloadValue(program, args, serviceName),
+    [program, serviceName, select.value, functionSelect.value],
   );
 
-  return { select, functionSelect, defaultValues, schema, args, decodeResult };
+  const schema = useMemo(
+    () =>
+      getPayloadSchema(program, serviceName, args, encodePayload).transform(
+        (value: { encoded: HexString }) => value.encoded,
+      ) as z.ZodType<HexString>,
+    [program, serviceName, select.value, functionSelect.value],
+  );
+
+  const callQuery =
+    key === 'queries'
+      ? async (payload: Record<string, unknown>, address?: string) => {
+          const queryFn = serviceMethods[functionSelect.value] as (
+            ...queryArgs: unknown[]
+          ) => QueryBuilderWithHeader<unknown> | QueryBuilder<unknown>;
+
+          const queryArgs = args.map((_, index) => payload[index]);
+          const builder = queryFn(...queryArgs);
+          if (address) builder.withAddress(address);
+
+          return builder.call();
+        }
+      : undefined;
+
+  return { select, functionSelect, defaultValues, schema, args, serviceName, callQuery };
 }
 
 export { useService };

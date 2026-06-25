@@ -538,17 +538,23 @@ React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/
 
 ## useSails
 
-Returns a Sails instance for interacting with a program using its interface for a given program ID and IDL.
+Parses a program IDL and returns a `Sails` (IDL v1) or `SailsProgram` (IDL v2) instance for interacting with the program.
+
+IDL format is detected automatically:
+- **IDL v2** — contains `!@sails:` → `SailsProgram` via `sails-js/parser`
+- **IDL v1** (legacy) — `constructor {` / `service {` syntax → `Sails` via `sails-js-parser`
+
+Both parsers require `sails-js@^1.0.0` and `sails-js-parser@0.5.1` as peer dependencies.
 
 ### Parameters
 
-- `programId` (`string`): The program ID to connect to.
-- `idl` (`string`): The program's interface definition language (IDL) as a string.
+- `programId` (`string`, optional): The program ID to connect to.
+- `idl` (`string`, optional): The program IDL as a string.
 - `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
 
 ### Returns
 
-- TanStack Query `UseQueryResult` with `Sails` instance data.
+- TanStack Query `UseQueryResult` with `ParsedSails` data (`Sails | SailsProgram`).
 
 ### Usage Example
 
@@ -556,17 +562,20 @@ Returns a Sails instance for interacting with a program using its interface for 
 import { useSails } from '@gear-js/react-hooks';
 
 const PROGRAM_ID = '0x...';
-const IDL = '...';
+const IDL_V2 = `!@sails: 1.0.0\n\nservice Counter { ... }`;
+const IDL_V1 = `constructor { New(); };\nservice Example { ... };`;
 
 function SailsInfo() {
-  const { data: sails } = useSails({
+  const { data: program } = useSails({
     programId: PROGRAM_ID,
-    idl: IDL,
+    idl: IDL_V2,
   });
 
-  if (!sails) return <div>Loading...</div>;
+  if (!program) return <div>Loading...</div>;
 
-  return <div>Sails instance ready: {String(!!sails)}</div>;
+  const isIdlV2 = 'resolveInService' in program;
+
+  return <div>Program ready ({isIdlV2 ? 'IDL v2' : 'IDL v1'})</div>;
 }
 ```
 

@@ -1,21 +1,19 @@
 import type { HexString } from '@gear-js/api';
 import { parseAsString } from 'nuqs';
-import type { Sails } from 'sails-js';
-
 import { DateFilter, Filters, parseAsIsoString } from '@/features/filters';
 import { useIsVftProgram } from '@/features/vft-whitelist';
 import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
-
 import { type EventType, useEvents } from '../../api';
+import type { ParsedSails } from '../../types';
 import { getParsedSailsFilterValue, getValidSailsFilterValue } from '../../utils';
 import { EventCard } from '../event-card';
 import { SailsFilter } from '../sails-filter';
 
 type Props = {
   programId: HexString;
-  sails: Sails | undefined;
+  sails: ParsedSails | undefined;
 };
 
 const FILTER_NAME = {
@@ -36,7 +34,7 @@ const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.TO_DATE]: DEFAULT_VALUE.TO_DATE,
 } as const;
 
-function useFilters(sails: Sails | undefined) {
+function useFilters(program: ParsedSails | undefined) {
   const [filters, setFilters] = useSearchParamsStates({
     [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
     [FILTER_NAME.FROM_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.FROM_DATE),
@@ -45,7 +43,7 @@ function useFilters(sails: Sails | undefined) {
 
   const validFilters = {
     ...filters,
-    [FILTER_NAME.SAILS]: getValidSailsFilterValue(sails, 'events', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
+    [FILTER_NAME.SAILS]: getValidSailsFilterValue(program, 'events', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
   };
 
   return [validFilters, setFilters] as const;

@@ -38,6 +38,9 @@ import {
   useSendMessageWithGas,
 } from './handlers';
 import {
+  createSailsParser,
+  isIdlV2,
+  type ParsedSails,
   type UsePrepareProgramTransactionParameters,
   type UseProgramEventParameters,
   type UseProgramParameters,
@@ -49,10 +52,12 @@ import {
   useProgramEvent,
   useProgramQuery,
   useSails,
+  useSailsInit,
   useSendProgramTransaction,
 } from './sails';
 
 export type {
+  ParsedSails,
   SendMessageOptions,
   SendMessageWithGasOptions,
   UseDeriveBalancesAllParameters,
@@ -67,6 +72,8 @@ export type {
   UseSendProgramTransactionParameters,
 };
 export {
+  createSailsParser,
+  isIdlV2,
   useAccountIssuedVouchers,
   useAccountVoucher,
   useAccountVouchers,
@@ -94,6 +101,7 @@ export {
   useReadWasmState,
   useReplyCalculateGas,
   useSails,
+  useSailsInit,
   useSendMessage,
   useSendMessageWithGas,
   useSendProgramTransaction,

@@ -31,7 +31,7 @@ const Send = () => {
 
   const { data: program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
-  const { sails } = useSails(program?.codeId);
+  const { sails } = useSails(program?.codeId, programId);
   const isAnyFunction = sails ? Object.values(sails.services).some(({ functions }) => isAnyKey(functions)) : false;
 
   return (
@@ -39,7 +39,7 @@ const Send = () => {
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
 
       {sails && isAnyFunction ? (
-        <SailsMessageForm id={id} programId={programId} isReply={isReply} sails={sails} />
+        <SailsMessageForm id={id} programId={programId} isReply={isReply} program={sails} />
       ) : (
         <MessageForm id={id} programId={programId} isReply={isReply} metadata={metadata} isLoading={!isMetadataReady} />
       )}

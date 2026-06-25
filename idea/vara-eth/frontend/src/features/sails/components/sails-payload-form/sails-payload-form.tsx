@@ -11,18 +11,17 @@ import { FormProvider, useForm } from 'react-hook-form';
 import type { Sails } from 'sails-js';
 import type { Hex } from 'viem';
 import { z } from 'zod';
-
 import { Checkbox, Input, Textarea } from '@/components';
 import { Select } from '@/components/form/select';
-
-import type { FormattedPayloadValue } from '../../lib';
+import type { FormattedPayloadValue, ParsedSails } from '../../lib';
 import { Fieldset } from '../fieldset';
 
 import styles from './sails-payload-form.module.scss';
 
 type Props = {
   id: string;
-  sails: Sails;
+  sails: ParsedSails;
+  serviceName?: string;
   args: ISailsFuncArg[];
   encode: (...params: unknown[]) => Hex;
   onSubmit: (payload: FormattedPayloadValue) => Promise<unknown>;
@@ -40,8 +39,18 @@ const GridCheckbox = ({ ...props }: ComponentProps<typeof Checkbox>) => (
   <Checkbox {...props} className={styles.checkbox} />
 );
 
-const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unknown[]) => Hex) =>
-  getPayloadSchema(sails, args, encode).transform(({ encoded, decoded }) => ({
+const getSchema = (
+  sails: ParsedSails,
+  serviceName: string | undefined,
+  args: ISailsFuncArg[],
+  encode: (...params: unknown[]) => Hex,
+) => {
+  const schema =
+    'resolveInService' in sails
+      ? getPayloadSchema(sails, serviceName, args, encode)
+      : getPayloadSchema(sails as Sails, args, encode);
+
+  return schema.transform(({ encoded, decoded }) => ({
     encoded,
 
     // TODO: maybe @gear-js/sails-js-payload should use arg names instead of indexes?
@@ -49,11 +58,12 @@ const getSchema = (sails: Sails, args: ISailsFuncArg[], encode: (...params: unkn
       .map((value, index) => `${args[index].name}: ${JSON.stringify(value)}`)
       .join(', '),
   }));
+};
 
-const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
-  const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args) }), []);
+const SailsPayloadForm = ({ id, sails, serviceName, args, encode, onSubmit }: Props) => {
+  const defaultValues = useMemo(() => ({ payload: getDefaultPayloadValue(sails, args, serviceName) }), []);
 
-  const schema = useMemo(() => z.object({ payload: getSchema(sails, args, encode) }), []);
+  const schema = useMemo(() => z.object({ payload: getSchema(sails, serviceName, args, encode) }), []);
 
   const form = useForm({
     values: defaultValues,
@@ -77,7 +87,8 @@ const SailsPayloadForm = ({ id, sails, args, encode, onSubmit }: Props) => {
     <FormProvider {...form}>
       <form id={id} onSubmit={handleSubmit} className={styles.form}>
         <Fields
-          sails={sails}
+          program={sails}
+          serviceName={serviceName}
           args={args}
           render={{
             ui: { fieldset: Fieldset, select: GridSelect },

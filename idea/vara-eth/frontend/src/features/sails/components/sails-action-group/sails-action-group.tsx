@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import type { Sails } from 'sails-js';
-
 import ArrowSVG from '@/assets/icons/arrow-square-down.svg?react';
 import { Badge } from '@/components';
 import { cx } from '@/shared/utils';
-
-import type { SailsAction as SailsActionType } from '../../lib';
+import type { ParsedSails, SailsAction as SailsActionType } from '../../lib';
 import { SailsAction } from '../sails-action';
 
 import styles from './sails-action-group.module.scss';
 
 type Props = {
   name: string;
-  sails: Sails;
+  sails: ParsedSails;
   items: SailsActionType[];
 };
 
