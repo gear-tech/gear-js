@@ -10,7 +10,7 @@
     "express": "5.2.1",
     "gear-idea-common": "workspace:*",
     "gear-idea-indexer-db": "workspace:*",
-    "pg": "8.20.0",
+    "pg": "8.22.0",
     "redis": "5.12.1",
     "reflect-metadata": "0.2.2"
   },
