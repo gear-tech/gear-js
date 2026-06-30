@@ -7,3 +7,4 @@ INSERT INTO router_implementation (id, from_block, version) VALUES ('0xfd378f8ff
 INSERT INTO router_implementation (id, from_block, version) VALUES ('0xf695b4115899889338dcfb3379bda23c387b9131', 2813529, 'v1');
 INSERT INTO router_implementation (id, from_block, version) VALUES ('0xe00cfae4de44b9eb57db47a5034ad0a091a2afab', 2852225, 'v2');
 INSERT INTO router_implementation (id, from_block, version) VALUES ('0x0417bbe4e2e66227a31839c39f04afa22e1dc067', 2983665, 'v3');
+INSERT INTO router_implementation (id, from_block, version) VALUES ('0x22647fac4d3e7aeb1388ad6ee0981b56e2bf58d1', 3034188, 'v3');

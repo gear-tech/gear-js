@@ -1,15 +1,27 @@
 import { createLogger } from '@gear-js/logger';
+import { VaraEthApi, type WsUrl } from '@vara-eth/api';
+import { FailoverWsProvider } from './failover-ws-provider.js';
 import type { LogRequest } from '@subsquid/evm-processor/lib/interfaces/data-request.js';
 import { TypeormDatabase } from '@subsquid/typeorm-store';
 
 import { BaseHandler } from './handlers/base.js';
+import { RouterHandler } from './handlers/router.js';
 import { handlers } from './handlers/index.js';
+import { InjectedTransactionModule } from './modules/injected-transaction.js';
+import { config } from './config.js';
 import { processor } from './processor.js';
 
 const logger = createLogger('vara-eth-proc');
 
 export class VaraEthProcessor {
   private _handlers: BaseHandler[] = [];
+  private _routerHandler: RouterHandler | null = null;
+  private _injectedTxModule: InjectedTransactionModule | null = null;
+
+  public setInjectedTxModule(routerHandler: RouterHandler, module: InjectedTransactionModule) {
+    this._routerHandler = routerHandler;
+    this._injectedTxModule = module;
+  }
 
   public addLogs(addr?: string, topics?: string[]) {
     logger.info(`Adding logs ${topics?.join(',')} for ${addr}`);
@@ -74,6 +86,12 @@ export class VaraEthProcessor {
         }
       }
 
+      if (this._routerHandler && this._injectedTxModule) {
+        const repliedToIds = this._routerHandler.getRepliedToIds();
+        const messageSentIds = this._routerHandler.getMessageSentIds();
+        await this._injectedTxModule.process(ctx, repliedToIds, messageSentIds);
+      }
+
       for (const handler of this._handlers) {
         await handler.save();
       }
@@ -82,7 +100,12 @@ export class VaraEthProcessor {
 }
 
 export async function runProcessor() {
-  const processor = new VaraEthProcessor();
+  const provider = new FailoverWsProvider(config.varaEthNodeUrls as WsUrl[]);
+  const client = await VaraEthApi.create(provider);
+  const injectedTxModule = new InjectedTransactionModule(client);
+
+  const proc = new VaraEthProcessor();
+  let routerHandler: RouterHandler | null = null;
 
   for (const Handler of Object.values(handlers)) {
     if (Handler.prototype instanceof BaseHandler) {
@@ -90,11 +113,18 @@ export async function runProcessor() {
       logger.info(`Initializing handler: ${Handler.constructor.name}`);
       await handler.init();
       logger.info(`Registering new handler: ${Handler.constructor.name}`);
-      processor.registerHandler(handler);
+      proc.registerHandler(handler);
+      if (handler instanceof RouterHandler) routerHandler = handler;
     }
   }
 
-  await processor.run();
+  if (routerHandler) {
+    proc.setInjectedTxModule(routerHandler, injectedTxModule);
+  } else {
+    logger.warn('RouterHandler not found — injected transaction indexing disabled');
+  }
+
+  await proc.run();
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

@@ -129,7 +129,7 @@ export class MirrorHandler extends BaseHandler {
 
     this._messageRequests.set(id, messageRequest);
     this._addHashEntry(EntityType.MessageRequest, id, common.timestamp);
-    this._logger.info({ messageId: id, programId }, 'Message queuing requested');
+    this._logger.debug({ messageId: id, programId }, 'Message queuing requested');
   }
 
   private _handleReplyQueueingRequested(log: Log, common: BlockDataCommon, programId: PgByteaString): void {
@@ -149,6 +149,6 @@ export class MirrorHandler extends BaseHandler {
     });
 
     this._replyRequests.set(id, replyRequest);
-    this._logger.info({ repliedTo: data.args.repliedTo, programId }, 'Reply queuing requested');
+    this._logger.debug({ repliedTo: data.args.repliedTo, programId }, 'Reply queuing requested');
   }
 }

@@ -6,10 +6,6 @@ export class InjectedTransactionResponseDto {
   @Expose()
   id: string;
 
-  @ApiProperty({ description: 'Reply ID (hex with 0x prefix)', example: '0x1234...' })
-  @Expose()
-  replyId: string;
-
   @ApiProperty({ description: 'Destination address (hex with 0x prefix)', example: '0x1234...' })
   @Expose()
   destination: string;

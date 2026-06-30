@@ -94,6 +94,14 @@ export class RouterHandler extends BaseHandler {
     return RouterAbi;
   }
 
+  public getRepliedToIds(): { id: PgByteaString; createdAt: Date }[] {
+    return [...this._repliesSent.values()].map((r) => ({ id: r.repliedToId, createdAt: r.createdAt }));
+  }
+
+  public getMessageSentIds(): Set<PgByteaString> {
+    return new Set(this._messagesSent.keys());
+  }
+
   public async save(): Promise<void> {
     await Promise.all([
       super.save(),
@@ -351,7 +359,7 @@ export class RouterHandler extends BaseHandler {
         createdAt: common.timestamp,
       });
       this._stateTransitions.set(stateTransition.id, stateTransition);
-      this._logger.info(
+      this._logger.debug(
         { id: stateTransition.id, hash: trans.newStateHash, block: common.blockNumber },
         'State transition created',
       );
@@ -388,7 +396,7 @@ export class RouterHandler extends BaseHandler {
       });
 
       this._repliesSent.set(id, replySent);
-      this._logger.info(
+      this._logger.debug(
         { replyId: message.id, repliedToId: message.replyDetails.to, sourceProgramId, transition: stateTransitionId },
         'Reply sent from program',
       );
@@ -405,7 +413,7 @@ export class RouterHandler extends BaseHandler {
       });
 
       this._messagesSent.set(id, messageSent);
-      this._logger.info(
+      this._logger.debug(
         { messageId: message.id, sourceProgramId, transition: stateTransitionId },
         'Message sent from program',
       );

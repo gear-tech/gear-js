@@ -6,11 +6,12 @@ import type { PgByteaString } from '../helpers/index.js';
 @Index('idx_injected_tx_sender_created', ['senderAddress', 'createdAt'])
 @Entity('injected_transaction')
 export class InjectedTransaction {
+  constructor(props?: Partial<InjectedTransaction>) {
+    Object.assign(this, props);
+  }
+
   @PrimaryColumn()
   id: PgByteaString;
-
-  @Column({ type: 'bytea', name: 'reply_id' })
-  replyId: PgByteaString;
 
   @Column({ type: 'bytea' })
   destination: PgByteaString;

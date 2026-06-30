@@ -18,4 +18,5 @@ export const config = {
   fromBlock: Number(getEnv('FROM_BLOCK', '0')),
   routerAddr: getEnv('ROUTER_ADDR') as Address,
   apiKey: getEnv('API_KEY'),
+  varaEthNodeUrls: getEnv('VARA_ETH_NODE_URLS').split(',').map((s) => s.trim()),
 };
