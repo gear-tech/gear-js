@@ -1,14 +1,13 @@
 import { createLogger } from '@gear-js/logger';
-import { VaraEthApi, type WsUrl } from '@vara-eth/api';
-import { FailoverWsProvider } from './failover-ws-provider.js';
 import type { LogRequest } from '@subsquid/evm-processor/lib/interfaces/data-request.js';
 import { TypeormDatabase } from '@subsquid/typeorm-store';
-
-import { BaseHandler } from './handlers/base.js';
-import { RouterHandler } from './handlers/router.js';
-import { handlers } from './handlers/index.js';
-import { InjectedTransactionModule } from './modules/injected-transaction.js';
+import { VaraEthApi, type WsUrl } from '@vara-eth/api';
 import { config } from './config.js';
+import { FailoverWsProvider } from './failover-ws-provider.js';
+import { BaseHandler } from './handlers/base.js';
+import { handlers } from './handlers/index.js';
+import { RouterHandler } from './handlers/router.js';
+import { InjectedTransactionModule } from './modules/injected-transaction.js';
 import { processor } from './processor.js';
 
 const logger = createLogger('vara-eth-proc');

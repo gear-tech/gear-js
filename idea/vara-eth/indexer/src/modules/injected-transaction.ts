@@ -11,11 +11,7 @@ type Candidate = { id: PgByteaString; createdAt: Date };
 export class InjectedTransactionModule {
   constructor(private readonly client: VaraEthApi) {}
 
-  async process(
-    ctx: Context,
-    candidates: Candidate[],
-    currentBatchMessageSentIds: Set<PgByteaString>,
-  ): Promise<void> {
+  async process(ctx: Context, candidates: Candidate[], currentBatchMessageSentIds: Set<PgByteaString>): Promise<void> {
     if (candidates.length === 0) return;
 
     const afterCurrentBatch = candidates.filter((c) => !currentBatchMessageSentIds.has(c.id));
