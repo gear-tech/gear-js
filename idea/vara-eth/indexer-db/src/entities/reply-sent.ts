@@ -15,7 +15,7 @@ export class ReplySent {
   @PrimaryColumn()
   id: PgByteaString;
 
-  @Column({ type: 'bytea', name: 'replied_to_id' })
+  @Column({ name: 'replied_to_id' })
   repliedToId: PgByteaString;
 
   @Column({ type: 'bytea', name: 'source_program_id' })

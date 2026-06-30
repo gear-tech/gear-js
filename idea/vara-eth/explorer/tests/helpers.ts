@@ -272,14 +272,12 @@ export function validateInjectedTransactionDto(t: any) {
     'id',
     'payload',
     'referenceBlock',
-    'replyId',
     'salt',
     'senderAddress',
     'signature',
     'value',
   ]);
   assertHex(t.id, 32);
-  assertHex(t.replyId);
   assertHex(t.destination);
   assertHex(t.senderAddress);
   assertHex(t.referenceBlock);
