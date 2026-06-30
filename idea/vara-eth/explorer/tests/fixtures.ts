@@ -75,8 +75,18 @@ export const REPLY_SENT_3_ID = '0xe0cf9214f53c0a8489049f756e6859f13f362903662ee8
 export const REPLY_SENT_4_ID = '0x387e9551abe3568f95152ca5da245ce2ca3f39a02c7cf828ab83f1936ee8a842'; // sourceProgramId: PROGRAM_3_ID, repliedToId: MSG_REQ_4_ID
 
 // ── Injected transactions ─────────────────────────────────────────────────────
-// NOTE: injected_transaction table is empty in the current dump.
-// Tests verify empty-list behavior and 404 on unknown IDs.
+
+export const INJECTED_TX_1_ID = '0x3f03eb844ba9a2645c29431aed08b24696f218188ccacef22e39f4b8c3506c72'; // dest: INJECTED_TX_1_DEST, sender: INJECTED_TX_1_SENDER
+export const INJECTED_TX_2_ID = '0x6efcae691ade1bdee41e1bfbc326414870bb829080a98d96320c08f22b7b2139'; // dest: INJECTED_TX_2_DEST, sender: INJECTED_TX_2_SENDER
+export const INJECTED_TX_3_ID = '0x0528dc40961ca6b22d7141916baf41f610c8b744f1c21448837263571d9fc5f2'; // dest: INJECTED_TX_3_DEST, sender: INJECTED_TX_3_SENDER
+
+export const INJECTED_TX_1_DEST = '0x8a600002e6874327452a859e904a10b38429de53';
+export const INJECTED_TX_2_DEST = '0xa1169900d8a001e878d2e115d8f3b7fc1e900edb';
+export const INJECTED_TX_3_DEST = '0xf6024378e281ee6fdff29b4b79e156bdcc6e7656';
+
+export const INJECTED_TX_1_SENDER = '0x94340419b7efa8d9aa417fd3ae3d7a6ef033bd9a';
+export const INJECTED_TX_2_SENDER = '0x859ff789c55b0e548129ce7ae5ac039f8900e3f4';
+export const INJECTED_TX_3_SENDER = '0x766270abf5dde72d374b3120c8aedc651ee3f184';
 
 // ── Non-existent IDs (used for "not found" tests) ───────────────────────────────
 export const UNKNOWN_ID = `0x${'ff'.repeat(32)}`;

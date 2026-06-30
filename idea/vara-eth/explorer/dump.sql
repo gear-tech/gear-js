@@ -2,10 +2,9 @@
 -- PostgreSQL database dump
 --
 
-\restrict 78xV3JyYDksXRv724bWhxhTwMsOBQ17tTsL47dwgMdMfKwpgk2YdwCSZn1Y8kqU
 
--- Dumped from database version 15.17 (Homebrew)
--- Dumped by pg_dump version 18.3
+-- Dumped from database version 15.18 (Homebrew)
+-- Dumped by pg_dump version 18.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -82,7 +81,10 @@ COPY public.hash_registry (id, type, created_at) FROM stdin;
 -- Data for Name: injected_transaction; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.injected_transaction (id, reply_id, destination, sender_address, reference_block, salt, signature, value, created_at, payload) FROM stdin;
+COPY public.injected_transaction (id, destination, sender_address, reference_block, salt, signature, value, created_at, payload) FROM stdin;
+\\x3f03eb844ba9a2645c29431aed08b24696f218188ccacef22e39f4b8c3506c72	\\x8a600002e6874327452a859e904a10b38429de53	\\x94340419b7efa8d9aa417fd3ae3d7a6ef033bd9a	\\x09bd44d45acb3d5816a03b1fb55297167156ee84d4e190e5a4c23feda5943ec8	\\x100c4d36786b9ad361f701e54c74aac10456b77e63ec06497a4ea783ded81371	\\x1a82ffdda9794a49bb21e7c7659ffade04374ccf0198d14265fc6f67a10aa0cd78ad05db967a9df5754629815b4f2c5fb4c62e92ca2c84e49383fd81ec8bf15c1b	0	2026-06-17 16:26:48+04	\\x474d011028cc4046ef964fc509000100000000000000000000000000ee98b6381b0a6a18a4a4e6d74355b015319a6809
+\\x6efcae691ade1bdee41e1bfbc326414870bb829080a98d96320c08f22b7b2139	\\xa1169900d8a001e878d2e115d8f3b7fc1e900edb	\\x859ff789c55b0e548129ce7ae5ac039f8900e3f4	\\xac3b74a4d283f8ff387dcb4c761e4413920f44f0a6bec6ec27a7b15363656c9c	\\x9ac95ceec5da1971fd5eed6fee8be42969f00970bc1e2a7eb217b80bfab16cc4	\\x5d210893899b0fa0e54a117b8b5a87d68b2569dac5a3b4bcb965d46b536f26ca52dbd8cd1e207d0cbc94fdaf2544e8a6a93df6fe016cdbdd4601158f5d51cd651c	0	2026-06-17 16:40:24+04	\\x474d011028cc4046ef964fc508000100
+\\x0528dc40961ca6b22d7141916baf41f610c8b744f1c21448837263571d9fc5f2	\\xf6024378e281ee6fdff29b4b79e156bdcc6e7656	\\x766270abf5dde72d374b3120c8aedc651ee3f184	\\x49e76dc21aa7556b881ccdbd106b42989b12e712e75914fa809c05e8d6717839	\\x21e2a46c6755adf6b91abb98c7e3cbc4e97a88c9ec574be7de00f33d97aa1017	\\x989cd9fff9d252ed903390eb09a46232ed38266d52f6897ce09ef71b4e7d5a4f273e3875dd160c19360058cbd1da63adbc4763c992b0c6e0354224db9d928da71b	0	2026-06-17 17:04:00+04	\\x474d011028cc4046ef964fc508000100
 \.
 
 
@@ -156,6 +158,14 @@ COPY public.reply_sent (id, replied_to_id, source_program_id, destination, state
 
 
 --
+-- Data for Name: router_implementation; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.router_implementation (id, from_block, version) FROM stdin;
+\.
+
+
+--
 -- Data for Name: state_transition; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -210,4 +220,4 @@ SELECT pg_catalog.setval('public.migrations_id_seq', 1, false);
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 78xV3JyYDksXRv724bWhxhTwMsOBQ17tTsL47dwgMdMfKwpgk2YdwCSZn1Y8kqU
+
