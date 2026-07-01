@@ -68,19 +68,47 @@ export type ReplySent = {
   stateTransition?: StateTransition;
 };
 
+export type InjectedTransaction = {
+  id: Hex;
+  destination: Hex;
+  senderAddress: Hex;
+  referenceBlock: Hex;
+  salt: Hex;
+  signature: Hex;
+  value: string;
+  payload: Hex;
+  createdAt: string;
+};
+
+type ListQueryParams = {
+  programId?: Hex;
+  destination?: Hex;
+  repliedToId?: Hex;
+};
+
 // TODO: merge with fetchWithGuard
-const getIndexerUrl = (explorerUrl: string, url: string, page?: number, pageSize?: number, programId?: Hex) => {
-  const indexerUrl = new URL(`${explorerUrl}/${url}`);
+const getIndexerUrl = (
+  explorerUrl: string,
+  path: string,
+  pagination?: { page: number; pageSize: number },
+  query?: ListQueryParams,
+) => {
+  const indexerUrl = new URL(`${explorerUrl}/${path}`);
 
-  if (!isUndefined(page) && !isUndefined(pageSize)) {
-    const limit = pageSize;
-    const offset = (page - 1) * pageSize;
-
-    indexerUrl.searchParams.set('limit', String(limit));
-    indexerUrl.searchParams.set('offset', String(offset));
+  if (pagination) {
+    const { page, pageSize } = pagination;
+    indexerUrl.searchParams.set('limit', String(pageSize));
+    indexerUrl.searchParams.set('offset', String((page - 1) * pageSize));
   }
-  if (!isUndefined(programId)) {
-    indexerUrl.searchParams.set('programId', programId);
+
+  if (!isUndefined(query?.programId)) {
+    indexerUrl.searchParams.set('programId', query.programId);
+  }
+  if (!isUndefined(query?.destination)) {
+    indexerUrl.searchParams.set('destination', query.destination);
+  }
+  if (!isUndefined(query?.repliedToId)) {
+    indexerUrl.searchParams.set('repliedToId', query.repliedToId);
   }
 
   return indexerUrl;
@@ -100,20 +128,38 @@ export const getReplySent = (explorerUrl: string, id: Hex) =>
 
 export const getMessageRequests = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
   fetchWithGuard<PaginatedResponse<MessageRequest>>({
-    url: getIndexerUrl(explorerUrl, 'messages/requests', page, pageSize, programId),
+    url: getIndexerUrl(explorerUrl, 'messages/requests', { page, pageSize }, { programId }),
   });
 
 export const getMessageSents = (explorerUrl: string, page: number, pageSize: number, programId?: Hex) =>
   fetchWithGuard<PaginatedResponse<MessageSent>>({
-    url: getIndexerUrl(explorerUrl, 'messages/sent', page, pageSize, programId),
+    url: getIndexerUrl(explorerUrl, 'messages/sent', { page, pageSize }, { programId }),
   });
 
 export const getReplyRequests = (explorerUrl: string, page: number, pageSize: number) =>
   fetchWithGuard<PaginatedResponse<ReplyRequest>>({
-    url: getIndexerUrl(explorerUrl, 'replies/requests', page, pageSize),
+    url: getIndexerUrl(explorerUrl, 'replies/requests', { page, pageSize }),
   });
 
-export const getReplySents = (explorerUrl: string, page: number, pageSize: number) =>
+export const getReplySents = (
+  explorerUrl: string,
+  page: number,
+  pageSize: number,
+  query?: Pick<ListQueryParams, 'programId' | 'repliedToId'>,
+) =>
   fetchWithGuard<PaginatedResponse<ReplySent>>({
-    url: getIndexerUrl(explorerUrl, 'replies/sent', page, pageSize),
+    url: getIndexerUrl(explorerUrl, 'replies/sent', { page, pageSize }, query),
+  });
+
+export const getInjectedTransaction = (explorerUrl: string, id: Hex) =>
+  fetchWithGuard<InjectedTransaction>({ url: getIndexerUrl(explorerUrl, `injected-transactions/${id}`) });
+
+export const getInjectedTransactions = (
+  explorerUrl: string,
+  page: number,
+  pageSize: number,
+  query?: Pick<ListQueryParams, 'destination'>,
+) =>
+  fetchWithGuard<PaginatedResponse<InjectedTransaction>>({
+    url: getIndexerUrl(explorerUrl, 'injected-transactions', { page, pageSize }, query),
   });

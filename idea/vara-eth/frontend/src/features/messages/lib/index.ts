@@ -5,14 +5,17 @@ import {
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetInjectedTransactionByIdQuery,
+  useGetInjectedTransactionsQuery,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  useGetReplySentsByRepliedToIdQuery,
 } from './queries';
-import type { MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
+import type { InjectedTransaction, MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
 
-export type { MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute };
+export type { InjectedTransaction, MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute };
 export {
   getDecodedPayload,
   getMessageName,
@@ -21,8 +24,11 @@ export {
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetInjectedTransactionByIdQuery,
+  useGetInjectedTransactionsQuery,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  useGetReplySentsByRepliedToIdQuery,
 };

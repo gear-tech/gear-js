@@ -5,7 +5,7 @@ import { formatEther } from 'viem';
 import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
-import type { MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute } from '../../lib';
+import type { InjectedTransaction, MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute } from '../../lib';
 
 type RouteProp = {
   route?: SailsMessageRoute | null;
@@ -134,14 +134,17 @@ const ReplyRequestData = ({
 };
 
 const ReplySentData = (props: ReplySent & RouteProp) => {
-  const { repliedToId, replyCode, sourceProgramId, destination, value, isCall, stateTransition, createdAt, route } =
+  const { repliedToId, replyCode, sourceProgramId, destination, value, isCall, stateTransition, createdAt, route, id } =
     props;
 
   return (
     <ChainEntity.Data>
       {route && <SailsRouteData route={route} />}
+      <ChainEntity.Key>Reply ID</ChainEntity.Key>
+      <HashLink hash={id} href={generatePath(routes.message, { messageId: id })} truncateSize="xxl" />
+
       <ChainEntity.Key>Replied To ID</ChainEntity.Key>
-      <HashLink hash={repliedToId} truncateSize="xxl" />
+      <HashLink hash={repliedToId} truncateSize="xxl" href={generatePath(routes.message, { messageId: repliedToId })} />
 
       <ChainEntity.Key>Reply Code</ChainEntity.Key>
       <div>{replyCode}</div>
@@ -176,6 +179,43 @@ const ReplySentData = (props: ReplySent & RouteProp) => {
   );
 };
 
+const InjectedTransactionData = ({
+  destination,
+  senderAddress,
+  value,
+  referenceBlock,
+  salt,
+  signature,
+  createdAt,
+  route,
+}: InjectedTransaction & RouteProp) => {
+  return (
+    <ChainEntity.Data>
+      {route && <SailsRouteData route={route} />}
+      <ChainEntity.Key>Sender Address</ChainEntity.Key>
+      <HashLink hash={senderAddress} explorerLinkPath="address" />
+
+      <ChainEntity.Key>Destination</ChainEntity.Key>
+      <HashLink hash={destination} href={generatePath(routes.program, { programId: destination })} explorerLinkPath="address" />
+
+      <ChainEntity.Key>Value</ChainEntity.Key>
+      <Balance value={formatEther(BigInt(value))} units="ETH" />
+
+      <ChainEntity.Key>Reference Block</ChainEntity.Key>
+      <HashLink hash={referenceBlock} truncateSize="xxl" maxLength={36} />
+
+      <ChainEntity.Key>Salt</ChainEntity.Key>
+      <HashLink hash={salt} truncateSize="xxl" maxLength={36} />
+
+      <ChainEntity.Key>Signature</ChainEntity.Key>
+      <HashLink hash={signature} truncateSize="xxl" maxLength={36} />
+
+      <ChainEntity.Key>Created At</ChainEntity.Key>
+      <ChainEntity.Date value={createdAt} />
+    </ChainEntity.Data>
+  );
+};
+
 const SkeletonData = () => {
   const render = () =>
     Array.from({ length: 6 }, (_, index) => (
@@ -196,6 +236,7 @@ const MessageData = {
   Sent: MessageSentData,
   ReplyRequest: ReplyRequestData,
   ReplySent: ReplySentData,
+  Injected: InjectedTransactionData,
   Skeleton: SkeletonData,
 };
 

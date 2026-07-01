@@ -7,10 +7,12 @@ import {
   getDecodedPayload,
   getMessageRoute,
   MessageData,
+  useGetInjectedTransactionByIdQuery,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  useGetReplySentsByRepliedToIdQuery,
 } from '@/features/messages';
 import { useGetProgramByIdQuery } from '@/features/programs';
 import { useSails } from '@/features/sails';
@@ -32,18 +34,34 @@ const Message = () => {
   const messageSent = useGetMessageSentByIdQuery(messageId);
   const replyRequest = useGetReplyRequestByIdQuery(messageId);
   const replySent = useGetReplySentByIdQuery(messageId);
+  const injectedTransaction = useGetInjectedTransactionByIdQuery(messageId);
+
+  const isInjected = Boolean(
+    injectedTransaction.data &&
+      !messageRequest.data &&
+      !messageSent.data &&
+      !replyRequest.data &&
+      !replySent.data,
+  );
+
+  const replySents = useGetReplySentsByRepliedToIdQuery(messageId, { enabled: isInjected });
 
   const sourceProgramId =
     messageRequest.data?.programId ||
     replyRequest.data?.programId ||
     messageSent.data?.sourceProgramId ||
-    replySent.data?.sourceProgramId;
+    replySent.data?.sourceProgramId ||
+    injectedTransaction.data?.destination;
   const { data: sourceProgram, isLoading: isSourceProgramLoading } = useGetProgramByIdQuery(sourceProgramId ?? '');
   const { idl, isLoading: isIdlLoading } = useIdlStorage(sourceProgram?.code?.id);
   const { data: sails, isLoading: isSailsLoading } = useSails(idl);
 
   const payload =
-    messageRequest.data?.payload || messageSent.data?.payload || replyRequest.data?.payload || replySent.data?.payload;
+    messageRequest.data?.payload ||
+    messageSent.data?.payload ||
+    replyRequest.data?.payload ||
+    replySent.data?.payload ||
+    injectedTransaction.data?.payload;
 
   const isDecodedPayloadLoading =
     Boolean(payload && sourceProgramId) && (isSourceProgramLoading || isIdlLoading || isSailsLoading);
@@ -51,13 +69,23 @@ const Message = () => {
   const decodedPayload = useMemo(() => (payload ? getDecodedPayload(payload, sails) : null), [payload, sails]);
   const messageRoute = useMemo(() => (payload ? getMessageRoute(payload, sails) : null), [payload, sails]);
 
-  if (
+  const isLoading =
     messageRequest.isLoading ||
     messageSent.isLoading ||
     replyRequest.isLoading ||
     replySent.isLoading ||
-    isDecodedPayloadLoading
-  ) {
+    injectedTransaction.isLoading ||
+    isDecodedPayloadLoading ||
+    (isInjected && replySents.isLoading);
+
+  const hasEntity =
+    messageRequest.data ||
+    messageSent.data ||
+    replyRequest.data ||
+    replySent.data ||
+    injectedTransaction.data;
+
+  if (isLoading) {
     return (
       <PageContainer className={styles.container}>
         <div className={styles.column}>
@@ -89,8 +117,7 @@ const Message = () => {
     );
   }
 
-  if (!messageRequest.data && !messageSent.data && !replyRequest.data && !replySent.data)
-    return <ChainEntity.NotFound entity="message" id={messageId} />;
+  if (!hasEntity) return <ChainEntity.NotFound entity="message" id={messageId} />;
 
   return (
     <PageContainer className={styles.container}>
@@ -99,7 +126,7 @@ const Message = () => {
           <ChainEntity.BackButton />
 
           <div className={styles.title}>
-            <ArrowSVG className={cx(styles.arrow, messageSent.data && styles.from)} />
+            <ArrowSVG className={cx(styles.arrow, (messageSent.data || isInjected) && styles.from)} />
             <ChainEntity.Title id={messageId} />
           </div>
         </ChainEntity.Header>
@@ -108,6 +135,20 @@ const Message = () => {
         {messageSent.data && <MessageData.Sent {...messageSent.data} route={messageRoute} />}
         {replyRequest.data && <MessageData.ReplyRequest {...replyRequest.data} route={messageRoute} />}
         {replySent.data && <MessageData.ReplySent {...replySent.data} route={messageRoute} />}
+        {injectedTransaction.data && isInjected && (
+          <MessageData.Injected {...injectedTransaction.data} route={messageRoute} />
+        )}
+
+        {isInjected && (
+          <section className={styles.response}>
+            <h2 className={styles.responseTitle}>Response</h2>
+            {replySents.data?.data.length ? (
+              replySents.data.data.map((reply) => <MessageData.ReplySent key={reply.id} {...reply} />)
+            ) : (
+              <p className={styles.responseEmpty}>No replies yet</p>
+            )}
+          </section>
+        )}
       </div>
 
       <div className={styles.column}>
