@@ -1,10 +1,13 @@
 import type { HexString } from '@gear-js/api';
-import { getDefaultPayloadValue, getPayloadSchema } from '@gear-js/sails-payload-form';
+import {
+  collectServiceMethodEntries,
+  formatServiceMethodLabel,
+  getDefaultPayloadValue,
+  getPayloadSchema,
+} from '@gear-js/sails-payload-form';
 import { type ChangeEvent, useMemo } from 'react';
 import type { QueryBuilder, QueryBuilderWithHeader } from 'sails-js';
 import type { z } from 'zod';
-
-import { isAnyKey } from '@/shared/helpers';
 
 import type { ParsedSails } from '../../types';
 
@@ -13,19 +16,33 @@ import { useSelect } from './use-select';
 function useService(program: ParsedSails, key: 'functions' | 'queries') {
   const { services } = program;
 
+  const getMethodEntries = (serviceName: string) => collectServiceMethodEntries(program, serviceName, key);
+
   const onSelectChange = (value: string) => {
-    const [defaultFunction] = Object.keys(services[value][key]);
+    const [defaultFunction] = getMethodEntries(value).map(({ name }) => name);
+
+    if (!defaultFunction) return;
 
     functionSelect.onChange({ target: { value: defaultFunction } } as ChangeEvent<HTMLSelectElement>);
   };
 
-  const nonEmptyServices = Object.fromEntries(Object.entries(services).filter(([, service]) => isAnyKey(service[key])));
+  const nonEmptyServices = Object.fromEntries(
+    Object.entries(services).filter(([name]) => getMethodEntries(name).length > 0),
+  );
 
   const select = useSelect(nonEmptyServices, { onChange: onSelectChange, label: 'Service' });
 
   const serviceName = select.value;
-  const serviceMethods = services[serviceName][key];
-  const functionSelect = useSelect(serviceMethods, { label: key === 'functions' ? 'Function' : 'Query' });
+  const methodEntries = getMethodEntries(serviceName);
+  const serviceMethods = Object.fromEntries(methodEntries.map(({ name, method }) => [name, method]));
+  const methodLabels = Object.fromEntries(
+    methodEntries.map(({ name, extendedFrom }) => [name, formatServiceMethodLabel(name, extendedFrom)]),
+  );
+
+  const functionSelect = useSelect(serviceMethods, {
+    label: key === 'functions' ? 'Function' : 'Query',
+    labels: methodLabels,
+  });
   const { args, encodePayload } = serviceMethods[functionSelect.value];
 
   const defaultValues = useMemo(
