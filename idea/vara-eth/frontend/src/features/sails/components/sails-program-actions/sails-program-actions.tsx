@@ -1,4 +1,4 @@
-import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
+import { collectServiceMethodEntries, type ISailsFuncArg } from '@gear-js/sails-payload-form';
 import { useEffect, useState } from 'react';
 import type { Hex } from 'viem';
 import { isHex } from 'viem';
@@ -118,55 +118,61 @@ const SailsProgramPanel = ({ programId, idl, isLoading, onSaveIdl, init, hasExec
   ] as const;
 
   const renderServiceActions = () =>
-    Object.entries(sails!.services).map(([serviceName, service]) => {
-      const queries = isReadTab
-        ? Object.entries(service.queries).map(([messageName, meta]) => {
-            const { args, encodePayload } = meta as SailsMethodMeta;
+    Object.entries(sails!.services)
+      .map(([serviceName]) => {
+        const queries = isReadTab
+          ? collectServiceMethodEntries(sails!, serviceName, 'queries').map(({ name, method, extendedFrom }) => {
+              const { args, encodePayload } = method as SailsMethodMeta;
 
-            return {
-              id: `query:${serviceName}:${messageName}`,
-              name: messageName,
-              action: 'Read',
-              serviceName,
-              args,
-              encode: encodePayload,
-              requiresAccount: false,
-              onSubmit: (payload: FormattedPayloadValue) =>
-                readMessage.mutateAsync({ serviceName, messageName, payload }),
-            };
-          })
-        : [];
+              return {
+                id: `query:${serviceName}:${name}`,
+                name,
+                extendedFrom,
+                action: 'Read',
+                serviceName,
+                args,
+                encode: encodePayload,
+                requiresAccount: false,
+                onSubmit: (payload: FormattedPayloadValue) =>
+                  readMessage.mutateAsync({ serviceName, messageName: name, payload }),
+              };
+            })
+          : [];
 
-      const functions = isWriteTab
-        ? Object.entries(service.functions).map(([messageName, meta]) => {
-            const { args, encodePayload } = meta as SailsMethodMeta;
+        const functions = isWriteTab
+          ? collectServiceMethodEntries(sails!, serviceName, 'functions').map(({ name, method, extendedFrom }) => {
+              const { args, encodePayload } = method as SailsMethodMeta;
 
-            return {
-              id: `fn:${serviceName}:${messageName}`,
-              name: messageName,
-              action: writeMode === WRITE_MODE_OFFCHAIN ? 'Write offchain' : 'Write onchain',
-              serviceName,
-              args,
-              encode: encodePayload,
-              splitAction: {
-                selectedValue: writeMode,
-                options: writeModeOptions,
-                onOptionClick: setWriteModePreference,
-              },
-              onSubmit: (payload: FormattedPayloadValue) =>
-                (writeMode === WRITE_MODE_OFFCHAIN ? sendInjectedTx : sendMessage).mutateAsync({
-                  serviceName,
-                  messageName,
-                  payload,
-                }),
-            };
-          })
-        : [];
+              return {
+                id: `fn:${serviceName}:${name}`,
+                name,
+                extendedFrom,
+                action: writeMode === WRITE_MODE_OFFCHAIN ? 'Write offchain' : 'Write onchain',
+                serviceName,
+                args,
+                encode: encodePayload,
+                splitAction: {
+                  selectedValue: writeMode,
+                  options: writeModeOptions,
+                  onOptionClick: setWriteModePreference,
+                },
+                onSubmit: (payload: FormattedPayloadValue) =>
+                  (writeMode === WRITE_MODE_OFFCHAIN ? sendInjectedTx : sendMessage).mutateAsync({
+                    serviceName,
+                    messageName: name,
+                    payload,
+                  }),
+              };
+            })
+          : [];
 
-      return (
-        <SailsActionGroup key={serviceName} name={serviceName} sails={sails!} items={[...queries, ...functions]} />
-      );
-    });
+        const items = [...queries, ...functions];
+
+        if (items.length === 0) return null;
+
+        return <SailsActionGroup key={serviceName} name={serviceName} sails={sails!} items={items} />;
+      })
+      .filter(Boolean);
 
   const renderCtors = () => {
     const items = Object.entries(sails!.ctors ?? {}).map(([ctorName, meta]) => {

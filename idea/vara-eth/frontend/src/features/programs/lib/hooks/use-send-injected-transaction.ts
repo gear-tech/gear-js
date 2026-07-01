@@ -1,3 +1,4 @@
+import { getServiceMethod } from '@gear-js/sails-payload-form';
 import { useMutation } from '@tanstack/react-query';
 import { InjectedTxReceipt } from '@vara-eth/api';
 import type { Hex } from 'viem';
@@ -18,7 +19,8 @@ const useSendInjectedTransaction = (programId: Hex, sails: ParsedSails | undefin
   const sendInjectedTransaction = async ({ serviceName, messageName, payload }: SendMessageParams) => {
     if (!sails || !api) return;
 
-    const sailsMessage = sails?.services[serviceName].functions[messageName];
+    const sailsMessage = getServiceMethod(sails, serviceName, 'functions', messageName);
+    if (!sailsMessage) throw new Error(`Function "${messageName}" not found in service "${serviceName}"`);
 
     const params = payload.formatted;
 

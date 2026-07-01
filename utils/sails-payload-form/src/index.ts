@@ -1,6 +1,23 @@
 import { Fields } from './components';
 import type { FormattedPayloadValue, ISailsFuncArg, PayloadValue } from './types';
-import { getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from './utils';
+import {
+  collectServiceMethodEntries,
+  collectServiceMethods,
+  formatServiceMethodLabel,
+  getDefaultPayloadValue,
+  getPayloadSchema,
+  getResetPayloadValue,
+  getServiceMethod,
+} from './utils';
 
 export type { FormattedPayloadValue, ISailsFuncArg, PayloadValue };
-export { Fields, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue };
+export {
+  collectServiceMethodEntries,
+  collectServiceMethods,
+  Fields,
+  formatServiceMethodLabel,
+  getDefaultPayloadValue,
+  getPayloadSchema,
+  getResetPayloadValue,
+  getServiceMethod,
+};

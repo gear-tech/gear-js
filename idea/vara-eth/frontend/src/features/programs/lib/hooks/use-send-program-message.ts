@@ -1,3 +1,4 @@
+import { getServiceMethod } from '@gear-js/sails-payload-form';
 import { useMutation } from '@tanstack/react-query';
 import type { Hex } from 'viem';
 import { useMirrorContract } from '@/app/api';
@@ -17,7 +18,8 @@ const useSendProgramMessage = (programId: Hex, sails: ParsedSails | undefined) =
   const sendMessage = async ({ serviceName, messageName, payload }: SendMessageParams) => {
     if (!mirrorContract || !sails) return;
 
-    const sailsMessage = sails?.services[serviceName].functions[messageName];
+    const sailsMessage = getServiceMethod(sails, serviceName, 'functions', messageName);
+    if (!sailsMessage) throw new Error(`Function "${messageName}" not found in service "${serviceName}"`);
 
     const tx = await mirrorContract.sendMessage(payload.encoded);
     const response = await tx.send();
