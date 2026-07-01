@@ -115,13 +115,7 @@ export const useGetInjectedTransactionByIdQuery = (id: Hex) => {
 
   return useQuery({
     queryKey: ['injectedTransaction', id, explorerUrl],
-    queryFn: async () => {
-      try {
-        return await getInjectedTransaction(explorerUrl, id);
-      } catch {
-        return null;
-      }
-    },
+    queryFn: () => getInjectedTransaction(explorerUrl, id),
   });
 };
 

@@ -142,7 +142,9 @@ const Message = () => {
         {isInjected && (
           <section className={styles.response}>
             <h2 className={styles.responseTitle}>Response</h2>
-            {replySents.data?.data.length ? (
+            {replySents.isError ? (
+              <p className={styles.responseEmpty}>Failed to load replies</p>
+            ) : replySents.data?.data.length ? (
               replySents.data.data.map((reply) => <MessageData.ReplySent key={reply.id} {...reply} />)
             ) : (
               <p className={styles.responseEmpty}>No replies yet</p>
