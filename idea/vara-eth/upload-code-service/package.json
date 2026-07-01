@@ -7,7 +7,7 @@
     "@vara-eth/api": "workspace:*",
     "dotenv": "^17",
     "fastify": "^5.8.5",
-    "kysely": "^0.28.16",
+    "kysely": "^0.29.2",
     "kzg-wasm": "^1.0.0",
     "pg": "^8.20.0",
     "viem": "npm:@vara-eth/viem@2.48.11"
