@@ -52,9 +52,7 @@ function SailsPreview({ value }: Props) {
 
   const interfaceIds = useMemo(() => {
     if (!isIdlV2Program(value)) return new Map<string, string>();
-
-    const serviceExpos: IServiceExpo[] = value.program.services ?? [];
-
+    const serviceExpos: IServiceExpo[] = value.program?.services ?? [];
     return new Map(
       serviceExpos
         .filter((service) => service.interface_id)
@@ -113,7 +111,7 @@ function SailsPreview({ value }: Props) {
           </Accordion>
         )}
 
-        {v2Service && v2Service.types.size > 0 && (
+        {v2Service?.types && v2Service.types.size > 0 && (
           <Accordion heading="Types">
             <PreformattedBlock text={getPreformattedText(formatTypesMap(v2Service.types))} />
           </Accordion>

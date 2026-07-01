@@ -46,7 +46,7 @@ const TABS_WITH_IDL = [MESSAGES_TAB, READ_TAB, WRITE_TAB];
 const getTabs = (isLoading: boolean, idl: string | null | undefined, isInitRequired: boolean) => {
   if (isLoading) return TABS_LOADING;
   if (!idl) return TABS_NO_IDL;
-  // if (isInitRequired) return TABS_WITH_INITIALIZE;
+  if (isInitRequired) return TABS_WITH_INITIALIZE;
   return TABS_WITH_IDL;
 };
 

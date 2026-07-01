@@ -29,12 +29,14 @@ const formatTypeDecl = (decl: TypeDecl): string => {
   if (isTuple(decl)) return `(${decl.types.map((type) => formatTypeDecl(type)).join(', ')})`;
 
   if (decl.kind === 'named') {
-    if (decl.name === 'Option') return `Option<${formatTypeDecl(decl.generics![0])}>`;
-    if (decl.name === 'Result') return `Result<${formatTypeDecl(decl.generics![0])}, ${formatTypeDecl(decl.generics![1])}>`;
-    if (decl.name === 'BTreeMap')
-      return `BTreeMap<${formatTypeDecl(decl.generics![0])}, ${formatTypeDecl(decl.generics![1])}>`;
+    const generics = decl.generics ?? [];
+    if (decl.name === 'Option' && generics[0]) return `Option<${formatTypeDecl(generics[0])}>`;
+    if (decl.name === 'Result' && generics[0] && generics[1])
+      return `Result<${formatTypeDecl(generics[0])}, ${formatTypeDecl(generics[1])}>`;
+    if (decl.name === 'BTreeMap' && generics[0] && generics[1])
+      return `BTreeMap<${formatTypeDecl(generics[0])}, ${formatTypeDecl(generics[1])}>`;
 
-    if (decl.generics?.length) return `${decl.name}<${decl.generics.map((g) => formatTypeDecl(g)).join(', ')}>`;
+    if (generics.length) return `${decl.name}<${generics.map((g) => formatTypeDecl(g)).join(', ')}>`;
 
     return decl.name;
   }
@@ -70,7 +72,7 @@ const formatTypeForPreview = (type: Type): unknown => {
     };
   }
 
-  throw new Error(`Unknown type kind: ${JSON.stringify(type)}`);
+  return `Unknown type: ${JSON.stringify(type)}`;
 };
 
 const formatTypesMap = (types: ReadonlyMap<string, Type>): Record<string, unknown> =>

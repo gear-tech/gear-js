@@ -33,12 +33,12 @@ const collectV2ServiceMethodEntries = (
       }
     }
 
-    for (const [nestedName, nested] of Object.entries(base.extends)) {
+    for (const [nestedName, nested] of Object.entries(base.extends ?? {})) {
       mergeFromBase(nestedName, nested);
     }
   };
 
-  for (const [baseName, base] of Object.entries(service.extends)) {
+  for (const [baseName, base] of Object.entries(service.extends ?? {})) {
     mergeFromBase(baseName, base);
   }
 };
@@ -48,7 +48,8 @@ const collectServiceMethodEntries = (
   serviceName: string,
   key: ServiceMethodKey,
 ): ServiceMethodEntry[] => {
-  const service = program.services[serviceName];
+  const service = program?.services?.[serviceName];
+  if (!service) return [];
 
   if (!isIdlV2Program(program)) {
     return Object.entries(service[key]).map(([name, method]) => ({
@@ -79,9 +80,4 @@ const getServiceMethod = (
 ): ServiceMethod | undefined => collectServiceMethods(program, serviceName, key)[methodName];
 
 export type { ServiceMethodEntry, ServiceMethodKey };
-export {
-  collectServiceMethodEntries,
-  collectServiceMethods,
-  formatServiceMethodLabel,
-  getServiceMethod,
-};
+export { collectServiceMethodEntries, collectServiceMethods, formatServiceMethodLabel, getServiceMethod };

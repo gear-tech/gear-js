@@ -43,7 +43,7 @@ function useService(program: ParsedSails, key: 'functions' | 'queries') {
     label: key === 'functions' ? 'Function' : 'Query',
     labels: methodLabels,
   });
-  const { args, encodePayload } = serviceMethods[functionSelect.value];
+  const { args = [], encodePayload } = serviceMethods[functionSelect.value] || {};
 
   const defaultValues = useMemo(
     () => getDefaultPayloadValue(program, args, serviceName),
