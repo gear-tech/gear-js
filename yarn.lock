@@ -10004,6 +10004,7 @@ __metadata:
     "@vara-eth/api": "workspace:*"
     "@vara-eth/idea-indexer-db": "workspace:*"
     dotenv: "npm:^17.4.2"
+    kzg-wasm: "npm:^1.0.0"
     typeorm: "npm:0.3.29"
     viem: "npm:@vara-eth/viem@2.48.11"
     xxhash-addon: "npm:^2.0.3"
