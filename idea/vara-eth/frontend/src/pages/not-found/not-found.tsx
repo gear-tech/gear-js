@@ -32,7 +32,7 @@ export const NotFound = () => {
 
       <div className={styles.buttons}>
         <Button variant="outline" className={styles.button} onClick={() => navigate(routes.home)}>
-          Try again
+          Go to homepage
         </Button>
 
         {searchQuery && (
