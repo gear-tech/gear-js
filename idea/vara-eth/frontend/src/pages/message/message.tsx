@@ -37,11 +37,7 @@ const Message = () => {
   const injectedTransaction = useGetInjectedTransactionByIdQuery(messageId);
 
   const isInjected = Boolean(
-    injectedTransaction.data &&
-      !messageRequest.data &&
-      !messageSent.data &&
-      !replyRequest.data &&
-      !replySent.data,
+    injectedTransaction.data && !messageRequest.data && !messageSent.data && !replyRequest.data && !replySent.data,
   );
 
   const replySents = useGetReplySentsByRepliedToIdQuery(messageId, { enabled: isInjected });
@@ -79,11 +75,7 @@ const Message = () => {
     (isInjected && replySents.isLoading);
 
   const hasEntity =
-    messageRequest.data ||
-    messageSent.data ||
-    replyRequest.data ||
-    replySent.data ||
-    injectedTransaction.data;
+    messageRequest.data || messageSent.data || replyRequest.data || replySent.data || injectedTransaction.data;
 
   if (isLoading) {
     return (

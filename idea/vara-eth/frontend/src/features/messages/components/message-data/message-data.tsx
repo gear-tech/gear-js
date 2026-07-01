@@ -5,7 +5,14 @@ import { formatEther } from 'viem';
 import { Balance, ChainEntity, HashLink, Skeleton } from '@/components';
 import { routes } from '@/shared/config';
 
-import type { InjectedTransaction, MessageRequest, MessageSent, ReplyRequest, ReplySent, SailsMessageRoute } from '../../lib';
+import type {
+  InjectedTransaction,
+  MessageRequest,
+  MessageSent,
+  ReplyRequest,
+  ReplySent,
+  SailsMessageRoute,
+} from '../../lib';
 
 type RouteProp = {
   route?: SailsMessageRoute | null;
@@ -196,7 +203,11 @@ const InjectedTransactionData = ({
       <HashLink hash={senderAddress} explorerLinkPath="address" />
 
       <ChainEntity.Key>Destination</ChainEntity.Key>
-      <HashLink hash={destination} href={generatePath(routes.program, { programId: destination })} explorerLinkPath="address" />
+      <HashLink
+        hash={destination}
+        href={generatePath(routes.program, { programId: destination })}
+        explorerLinkPath="address"
+      />
 
       <ChainEntity.Key>Value</ChainEntity.Key>
       <Balance value={formatEther(BigInt(value))} units="ETH" />
