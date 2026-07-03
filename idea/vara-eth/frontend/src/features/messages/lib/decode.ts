@@ -1,3 +1,4 @@
+import { getServiceMethod } from '@gear-js/sails-payload-form';
 import { getFnNamePrefix, getServiceNamePrefix } from 'sails-js';
 import type { Hex } from 'viem';
 import type { ParsedSails } from '@/features/sails/lib';
@@ -20,9 +21,11 @@ const getSailsMethod = (sails: ParsedSails, payload: Hex) => {
   if (!service) {
     throw new Error(`Unable to identify service ${serviceName}`);
   }
-  const hasFunction = Boolean(service.functions?.[functionName]);
-  const hasQuery = Boolean(service.queries?.[functionName]);
-  const method = service.functions?.[functionName] ?? service.queries?.[functionName];
+  const fn = getServiceMethod(sails, serviceName, 'functions', functionName);
+  const query = getServiceMethod(sails, serviceName, 'queries', functionName);
+  const method = fn ?? query;
+  const hasFunction = Boolean(fn);
+  const hasQuery = Boolean(query);
   const hasMethod = hasFunction || hasQuery;
   const kind: SailsMessageRoute['kind'] | undefined = hasFunction ? 'function' : hasQuery ? 'query' : undefined;
   return { serviceName, functionName, method, hasMethod, kind };

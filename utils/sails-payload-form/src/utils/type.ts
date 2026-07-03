@@ -19,11 +19,14 @@ const getType = (decl: TypeDecl, resolvedType?: Type): string => {
   if (isTuple(decl)) return `(${decl.types.map((type) => getType(type)).join(', ')})`;
 
   if (decl.kind === 'named') {
-    if (decl.name === 'Option') return `Option<${getType(decl.generics![0])}>`;
-    if (decl.name === 'Result') return `Result<${getType(decl.generics![0])}, ${getType(decl.generics![1])}>`;
-    if (decl.name === 'BTreeMap') return `BTreeMap<${getType(decl.generics![0])}, ${getType(decl.generics![1])}>`;
+    const generics = decl.generics ?? [];
+    if (decl.name === 'Option' && generics[0]) return `Option<${getType(generics[0])}>`;
+    if (decl.name === 'Result' && generics[0] && generics[1])
+      return `Result<${getType(generics[0])}, ${getType(generics[1])}>`;
+    if (decl.name === 'BTreeMap' && generics[0] && generics[1])
+      return `BTreeMap<${getType(generics[0])}, ${getType(generics[1])}>`;
 
-    if (decl.generics?.length) return `${decl.name}<${decl.generics.map((g) => getType(g)).join(', ')}>`;
+    if (generics.length) return `${decl.name}<${generics.map((g) => getType(g)).join(', ')}>`;
 
     return decl.name;
   }

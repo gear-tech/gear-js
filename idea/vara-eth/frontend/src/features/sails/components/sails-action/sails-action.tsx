@@ -13,9 +13,17 @@ type Props = SailsActionType & {
   sails: ParsedSails;
 };
 
+const renderTitle = (name: string, extendedFrom?: string) => (
+  <span className={styles.title}>
+    {name}
+    {extendedFrom && <span className={styles.extendedFrom}> (Extended from {extendedFrom})</span>}
+  </span>
+);
+
 const SailsAction = ({
   id,
   name,
+  extendedFrom,
   action,
   sails,
   args,
@@ -101,7 +109,7 @@ const SailsAction = ({
       <div className={styles.container}>
         <header className={cx(styles.header, styles.empty)}>
           <ArrowSVG className={styles.arrow} />
-          <span className={styles.title}>{name}</span>
+          {renderTitle(name, extendedFrom)}
 
           <Tooltip value={tooltip} showOnDisabledTrigger>
             {renderActionButton()}
@@ -124,7 +132,7 @@ const SailsAction = ({
       {/* biome-ignore lint/a11y: keyboard handling is provided by button inside the header */}
       <header className={cx(styles.header, isOpen && styles.open)} onClick={() => setIsOpen((prevValue) => !prevValue)}>
         <ArrowSVG className={styles.arrow} />
-        <span className={styles.title}>{name}</span>
+        {renderTitle(name, extendedFrom)}
 
         <Tooltip value={tooltip} showOnDisabledTrigger>
           {renderActionButton()}

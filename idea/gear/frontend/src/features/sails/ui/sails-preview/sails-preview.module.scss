@@ -1,4 +1,5 @@
 @use '@gear-js/ui/headings' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 .button {
   @extend %headingFont;
@@ -30,4 +31,9 @@
 
 .accordion > .accordion {
   padding-left: 8px;
+}
+
+.interfaceId {
+  margin-left: 6px;
+  color: $textColorSecondary;
 }

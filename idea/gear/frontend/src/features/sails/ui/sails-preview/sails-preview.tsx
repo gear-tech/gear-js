@@ -1,6 +1,8 @@
 import type { ISailsFuncArg } from '@gear-js/sails-payload-form';
 import cx from 'clsx';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
+import type { SailsProgram } from 'sails-js';
+import type { IServiceExpo } from 'sails-js/types';
 
 import { getPreformattedText, isAnyKey } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
@@ -9,18 +11,22 @@ import ArrowSVG from '../../assets/arrow.svg?react';
 import type {
   ISailsCtorFuncParams,
   ParsedSails,
+  SailsService,
   SailsServiceEvent,
   SailsServiceFunc,
   SailsServiceQuery,
 } from '../../types';
+import { formatTypeForSignature, formatTypesMap, isIdlV2Program } from '../../utils/format-preview-types';
 
 import styles from './sails-preview.module.scss';
+
+type SailsV2Service = SailsProgram['services'][string];
 
 type Props = {
   value: ParsedSails;
 };
 
-function Accordion({ heading, children }: { heading: string; children: ReactNode }) {
+function Accordion({ heading, children }: { heading: ReactNode; children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggle = () => setIsOpen((prevValue) => !prevValue);
@@ -39,10 +45,22 @@ function Accordion({ heading, children }: { heading: string; children: ReactNode
 
 function SailsPreview({ value }: Props) {
   const { ctors, services } = value;
-  const typesObject = 'programTypes' in value ? Object.fromEntries(value.programTypes) : value.scaleCodecTypes;
+  const isV2 = isIdlV2Program(value);
+
+  const programTypes = isV2 ? formatTypesMap(value.programTypes) : value.scaleCodecTypes;
+  const hasProgramTypes = isV2 ? value.programTypes.size > 0 : isAnyKey(programTypes);
+
+  const interfaceIds = useMemo(() => {
+    if (!isIdlV2Program(value)) return new Map<string, string>();
+    const serviceExpos: IServiceExpo[] = value.program?.services ?? [];
+    return new Map(
+      serviceExpos
+        .filter((service) => service.interface_id)
+        .map((service) => [service.name, String(service.interface_id)]),
+    );
+  }, [value]);
 
   const getArgs = (args: ISailsFuncArg[]) => args.map(({ name, type }) => `${name}: ${type}`).join(', ');
-  const getReturnType = (type: unknown) => JSON.stringify(type).replace(/"/g, '');
 
   const getFunction = (name: string, returnType?: string, args?: ISailsFuncArg[]) =>
     `${name}: (${args ? getArgs(args) : ''}) => ${returnType}`;
@@ -50,9 +68,10 @@ function SailsPreview({ value }: Props) {
   const getConstructorFunction = (name: string, { args }: ISailsCtorFuncParams) => getFunction(name, 'void', args);
 
   const getServiceFunction = (name: string, { args, returnType }: SailsServiceFunc | SailsServiceQuery) =>
-    getFunction(name, getReturnType(returnType), args);
+    getFunction(name, formatTypeForSignature(returnType), args);
 
-  const getEventFunction = (name: string, { type }: SailsServiceEvent) => getFunction(name, getReturnType(type));
+  const getEventFunction = (name: string, { type }: SailsServiceEvent) =>
+    getFunction(name, formatTypeForSignature(type));
 
   const getFunctions = <T,>(funcs: Record<string, T>, getFunc: (name: string, func: T) => string) =>
     Object.entries(funcs)
@@ -61,9 +80,43 @@ function SailsPreview({ value }: Props) {
 
   const serviceEntries = Object.entries(services);
 
-  const renderServices = () =>
-    serviceEntries.map(([name, { functions, queries, events }]) => (
-      <Accordion key={name} heading={name}>
+  const formatServiceLabel = (name: string) => {
+    const interfaceId = interfaceIds.get(name);
+
+    return interfaceId ? `${name}@${interfaceId}` : name;
+  };
+
+  const getServiceHeading = (name: string) => {
+    const interfaceId = interfaceIds.get(name);
+
+    if (!interfaceId) return name;
+
+    return (
+      <>
+        {name}
+        <span className={styles.interfaceId}>@{interfaceId}</span>
+      </>
+    );
+  };
+
+  const renderServiceSections = (service: SailsService) => {
+    const { functions, queries, events } = service;
+    const v2Service = isV2 ? (service as SailsV2Service) : null;
+
+    return (
+      <>
+        {v2Service && isAnyKey(v2Service.extends) && (
+          <Accordion heading="Extends">
+            <PreformattedBlock text={Object.keys(v2Service.extends).map(formatServiceLabel).join('\n')} />
+          </Accordion>
+        )}
+
+        {v2Service?.types && v2Service.types.size > 0 && (
+          <Accordion heading="Types">
+            <PreformattedBlock text={getPreformattedText(formatTypesMap(v2Service.types))} />
+          </Accordion>
+        )}
+
         {isAnyKey(functions) && (
           <Accordion heading="Functions">
             <PreformattedBlock text={getFunctions(functions, getServiceFunction)} />
@@ -81,14 +134,24 @@ function SailsPreview({ value }: Props) {
             <PreformattedBlock text={getFunctions(events, getEventFunction)} />
           </Accordion>
         )}
+      </>
+    );
+  };
+
+  const renderServices = () =>
+    serviceEntries.map(([name, service]) => (
+      <Accordion key={name} heading={getServiceHeading(name)}>
+        {renderServiceSections(service)}
       </Accordion>
     ));
 
   return (
     <div>
-      <Accordion heading="Types">
-        <PreformattedBlock text={getPreformattedText(typesObject)} />
-      </Accordion>
+      {hasProgramTypes && (
+        <Accordion heading="Types">
+          <PreformattedBlock text={getPreformattedText(programTypes)} />
+        </Accordion>
+      )}
 
       {ctors && (
         <Accordion heading="Constructors">

@@ -28,6 +28,7 @@ type FormattedPayloadValue = {
 type SailsAction = {
   id: string;
   name: string;
+  extendedFrom?: string;
   action: string;
   serviceName?: string;
   args: ISailsFuncArg[];

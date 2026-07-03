@@ -1,15 +1,14 @@
 import { type ChangeEvent, useState } from 'react';
 
-import type { Ctors, Functions, Services } from '../../types';
-
 type Props = {
   label?: string;
+  labels?: Record<string, string>;
   onChange?: (value: string) => void;
 };
 
-function useSelect(functions: Ctors | Services | Functions, props?: Props) {
-  const names = Object.keys(functions);
-  const options = names.map((name) => ({ label: name, value: name }));
+function useSelect(items: Record<string, unknown>, props?: Props) {
+  const names = Object.keys(items);
+  const options = names.map((name) => ({ label: props?.labels?.[name] ?? name, value: name }));
   const label = props?.label;
 
   const [value, setValue] = useState(names[0]);

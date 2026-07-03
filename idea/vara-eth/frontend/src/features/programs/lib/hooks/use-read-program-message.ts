@@ -1,3 +1,4 @@
+import { getServiceMethod } from '@gear-js/sails-payload-form';
 import { useMutation } from '@tanstack/react-query';
 import { type Hex, zeroAddress } from 'viem';
 import { useConnection } from 'wagmi';
@@ -19,7 +20,8 @@ const useReadProgramMessage = (programId: Hex, sails: ParsedSails | undefined) =
   const readProgramMessage = async ({ serviceName, messageName, payload }: ReadMessageParams) => {
     if (!sails || !api) return;
 
-    const sailsMessage = sails.services[serviceName].queries[messageName];
+    const sailsMessage = getServiceMethod(sails, serviceName, 'queries', messageName);
+    if (!sailsMessage) throw new Error(`Query "${messageName}" not found in service "${serviceName}"`);
     const sourceAddress = account.address ?? zeroAddress;
 
     const response = await api.call.program.calculateReplyForHandle(sourceAddress, programId, payload.encoded);
