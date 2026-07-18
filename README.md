@@ -116,7 +116,7 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) 
         <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-4.svg" alt="medium" style="vertical-align:middle" >
     </a>
     <a href="https://t.me/gear_tech">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-5.svg" alt="medium" style="vertical-align:middle" >
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-5.svg" alt="telegram" style="vertical-align:middle" >
    </a>
 </p>
 
