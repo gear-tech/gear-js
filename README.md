@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
+    <img src="https://raw.githubusercontent.com/gear-tech/gear/refs/heads/master/.github/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
 <h3 align="center">
@@ -103,20 +103,20 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) 
 
 
 <p align="center">
-    <a href="https://twitter.com/gear_techs">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/social-icon-1.svg" alt="twit" style="vertical-align:middle" >
+    <a href="https://x.com/gear_techs">
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-1.svg" alt="x" style="vertical-align:middle" >
     </a>
     <a href="https://github.com/gear-tech">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/social-icon-2.svg" alt="github" style="vertical-align:middle" >
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-2.svg" alt="github" style="vertical-align:middle" >
     </a>
     <a href="https://discord.gg/7BQznC9uD9">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/social-icon-3.svg" alt="discord" style="vertical-align:middle" >
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-3.svg" alt="discord" style="vertical-align:middle" >
     </a>
     <a href="https://medium.com/@gear_techs">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/social-icon-4.svg" alt="medium" style="vertical-align:middle" >
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-4.svg" alt="medium" style="vertical-align:middle" >
     </a>
     <a href="https://t.me/gear_tech">
-        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/social-icon-5.svg" alt="medium" style="vertical-align:middle" >
+        <img src="https://raw.githubusercontent.com/gear-tech/gear/master/.github/images/social-icon-5.svg" alt="medium" style="vertical-align:middle" >
    </a>
 </p>
 
