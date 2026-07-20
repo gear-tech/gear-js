@@ -6,10 +6,13 @@ import {
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetInjectedTransactionByIdQuery,
+  useGetInjectedTransactionsQuery,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  useGetReplySentsByRepliedToIdQuery,
 } from './lib';
 import { ProgramMessagesTable } from './ui';
 
@@ -22,8 +25,11 @@ export {
   useGetAllMessageSentsQuery,
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
+  useGetInjectedTransactionByIdQuery,
+  useGetInjectedTransactionsQuery,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,
   useGetReplySentByIdQuery,
+  useGetReplySentsByRepliedToIdQuery,
 };
