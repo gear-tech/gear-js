@@ -65,7 +65,12 @@ export class MainnetClaim {
   @Column({ default: false })
   public isDatacenter: boolean;
 
-  @Column({ type: 'enum', enum: MainnetClaimStatus, enumName: 'mainnet_claim_status_enum', default: MainnetClaimStatus.Created })
+  @Column({
+    type: 'enum',
+    enum: MainnetClaimStatus,
+    enumName: 'mainnet_claim_status_enum',
+    default: MainnetClaimStatus.Created,
+  })
   public status: MainnetClaimStatus;
 
   @Column({ type: 'varchar', nullable: true })

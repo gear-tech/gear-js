@@ -1,6 +1,12 @@
 import { vi } from 'vitest';
 
-import { FaucetRequest, MainnetChallenge, MainnetClaim, MainnetClaimEvent, UserLastSeen } from '../../src/database/index.js';
+import {
+  FaucetRequest,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  UserLastSeen,
+} from '../../src/database/index.js';
 import { repos } from './db.js';
 
 vi.mock('typeorm', async () => {

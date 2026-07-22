@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import express from 'express';
 import { Keyring } from '@polkadot/api';
 import { stringToU8a, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate } from '@polkadot/util-crypto';
+import express from 'express';
 import request from 'supertest';
 
 import config from '../src/config.js';
@@ -47,7 +47,9 @@ describe('Mainnet faucet router', () => {
 
   it('uses trusted Cloudflare request metadata for claim evaluation', async () => {
     const fakeService = {
-      createClaim: vi.fn().mockResolvedValue({ id: randomUUID(), status: MainnetClaimStatus.Queued, publicReasonCode: null }),
+      createClaim: vi
+        .fn()
+        .mockResolvedValue({ id: randomUUID(), status: MainnetClaimStatus.Queued, publicReasonCode: null }),
       createChallenge: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
@@ -87,24 +89,23 @@ describe('Mainnet faucet router', () => {
 
   it('ignores untrusted risk metadata submitted in the request body', async () => {
     const fakeService = {
-      createClaim: vi.fn().mockResolvedValue({ id: randomUUID(), status: MainnetClaimStatus.Queued, publicReasonCode: null }),
+      createClaim: vi
+        .fn()
+        .mockResolvedValue({ id: randomUUID(), status: MainnetClaimStatus.Queued, publicReasonCode: null }),
       createChallenge: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
     const metadataApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
 
-    const res = await request(metadataApp)
-      .post('/api/v1/mainnet/claims')
-      .set('Idempotency-Key', randomUUID())
-      .send({
-        address: createKeyPair().address,
-        challengeId: randomUUID(),
-        signature: '0xsig',
-        turnstileToken: 'token',
-        deviceToken: 'device-token',
-        isTor: true,
-        isDatacenter: true,
-      });
+    const res = await request(metadataApp).post('/api/v1/mainnet/claims').set('Idempotency-Key', randomUUID()).send({
+      address: createKeyPair().address,
+      challengeId: randomUUID(),
+      signature: '0xsig',
+      turnstileToken: 'token',
+      deviceToken: 'device-token',
+      isTor: true,
+      isDatacenter: true,
+    });
 
     expect(res.statusCode).toBe(200);
     expect(fakeService.createClaim).toHaveBeenCalledWith(
@@ -120,7 +121,11 @@ describe('Mainnet faucet router', () => {
   it('returns a public reason for rejected claims', async () => {
     const claimId = randomUUID();
     const fakeService = {
-      createClaim: vi.fn().mockResolvedValue({ id: claimId, status: MainnetClaimStatus.Rejected, publicReasonCode: 'wallet_limit_reached' }),
+      createClaim: vi.fn().mockResolvedValue({
+        id: claimId,
+        status: MainnetClaimStatus.Rejected,
+        publicReasonCode: 'wallet_limit_reached',
+      }),
       createChallenge: vi.fn(),
       getClaim: vi.fn().mockResolvedValue({
         status: MainnetClaimStatus.Rejected,
@@ -139,7 +144,10 @@ describe('Mainnet faucet router', () => {
       deviceToken: 'device-token',
     };
 
-    const created = await request(rejectedApp).post('/api/v1/mainnet/claims').set('Idempotency-Key', randomUUID()).send(body);
+    const created = await request(rejectedApp)
+      .post('/api/v1/mainnet/claims')
+      .set('Idempotency-Key', randomUUID())
+      .send(body);
     const status = await request(rejectedApp).get(`/api/v1/mainnet/claims/${claimId}`);
 
     expect(created.statusCode).toBe(202);
@@ -176,12 +184,19 @@ describe('Mainnet faucet router', () => {
 
   it('returns reconciliation claims with a valid admin key', async () => {
     const fakeAdmin = {
-      listReconciliation: vi.fn().mockResolvedValue([{ claimId: 'claim-1', status: MainnetClaimStatus.ReconciliationRequired }]),
+      listReconciliation: vi
+        .fn()
+        .mockResolvedValue([{ claimId: 'claim-1', status: MainnetClaimStatus.ReconciliationRequired }]),
       resolveReconciliation: vi.fn(),
     };
-    const reconciliationApp = express().use('/api/v1/mainnet', new MainnetRouter(service, undefined as any, fakeAdmin as any).router);
+    const reconciliationApp = express().use(
+      '/api/v1/mainnet',
+      new MainnetRouter(service, undefined as any, fakeAdmin as any).router,
+    );
 
-    const res = await request(reconciliationApp).get('/api/v1/mainnet/admin/reconciliation').set('x-admin-key', 'test-admin-key');
+    const res = await request(reconciliationApp)
+      .get('/api/v1/mainnet/admin/reconciliation')
+      .set('x-admin-key', 'test-admin-key');
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ claims: [{ claimId: 'claim-1', status: MainnetClaimStatus.ReconciliationRequired }] });
@@ -193,7 +208,10 @@ describe('Mainnet faucet router', () => {
       listReconciliation: vi.fn(),
       resolveReconciliation: vi.fn().mockResolvedValue({ claimId: 'claim-1', status: MainnetClaimStatus.Finalized }),
     };
-    const reconciliationApp = express().use('/api/v1/mainnet', new MainnetRouter(service, undefined as any, fakeAdmin as any).router);
+    const reconciliationApp = express().use(
+      '/api/v1/mainnet',
+      new MainnetRouter(service, undefined as any, fakeAdmin as any).router,
+    );
 
     const res = await request(reconciliationApp)
       .post('/api/v1/mainnet/admin/reconciliation/claim-1')
@@ -237,7 +255,13 @@ describe('Mainnet faucet router', () => {
       'claim',
       'post',
       '/api/v1/mainnet/claims',
-      { address: createKeyPair().address, challengeId: randomUUID(), signature: '0xsig', turnstileToken: 'token', deviceToken: 'device-token' },
+      {
+        address: createKeyPair().address,
+        challengeId: randomUUID(),
+        signature: '0xsig',
+        turnstileToken: 'token',
+        deviceToken: 'device-token',
+      },
     ],
     ['status', 'get', `/api/v1/mainnet/claims/${randomUUID()}`, undefined],
   ])('maps unexpected %s errors to internal_error', async (operation, method, path, body) => {
@@ -256,7 +280,9 @@ describe('Mainnet faucet router', () => {
 
   it('rate limits excessive challenge requests', async () => {
     const fakeService = {
-      createChallenge: vi.fn().mockResolvedValue({ challengeId: randomUUID(), messageHex: '0x00', expiresAt: new Date() }),
+      createChallenge: vi
+        .fn()
+        .mockResolvedValue({ challengeId: randomUUID(), messageHex: '0x00', expiresAt: new Date() }),
       createClaim: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
@@ -302,16 +328,13 @@ describe('Mainnet faucet router', () => {
     const storedChallenge = repos.MainnetChallenge._data()[challengeRes.body.challengeId];
     const signature = u8aToHex(pair.sign(stringToU8a(storedChallenge.message)));
 
-    const claimRes = await request(app)
-      .post('/api/v1/mainnet/claims')
-      .set('Idempotency-Key', randomUUID())
-      .send({
-        address: pair.address,
-        challengeId: challengeRes.body.challengeId,
-        signature,
-        turnstileToken: 'test-token',
-        deviceToken: 'device-a',
-      });
+    const claimRes = await request(app).post('/api/v1/mainnet/claims').set('Idempotency-Key', randomUUID()).send({
+      address: pair.address,
+      challengeId: challengeRes.body.challengeId,
+      signature,
+      turnstileToken: 'test-token',
+      deviceToken: 'device-a',
+    });
 
     expect(claimRes.statusCode).toBe(200);
     expect(claimRes.body).toMatchObject({ status: 'queued' });

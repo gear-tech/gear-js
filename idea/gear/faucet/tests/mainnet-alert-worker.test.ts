@@ -148,7 +148,11 @@ describe('Mainnet alert worker', () => {
 
   it('does not send triggered alerts when webhook is not configured', async () => {
     const metrics = {
-      snapshot: vi.fn().mockResolvedValue(snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } })),
+      snapshot: vi
+        .fn()
+        .mockResolvedValue(
+          snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } }),
+        ),
     };
     vi.stubGlobal('fetch', vi.fn());
     const worker = new MainnetAlertWorker(metrics as any);
@@ -161,7 +165,11 @@ describe('Mainnet alert worker', () => {
   it('sends triggered alerts to the configured webhook', async () => {
     config.mainnet.alertWebhookUrl = 'https://alerts.example/webhook';
     const metrics = {
-      snapshot: vi.fn().mockResolvedValue(snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } })),
+      snapshot: vi
+        .fn()
+        .mockResolvedValue(
+          snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } }),
+        ),
     };
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}', { status: 200 })));
     const worker = new MainnetAlertWorker(metrics as any);
@@ -181,9 +189,19 @@ describe('Mainnet alert worker', () => {
   it('does not fail the tick when webhook delivery throws or returns an error', async () => {
     config.mainnet.alertWebhookUrl = 'https://alerts.example/webhook';
     const metrics = {
-      snapshot: vi.fn().mockResolvedValue(snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } })),
+      snapshot: vi
+        .fn()
+        .mockResolvedValue(
+          snapshot({ claims: { byStatus: {}, rejectedByReason: {}, payoutQueueSize: 11, reconciliationBacklog: 0 } }),
+        ),
     };
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce(new Response('{}', { status: 500 })));
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockRejectedValueOnce(new Error('network'))
+        .mockResolvedValueOnce(new Response('{}', { status: 500 })),
+    );
     const worker = new MainnetAlertWorker(metrics as any);
 
     await expect(worker.tick()).resolves.toBeUndefined();

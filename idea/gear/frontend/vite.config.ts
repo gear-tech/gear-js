@@ -1,6 +1,5 @@
-import { mergeConfig } from 'vite';
-
 import { viteConfigs } from '@gear-js/frontend-configs';
+import { mergeConfig } from 'vite';
 
 const faucetProxyTarget = process.env.VITE_FAUCET_PROXY_TARGET;
 

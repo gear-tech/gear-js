@@ -7,9 +7,14 @@ import { createPortal } from 'react-dom';
 import { useModalState } from '@/hooks';
 import { GENESIS, TURNSTILE_SITEKEY } from '@/shared/config';
 import { cx } from '@/shared/helpers';
-
+import {
+  createMainnetClaim,
+  getMainnetChallenge,
+  getMainnetClaim,
+  type MainnetChallenge,
+  type MainnetClaim,
+} from '../../api';
 import GiftSVG from '../../assets/gift.svg?react';
-import { createMainnetClaim, getMainnetChallenge, getMainnetClaim, type MainnetChallenge, type MainnetClaim } from '../../api';
 import styles from '../get-test-balance/get-test-balance.module.scss';
 
 const OVERLAY_ROOT_ID = 'mainnet-faucet-verification-overlay-root';

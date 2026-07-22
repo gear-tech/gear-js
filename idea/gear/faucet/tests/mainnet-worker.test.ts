@@ -125,20 +125,21 @@ describe('Mainnet payout worker', () => {
     ]);
   });
 
-  it.each(['omitTxHash', 'asyncSuccess', 'duplicateFinal'] as const)(
-    'finalizes successfully in %s callback mode',
-    async (mode) => {
-      gearMockState.transferMode = mode;
-      await repos.MainnetClaim.save(claim('claim-1'));
+  it.each([
+    'omitTxHash',
+    'asyncSuccess',
+    'duplicateFinal',
+  ] as const)('finalizes successfully in %s callback mode', async (mode) => {
+    gearMockState.transferMode = mode;
+    await repos.MainnetClaim.save(claim('claim-1'));
 
-      await worker.tick();
+    await worker.tick();
 
-      expect(repos.MainnetClaim._data()['claim-1']).toMatchObject({
-        status: MainnetClaimStatus.Finalized,
-        transactionHash: '0xTX',
-      });
-    },
-  );
+    expect(repos.MainnetClaim._data()['claim-1']).toMatchObject({
+      status: MainnetClaimStatus.Finalized,
+      transactionHash: '0xTX',
+    });
+  });
 
   it('unsubscribes when callback settlement wins the subscription race', async () => {
     gearMockState.transferMode = 'lateUnsubscribe';
@@ -219,7 +220,6 @@ describe('Mainnet payout worker', () => {
     const stored = repos.MainnetClaim._data()['claim-1'];
     expect(stored.status).toBe(MainnetClaimStatus.Queued);
     expect(stored.transactionHash).toBeNull();
-
   });
 
   it('returns immediately when another tick is running', async () => {

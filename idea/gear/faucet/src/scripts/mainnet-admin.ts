@@ -85,7 +85,10 @@ function parseArgs(argv: string[]): ParsedArgs {
   return { command, claimId: maybeClaimId, flags };
 }
 
-async function requestJson(url: string, options: { method: 'GET' | 'POST'; adminKey: string; actor?: string; body?: Record<string, unknown> }) {
+async function requestJson(
+  url: string,
+  options: { method: 'GET' | 'POST'; adminKey: string; actor?: string; body?: Record<string, unknown> },
+) {
   const response = await fetch(url, {
     method: options.method,
     headers: {

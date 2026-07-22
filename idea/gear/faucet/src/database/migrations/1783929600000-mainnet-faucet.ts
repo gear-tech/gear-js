@@ -21,7 +21,9 @@ export class MainnetFaucet1783929600000 implements MigrationInterface {
     await queryRunner.query(
       `CREATE UNIQUE INDEX "IDX_mainnet_claim_wallet" ON "mainnet_claim" ("canonicalWallet") WHERE "status" != 'rejected'`,
     );
-    await queryRunner.query(`CREATE UNIQUE INDEX "IDX_mainnet_claim_idempotency" ON "mainnet_claim" ("idempotencyKey")`);
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX "IDX_mainnet_claim_idempotency" ON "mainnet_claim" ("idempotencyKey")`,
+    );
     await queryRunner.query(`CREATE UNIQUE INDEX "IDX_mainnet_claim_challenge" ON "mainnet_claim" ("challengeId")`);
     await queryRunner.query(
       `CREATE UNIQUE INDEX "IDX_mainnet_claim_transaction_hash" ON "mainnet_claim" ("transactionHash") WHERE "transactionHash" IS NOT NULL`,
@@ -31,8 +33,12 @@ export class MainnetFaucet1783929600000 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_mainnet_claim_subnet" ON "mainnet_claim" ("subnetHash")`);
     await queryRunner.query(`CREATE INDEX "IDX_mainnet_claim_status" ON "mainnet_claim" ("status")`);
     await queryRunner.query(`CREATE INDEX "IDX_mainnet_claim_created_at" ON "mainnet_claim" ("createdAt")`);
-    await queryRunner.query(`CREATE INDEX "IDX_mainnet_claim_payout_started_at" ON "mainnet_claim" ("payoutStartedAt")`);
-    await queryRunner.query(`CREATE INDEX "IDX_mainnet_claim_event_claim_created" ON "mainnet_claim_event" ("claimId", "createdAt")`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_mainnet_claim_payout_started_at" ON "mainnet_claim" ("payoutStartedAt")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_mainnet_claim_event_claim_created" ON "mainnet_claim_event" ("claimId", "createdAt")`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

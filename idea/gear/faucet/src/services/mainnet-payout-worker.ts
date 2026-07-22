@@ -4,7 +4,7 @@ import type { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { CronJob } from 'cron';
 import { createLogger } from 'gear-idea-common';
-import { In, type EntityManager } from 'typeorm';
+import { type EntityManager, In } from 'typeorm';
 
 import config from '../config.js';
 import { AppDataSource, MainnetClaim, MainnetClaimEvent, MainnetClaimStatus } from '../database/index.js';
@@ -61,7 +61,9 @@ export class MainnetPayoutWorker {
 
   public stop() {
     this._job?.stop();
-    Promise.resolve(this._api?.disconnect()).catch((error) => logger.warn('Failed to disconnect API', { error: error.message }));
+    Promise.resolve(this._api?.disconnect()).catch((error) =>
+      logger.warn('Failed to disconnect API', { error: error.message }),
+    );
   }
 
   public async reconcile() {
@@ -80,7 +82,9 @@ export class MainnetPayoutWorker {
           publicReasonCode: null,
         });
       }
-      logger.warn('Moved ambiguous submitting claims to reconciliation_required', { count: ambiguousSubmitting.length });
+      logger.warn('Moved ambiguous submitting claims to reconciliation_required', {
+        count: ambiguousSubmitting.length,
+      });
     }
 
     const pendingChainClaims = await repo.find({
@@ -207,7 +211,10 @@ export class MainnetPayoutWorker {
     const maxByBalance = balance.sub(minBalance).div(this._amount).toNumber();
 
     if (maxByBalance <= 0) {
-      logger.warn('Treasury balance is below payout threshold', { balance: balance.toString(), minBalance: minBalance.toString() });
+      logger.warn('Treasury balance is below payout threshold', {
+        balance: balance.toString(),
+        minBalance: minBalance.toString(),
+      });
       return [];
     }
 
@@ -233,7 +240,11 @@ export class MainnetPayoutWorker {
         [MainnetClaimStatus.Submitted, MainnetClaimStatus.InBlock],
       );
       recordMainnetPayout('finalized');
-      logger.info('Claim finalized', { claimId: claim.id, transactionHash: transfer.transactionHash, blockHash: transfer.blockHash });
+      logger.info('Claim finalized', {
+        claimId: claim.id,
+        transactionHash: transfer.transactionHash,
+        blockHash: transfer.blockHash,
+      });
     } catch (error: any) {
       const status = error.retryable ? MainnetClaimStatus.ReconciliationRequired : MainnetClaimStatus.FailedTerminal;
       await this._transitionClaim(
@@ -272,12 +283,9 @@ export class MainnetPayoutWorker {
       const handleResult = async (result: any) => {
         transactionHash = result.txHash?.toHex?.() ?? tx.hash.toHex();
 
-        await this._transitionClaim(
-          claimId,
-          MainnetClaimStatus.Submitted,
-          { transactionHash, updatedAt: new Date() },
-          [MainnetClaimStatus.Submitting],
-        );
+        await this._transitionClaim(claimId, MainnetClaimStatus.Submitted, { transactionHash, updatedAt: new Date() }, [
+          MainnetClaimStatus.Submitting,
+        ]);
 
         if (result.status?.isInBlock) {
           blockHash = result.status.asInBlock.toHex();
@@ -295,7 +303,11 @@ export class MainnetPayoutWorker {
 
         for (const { event } of result.events ?? []) {
           const data = event.data as TransferData;
-          if (event.method === TRANSFER_EVENT && data.to.toHex() === address && data.amount.toString() === this._amount.toString()) {
+          if (
+            event.method === TRANSFER_EVENT &&
+            data.to.toHex() === address &&
+            data.amount.toString() === this._amount.toString()
+          ) {
             transferred = true;
           }
           if (event.method === EXTRINSIC_FAILED_EVENT) {
@@ -305,7 +317,12 @@ export class MainnetPayoutWorker {
         }
 
         if (!transferred) {
-          finish(Object.assign(new Error('Transfer event was not found'), { reason: 'transfer_event_missing', retryable: false }));
+          finish(
+            Object.assign(new Error('Transfer event was not found'), {
+              reason: 'transfer_event_missing',
+              retryable: false,
+            }),
+          );
           return;
         }
 
@@ -348,7 +365,9 @@ export class MainnetPayoutWorker {
   private async _findFinalizedOutcomes(claims: MainnetClaim[]) {
     if (!this._api) throw new Error('GearApi is not initialized');
 
-    const claimsByHash = new Map(claims.filter(({ transactionHash }) => transactionHash).map((claim) => [claim.transactionHash!, claim]));
+    const claimsByHash = new Map(
+      claims.filter(({ transactionHash }) => transactionHash).map((claim) => [claim.transactionHash!, claim]),
+    );
     const outcomes = new Map<string, { transferred: boolean; blockHash: string; reason: string | null }>();
     if (claimsByHash.size === 0) return outcomes;
 
@@ -357,7 +376,11 @@ export class MainnetPayoutWorker {
     const finalizedNumber = finalizedHeader.number.toNumber();
     const firstBlock = Math.max(finalizedNumber - config.mainnet.reconciliationLookbackBlocks + 1, 0);
 
-    for (let blockNumber = finalizedNumber; blockNumber >= firstBlock && outcomes.size < claimsByHash.size; blockNumber--) {
+    for (
+      let blockNumber = finalizedNumber;
+      blockNumber >= firstBlock && outcomes.size < claimsByHash.size;
+      blockNumber--
+    ) {
       const blockHashCodec = await this._api.rpc.chain.getBlockHash(blockNumber);
       const blockHash = blockHashCodec.toHex();
       const signedBlock = await this._api.rpc.chain.getBlock(blockHashCodec);

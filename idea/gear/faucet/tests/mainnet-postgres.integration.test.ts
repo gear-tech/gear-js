@@ -100,7 +100,9 @@ describe('mainnet faucet PostgreSQL integration', () => {
     expect(enumExists[0].exists).toBe(true);
 
     const indexes = await loadMainnetIndexes(dataSource);
-    expect(indexes.get('IDX_mainnet_claim_wallet')).toMatch(/WHERE \("status" <> 'rejected'|WHERE \(status <> 'rejected'/);
+    expect(indexes.get('IDX_mainnet_claim_wallet')).toMatch(
+      /WHERE \("status" <> 'rejected'|WHERE \(status <> 'rejected'/,
+    );
     expect(indexes.get('IDX_mainnet_claim_transaction_hash')).toContain('WHERE ("transactionHash" IS NOT NULL)');
     expect(indexes.get('IDX_mainnet_claim_challenge')).toContain('UNIQUE INDEX');
     expect(indexes.get('IDX_mainnet_claim_idempotency')).toContain('UNIQUE INDEX');
@@ -110,7 +112,9 @@ describe('mainnet faucet PostgreSQL integration', () => {
 
     await dataSource.undoLastMigration();
 
-    const removedTable = await dataSource.query<{ table_name: string | null }[]>(`SELECT to_regclass('public.mainnet_claim') AS table_name`);
+    const removedTable = await dataSource.query<{ table_name: string | null }[]>(
+      `SELECT to_regclass('public.mainnet_claim') AS table_name`,
+    );
     expect(removedTable[0].table_name).toBeNull();
 
     const removedEnum = await dataSource.query<{ exists: boolean }[]>(`
@@ -195,19 +199,22 @@ describe('mainnet faucet PostgreSQL integration', () => {
       await firstRunner.startTransaction();
       await secondRunner.startTransaction();
 
-      const locked = (await firstRunner.query(
-        `SELECT id, used FROM "mainnet_challenge" WHERE id = $1 FOR UPDATE`,
-        [challengeId],
-      )) as { id: string; used: boolean }[];
+      const locked = (await firstRunner.query(`SELECT id, used FROM "mainnet_challenge" WHERE id = $1 FOR UPDATE`, [
+        challengeId,
+      ])) as { id: string; used: boolean }[];
       expect(locked[0]).toMatchObject({ id: challengeId, used: false });
 
       await secondRunner.query(`SET LOCAL lock_timeout = '100ms'`);
-      await expect(secondRunner.query(`SELECT id FROM "mainnet_challenge" WHERE id = $1 FOR UPDATE`, [challengeId])).rejects.toMatchObject({
+      await expect(
+        secondRunner.query(`SELECT id FROM "mainnet_challenge" WHERE id = $1 FOR UPDATE`, [challengeId]),
+      ).rejects.toMatchObject({
         code: '55P03',
       });
       await secondRunner.rollbackTransaction();
 
-      await firstRunner.query(`UPDATE "mainnet_challenge" SET used = true, "usedAt" = now() WHERE id = $1`, [challengeId]);
+      await firstRunner.query(`UPDATE "mainnet_challenge" SET used = true, "usedAt" = now() WHERE id = $1`, [
+        challengeId,
+      ]);
       await firstRunner.commitTransaction();
 
       await secondRunner.startTransaction();
@@ -243,7 +250,9 @@ describe('mainnet faucet PostgreSQL integration', () => {
       await secondRunner.startTransaction();
 
       const firstBatch = (await firstRunner.query(claimBatchSql(1), [MainnetClaimStatus.Queued])) as { id: string }[];
-      const secondBatch = (await secondRunner.query(claimBatchSql(10), [MainnetClaimStatus.Queued])) as { id: string }[];
+      const secondBatch = (await secondRunner.query(claimBatchSql(10), [MainnetClaimStatus.Queued])) as {
+        id: string;
+      }[];
 
       expect(firstBatch.map(({ id }) => id)).toEqual([firstClaimId]);
       expect(secondBatch.map(({ id }) => id)).toEqual([secondClaimId, thirdClaimId]);

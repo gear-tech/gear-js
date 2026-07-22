@@ -123,15 +123,19 @@ vi.mock('@gear-js/api', async () => {
       tx: mockTx,
       isReady: Promise.resolve(),
       isReadyOrError: Promise.resolve(),
-      disconnect: vi.fn().mockImplementation(() =>
-        gearMockState.disconnectFails ? Promise.reject(new Error('disconnect failed')) : Promise.resolve(),
-      ),
+      disconnect: vi
+        .fn()
+        .mockImplementation(() =>
+          gearMockState.disconnectFails ? Promise.reject(new Error('disconnect failed')) : Promise.resolve(),
+        ),
       on: vi.fn(),
       genesisHash: { toHex: mockToHex },
       chain: vi.fn().mockResolvedValue('Vara Local'),
       query: {
         system: {
-          account: vi.fn().mockImplementation(async () => ({ data: { free: { toString: () => gearMockState.freeBalance } } })),
+          account: vi
+            .fn()
+            .mockImplementation(async () => ({ data: { free: { toString: () => gearMockState.freeBalance } } })),
           events: {
             at: vi.fn().mockImplementation(async () => {
               if (gearMockState.reconciliationMode === 'notFound') return [];

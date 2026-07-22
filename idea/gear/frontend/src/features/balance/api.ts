@@ -68,7 +68,10 @@ type FetchMainnetJsonOptions = {
   parameters?: object;
 };
 
-const fetchMainnetJson = async <T>(path: string, { method = 'GET', headers, parameters }: FetchMainnetJsonOptions = {}) => {
+const fetchMainnetJson = async <T>(
+  path: string,
+  { method = 'GET', headers, parameters }: FetchMainnetJsonOptions = {},
+) => {
   const response = await fetch(`${FAUCET_API_URL}/mainnet${path}`, {
     method,
     headers: { 'Content-Type': 'application/json;charset=utf-8', ...headers },
@@ -88,5 +91,5 @@ const fetchMainnetJson = async <T>(path: string, { method = 'GET', headers, para
   return response.json() as Promise<T>;
 };
 
-export { createMainnetClaim, getMainnetChallenge, getMainnetClaim, getTestBalance };
 export type { MainnetChallenge, MainnetClaim };
+export { createMainnetClaim, getMainnetChallenge, getMainnetClaim, getTestBalance };

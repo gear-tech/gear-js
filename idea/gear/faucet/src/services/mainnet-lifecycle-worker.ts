@@ -3,7 +3,13 @@ import { createLogger } from 'gear-idea-common';
 import { LessThan } from 'typeorm';
 
 import config from '../config.js';
-import { AppDataSource, MainnetChallenge, MainnetClaim, MainnetClaimEvent, MainnetClaimStatus } from '../database/index.js';
+import {
+  AppDataSource,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  MainnetClaimStatus,
+} from '../database/index.js';
 import { recordMainnetLifecycleCleanup } from './mainnet-metrics.js';
 
 const logger = createLogger('mainnet-lifecycle-worker');

@@ -5,7 +5,7 @@ import { mnemonicGenerate } from '@polkadot/util-crypto';
 
 import config from '../src/config.js';
 import { MainnetClaimStatus } from '../src/database/index.js';
-import { MainnetFaucetError, MainnetFaucetService } from '../src/services/index.js';
+import { type MainnetFaucetError, MainnetFaucetService } from '../src/services/index.js';
 import { repos } from './__mocks__/db.js';
 
 function createKeyPair() {
@@ -116,8 +116,14 @@ describe('Mainnet faucet service', () => {
   });
 
   it('rejects a second claim from the same device', async () => {
-    const first = await createSignedClaimInput(createKeyPair(), { deviceToken: 'same-device', remoteIp: '192.168.1.10' });
-    const second = await createSignedClaimInput(createKeyPair(), { deviceToken: 'same-device', remoteIp: '192.168.2.10' });
+    const first = await createSignedClaimInput(createKeyPair(), {
+      deviceToken: 'same-device',
+      remoteIp: '192.168.1.10',
+    });
+    const second = await createSignedClaimInput(createKeyPair(), {
+      deviceToken: 'same-device',
+      remoteIp: '192.168.2.10',
+    });
 
     await service.createClaim(first);
     const rejected = await service.createClaim(second);
@@ -274,8 +280,14 @@ describe('Mainnet faucet service', () => {
     config.mainnet.maxPayouts24h = 100;
     config.mainnet.maxAmount24h = 60;
 
-    const first = await createSignedClaimInput(createKeyPair(), { deviceToken: 'amount-device-a', remoteIp: '172.16.0.1' });
-    const second = await createSignedClaimInput(createKeyPair(), { deviceToken: 'amount-device-b', remoteIp: '172.17.0.1' });
+    const first = await createSignedClaimInput(createKeyPair(), {
+      deviceToken: 'amount-device-a',
+      remoteIp: '172.16.0.1',
+    });
+    const second = await createSignedClaimInput(createKeyPair(), {
+      deviceToken: 'amount-device-b',
+      remoteIp: '172.17.0.1',
+    });
 
     await service.createClaim(first);
     const rejected = await service.createClaim(second);

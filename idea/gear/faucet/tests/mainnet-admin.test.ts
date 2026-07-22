@@ -152,9 +152,21 @@ describe('Mainnet admin service', () => {
   });
 
   it.each([
-    ['missing tx hash', { claimId: 'claim-1', action: 'mark_finalized' as const, blockHash: '0xBLOCK' }, 'missing_transaction_hash'],
-    ['missing block hash', { claimId: 'claim-1', action: 'mark_finalized' as const, transactionHash: '0xTX' }, 'missing_block_hash'],
-    ['missing reason', { claimId: 'claim-1', action: 'mark_failed_terminal' as const, reasonCode: ' ' }, 'missing_reason_code'],
+    [
+      'missing tx hash',
+      { claimId: 'claim-1', action: 'mark_finalized' as const, blockHash: '0xBLOCK' },
+      'missing_transaction_hash',
+    ],
+    [
+      'missing block hash',
+      { claimId: 'claim-1', action: 'mark_finalized' as const, transactionHash: '0xTX' },
+      'missing_block_hash',
+    ],
+    [
+      'missing reason',
+      { claimId: 'claim-1', action: 'mark_failed_terminal' as const, reasonCode: ' ' },
+      'missing_reason_code',
+    ],
     ['invalid action', { claimId: 'claim-1', action: 'nope' as any }, 'invalid_action'],
   ])('rejects %s', async (_, request, publicCode) => {
     await repos.MainnetClaim.save(claim('claim-1'));

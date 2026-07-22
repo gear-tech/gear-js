@@ -3,7 +3,12 @@ import { createLogger } from 'gear-idea-common';
 
 import config from '../config.js';
 import { MainnetClaimStatus } from '../database/index.js';
-import { MainnetAdminService, MainnetFaucetError, MainnetMetricsService, type MainnetFaucetService } from '../services/index.js';
+import {
+  MainnetAdminService,
+  MainnetFaucetError,
+  type MainnetFaucetService,
+  MainnetMetricsService,
+} from '../services/index.js';
 import { BaseRouter } from './base.js';
 import { mainnetChallengeRateLimitMiddleware, mainnetClaimRateLimitMiddleware } from './middleware/index.js';
 
@@ -45,7 +50,9 @@ export class MainnetRouter extends BaseRouter {
     const idempotencyKey = req.header('Idempotency-Key') ?? '';
 
     if (!address || !challengeId || !signature || !turnstileToken || !deviceToken) {
-      return res.status(400).json({ error: 'Address, challengeId, signature, turnstileToken, and deviceToken are required' });
+      return res
+        .status(400)
+        .json({ error: 'Address, challengeId, signature, turnstileToken, and deviceToken are required' });
     }
 
     try {
@@ -131,7 +138,10 @@ export class MainnetRouter extends BaseRouter {
 
   private _handleError(error: any, res: Response) {
     if (error instanceof MainnetFaucetError) {
-      logger.warn('Mainnet faucet request rejected', { publicCode: error.publicCode, internalCode: error.internalCode });
+      logger.warn('Mainnet faucet request rejected', {
+        publicCode: error.publicCode,
+        internalCode: error.internalCode,
+      });
       return res.status(error.statusCode).json({ error: error.publicCode });
     }
 

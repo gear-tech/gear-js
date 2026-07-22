@@ -1,7 +1,13 @@
 import { randomInt } from 'node:crypto';
 import { vi } from 'vitest';
 
-import type { FaucetRequest, MainnetChallenge, MainnetClaim, MainnetClaimEvent, UserLastSeen } from '../../src/database/index.js';
+import type {
+  FaucetRequest,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  UserLastSeen,
+} from '../../src/database/index.js';
 
 type Criterion = Record<string, any>;
 
@@ -30,7 +36,9 @@ function matchesValue(value: any, criterion: any) {
   return value === criterion;
 }
 
-export function createFakeRepository<T extends { id: any; timestamp?: Date; createdAt?: Date; [key: string]: any }>(saveDelay = true) {
+export function createFakeRepository<T extends { id: any; timestamp?: Date; createdAt?: Date; [key: string]: any }>(
+  saveDelay = true,
+) {
   let data: Record<string | number, T> = {};
 
   const repo = {
@@ -146,10 +154,14 @@ function filterRows<T extends { [key: string]: any }>(rows: T[], condition: stri
     return rows.filter((row) => new Date(row.createdAt).getTime() >= new Date(params.hourAgo).getTime());
   }
   if (condition.includes('claim."payoutStartedAt" >= :dayAgo')) {
-    return rows.filter((row) => row.payoutStartedAt && new Date(row.payoutStartedAt).getTime() >= new Date(params.dayAgo).getTime());
+    return rows.filter(
+      (row) => row.payoutStartedAt && new Date(row.payoutStartedAt).getTime() >= new Date(params.dayAgo).getTime(),
+    );
   }
   if (condition.includes('claim."payoutStartedAt" >= :hourAgo')) {
-    return rows.filter((row) => row.payoutStartedAt && new Date(row.payoutStartedAt).getTime() >= new Date(params.hourAgo).getTime());
+    return rows.filter(
+      (row) => row.payoutStartedAt && new Date(row.payoutStartedAt).getTime() >= new Date(params.hourAgo).getTime(),
+    );
   }
 
   return rows;

@@ -5,7 +5,7 @@ import { mnemonicGenerate } from '@polkadot/util-crypto';
 
 import config from '../src/config.js';
 import { AppDataSource, MainnetClaimStatus } from '../src/database/index.js';
-import { MainnetFaucetError, MainnetFaucetService } from '../src/services/index.js';
+import { type MainnetFaucetError, MainnetFaucetService } from '../src/services/index.js';
 import { repos } from './__mocks__/db.js';
 
 const GENESIS = '0x1111111111111111111111111111111111111111111111111111111111111111';
@@ -144,7 +144,10 @@ describe('Mainnet faucet security validation', () => {
     const input = await signedInput(service);
     mockTurnstile({}, 503);
 
-    await expect(service.createClaim(input)).rejects.toMatchObject({ statusCode: 503, internalCode: 'turnstile_http_503' });
+    await expect(service.createClaim(input)).rejects.toMatchObject({
+      statusCode: 503,
+      internalCode: 'turnstile_http_503',
+    });
   });
 
   it('returns verification_unavailable for a Turnstile network error', async () => {
@@ -153,7 +156,10 @@ describe('Mainnet faucet security validation', () => {
     const input = await signedInput(service);
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
 
-    await expect(service.createClaim(input)).rejects.toMatchObject({ statusCode: 503, internalCode: 'turnstile_request_failed' });
+    await expect(service.createClaim(input)).rejects.toMatchObject({
+      statusCode: 503,
+      internalCode: 'turnstile_request_failed',
+    });
   });
 
   it('requires a Turnstile token when verification is enabled', async () => {
@@ -218,7 +224,12 @@ describe('Mainnet faucet security validation', () => {
       'medium_risk_requires_captcha',
       () => (config.mainnet.mediumRiskCountries = ['IR']),
     ],
-    ['configured ASN', { asn: '64512' }, 'medium_risk_requires_captcha', () => (config.mainnet.mediumRiskAsns = ['AS64512'])],
+    [
+      'configured ASN',
+      { asn: '64512' },
+      'medium_risk_requires_captcha',
+      () => (config.mainnet.mediumRiskAsns = ['AS64512']),
+    ],
   ])('temporarily rejects medium-risk %s claims when Turnstile is disabled', async (_, override, internalReasonCode, setup = () => {}) => {
     setup();
     const service = new MainnetFaucetService();
@@ -287,7 +298,10 @@ describe('Mainnet faucet security validation', () => {
     const input = await signedInput(service);
     config.mainnet.emergencyPause = true;
 
-    await expect(service.createClaim(input)).rejects.toMatchObject({ statusCode: 503, internalCode: 'emergency_pause' });
+    await expect(service.createClaim(input)).rejects.toMatchObject({
+      statusCode: 503,
+      internalCode: 'emergency_pause',
+    });
   });
 
   it('rejects oversized and non-string challenge addresses', async () => {
@@ -336,12 +350,25 @@ describe('Mainnet faucet security validation', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce({ challengeId: randomUUID(), canonicalWallet: '0xother' });
 
-    await expect(service.createClaim(input)).rejects.toMatchObject({ statusCode: 409, publicCode: 'idempotency_conflict' });
+    await expect(service.createClaim(input)).rejects.toMatchObject({
+      statusCode: 409,
+      publicCode: 'idempotency_conflict',
+    });
   });
 
   it.each([
-    ['wallet constraint', { code: '23505', constraint: 'IDX_mainnet_claim_wallet' }, 'wallet_limit_reached', 'wallet_already_claimed'],
-    ['challenge constraint', { code: '23505', constraint: 'IDX_mainnet_claim_challenge' }, 'not_eligible', 'challenge_already_used'],
+    [
+      'wallet constraint',
+      { code: '23505', constraint: 'IDX_mainnet_claim_wallet' },
+      'wallet_limit_reached',
+      'wallet_already_claimed',
+    ],
+    [
+      'challenge constraint',
+      { code: '23505', constraint: 'IDX_mainnet_claim_challenge' },
+      'not_eligible',
+      'challenge_already_used',
+    ],
     [
       'idempotency constraint',
       { driverError: { code: '23505', constraint: 'IDX_mainnet_claim_idempotency' } },
@@ -430,14 +457,18 @@ describe('Mainnet faucet security validation', () => {
     const service = new MainnetFaucetService();
     const input = await signedInput(service);
 
-    await expect(service.createClaim({ ...input, signature: 'malformed' })).rejects.toMatchObject({ publicCode: 'invalid_signature' });
+    await expect(service.createClaim({ ...input, signature: 'malformed' })).rejects.toMatchObject({
+      publicCode: 'invalid_signature',
+    });
   });
 
   it('rejects non-IP numeric host syntax', async () => {
     const service = new MainnetFaucetService();
     const input = await signedInput(service);
 
-    await expect(service.createClaim({ ...input, remoteIp: '2130706433' })).rejects.toMatchObject({ internalCode: 'invalid_remote_ip' });
+    await expect(service.createClaim({ ...input, remoteIp: '2130706433' })).rejects.toMatchObject({
+      internalCode: 'invalid_remote_ip',
+    });
   });
 
   it('normalizes an IPv6 address without compressed groups', async () => {

@@ -3,10 +3,16 @@ import { decodeAddress } from '@gear-js/api';
 import { stringToU8a, u8aToHex } from '@polkadot/util';
 import { signatureVerify } from '@polkadot/util-crypto';
 import { createLogger } from 'gear-idea-common';
-import { MoreThanOrEqual, Not, type EntityManager } from 'typeorm';
+import { type EntityManager, MoreThanOrEqual, Not } from 'typeorm';
 
 import config from '../config.js';
-import { AppDataSource, MainnetChallenge, MainnetClaim, MainnetClaimEvent, MainnetClaimStatus } from '../database/index.js';
+import {
+  AppDataSource,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  MainnetClaimStatus,
+} from '../database/index.js';
 import { recordMainnetTurnstileVerification } from './mainnet-metrics.js';
 import { parseVaraAmount } from './mainnet-utils.js';
 
@@ -112,7 +118,11 @@ export class MainnetFaucetService {
       return existing;
     }
 
-    const turnstileVerified = await this._verifyTurnstile(request.turnstileToken, request.remoteIp, request.challengeId);
+    const turnstileVerified = await this._verifyTurnstile(
+      request.turnstileToken,
+      request.remoteIp,
+      request.challengeId,
+    );
 
     try {
       return await AppDataSource.transaction(async (manager) => {
@@ -129,7 +139,10 @@ export class MainnetFaucetService {
             where: { idempotencyKey: request.idempotencyKey },
           });
           if (concurrentClaim) {
-            if (concurrentClaim.challengeId === request.challengeId && concurrentClaim.canonicalWallet === canonicalWallet) {
+            if (
+              concurrentClaim.challengeId === request.challengeId &&
+              concurrentClaim.canonicalWallet === canonicalWallet
+            ) {
               return concurrentClaim;
             }
             throw new MainnetFaucetError(409, 'idempotency_conflict');
@@ -167,7 +180,11 @@ export class MainnetFaucetService {
       const racedClaim = await AppDataSource.getRepository(MainnetClaim).findOne({
         where: { idempotencyKey: request.idempotencyKey },
       });
-      if (racedClaim && racedClaim.challengeId === request.challengeId && racedClaim.canonicalWallet === canonicalWallet) {
+      if (
+        racedClaim &&
+        racedClaim.challengeId === request.challengeId &&
+        racedClaim.canonicalWallet === canonicalWallet
+      ) {
         return racedClaim;
       }
 
@@ -180,7 +197,12 @@ export class MainnetFaucetService {
     return AppDataSource.getRepository(MainnetClaim).findOne({ where: { id: claimId } });
   }
 
-  private async _buildClaim(manager: EntityManager, request: MainnetClaimRequest, canonicalWallet: string, turnstileVerified: boolean) {
+  private async _buildClaim(
+    manager: EntityManager,
+    request: MainnetClaimRequest,
+    canonicalWallet: string,
+    turnstileVerified: boolean,
+  ) {
     const ip = normalizeIp(request.remoteIp);
     const fullIpHash = hmac(ip);
     const subnetHash = hmac(normalizeSubnet(ip));
@@ -200,8 +222,12 @@ export class MainnetFaucetService {
       await Promise.all([
         claimRepo.count({ where: { canonicalWallet, status: Not(MainnetClaimStatus.Rejected) } }),
         claimRepo.count({ where: { deviceHash, status: Not(MainnetClaimStatus.Rejected) } }),
-        claimRepo.count({ where: { fullIpHash, createdAt: MoreThanOrEqual(dayAgo), status: Not(MainnetClaimStatus.Rejected) } }),
-        claimRepo.count({ where: { subnetHash, createdAt: MoreThanOrEqual(dayAgo), status: Not(MainnetClaimStatus.Rejected) } }),
+        claimRepo.count({
+          where: { fullIpHash, createdAt: MoreThanOrEqual(dayAgo), status: Not(MainnetClaimStatus.Rejected) },
+        }),
+        claimRepo.count({
+          where: { subnetHash, createdAt: MoreThanOrEqual(dayAgo), status: Not(MainnetClaimStatus.Rejected) },
+        }),
         claimRepo.count({ where: { createdAt: MoreThanOrEqual(hourAgo), status: Not(MainnetClaimStatus.Rejected) } }),
         claimRepo.count({ where: { createdAt: MoreThanOrEqual(dayAgo), status: Not(MainnetClaimStatus.Rejected) } }),
         claimRepo
@@ -263,7 +289,8 @@ export class MainnetFaucetService {
       return false;
     }
     if (!token) throw new MainnetFaucetError(400, 'invalid_request', 'missing_turnstile_token');
-    if (!config.mainnet.turnstileSecret) throw new MainnetFaucetError(500, 'server_misconfigured', 'missing_turnstile_secret');
+    if (!config.mainnet.turnstileSecret)
+      throw new MainnetFaucetError(500, 'server_misconfigured', 'missing_turnstile_secret');
 
     const body = new URLSearchParams({
       secret: config.mainnet.turnstileSecret,
@@ -311,7 +338,11 @@ export class MainnetFaucetService {
     }
     const challengeTimestamp = result.challenge_ts ? Date.parse(result.challenge_ts) : Number.NaN;
     const challengeAge = Date.now() - challengeTimestamp;
-    if (!Number.isFinite(challengeTimestamp) || challengeAge < -60_000 || challengeAge > config.mainnet.challengeTtlMs) {
+    if (
+      !Number.isFinite(challengeTimestamp) ||
+      challengeAge < -60_000 ||
+      challengeAge > config.mainnet.challengeTtlMs
+    ) {
       recordMainnetTurnstileVerification('failed');
       throw new MainnetFaucetError(401, 'verification_failed', 'turnstile_expired');
     }
@@ -453,9 +484,14 @@ function firstRejectReason(input: {
   if (input.deviceClaims > 0) return 'device_already_claimed';
   if (input.fullIpClaims24h >= config.mainnet.fullIpLimit24h) return 'full_ip_limit';
   if (input.subnetClaims24h >= config.mainnet.subnetLimit24h) return 'subnet_limit';
-  if (input.globalClaims1h >= Math.min(config.mainnet.globalLimit1h, config.mainnet.maxPayouts1h)) return 'global_hour_limit';
-  if (input.globalClaims24h >= Math.min(config.mainnet.globalLimit24h, config.mainnet.maxPayouts24h)) return 'global_day_limit';
-  if (BigInt(input.amount24h) + BigInt(parseVaraAmount(config.mainnet.transferValue)) > BigInt(parseVaraAmount(config.mainnet.maxAmount24h))) {
+  if (input.globalClaims1h >= Math.min(config.mainnet.globalLimit1h, config.mainnet.maxPayouts1h))
+    return 'global_hour_limit';
+  if (input.globalClaims24h >= Math.min(config.mainnet.globalLimit24h, config.mainnet.maxPayouts24h))
+    return 'global_day_limit';
+  if (
+    BigInt(input.amount24h) + BigInt(parseVaraAmount(config.mainnet.transferValue)) >
+    BigInt(parseVaraAmount(config.mainnet.maxAmount24h))
+  ) {
     return 'daily_amount_limit';
   }
   if (input.isTor) return 'tor';

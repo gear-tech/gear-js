@@ -102,7 +102,12 @@ export class MainnetAdminService {
         }),
       );
 
-      logger.info('Mainnet reconciliation resolved', { claimId: claim.id, action: request.action, operator, toStatus: claim.status });
+      logger.info('Mainnet reconciliation resolved', {
+        claimId: claim.id,
+        action: request.action,
+        operator,
+        toStatus: claim.status,
+      });
       return toReconciliationDto(claim);
     });
   }

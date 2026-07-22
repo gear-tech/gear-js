@@ -3,7 +3,7 @@ import { createLogger } from 'gear-idea-common';
 
 const logger = createLogger('request');
 
-export function requestLoggerMiddleware(req: Request, res: Response, next: NextFunction) {
+export function requestLoggerMiddleware(req: Request, _res: Response, next: NextFunction) {
   const requestBody = req.body ?? {};
 
   if (Object.keys(requestBody).length > 0) {

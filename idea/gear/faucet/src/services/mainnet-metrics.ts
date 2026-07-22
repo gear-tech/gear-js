@@ -1,5 +1,11 @@
 import config from '../config.js';
-import { AppDataSource, MainnetChallenge, MainnetClaim, MainnetClaimEvent, MainnetClaimStatus } from '../database/index.js';
+import {
+  AppDataSource,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  MainnetClaimStatus,
+} from '../database/index.js';
 import { parseVaraAmount } from './mainnet-utils.js';
 
 type CounterMap = Record<string, number>;
@@ -26,8 +32,12 @@ export class MainnetMetricsService {
       MainnetClaimStatus.Finalized,
     ];
     const activePayoutClaims = claims.filter(({ status }) => activePayoutStatuses.includes(status));
-    const activePayoutClaims1h = activePayoutClaims.filter(({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= hourAgo);
-    const activePayoutClaims24h = activePayoutClaims.filter(({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= dayAgo);
+    const activePayoutClaims1h = activePayoutClaims.filter(
+      ({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= hourAgo,
+    );
+    const activePayoutClaims24h = activePayoutClaims.filter(
+      ({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= dayAgo,
+    );
     const spent24h = activePayoutClaims24h.reduce((sum, { amount }) => sum + BigInt(amount), 0n);
     const payoutAmount = BigInt(parseVaraAmount(config.mainnet.transferValue));
     const dailyAmountLimit = BigInt(parseVaraAmount(config.mainnet.maxAmount24h));
@@ -41,7 +51,8 @@ export class MainnetMetricsService {
         byStatus: countBy(claims, 'status'),
         rejectedByReason: countRejectedByReason(claims),
         payoutQueueSize: claims.filter(({ status }) => status === MainnetClaimStatus.Queued).length,
-        reconciliationBacklog: claims.filter(({ status }) => status === MainnetClaimStatus.ReconciliationRequired).length,
+        reconciliationBacklog: claims.filter(({ status }) => status === MainnetClaimStatus.ReconciliationRequired)
+          .length,
       },
       turnstile: {
         verifications: { ...counters.turnstileVerifications },

@@ -94,7 +94,10 @@ export class MainnetAlertWorker {
       alerts.push({ name: 'treasury_daily_budget_exhausted', severity: 'critical', value: 0, threshold: '>0' });
     }
 
-    const automationRejects = AUTOMATION_REASONS.reduce((sum, reason) => sum + (claims.rejectedByReason[reason] ?? 0), 0);
+    const automationRejects = AUTOMATION_REASONS.reduce(
+      (sum, reason) => sum + (claims.rejectedByReason[reason] ?? 0),
+      0,
+    );
     if (automationRejects >= config.mainnet.alertAutomationRejectThreshold) {
       alerts.push({
         name: 'automation_reject_spike',
