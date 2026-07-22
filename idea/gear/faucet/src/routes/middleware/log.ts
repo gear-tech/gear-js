@@ -4,10 +4,10 @@ import { createLogger } from 'gear-idea-common';
 const logger = createLogger('request');
 
 export function requestLoggerMiddleware(req: Request, res: Response, next: NextFunction) {
-  if (!req.body) return res.status(400).send('Bad Request');
+  const requestBody = req.body ?? {};
 
-  if (Object.keys(req.body).length > 0) {
-    const { token, signature, ...body } = req.body;
+  if (Object.keys(requestBody).length > 0) {
+    const { token, signature, ...body } = requestBody;
     logger.debug(`method: ${req.method}, url: ${req.originalUrl}`, {
       token: token?.slice(0, 10),
       ...(signature ? { signature: `${signature.slice(0, 10)}...` } : {}),

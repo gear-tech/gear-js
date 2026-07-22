@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import { FaucetRequest, UserLastSeen } from '../../src/database/index.js';
+import { FaucetRequest, MainnetChallenge, MainnetClaim, MainnetClaimEvent, UserLastSeen } from '../../src/database/index.js';
 import { repos } from './db.js';
 
 vi.mock('typeorm', async () => {
@@ -8,9 +8,20 @@ vi.mock('typeorm', async () => {
 
   class FakeDataSource {
     initialize = vi.fn(async () => this);
+    query = vi.fn(async () => []);
+    transaction = vi.fn(async (callback) => callback(this));
     getRepository = vi.fn((entity: any) => {
       if (entity === FaucetRequest) {
         return repos.FaucetRequest;
+      }
+      if (entity === MainnetChallenge) {
+        return repos.MainnetChallenge;
+      }
+      if (entity === MainnetClaim) {
+        return repos.MainnetClaim;
+      }
+      if (entity === MainnetClaimEvent) {
+        return repos.MainnetClaimEvent;
       }
       if (entity === UserLastSeen) {
         return repos.UserLastSeen;

@@ -5,8 +5,8 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 import config from './config.js';
-import { AgentRouter, VaraBridgeRouter, VaraTestnetRouter, WvaraRouter } from './routes/index.js';
-import { ChallengeService, type RequestService } from './services/index.js';
+import { AgentRouter, MainnetRouter, VaraBridgeRouter, VaraTestnetRouter, WvaraRouter } from './routes/index.js';
+import { ChallengeService, MainnetFaucetService, type RequestService } from './services/index.js';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 
@@ -21,6 +21,7 @@ export class Server {
     runVaraTestnetFaucet = true,
     runWvaraFaucet = true,
     runAgentFaucet = true,
+    runMainnetFaucet = true,
   ) {
     this._app = express();
     this._app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -37,6 +38,10 @@ export class Server {
       this._challengeService = new ChallengeService(config.agent.challengeTtlMs);
       this._app.use('/', new AgentRouter(requestService, this._challengeService).router);
       logger.info('Agent faucet enabled');
+    }
+    if (runMainnetFaucet && config.mainnet.enabled) {
+      this._app.use('/api/v1/mainnet', new MainnetRouter(new MainnetFaucetService()).router);
+      logger.info('Mainnet faucet API enabled');
     }
   }
 

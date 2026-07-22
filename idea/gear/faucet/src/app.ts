@@ -46,6 +46,7 @@ export class FaucetApp {
       this._runVaraTestnetFaucet,
       this._runWvaraFaucet,
       config.agent.enabled,
+      config.mainnet.enabled,
     );
   }
 

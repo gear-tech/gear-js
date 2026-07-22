@@ -22,6 +22,7 @@ temp/
 
 idea/gear/squid/lib/
 idea/gear/indexer-db/lib/
+idea/gear/faucet/coverage/
 idea/vara-eth/indexer/lib/
 idea/vara-eth/indexer-db/lib/
 .spec.json
