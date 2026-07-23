@@ -3,6 +3,7 @@ import { STATUS_CODES } from 'node:http';
 type Parameters = {
   url: string | URL;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: Record<string, string>;
   parameters?: object;
   isJson?: boolean;
 };
@@ -12,11 +13,17 @@ type FetchWithGuard = {
   (parameters: Parameters & { isJson?: false }): Promise<Response>;
 };
 
-const fetchWithGuard: FetchWithGuard = async <T>({ url, method = 'GET', parameters, isJson = true }: Parameters) => {
-  const headers = { 'Content-Type': 'application/json;charset=utf-8' };
+const fetchWithGuard: FetchWithGuard = async <T>({
+  url,
+  method = 'GET',
+  headers = {},
+  parameters,
+  isJson = true,
+}: Parameters) => {
+  const requestHeaders = { 'Content-Type': 'application/json;charset=utf-8', ...headers };
   const body = parameters ? JSON.stringify(parameters) : undefined;
 
-  const response = await fetch(url, { headers, method, body });
+  const response = await fetch(url, { headers: requestHeaders, method, body });
 
   if (!response.ok) {
     const result = (await response.json().catch(() => ({}))) as unknown;

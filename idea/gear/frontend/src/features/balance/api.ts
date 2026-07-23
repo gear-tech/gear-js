@@ -71,25 +71,13 @@ type FetchMainnetJsonOptions = {
 const fetchMainnetJson = async <T>(
   path: string,
   { method = 'GET', headers, parameters }: FetchMainnetJsonOptions = {},
-) => {
-  const response = await fetch(`${FAUCET_API_URL}/mainnet${path}`, {
+) =>
+  fetchWithGuard<T>({
+    url: `${FAUCET_API_URL}/mainnet${path}`,
     method,
-    headers: { 'Content-Type': 'application/json;charset=utf-8', ...headers },
-    body: parameters ? JSON.stringify(parameters) : undefined,
+    headers,
+    parameters,
   });
-
-  if (!response.ok) {
-    const result = (await response.json().catch(() => ({}))) as unknown;
-    const message =
-      result !== null && typeof result === 'object' && 'error' in result && typeof result.error === 'string'
-        ? result.error
-        : response.statusText;
-
-    throw new Error(message);
-  }
-
-  return response.json() as Promise<T>;
-};
 
 export type { MainnetChallenge, MainnetClaim };
 export { createMainnetClaim, getMainnetChallenge, getMainnetClaim, getTestBalance };
