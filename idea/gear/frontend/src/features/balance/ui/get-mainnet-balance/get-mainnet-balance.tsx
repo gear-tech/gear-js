@@ -1,12 +1,10 @@
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useState } from 'react';
 
 import { useModalState } from '@/hooks';
 import { GENESIS, TURNSTILE_SITEKEY } from '@/shared/config';
-import { cx } from '@/shared/helpers';
 import {
   createMainnetClaim,
   getMainnetChallenge,
@@ -15,9 +13,8 @@ import {
   type MainnetClaim,
 } from '../../api';
 import GiftSVG from '../../assets/gift.svg?react';
-import styles from '../get-test-balance/get-test-balance.module.scss';
+import { VerificationOverlay } from '../verification-overlay';
 
-const OVERLAY_ROOT_ID = 'mainnet-faucet-verification-overlay-root';
 const DEVICE_TOKEN_KEY = 'vara-mainnet-faucet-device-token';
 const FINAL_STATUSES = new Set(['finalized', 'rejected', 'failed_terminal', 'reconciliation_required']);
 const MAINNET_FAUCET_ERROR_MESSAGES: Record<string, string> = {
@@ -43,36 +40,6 @@ type PendingClaim = {
   challenge: MainnetChallenge;
   signature: string;
 };
-
-type VerificationOverlayProps = {
-  isVisible: boolean;
-  children: ReactNode;
-};
-
-function VerificationOverlay({ isVisible, children }: VerificationOverlayProps) {
-  const [overlayRoot, setOverlayRoot] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    let root = document.getElementById(OVERLAY_ROOT_ID);
-
-    if (!root) {
-      root = document.createElement('div');
-      root.id = OVERLAY_ROOT_ID;
-
-      document.body.append(root);
-    }
-
-    setOverlayRoot(root);
-
-    return () => {
-      root?.remove();
-    };
-  }, []);
-
-  const overlay = <div className={cx(styles.overlay, isVisible && styles.active)}>{children}</div>;
-
-  return overlayRoot ? createPortal(overlay, overlayRoot) : overlay;
-}
 
 function GetMainnetBalance() {
   const { api } = useApi();

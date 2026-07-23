@@ -2,50 +2,14 @@ import { GearKeyring } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useRef, useState } from 'react';
 
 import { useChain, useModalState, useSignAndSend } from '@/hooks';
 import { GEAR_BALANCE_TRANSFER_VALUE, TURNSTILE_SITEKEY } from '@/shared/config';
-import { cx } from '@/shared/helpers';
 
 import { getTestBalance } from '../../api';
 import GiftSVG from '../../assets/gift.svg?react';
-
-import styles from './get-test-balance.module.scss';
-
-const OVERLAY_ROOT_ID = 'faucet-verification-overlay-root';
-
-type VerificationOverlayProps = {
-  isVisible: boolean;
-  children: ReactNode;
-};
-
-function VerificationOverlay({ isVisible, children }: VerificationOverlayProps) {
-  // temporary fast solution because menu z-index is higher than overlays z-index
-  const [overlayRoot, setOverlayRoot] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    let root = document.getElementById(OVERLAY_ROOT_ID);
-
-    if (!root) {
-      root = document.createElement('div');
-      root.id = OVERLAY_ROOT_ID;
-
-      document.body.append(root);
-    }
-
-    setOverlayRoot(root);
-
-    return () => {
-      root?.remove();
-    };
-  }, []);
-
-  const overlay = <div className={cx(styles.overlay, isVisible && styles.active)}>{children}</div>;
-
-  return overlayRoot ? createPortal(overlay, overlayRoot) : overlay;
-}
+import { VerificationOverlay } from '../verification-overlay';
 
 function GetTestBalance() {
   const { api, isApiReady } = useApi();
