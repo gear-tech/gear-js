@@ -104,13 +104,24 @@ export function createFakeRepository<T extends { id: any; timestamp?: Date; crea
 function createFakeQueryBuilder<T extends { [key: string]: any }>(getData: () => T[]) {
   let rows = getData();
   let selectSum = false;
+  let countGroupKey: string | undefined;
   let limitValue: number | undefined;
 
   const builder = {
     select: vi.fn((selection: string) => {
       selectSum = selection.includes('SUM');
+      if (selection.includes('claim.status')) {
+        countGroupKey = 'status';
+      }
+      if (selection.includes('internalReasonCode')) {
+        countGroupKey = 'internalReasonCode';
+      }
       return builder;
     }),
+    addSelect: vi.fn(() => {
+      return builder;
+    }),
+    groupBy: vi.fn(() => builder),
     where: vi.fn((condition: string, params: Record<string, any>) => {
       rows = filterRows(rows, condition, params);
       return builder;
@@ -131,6 +142,16 @@ function createFakeQueryBuilder<T extends { [key: string]: any }>(getData: () =>
     getRawOne: vi.fn(async () => {
       if (!selectSum) return {};
       return { sum: rows.reduce((sum, row) => sum + BigInt(row.amount ?? '0'), 0n).toString() };
+    }),
+    getRawMany: vi.fn(async () => {
+      if (!countGroupKey) return [];
+      const counts = rows.reduce<Record<string, number>>((result, row) => {
+        const key = row[countGroupKey!] ?? 'unknown';
+        result[key] = (result[key] ?? 0) + 1;
+        return result;
+      }, {});
+
+      return Object.entries(counts).map(([key, count]) => ({ key, count: count.toString() }));
     }),
   };
 

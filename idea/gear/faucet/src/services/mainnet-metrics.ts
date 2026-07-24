@@ -21,7 +21,6 @@ export class MainnetMetricsService {
     const claimRepo = AppDataSource.getRepository(MainnetClaim);
     const challengeRepo = AppDataSource.getRepository(MainnetChallenge);
     const eventRepo = AppDataSource.getRepository(MainnetClaimEvent);
-    const claims = await claimRepo.find({ where: {} });
     const now = Date.now();
     const hourAgo = new Date(now - 60 * 60 * 1000);
     const dayAgo = new Date(now - 24 * 60 * 60 * 1000);
@@ -31,28 +30,71 @@ export class MainnetMetricsService {
       MainnetClaimStatus.InBlock,
       MainnetClaimStatus.Finalized,
     ];
-    const activePayoutClaims = claims.filter(({ status }) => activePayoutStatuses.includes(status));
-    const activePayoutClaims1h = activePayoutClaims.filter(
-      ({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= hourAgo,
-    );
-    const activePayoutClaims24h = activePayoutClaims.filter(
-      ({ payoutStartedAt }) => payoutStartedAt && payoutStartedAt >= dayAgo,
-    );
-    const spent24h = activePayoutClaims24h.reduce((sum, { amount }) => sum + BigInt(amount), 0n);
+    const [
+      statusCounts,
+      rejectedReasonCounts,
+      payoutQueueSize,
+      reconciliationBacklog,
+      activePayoutClaims1h,
+      activePayoutClaims24h,
+      amount24h,
+      expiredUnusedChallenges,
+      auditEventCount,
+    ] = await Promise.all([
+      claimRepo
+        .createQueryBuilder('claim')
+        .select('claim.status', 'key')
+        .addSelect('COUNT(*)', 'count')
+        .groupBy('claim.status')
+        .getRawMany<{ key: string; count: string }>(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .select(`COALESCE(claim."internalReasonCode", 'unknown')`, 'key')
+        .addSelect('COUNT(*)', 'count')
+        .where('claim.status = :status', { status: MainnetClaimStatus.Rejected })
+        .groupBy(`COALESCE(claim."internalReasonCode", 'unknown')`)
+        .getRawMany<{ key: string; count: string }>(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .where('claim.status = :status', { status: MainnetClaimStatus.Queued })
+        .getCount(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .where('claim.status = :status', { status: MainnetClaimStatus.ReconciliationRequired })
+        .getCount(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .where('claim."payoutStartedAt" >= :hourAgo', { hourAgo })
+        .andWhere('claim.status IN (:...statuses)', { statuses: activePayoutStatuses })
+        .getCount(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .where('claim."payoutStartedAt" >= :dayAgo', { dayAgo })
+        .andWhere('claim.status IN (:...statuses)', { statuses: activePayoutStatuses })
+        .getCount(),
+      claimRepo
+        .createQueryBuilder('claim')
+        .select('COALESCE(SUM(claim.amount), 0)', 'sum')
+        .where('claim."payoutStartedAt" >= :dayAgo', { dayAgo })
+        .andWhere('claim.status IN (:...statuses)', { statuses: activePayoutStatuses })
+        .getRawOne<{ sum: string }>(),
+      challengeRepo.count({ where: { used: false } }),
+      eventRepo.count({ where: {} }),
+    ]);
+    const claimsByStatus = rowsToCounterMap(statusCounts);
+    const rejectedByReason = rowsToCounterMap(rejectedReasonCounts);
+    const spent24h = BigInt(amount24h!.sum);
     const payoutAmount = BigInt(parseVaraAmount(config.mainnet.transferValue));
     const dailyAmountLimit = BigInt(parseVaraAmount(config.mainnet.maxAmount24h));
     const remainingByAmount = payoutAmount === 0n ? 0 : Number((dailyAmountLimit - spent24h) / payoutAmount);
-    const expiredUnusedChallenges = await challengeRepo.count({ where: { used: false } });
-    const auditEventCount = await eventRepo.count({ where: {} });
 
     return {
       generatedAt: new Date().toISOString(),
       claims: {
-        byStatus: countBy(claims, 'status'),
-        rejectedByReason: countRejectedByReason(claims),
-        payoutQueueSize: claims.filter(({ status }) => status === MainnetClaimStatus.Queued).length,
-        reconciliationBacklog: claims.filter(({ status }) => status === MainnetClaimStatus.ReconciliationRequired)
-          .length,
+        byStatus: claimsByStatus,
+        rejectedByReason,
+        payoutQueueSize,
+        reconciliationBacklog,
       },
       turnstile: {
         verifications: { ...counters.turnstileVerifications },
@@ -61,8 +103,8 @@ export class MainnetMetricsService {
         results: { ...counters.payouts },
       },
       treasury: {
-        payoutsRemaining1h: Math.max(config.mainnet.maxPayouts1h - activePayoutClaims1h.length, 0),
-        payoutsRemaining24h: Math.max(config.mainnet.maxPayouts24h - activePayoutClaims24h.length, 0),
+        payoutsRemaining1h: Math.max(config.mainnet.maxPayouts1h - activePayoutClaims1h, 0),
+        payoutsRemaining24h: Math.max(config.mainnet.maxPayouts24h - activePayoutClaims24h, 0),
         amountRemaining24h: (dailyAmountLimit - spent24h).toString(),
         payoutSlotsRemainingByAmount: Math.max(remainingByAmount, 0),
       },
@@ -99,17 +141,9 @@ function increment(map: CounterMap, key: string) {
   map[key] = (map[key] ?? 0) + 1;
 }
 
-function countBy<T extends Record<string, any>>(items: T[], key: keyof T) {
-  return items.reduce<CounterMap>((result, item) => {
-    increment(result, String(item[key]));
-    return result;
-  }, {});
-}
-
-function countRejectedByReason(claims: MainnetClaim[]) {
-  return claims.reduce<CounterMap>((result, claim) => {
-    if (claim.status !== MainnetClaimStatus.Rejected) return result;
-    increment(result, claim.internalReasonCode ?? 'unknown');
+function rowsToCounterMap(rows: Array<{ key: string; count: string | number }>) {
+  return rows.reduce<CounterMap>((result, { key, count }) => {
+    result[key] = Number(count);
     return result;
   }, {});
 }
