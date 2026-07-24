@@ -96,6 +96,8 @@ jobs:
       env: ${{ inputs.env }}
       app: gear-idea
       component: faucet
+      extra_components: |
+        worker-mainnet
       registry: ghcr.io/gear-tech/gear-idea-faucet
       dockerfile: idea/gear/faucet/Dockerfile
       context: .
