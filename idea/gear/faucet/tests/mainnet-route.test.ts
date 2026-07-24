@@ -328,12 +328,13 @@ describe('Mainnet faucet router', () => {
     const storedChallenge = repos.MainnetChallenge._data()[challengeRes.body.challengeId];
     const signature = u8aToHex(pair.sign(stringToU8a(storedChallenge.message)));
 
-    const claimRes = await request(app).post('/api/v1/mainnet/claims').set('Idempotency-Key', randomUUID()).send({
+    const claimRes = await request(app).post('/api/v1/mainnet/claims').send({
       address: pair.address,
       challengeId: challengeRes.body.challengeId,
       signature,
       turnstileToken: 'test-token',
       deviceToken: 'device-a',
+      idempotencyKey: randomUUID(),
     });
 
     expect(claimRes.statusCode).toBe(200);

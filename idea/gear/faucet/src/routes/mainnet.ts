@@ -46,8 +46,15 @@ export class MainnetRouter extends BaseRouter {
   }
 
   private async _createClaim(req: Request, res: Response) {
-    const { address, challengeId, signature, turnstileToken, deviceToken } = req.body;
-    const idempotencyKey = req.header('Idempotency-Key') ?? '';
+    const {
+      address,
+      challengeId,
+      signature,
+      turnstileToken,
+      deviceToken,
+      idempotencyKey: bodyIdempotencyKey,
+    } = req.body;
+    const idempotencyKey = req.header('Idempotency-Key') ?? bodyIdempotencyKey ?? '';
 
     if (!address || !challengeId || !signature || !turnstileToken || !deviceToken) {
       return res

@@ -56,8 +56,7 @@ const createMainnetClaim = ({
 }: CreateMainnetClaimParameters) =>
   fetchMainnetJson<MainnetClaim>('/claims', {
     method: 'POST',
-    headers: { 'Idempotency-Key': idempotencyKey },
-    parameters: { address, challengeId, signature, turnstileToken, deviceToken },
+    parameters: { address, challengeId, signature, turnstileToken, deviceToken, idempotencyKey },
   });
 
 const getMainnetClaim = (claimId: string) => fetchMainnetJson<MainnetClaim>(`/claims/${encodeURIComponent(claimId)}`);
@@ -73,7 +72,7 @@ const fetchMainnetJson = async <T>(
   { method = 'GET', headers, parameters }: FetchMainnetJsonOptions = {},
 ) =>
   fetchWithGuard<T>({
-    url: `${FAUCET_API_URL}/mainnet${path}`,
+    url: `${FAUCET_API_URL}/api/v1/mainnet${path}`,
     method,
     headers,
     parameters,
