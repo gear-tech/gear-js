@@ -82,7 +82,8 @@ const getShortName = (filename: string, maxLength = 24) => {
     : transformedFileName;
 };
 
-const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
+const getPreformattedText = (data: unknown, space: number | string = 4) =>
+  JSON.stringify(data, (_, value: unknown) => (typeof value === 'bigint' ? value.toString() : value), space);
 
 const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   const { docs, method } = api.getExtrinsicFailedError(event);

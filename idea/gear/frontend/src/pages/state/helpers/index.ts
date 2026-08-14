@@ -1,7 +1,9 @@
 import type { AnyJson } from '@polkadot/types/types';
 
+import { getPreformattedText } from '@/shared/helpers';
+
 const downloadJson = (state: AnyJson) => {
-  const json = JSON.stringify(state, null, 2);
+  const json = getPreformattedText(state, 2);
   const blob = new Blob([json], { type: 'application/json' });
 
   const url = window.URL.createObjectURL(blob);
