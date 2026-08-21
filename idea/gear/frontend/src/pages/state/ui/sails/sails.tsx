@@ -46,7 +46,8 @@ const StateForm = ({ programId, program }: { programId: HexString; program: Pars
   const state = useMutation({ mutationFn: readQuery, onError: ({ message }) => alert.error(message) });
   const isStateExists = !isUndefined(state.data);
 
-  const handleSubmit = form.handleSubmit(({ payload }) => state.mutate(payload));
+  // Resolver output is an encoded payload, while queries expect the original decoded arguments.
+  const handleSubmit = form.handleSubmit(() => state.mutate(form.getValues('payload') as PayloadValue));
 
   useEffect(() => {
     state.reset();
