@@ -9,6 +9,7 @@ import { CSSTransitionWithRef } from '@/shared/ui';
 
 import VaraSVG from '../../assets/vara.svg?react';
 import { Balance } from '../balance';
+import { GetMainnetBalance } from '../get-mainnet-balance';
 import { GetTestBalance } from '../get-test-balance';
 import { TransferBalance } from '../transfer-balance';
 
@@ -74,6 +75,7 @@ function Dropdown({ ref, total, transferable, lockedBalance, onHeaderClick }: Pr
 
       <footer className={styles.footer}>
         <GetTestBalance />
+        <GetMainnetBalance />
         <TransferBalance onClick={onHeaderClick} />
       </footer>
     </div>

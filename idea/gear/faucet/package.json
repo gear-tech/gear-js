@@ -6,8 +6,13 @@
   "scripts": {
     "build": "rm -rf dist && npx tsc",
     "test": "npx vitest run",
+    "test:integration": "npx vitest run --config vitest.integration.config.ts",
+    "test:coverage": "npx vitest run --coverage",
     "start": "node dist/main.js",
+    "start:mainnet-worker": "node dist/mainnet-worker.js",
+    "mainnet:admin": "node dist/scripts/mainnet-admin.js",
     "dev": "npx ts-node-dev src/main.ts",
+    "dev:mainnet-worker": "npx ts-node-dev src/mainnet-worker.ts",
     "clean": "echo \"clean gear-idea-faucet\" && rm -rf dist",
     "migration:generate": "npx typeorm-ts-node-commonjs migration:generate -d src/database/app-data-source.ts",
     "migration:run": "npx typeorm migration:run -d dist/database/app-data-source.js"
@@ -34,11 +39,15 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^12.0.0",
     "@types/express": "5.0.6",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/xxhashjs": "^0.2.4",
     "@types/yamljs": "^0.2.34",
-    "supertest": "^7.2.2"
+    "@vitest/coverage-v8": "4.1.7",
+    "supertest": "^7.2.2",
+    "vitest": "4.1.7"
   }
 }
