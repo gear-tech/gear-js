@@ -8,11 +8,16 @@ import type { ParsedSails } from '@/features/sails/lib';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
 
-import { getMessageName, useGetAllMessageRequestsQuery, useGetAllMessageSentsQuery } from '../../lib';
+import {
+  getMessageName,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetInjectedTransactionsQuery,
+} from '../../lib';
 
 import styles from './program-messages-table.module.scss';
 
-const FILTERS = ['Incoming', 'Outgoing'] as const;
+const TABS = ['Incoming', 'Outgoing', 'Injected'] as const;
 
 type BaseRow = {
   id: Hex;
@@ -90,14 +95,18 @@ type Props = {
 };
 
 const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
-  const [filterIndex, setFilterIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
   const [incomingPage, setIncomingPage] = useState(1);
   const [outgoingPage, setOutgoingPage] = useState(1);
+  const [injectedPage, setInjectedPage] = useState(1);
 
-  const isIncoming = filterIndex === 0;
+  const isIncoming = tabIndex === 0;
+  const isOutgoing = tabIndex === 1;
+  const isInjected = tabIndex === 2;
 
   const incoming = useGetAllMessageRequestsQuery(incomingPage, pageSize, programId, { enabled: isIncoming });
-  const outgoing = useGetAllMessageSentsQuery(outgoingPage, pageSize, programId, { enabled: !isIncoming });
+  const outgoing = useGetAllMessageSentsQuery(outgoingPage, pageSize, programId, { enabled: isOutgoing });
+  const injected = useGetInjectedTransactionsQuery(injectedPage, pageSize, programId, { enabled: isInjected });
 
   const incomingData = useMemo(
     () =>
@@ -123,23 +132,39 @@ const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
     [outgoing.data, sails],
   );
 
-  const currentPage = isIncoming ? incomingPage : outgoingPage;
-  const totalItems = isIncoming ? (incoming.data?.total ?? 0) : (outgoing.data?.total ?? 0);
-  const totalPages = totalItems ? Math.ceil(totalItems / pageSize) : 1;
-  const isFetching = isIncoming ? incoming.isFetching : outgoing.isFetching;
+  const injectedData = useMemo(
+    () =>
+      injected.data?.data.map((item) => ({
+        id: item.id,
+        messageId: item.id,
+        messageLabel: getMessageName(item.payload, sails) ?? undefined,
+        source: item.senderAddress,
+        createdAt: formatDate(item.createdAt),
+      })),
+    [injected.data, sails],
+  );
 
-  const setPage = isIncoming ? setIncomingPage : setOutgoingPage;
+  const currentPage = isIncoming ? incomingPage : isOutgoing ? outgoingPage : injectedPage;
+  const totalItems = isIncoming
+    ? (incoming.data?.total ?? 0)
+    : isOutgoing
+      ? (outgoing.data?.total ?? 0)
+      : (injected.data?.total ?? 0);
+  const totalPages = totalItems ? Math.ceil(totalItems / pageSize) : 1;
+  const isFetching = isIncoming ? incoming.isFetching : isOutgoing ? outgoing.isFetching : injected.isFetching;
+
+  const setPage = isIncoming ? setIncomingPage : isOutgoing ? setOutgoingPage : setInjectedPage;
 
   return (
     <div>
       <div className={styles.filter}>
         <div className={styles.filterButtons}>
-          {FILTERS.map((label, i) => (
+          {TABS.map((label, i) => (
             <button
               key={label}
               type="button"
-              className={clsx(styles.filterButton, i === filterIndex && styles.filterButtonActive)}
-              onClick={() => setFilterIndex(i)}>
+              className={clsx(styles.filterButton, i === tabIndex && styles.filterButtonActive)}
+              onClick={() => setTabIndex(i)}>
               {label}
             </button>
           ))}
@@ -148,7 +173,7 @@ const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} isFetching={isFetching} />
       </div>
 
-      {isIncoming ? (
+      {isIncoming && (
         <Table
           columns={INCOMING_COLUMNS}
           data={incomingData}
@@ -156,11 +181,23 @@ const ProgramMessagesTable = ({ programId, sails, pageSize = 5 }: Props) => {
           pageSize={pageSize}
           positionedAt="bottom"
         />
-      ) : (
+      )}
+
+      {isOutgoing && (
         <Table
           columns={OUTGOING_COLUMNS}
           data={outgoingData}
           isLoading={outgoing.isFetching}
+          pageSize={pageSize}
+          positionedAt="bottom"
+        />
+      )}
+
+      {isInjected && (
+        <Table
+          columns={INCOMING_COLUMNS}
+          data={injectedData}
+          isLoading={injected.isFetching}
           pageSize={pageSize}
           positionedAt="bottom"
         />
