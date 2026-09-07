@@ -31,7 +31,7 @@ export class MainnetRouter extends BaseRouter {
   }
 
   private async _challenge(req: Request, res: Response) {
-    const { address } = req.body;
+    const { address } = req.body ?? {};
     if (!address) {
       return res.status(400).json({ error: 'Address is required' });
     }
@@ -53,7 +53,7 @@ export class MainnetRouter extends BaseRouter {
       turnstileToken,
       deviceToken,
       idempotencyKey: bodyIdempotencyKey,
-    } = req.body;
+    } = req.body ?? {};
     const idempotencyKey = req.header('Idempotency-Key') ?? bodyIdempotencyKey ?? '';
 
     if (!address || !challengeId || !signature || !turnstileToken || !deviceToken) {
@@ -130,11 +130,11 @@ export class MainnetRouter extends BaseRouter {
       assertAdmin(req);
       const claim = await this._mainnetAdminService.resolveReconciliation({
         claimId: req.params.claimId as string,
-        action: req.body.action,
-        transactionHash: req.body.transactionHash,
-        blockHash: req.body.blockHash,
-        reasonCode: req.body.reasonCode,
-        note: req.body.note,
+        action: req.body?.action,
+        transactionHash: req.body?.transactionHash,
+        blockHash: req.body?.blockHash,
+        reasonCode: req.body?.reasonCode,
+        note: req.body?.note,
         operator: getHeader(req, 'x-admin-actor'),
       });
       res.json({ claim });
