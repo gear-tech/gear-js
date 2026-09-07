@@ -45,6 +45,18 @@ describe('Mainnet faucet router', () => {
     expect(res.body).toEqual({ error: 'untrusted_origin' });
   });
 
+  it('handles CORS preflight requests', async () => {
+    const res = await request(app)
+      .options('/api/v1/mainnet/challenge')
+      .set('Origin', 'http://127.0.0.1:5173')
+      .set('Access-Control-Request-Method', 'POST')
+      .set('Access-Control-Request-Headers', 'content-type,idempotency-key');
+
+    expect(res.statusCode).toBe(204);
+    expect(res.headers['access-control-allow-origin']).toBe('*');
+    expect(res.headers['access-control-allow-headers']).toContain('Idempotency-Key');
+  });
+
   it('uses trusted Cloudflare request metadata for claim evaluation', async () => {
     const fakeService = {
       createClaim: vi
@@ -306,8 +318,24 @@ describe('Mainnet faucet router', () => {
     expect(res.body).toEqual({ error: 'Address is required' });
   });
 
+  it('returns 400 when challenge body is missing', async () => {
+    const res = await request(app).post('/api/v1/mainnet/challenge');
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ error: 'Address is required' });
+  });
+
   it('returns 400 when claim fields are missing', async () => {
     const res = await request(app).post('/api/v1/mainnet/claims').send({ address: 'missing' });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({
+      error: 'Address, challengeId, signature, turnstileToken, and deviceToken are required',
+    });
+  });
+
+  it('returns 400 when claim body is missing', async () => {
+    const res = await request(app).post('/api/v1/mainnet/claims');
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({
