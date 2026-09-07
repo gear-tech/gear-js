@@ -37,7 +37,6 @@ export class MainnetRouter extends BaseRouter {
     }
 
     try {
-      assertTrustedOrigin(req);
       const challenge = await this._mainnetFaucetService.createChallenge(address);
       res.json(challenge);
     } catch (error: any) {
@@ -63,7 +62,6 @@ export class MainnetRouter extends BaseRouter {
     }
 
     try {
-      assertTrustedOrigin(req);
       const claim = await this._mainnetFaucetService.createClaim({
         address,
         challengeId,
@@ -158,16 +156,7 @@ export class MainnetRouter extends BaseRouter {
 }
 
 function getClientIp(req: Request) {
-  const cfIp = getHeader(req, 'cf-connecting-ip');
-  if (cfIp) return cfIp;
-
   return req.ip!;
-}
-
-function assertTrustedOrigin(req: Request) {
-  if (config.mainnet.requireCloudflare && !getHeader(req, 'cf-connecting-ip')) {
-    throw new MainnetFaucetError(403, 'untrusted_origin');
-  }
 }
 
 function assertAdmin(req: Request) {

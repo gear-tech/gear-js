@@ -23,6 +23,13 @@ function resetMainnetRepos() {
   repos.MainnetClaimEvent.clear();
 }
 
+function createApp(router: express.Router) {
+  const app = express();
+  app.set('trust proxy', true);
+  app.use('/api/v1/mainnet', router);
+  return app;
+}
+
 describe('Mainnet faucet router', () => {
   let service: MainnetFaucetService;
   let app: express.Express;
@@ -31,18 +38,18 @@ describe('Mainnet faucet router', () => {
     resetMainnetRepos();
     resetMainnetMetricsForTests();
     config.mainnet.adminApiKey = 'test-admin-key';
-    config.mainnet.requireCloudflare = false;
     service = new MainnetFaucetService();
-    app = express();
-    app.use('/api/v1/mainnet', new MainnetRouter(service).router);
+    app = createApp(new MainnetRouter(service).router);
   });
 
-  it('rejects requests that bypass the configured Cloudflare origin', async () => {
-    config.mainnet.requireCloudflare = true;
+  it('creates challenges without requiring CDN-specific headers', async () => {
     const res = await request(app).post('/api/v1/mainnet/challenge').send({ address: createKeyPair().address });
 
-    expect(res.statusCode).toBe(403);
-    expect(res.body).toEqual({ error: 'untrusted_origin' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({
+      challengeId: expect.any(String),
+      messageHex: expect.any(String),
+    });
   });
 
   it('handles CORS preflight requests', async () => {
@@ -57,7 +64,7 @@ describe('Mainnet faucet router', () => {
     expect(res.headers['access-control-allow-headers']).toContain('Idempotency-Key');
   });
 
-  it('uses trusted Cloudflare request metadata for claim evaluation', async () => {
+  it('uses trusted request metadata for claim evaluation', async () => {
     const fakeService = {
       createClaim: vi
         .fn()
@@ -65,12 +72,12 @@ describe('Mainnet faucet router', () => {
       createChallenge: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
-    const metadataApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
+    const metadataApp = createApp(new MainnetRouter(fakeService).router);
 
     const res = await request(metadataApp)
       .post('/api/v1/mainnet/claims')
       .set('Idempotency-Key', randomUUID())
-      .set('cf-connecting-ip', '203.0.113.8')
+      .set('x-forwarded-for', '203.0.113.8')
       .set('cf-ipcountry', 'DE')
       .set('cf-asn', 'AS64500')
       .set('x-vara-risk-vpn', 'true')
@@ -107,7 +114,7 @@ describe('Mainnet faucet router', () => {
       createChallenge: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
-    const metadataApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
+    const metadataApp = createApp(new MainnetRouter(fakeService).router);
 
     const res = await request(metadataApp).post('/api/v1/mainnet/claims').set('Idempotency-Key', randomUUID()).send({
       address: createKeyPair().address,
@@ -147,7 +154,7 @@ describe('Mainnet faucet router', () => {
         publicReasonCode: 'wallet_limit_reached',
       }),
     } as unknown as MainnetFaucetService;
-    const rejectedApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
+    const rejectedApp = createApp(new MainnetRouter(fakeService).router);
     const body = {
       address: createKeyPair().address,
       challengeId: randomUUID(),
@@ -185,7 +192,7 @@ describe('Mainnet faucet router', () => {
 
   it('returns admin metrics with a valid key', async () => {
     const fakeMetrics = { snapshot: vi.fn().mockResolvedValue({ claims: { payoutQueueSize: 1 } }) };
-    const metricsApp = express().use('/api/v1/mainnet', new MainnetRouter(service, fakeMetrics as any).router);
+    const metricsApp = createApp(new MainnetRouter(service, fakeMetrics as any).router);
 
     const res = await request(metricsApp).get('/api/v1/mainnet/admin/metrics').set('x-admin-key', 'test-admin-key');
 
@@ -282,7 +289,7 @@ describe('Mainnet faucet router', () => {
       createClaim: vi.fn().mockRejectedValue(new Error('boom')),
       getClaim: vi.fn().mockRejectedValue(new Error('boom')),
     } as unknown as MainnetFaucetService;
-    const errorApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
+    const errorApp = createApp(new MainnetRouter(fakeService).router);
     const pending = (request(errorApp) as any)[method](path).set('Idempotency-Key', randomUUID());
     const res = body ? await pending.send(body) : await pending;
 
@@ -298,12 +305,12 @@ describe('Mainnet faucet router', () => {
       createClaim: vi.fn(),
       getClaim: vi.fn(),
     } as unknown as MainnetFaucetService;
-    const rateLimitApp = express().use('/api/v1/mainnet', new MainnetRouter(fakeService).router);
+    const rateLimitApp = createApp(new MainnetRouter(fakeService).router);
     let response: any;
     for (let index = 0; index <= config.mainnet.challengeRateLimit; index++) {
       response = await request(rateLimitApp)
         .post('/api/v1/mainnet/challenge')
-        .set('cf-connecting-ip', '198.51.100.200')
+        .set('x-forwarded-for', '198.51.100.200')
         .send({ address: createKeyPair().address });
     }
 
