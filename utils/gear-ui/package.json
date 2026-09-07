@@ -34,8 +34,8 @@
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
     "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.2",
-    "happy-dom": "20.9.0"
+    "@testing-library/react": "16.3.3",
+    "happy-dom": "20.14.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
