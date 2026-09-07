@@ -5,8 +5,7 @@ import { ipKeyGenerator, rateLimit } from 'express-rate-limit';
 import config from '../../config.js';
 
 function clientKey(req: Request) {
-  const cloudflareIp = req.header('cf-connecting-ip');
-  const ip = cloudflareIp || ipKeyGenerator(req.ip!);
+  const ip = ipKeyGenerator(req.ip!);
   return createHash('sha256').update(ip.trim().toLowerCase()).digest('hex');
 }
 

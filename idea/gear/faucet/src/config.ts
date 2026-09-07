@@ -79,7 +79,6 @@ export default {
     accountSeed: getOptionalEnv('VARA_MAINNET_ACCOUNT_SEED'),
     transferValue: Number(getEnv('VARA_MAINNET_TRANSFER_VALUE', '50')),
     challengeTtlMs: Number(getEnv('VARA_MAINNET_CHALLENGE_TTL_MS', '300000')),
-    requireCloudflare: getEnv('VARA_MAINNET_REQUIRE_CLOUDFLARE', 'true') === 'true',
     apiRateLimitWindowMs: Number(getEnv('VARA_MAINNET_API_RATE_LIMIT_WINDOW_MS', '60000')),
     challengeRateLimit: Number(getEnv('VARA_MAINNET_CHALLENGE_RATE_LIMIT', '5')),
     claimRateLimit: Number(getEnv('VARA_MAINNET_CLAIM_RATE_LIMIT', '3')),

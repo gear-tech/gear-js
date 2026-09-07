@@ -24,6 +24,7 @@ export class Server {
     runMainnetFaucet = true,
   ) {
     this._app = express();
+    this._app.set('trust proxy', true);
     this._app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     if (runVaraTestnetFaucet) {
       this._app.use('/', new VaraTestnetRouter(requestService).router);
