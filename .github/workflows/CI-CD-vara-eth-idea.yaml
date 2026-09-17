@@ -1,0 +1,77 @@
+name: Build and Deploy Vara.Eth Idea
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '.github/**'
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Target environment
+        required: false
+        options: [prod]
+      deploy_indexer-mainnet:
+        type: boolean
+        description: Build indexer-mainnet
+        default: true
+      deploy_explorer-mainnet:
+        type: boolean
+        description: Build explorer-mainnet
+        default: true
+      deploy_upload-code:
+        type: boolean
+        description: Build upload-code
+        default: true
+      deploy_frontend:
+        type: boolean
+        description: Build frontend
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+  actions: write
+  id-token: write
+
+jobs:
+  deploy:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      app: vara-eth-idea
+      env: ${{ inputs.env }}
+      components: |
+        - name: indexer-mainnet
+          docker_file: idea/vara-eth/indexer/Dockerfile
+          docker_registry: ghcr.io/gear-tech/vara-eth-idea-indexer
+          chart_init_containers: migrations
+          paths: |
+            idea/vara-eth/indexer/**
+            idea/vara-eth/indexer-db/**
+            apis/vara-eth/**
+        - name: explorer-mainnet
+          docker_file: idea/vara-eth/explorer/Dockerfile
+          docker_registry: ghcr.io/gear-tech/vara-eth-idea-explorer
+          paths: |
+            idea/vara-eth/explorer/**
+            idea/vara-eth/indexer-db/**
+        - name: upload-code
+          docker_file: idea/vara-eth/upload-code-service/Dockerfile
+          docker_registry: ghcr.io/gear-tech/vara-eth-idea-upload-code
+          chart_init_containers: migrations
+          paths: |
+            idea/vara-eth/upload-code-service/**
+            apis/vara-eth/**
+        - name: frontend
+          docker_file: idea/vara-eth/frontend/Dockerfile
+          docker_registry: ghcr.io/gear-tech/vara-eth-idea-frontend
+          paths: idea/vara-eth/frontend/**
+    secrets:
+      CHARTS_REPO_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
+      ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}

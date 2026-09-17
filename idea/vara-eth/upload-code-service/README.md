@@ -95,7 +95,7 @@ aws lambda update-function-code --function-name <worker-function> \
   --zip-file fileb://dist/worker.zip --region <region>
 ```
 
-Or trigger the GitHub Actions workflow (`release-vara-eth-idea.yml`).
+Or trigger the GitHub Actions workflow (`CI-CD-vara-eth-idea.yaml`).
 
 ### 3. Lambda configuration
 

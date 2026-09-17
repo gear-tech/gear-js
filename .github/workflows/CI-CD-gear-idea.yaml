@@ -1,0 +1,88 @@
+name: Build and Deploy Gear Idea
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '.github/**'
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Target environment
+        required: false
+        options: [prod]
+      deploy_indexer-mainnet:
+        type: boolean
+        description: Build indexer-mainnet
+        default: true
+      deploy_explorer:
+        type: boolean
+        description: Build explorer
+        default: true
+      deploy_faucet:
+        type: boolean
+        description: Build faucet
+        default: true
+      deploy_meta-storage:
+        type: boolean
+        description: Build meta-storage
+        default: true
+      deploy_frontend:
+        type: boolean
+        description: Build frontend
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+  actions: write
+  id-token: write
+
+jobs:
+  deploy:
+    uses: gear-ops/actions/.github/workflows/build-deploy.yaml@main
+    with:
+      app: gear-idea
+      env: ${{ inputs.env }}
+      components: |
+        - name: indexer-mainnet
+          docker_file: idea/gear/squid/Dockerfile
+          docker_registry: ghcr.io/gear-tech/gear-idea-indexer
+          paths: |
+            idea/gear/squid/**
+            idea/gear/common/**
+            idea/gear/indexer-db/**
+        - name: explorer
+          docker_file: idea/gear/explorer/Dockerfile
+          docker_registry: ghcr.io/gear-tech/gear-idea-explorer
+          paths: |
+            idea/gear/explorer/**
+            idea/gear/common/**
+            idea/gear/indexer-db/**
+        - name: faucet
+          docker_file: idea/gear/faucet/Dockerfile
+          docker_registry: ghcr.io/gear-tech/gear-idea-faucet
+          chart_components_extra: worker-mainnet
+          paths: |
+            idea/gear/faucet/**
+            idea/gear/common/**
+            idea/gear/indexer-db/**
+        - name: meta-storage
+          docker_file: idea/gear/meta-storage/Dockerfile
+          docker_registry: ghcr.io/gear-tech/gear-idea-meta-storage
+          paths: |
+            idea/gear/meta-storage/**
+            idea/gear/common/**
+        - name: frontend
+          docker_file: idea/gear/frontend/Dockerfile
+          docker_registry: ghcr.io/gear-tech/gear-idea-frontend
+          paths: idea/gear/frontend/**
+    secrets:
+      CHARTS_REPO_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
+      ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
