@@ -38,7 +38,7 @@
     "@twa-dev/sdk": "8.0.2",
     "@varan-wallet/varan-connect": "1.1.0",
     "bignumber.js": "11.1.1",
-    "nanoid": "5.1.11",
+    "nanoid": "5.1.16",
     "react-transition-group": "4.4.5"
   },
   "devDependencies": {
