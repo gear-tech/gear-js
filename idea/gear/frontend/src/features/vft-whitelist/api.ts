@@ -8,12 +8,10 @@ import { fetchWithGuard } from '@/shared/helpers';
 
 type Whitelist = {
   mainnet: HexString[];
-  testnet: HexString[];
 };
 
 const GENESIS_TO_WHITELIST_KEY = {
   [GENESIS.MAINNET]: 'mainnet',
-  [GENESIS.TESTNET]: 'testnet',
 } as const;
 
 const VFT_WHITELIST_API_URL = import.meta.env.VITE_VFT_WHITELIST_API_URL as string;

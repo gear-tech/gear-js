@@ -4,7 +4,13 @@ import { useSearchParams } from 'react-router-dom';
 
 import { INITIAL_ENDPOINT } from '@/features/api';
 import { useModal, useOutsideClick } from '@/hooks';
-import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from '@/shared/config';
+import {
+  AnimationTimeout,
+  isRetiredVaraTestnet,
+  LocalStorage,
+  NODE_ADRESS_URL_PARAM,
+  RETIRED_NETWORK_MESSAGE,
+} from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import { useNodes } from '@/widgets/menu/helpers/useNodes';
@@ -56,6 +62,11 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   };
 
   const switchNode = () => {
+    if (isRetiredVaraTestnet(selectedNode)) {
+      alert.error(RETIRED_NETWORK_MESSAGE);
+      return;
+    }
+
     searchParams.set(NODE_ADRESS_URL_PARAM, selectedNode);
     setSearchParams(searchParams);
 

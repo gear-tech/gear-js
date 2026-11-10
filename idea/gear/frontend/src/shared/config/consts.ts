@@ -12,7 +12,6 @@ const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
 
 const GENESIS = {
   MAINNET: '0xfe1b4c55fd4d668101126434206571a7838a8b6b93a6d1b95d607e78e6c53763',
-  TESTNET: '0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6',
 } as const;
 
 const NODE_ADRESS_URL_PARAM = 'node';
