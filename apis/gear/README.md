@@ -91,19 +91,23 @@ Start an API connection to a running node on localhost:
 import { GearApi } from '@gear-js/api';
 
 // Connect to local node
-const gearApi = await GearApi.create();
+const gearApi = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
 ```
 
 ## Custom Node Connection
 
-Connect to a specific node by providing its WebSocket address:
+Read Vara mainnet state by providing its WebSocket address:
 
 ```typescript
-// Connect to a custom node
+// Connect to Vara mainnet for reads
 const gearApi = await GearApi.create({
-  providerAddress: 'wss://someIP:somePort'
+  providerAddress: 'wss://rpc.vara.network'
 });
 ```
+
+Use a local development node at `ws://127.0.0.1:9944` for tutorial deployments, messages and test transactions. The retired Vara Substrate testnet is no longer available. Mainnet transactions spend real VARA; the read connection above does not make tutorial writes safe to run on mainnet.
+
+View mainnet activity in [Vara Explorer](https://explorer.vara.network/). Direct links use `/account/<address>`, `/block/<number>` and `/extrinsic/<block>-<index>`.
 
 ## Node Information
 
@@ -127,7 +131,7 @@ import { VaraApiV1010 } from '@gear-js/api';
 
 // For networks with runtime version 1010 or higher
 const varaApi = await VaraApiV1010.create({
-  providerAddress: 'wss://testnet.vara.network'
+  providerAddress: 'wss://rpc.vara.network'
 });
 ```
 
@@ -255,6 +259,16 @@ const account = createType.create('AccountInfo', {
 # Gear Extrinsics
 
 Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol. 
+
+Run these tutorial writes against a local development node. Initialize the `api` used below with:
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
+```
+
+Use a development account funded on that local chain. Do not reuse a mainnet read connection for these test transactions.
 
 ## Program Management
 
@@ -444,6 +458,7 @@ To verify if an address belongs to a program, use the `api.program.exists` metho
 ```typescript
 import { GearApi } from '@gear-js/api';
 
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x...';
 const programExists = await api.program.exists(programId);
 
@@ -457,6 +472,7 @@ The `api.message.calculateReply` method allows you to read a program's state by 
 ```typescript
 import { GearApi, decodeHexTypes, encodePayload } from '@gear-js/api';
 
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x..';
 const origin = '0x...'; // sender's address
 
@@ -496,7 +512,7 @@ The mailbox contains pending messages awaiting user action.
 #### Read Mailbox
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const address = '0x...';
 const mailbox = await api.mailbox.read(address);
 console.log('Mailbox messages:', mailbox);
@@ -504,10 +520,10 @@ console.log('Mailbox messages:', mailbox);
 
 #### Claim Value
 
-Claim value from a mailbox message:
+Claim value from a mailbox message on your local development chain:
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
 const messageId = '0x...';
 
 // Prepare the transaction
@@ -526,7 +542,7 @@ await tx.signAndSend(account, ({ events, status }) => {
 Read a program's waitlist (messages waiting to be processed):
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x...';
 const waitlist = await api.waitlist.read(programId);
 console.log('Program waitlist:', waitlist);
@@ -545,7 +561,7 @@ Monitor all system events:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Subscribe to all events
 const unsubscribe = await api.query.system.events((events) => {
@@ -567,7 +583,7 @@ Subscribe to messages sent from programs to users with optional filtering:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Basic subscription - listen to all user message sent events
 const unsubscribe = await api.message.subscribeUserMessageSent(
@@ -594,7 +610,7 @@ unsubscribe();
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Listen only to messages from a specific program
 const unsubscribe = await api.message.subscribeUserMessageSent(
@@ -614,7 +630,7 @@ The API allows filtering by message payload using `PayloadFilter`:
 ```typescript
 import { GearApi, PayloadFilter } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Create payload filters
 const filter1 = new PayloadFilter('0xdeadbeef');
@@ -635,7 +651,7 @@ const unsubscribe = await api.message.subscribeUserMessageSent(
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Listen to events starting from a specific block
 const unsubscribe = await api.message.subscribeUserMessageSent(
@@ -654,7 +670,7 @@ const unsubscribe = await api.message.subscribeUserMessageSent(
 ```typescript
 import { GearApi, PayloadFilter } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const payloadFilter = new PayloadFilter('0xcafebabe');
 
@@ -699,7 +715,7 @@ Monitor changes to program state across the blockchain:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Listen to all program state changes
 const unsubscribe = await api.program.subscribeToStateChanges(
@@ -719,7 +735,7 @@ unsubscribe();
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Listen only to state changes of specific programs
 const programIds = [
@@ -746,7 +762,7 @@ const unsubscribe = await api.program.subscribeToStateChanges(
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const myPrograms = ['0x...', '0x...'];
 
@@ -783,7 +799,7 @@ unsubscribe();
 ```typescript
 import { GearApi, RpcMethodNotSupportedError } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 try {
   const unsubscribe = await api.message.subscribeUserMessageSent(
@@ -807,7 +823,7 @@ Filter and handle specific event types:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 api.query.system.events((events) => {
   // Handle Gear message events
@@ -833,7 +849,7 @@ Subscribe to specific Gear pallet events using the dedicated API:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Subscribe to UserMessageSent events
 const unsubscribe = api.gearEvents.subscribeToGearEvent(
@@ -880,7 +896,7 @@ Retrieve detailed information about a specific block:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Get block by number or hash
 const blockId = 12345; // or '0x...'
@@ -896,7 +912,7 @@ Retrieve the timestamp of a specific block:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Get timestamp by block number or hash
 const blockId = 12345; // or '0x...'
@@ -914,7 +930,7 @@ Get the hash of a block by its number:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockNumber = 12345;
 const blockHash = (await api.blocks.getBlockHash(blockNumber)).toHex();
@@ -929,7 +945,7 @@ Get the block number from its hash:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const blockNumber = (await api.blocks.getBlockNumber(blockHash)).toNumber();
@@ -946,7 +962,7 @@ Retrieve all events from a specific block:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const events = await api.blocks.getEvents(blockHash);
@@ -964,7 +980,7 @@ Retrieve all extrinsics (transactions) from a specific block:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const extrinsics = await api.blocks.getExtrinsics(blockHash);

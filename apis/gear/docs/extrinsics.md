@@ -2,6 +2,16 @@
 
 Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol. 
 
+Run these tutorial writes against a local development node. Initialize the `api` used below with:
+
+```typescript
+import { GearApi } from '@gear-js/api';
+
+const api = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
+```
+
+Use a development account funded on that local chain. Do not reuse a mainnet read connection for these test transactions.
+
 ## Program Management
 
 ### Upload Program

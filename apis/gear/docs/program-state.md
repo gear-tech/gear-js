@@ -7,6 +7,7 @@ To verify if an address belongs to a program, use the `api.program.exists` metho
 ```typescript
 import { GearApi } from '@gear-js/api';
 
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x...';
 const programExists = await api.program.exists(programId);
 
@@ -20,6 +21,7 @@ The `api.message.calculateReply` method allows you to read a program's state by 
 ```typescript
 import { GearApi, decodeHexTypes, encodePayload } from '@gear-js/api';
 
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x..';
 const origin = '0x...'; // sender's address
 
@@ -59,7 +61,7 @@ The mailbox contains pending messages awaiting user action.
 #### Read Mailbox
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const address = '0x...';
 const mailbox = await api.mailbox.read(address);
 console.log('Mailbox messages:', mailbox);
@@ -67,10 +69,10 @@ console.log('Mailbox messages:', mailbox);
 
 #### Claim Value
 
-Claim value from a mailbox message:
+Claim value from a mailbox message on your local development chain:
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
 const messageId = '0x...';
 
 // Prepare the transaction
@@ -89,7 +91,7 @@ await tx.signAndSend(account, ({ events, status }) => {
 Read a program's waitlist (messages waiting to be processed):
 
 ```typescript
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 const programId = '0x...';
 const waitlist = await api.waitlist.read(programId);
 console.log('Program waitlist:', waitlist);

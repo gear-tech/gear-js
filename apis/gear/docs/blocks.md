@@ -11,7 +11,7 @@ Retrieve detailed information about a specific block:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Get block by number or hash
 const blockId = 12345; // or '0x...'
@@ -27,7 +27,7 @@ Retrieve the timestamp of a specific block:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Get timestamp by block number or hash
 const blockId = 12345; // or '0x...'
@@ -45,7 +45,7 @@ Get the hash of a block by its number:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockNumber = 12345;
 const blockHash = (await api.blocks.getBlockHash(blockNumber)).toHex();
@@ -60,7 +60,7 @@ Get the block number from its hash:
 ```typescript
 import { GearApi, HexString } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const blockNumber = (await api.blocks.getBlockNumber(blockHash)).toNumber();
@@ -77,7 +77,7 @@ Retrieve all events from a specific block:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const events = await api.blocks.getEvents(blockHash);
@@ -95,7 +95,7 @@ Retrieve all extrinsics (transactions) from a specific block:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 const blockHash = '0x...';
 const extrinsics = await api.blocks.getExtrinsics(blockHash);

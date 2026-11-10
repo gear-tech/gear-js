@@ -16,7 +16,6 @@ const ICON = {
 
 const LOGO = {
   [GENESIS.MAINNET]: ICON.vara,
-  [GENESIS.TESTNET]: ICON.vara,
 };
 
 export { DEVELOPMENT_SECTION, ICON, LOGO };

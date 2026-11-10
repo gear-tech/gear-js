@@ -1,12 +1,6 @@
-import { GENESIS } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { FAUCET_API_URL } from './consts';
-
-type GetTestBalanceParameters = {
-  token: string;
-  address: string;
-};
 
 type MainnetChallenge = {
   challengeId: string;
@@ -31,14 +25,6 @@ type MainnetClaim = {
   blockHash?: string | null;
   reasonCode?: string;
 };
-
-const getTestBalance = ({ token, address }: GetTestBalanceParameters) =>
-  fetchWithGuard({
-    url: `${FAUCET_API_URL}/balance`,
-    method: 'POST',
-    parameters: { token, payload: { address, genesis: GENESIS.TESTNET } },
-    isJson: false,
-  });
 
 const getMainnetChallenge = (address: string) =>
   fetchMainnetJson<MainnetChallenge>('/challenge', {
@@ -79,4 +65,4 @@ const fetchMainnetJson = async <T>(
   });
 
 export type { MainnetChallenge, MainnetClaim };
-export { createMainnetClaim, getMainnetChallenge, getMainnetClaim, getTestBalance };
+export { createMainnetClaim, getMainnetChallenge, getMainnetClaim };

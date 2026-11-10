@@ -16,7 +16,7 @@ describe('WVARA requests', () => {
     repos.FaucetRequest.clear();
     repos.UserLastSeen.clear();
 
-    app = new FaucetApp(false, false, true);
+    app = new FaucetApp(false, true);
     await app.init();
     app.run();
 

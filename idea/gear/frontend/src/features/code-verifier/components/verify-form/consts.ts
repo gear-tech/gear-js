@@ -17,13 +17,9 @@ const FIELD_NAME = {
 
 const NETWORK = {
   [GENESIS.MAINNET]: 'vara_mainnet',
-  [GENESIS.TESTNET]: 'vara_testnet',
 } as const;
 
-const NETWORK_OPTIONS = [
-  { label: 'Mainnet', value: NETWORK[GENESIS.MAINNET] },
-  { label: 'Testnet', value: NETWORK[GENESIS.TESTNET] },
-] as const;
+const NETWORK_OPTIONS = [{ label: 'Mainnet', value: NETWORK[GENESIS.MAINNET] }] as const;
 
 const PROJECT_ID_TYPE = {
   ROOT: 'root',
@@ -68,7 +64,7 @@ const SCHEMA = z
       .trim()
       .refine((value) => ABSOLUTE_PATH_REGEX.test(value), { message: 'Invalid absolute path' }),
 
-    [FIELD_NAME.NETWORK]: z.string(),
+    [FIELD_NAME.NETWORK]: z.enum(['vara_mainnet']),
     [FIELD_NAME.BUILD_IDL]: z.boolean(),
   })
   .refine(({ projectIdType, projectId }) => projectIdType === PROJECT_ID_TYPE.ROOT || projectId.length > 0, {
