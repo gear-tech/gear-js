@@ -30,7 +30,7 @@ ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
 
 RUN yarn build:gear-idea-frontend
 
-FROM public.ecr.aws/nginx/nginx-unprivileged:1.31.9-alpine-slim@sha256:75e85a09b0f25bd46d49a9fd85589ffa70b0459c8ed5ee0dc6596fd642e1f829
+FROM ghcr.io/nginx/nginx-unprivileged:1.31.9-alpine-slim@sha256:75e85a09b0f25bd46d49a9fd85589ffa70b0459c8ed5ee0dc6596fd642e1f829
 
 COPY idea/gear/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /src/idea/gear/frontend/dist /app/dist
