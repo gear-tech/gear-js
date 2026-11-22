@@ -1,4 +1,4 @@
-FROM node:20-slim AS builder
+FROM node:24-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 AS builder
 
 WORKDIR /src
 
@@ -30,18 +30,9 @@ ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
 
 RUN yarn build:gear-idea-frontend
 
-FROM node:20-alpine AS runner
+FROM public.ecr.aws/nginx/nginx-unprivileged:1.31.9-alpine-slim@sha256:75e85a09b0f25bd46d49a9fd85589ffa70b0459c8ed5ee0dc6596fd642e1f829
 
-WORKDIR /app
-
-ENV NODE_ENV=production
-
-RUN npm install -g serve@14
-
-COPY --from=builder --chown=node:node /src/idea/gear/frontend/dist ./dist
-
-USER node
+COPY idea/gear/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /src/idea/gear/frontend/dist /app/dist
 
 EXPOSE 3000
-
-CMD ["serve", "-s", "dist", "-l", "3000"]
