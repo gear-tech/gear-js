@@ -83,6 +83,3 @@ jobs:
           docker_file: idea/gear/frontend/Dockerfile
           docker_registry: ghcr.io/gear-tech/gear-idea-frontend
           paths: idea/gear/frontend/**
-    secrets:
-      CHARTS_REPO_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
-      ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
