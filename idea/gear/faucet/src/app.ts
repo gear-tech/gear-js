@@ -4,18 +4,16 @@ import { webSocket } from 'viem';
 import config from './config.js';
 import { AppDataSource } from './database/index.js';
 import { Server } from './server.js';
-import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services/index.js';
+import { LastSeenService, RequestService, VaraBridgeProcessor } from './services/index.js';
 
 export class FaucetApp {
   private _lastSeenService: LastSeenService;
   private _requestService: RequestService;
-  private _varaTestnetProcessor: VaraTestnetProcessor;
   private _varaBridgeProcessor: VaraBridgeProcessor;
   private _server: Server;
 
   constructor(
     private _runBridgeFaucet: boolean,
-    private _runVaraTestnetFaucet: boolean,
     private _runWvaraFaucet: boolean,
   ) {}
 
@@ -24,14 +22,9 @@ export class FaucetApp {
     logger.info('Database connected');
 
     this._lastSeenService = new LastSeenService();
-    this._requestService = new RequestService(config.varaTestnet.genesis, this._lastSeenService);
+    this._requestService = new RequestService(this._lastSeenService);
 
     await this._requestService.resetProcessing();
-
-    if (this._runVaraTestnetFaucet) {
-      this._varaTestnetProcessor = new VaraTestnetProcessor(this._lastSeenService, this._requestService);
-      await this._varaTestnetProcessor.init();
-    }
 
     if (this._runBridgeFaucet || this._runWvaraFaucet) {
       if (!config.bridge.ethProvider) throw new Error('ETH_PROVIDER is required');
@@ -43,17 +36,12 @@ export class FaucetApp {
     this._server = new Server(
       this._requestService,
       this._runBridgeFaucet,
-      this._runVaraTestnetFaucet,
       this._runWvaraFaucet,
-      config.agent.enabled,
       config.mainnet.enabled,
     );
   }
 
   run() {
-    if (this._runVaraTestnetFaucet) {
-      this._varaTestnetProcessor.run();
-    }
     if (this._runBridgeFaucet || this._runWvaraFaucet) {
       this._varaBridgeProcessor.run();
     }
@@ -63,9 +51,6 @@ export class FaucetApp {
 
   destroy() {
     this._server.close();
-    if (this._runVaraTestnetFaucet) {
-      this._varaTestnetProcessor.stop();
-    }
     if (this._runBridgeFaucet || this._runWvaraFaucet) {
       this._varaBridgeProcessor.stop();
     }

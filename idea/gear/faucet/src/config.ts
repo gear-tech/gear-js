@@ -40,15 +40,7 @@ export default {
     name: getEnv('DB_NAME', 'faucet'),
     host: getEnv('DB_HOST', 'localhost'),
   },
-  varaTestnet: {
-    providerAddresses: getEnv('VARA_PROVIDER', 'ws://127.0.0.1:9944').split(','),
-    accountSeed: getEnv('VARA_ACCOUNT_SEED', '//Alice'),
-    balanceToTransfer: Number(getEnv('VARA_TRANSFER_VALUE', '1000')),
-    genesis: getOptionalHex('VARA_GENESIS'),
-    cronTime: getEnv('VARA_PROCESSOR_CRON_TIME', '*/6 * * * * *'),
-  },
   bridge: {
-    tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
     ethProvider: process.env.ETH_PROVIDER,
     ethPrivateKey: getOptionalHex('ETH_PRIVATE_KEY'),
     erc20Contracts: ((process.env.ETH_ERC20_CONTRACTS || undefined)?.split(',') || []).map((data) => {
@@ -65,12 +57,6 @@ export default {
     port: Number.parseInt(getEnv('PORT', '3010'), 10),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
     rateLimitMs: Number(getEnv('RATE_LIMIT_SEC', '60000')),
-  },
-  agent: {
-    enabled: getEnv('AGENT_FAUCET_ENABLED', 'false') === 'true',
-    dailyCap: Number(getEnv('AGENT_DAILY_CAP', '20')),
-    rateLimitMs: Number(getEnv('AGENT_RATE_LIMIT_MS', '300000')),
-    challengeTtlMs: Number(getEnv('AGENT_CHALLENGE_TTL_MS', '60000')),
   },
   mainnet: {
     enabled: getEnv('VARA_MAINNET_FAUCET_ENABLED', 'false') === 'true',

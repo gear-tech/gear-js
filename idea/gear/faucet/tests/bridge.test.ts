@@ -1,4 +1,3 @@
-import { Keyring } from '@polkadot/api';
 import request from 'supertest';
 import { FaucetApp } from '../src/app';
 import { FaucetType, RequestStatus } from '../src/database';
@@ -19,7 +18,7 @@ describe('Bridge requests', () => {
       .set('Accept', 'application/json');
 
   beforeAll(async () => {
-    app = new FaucetApp(true, true, false);
+    app = new FaucetApp(true, false);
     await app.init();
     app.run();
   });
@@ -32,7 +31,7 @@ describe('Bridge requests', () => {
     let res = await req(ETH_USER_ADDRESS);
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('Either contract or genesis must be provided, but not both');
+    expect(res.text).toBe('An ERC20 contract is required; Substrate genesis requests are no longer supported');
 
     res = await req(undefined, ETH_CONTRACT_ADDRESS);
 
@@ -66,6 +65,7 @@ describe('Bridge requests', () => {
     expect(faucetRequestData[1]).toHaveProperty('address', ETH_USER_ADDRESS);
     expect(faucetRequestData[1]).toHaveProperty('target', ETH_CONTRACT_ADDRESS);
     expect(faucetRequestData[1]).toHaveProperty('status', RequestStatus.Pending);
+    expect(faucetRequestData[1]).toHaveProperty('type', FaucetType.BridgeErc20);
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -91,46 +91,14 @@ describe('Bridge requests', () => {
     const res = await req(ETH_USER_ADDRESS, ETH_CONTRACT_ADDRESS, VARA_GENESIS);
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('Either contract or genesis must be provided, but not both');
+    expect(res.text).toBe('An ERC20 contract is required; Substrate genesis requests are no longer supported');
   });
 
-  it('should return ok with genesis (bridge testnet)', async () => {
+  it('rejects retired Substrate genesis requests without adding to the queue', async () => {
+    const before = Object.keys(repos.FaucetRequest._data()).length;
     const res = await req(ALICE, undefined, VARA_GENESIS);
 
-    expect(res.statusCode).toBe(200);
-
-    let faucetRequestData = repos.FaucetRequest._data();
-
-    expect(faucetRequestData).toHaveProperty('2');
-    expect(faucetRequestData[2]).toHaveProperty('id', 2);
-    expect(faucetRequestData[2]).toHaveProperty('address', ALICE);
-    expect(faucetRequestData[2]).toHaveProperty('target', VARA_GENESIS);
-    expect(faucetRequestData[2]).toHaveProperty('type', FaucetType.BridgeVaraTestnet);
-    expect(faucetRequestData[2]).toHaveProperty('status', RequestStatus.Pending);
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    faucetRequestData = repos.FaucetRequest._data();
-    expect(faucetRequestData[2].status).toBe(RequestStatus.Processing);
-
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    faucetRequestData = repos.FaucetRequest._data();
-    expect(faucetRequestData[2].status).toBe(RequestStatus.Completed);
-
-    const userLastSeenData = repos.UserLastSeen._data();
-    expect(userLastSeenData).toHaveProperty(hash(ALICE, VARA_GENESIS));
-  });
-
-  it('should return request limit error for genesis request', async () => {
-    const addr = new Keyring({ ss58Format: 137 }).encodeAddress(ALICE);
-    let res = await req(addr, undefined, VARA_GENESIS);
-
-    expect(res.statusCode).toBe(403);
-    expect(res.body).toEqual({ error: 'The limit for requesting test balance has been reached.' });
-
-    res = await req(ALICE, undefined, VARA_GENESIS);
-
-    expect(res.statusCode).toBe(403);
-    expect(res.body).toEqual({ error: 'The limit for requesting test balance has been reached.' });
+    expect(res.statusCode).toBe(400);
+    expect(Object.keys(repos.FaucetRequest._data())).toHaveLength(before);
   });
 });

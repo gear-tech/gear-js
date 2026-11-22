@@ -1,5 +1,5 @@
 import type { Node, NodeSection } from '@/entities/node';
-import { LocalStorage } from '@/shared/config';
+import { isRetiredVaraTestnet, LocalStorage } from '@/shared/config';
 
 import { DEVELOPMENT_SECTION } from '../model/consts';
 
@@ -15,7 +15,7 @@ const getLocalNodes = (nodes: Node[]): Node[] =>
 const getLocalNodesFromLS = (): Node[] => {
   const nodes = localStorage.getItem(LocalStorage.Nodes);
 
-  return nodes ? JSON.parse(nodes) : [];
+  return nodes ? (JSON.parse(nodes) as Node[]).filter(({ address }) => !isRetiredVaraTestnet(address)) : [];
 };
 
 const concatNodes = (nodeSections: NodeSection[], value: Node | Node[]) =>

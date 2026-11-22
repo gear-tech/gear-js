@@ -1,3 +1,3 @@
-import { INITIAL_ENDPOINT } from './consts';
+import { INITIAL_ENDPOINT, REQUIRES_NETWORK_SELECTION } from './consts';
 
-export { INITIAL_ENDPOINT };
+export { INITIAL_ENDPOINT, REQUIRES_NETWORK_SELECTION };

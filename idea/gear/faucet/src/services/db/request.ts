@@ -1,4 +1,3 @@
-import { decodeAddress } from '@gear-js/api';
 import { validateOrReject } from 'class-validator';
 import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
 import 'reflect-metadata';
@@ -11,25 +10,21 @@ import { hash, type LastSeenService } from './last-seen.js';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
-  private _targets: string[];
   private _requesting: Set<string>;
 
-  constructor(
-    varaTestnetGenesis: string | undefined,
-    private _lastSeenService: LastSeenService,
-  ) {
+  constructor(private _lastSeenService: LastSeenService) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
-    this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
-    if (varaTestnetGenesis) this._targets.push(varaTestnetGenesis.toLowerCase());
-    if (config.wvara.address) this._targets.push(config.wvara.address.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
   }
 
-  private _validateTarget(value: Hex): Hex {
+  private _validateTarget(value: Hex, type: FaucetType): Hex {
     const target = value.toLowerCase();
+    const isSupported =
+      (type === FaucetType.BridgeErc20 && config.bridge.erc20Contracts.some(([contract]) => contract === target)) ||
+      (type === FaucetType.WVara && config.wvara.address === target);
 
-    if (!this._targets.includes(target)) {
+    if (!isSupported) {
       throw new UnsupportedTargetError(target);
     }
 
@@ -54,16 +49,12 @@ export class RequestService {
       throw new InvalidAddress();
     }
 
-    if (req.type === FaucetType.VaraTestnet || req.type === FaucetType.BridgeVaraTestnet) {
-      req.address = decodeAddress(address);
-    }
-
     return req;
   }
 
   public async newRequest(address: Hex, target: Hex, type: FaucetType) {
     logger.info('New request', { address, target, type });
-    target = this._validateTarget(target);
+    target = this._validateTarget(target, type);
 
     const req = await this._createAndValidateRequest(address, target, type);
 
@@ -132,6 +123,9 @@ export class RequestService {
   }
 
   public async resetProcessing() {
-    await this._repo.update({ status: RequestStatus.Processing }, { status: RequestStatus.Failed });
+    await this._repo.update(
+      { type: In([FaucetType.BridgeErc20, FaucetType.WVara]), status: RequestStatus.Processing },
+      { status: RequestStatus.Failed },
+    );
   }
 }

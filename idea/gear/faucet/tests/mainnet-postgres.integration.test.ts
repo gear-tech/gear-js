@@ -2,10 +2,25 @@ import { randomUUID } from 'node:crypto';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { Client } from 'pg';
 import { DataSource } from 'typeorm';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import config from '../src/config.js';
+import { AppDataSource } from '../src/database/app-data-source.js';
+import { init1746533767543 } from '../src/database/migrations/1746533767543-init.js';
+import { RequestType1760434006491 } from '../src/database/migrations/1760434006491-request_type.js';
+import { Wvara1765801294946 } from '../src/database/migrations/1765801294946-wvara.js';
 import { MainnetFaucet1783929600000 } from '../src/database/migrations/1783929600000-mainnet-faucet.js';
-import { MainnetChallenge, MainnetClaim, MainnetClaimEvent, MainnetClaimStatus } from '../src/database/model/index.js';
+import {
+  FaucetRequest,
+  FaucetType,
+  MainnetChallenge,
+  MainnetClaim,
+  MainnetClaimEvent,
+  MainnetClaimStatus,
+  RequestStatus,
+  UserLastSeen,
+} from '../src/database/model/index.js';
+import { LastSeenService, RequestService } from '../src/services/db/index.js';
 
 interface DbConfig {
   host: string;
@@ -72,6 +87,47 @@ afterAll(async () => {
 });
 
 describe('mainnet faucet PostgreSQL integration', () => {
+  it('keeps legacy enum values and historical requests while accepting Bridge and WVARA without a genesis', async () => {
+    const dataSource = await createDataSource('retirement', true);
+    await dataSource.runMigrations();
+    const repo = dataSource.getRepository(FaucetRequest);
+    const address = '0x0000000000000000000000000000000000000001';
+    const genesis = '0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6';
+    const historical = [FaucetType.VaraTestnet, FaucetType.BridgeVaraTestnet].flatMap((type) =>
+      [RequestStatus.Pending, RequestStatus.Processing, RequestStatus.Completed, RequestStatus.Failed].map(
+        (status) => new FaucetRequest({ address, target: genesis, type, status }),
+      ),
+    );
+    await repo.save(historical);
+    const before = await repo.find({ order: { id: 'ASC' } });
+    const getRepository = vi
+      .spyOn(AppDataSource, 'getRepository')
+      .mockImplementation(dataSource.getRepository.bind(dataSource));
+    const oldBridge = config.bridge.erc20Contracts;
+    const oldWvara = config.wvara.address;
+    config.bridge.erc20Contracts = [['0x0000000000000000000000000000000000000002', '10']];
+    config.wvara.address = '0x0000000000000000000000000000000000000003';
+    try {
+      const service = new RequestService(new LastSeenService());
+      await service.resetProcessing();
+      expect(await service.getRequestsToProcess([FaucetType.BridgeErc20, FaucetType.WVara])).toEqual([]);
+      expect(await repo.find({ order: { id: 'ASC' } })).toEqual(before);
+      await service.newRequest(address, config.bridge.erc20Contracts[0][0], FaucetType.BridgeErc20);
+      await service.newRequest(address, config.wvara.address, FaucetType.WVara);
+      const active = await service.getRequestsToProcess([FaucetType.BridgeErc20, FaucetType.WVara]);
+      expect(active.map(({ type }) => type).sort()).toEqual([FaucetType.BridgeErc20, FaucetType.WVara]);
+      expect((await repo.find({ order: { id: 'ASC' } })).slice(0, 8)).toEqual(before);
+      const labels = await dataSource.query(
+        "SELECT enumlabel FROM pg_enum WHERE enumtypid = 'faucet_request_type_enum'::regtype ORDER BY enumsortorder",
+      );
+      expect(labels.map(({ enumlabel }: { enumlabel: string }) => enumlabel)).toEqual(['0', '1', '2', '3']);
+    } finally {
+      getRepository.mockRestore();
+      config.bridge.erc20Contracts = oldBridge;
+      config.wvara.address = oldWvara;
+    }
+  });
+
   it('applies and reverts the mainnet faucet migration', async () => {
     const dataSource = await createDataSource('migration');
 
@@ -302,7 +358,7 @@ async function createMigratedDataSource(name: string) {
   return dataSource;
 }
 
-async function createDataSource(name: string) {
+async function createDataSource(name: string, includeLegacy = false) {
   if (!dbConfig) throw new Error('PostgreSQL test database is not configured');
 
   const database = `mainnet_faucet_${name}_${randomUUID().replace(/-/g, '')}`;
@@ -318,8 +374,16 @@ async function createDataSource(name: string) {
     database,
     synchronize: false,
     migrationsRun: false,
-    entities: [MainnetChallenge, MainnetClaim, MainnetClaimEvent],
-    migrations: [MainnetFaucet1783929600000],
+    entities: [
+      MainnetChallenge,
+      MainnetClaim,
+      MainnetClaimEvent,
+      ...(includeLegacy ? [FaucetRequest, UserLastSeen] : []),
+    ],
+    migrations: [
+      ...(includeLegacy ? [init1746533767543, RequestType1760434006491, Wvara1765801294946] : []),
+      MainnetFaucet1783929600000,
+    ],
     logging: false,
   });
 

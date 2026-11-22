@@ -8,19 +8,23 @@ Start an API connection to a running node on localhost:
 import { GearApi } from '@gear-js/api';
 
 // Connect to local node
-const gearApi = await GearApi.create();
+const gearApi = await GearApi.create({ providerAddress: 'ws://127.0.0.1:9944' });
 ```
 
 ## Custom Node Connection
 
-Connect to a specific node by providing its WebSocket address:
+Read Vara mainnet state by providing its WebSocket address:
 
 ```typescript
-// Connect to a custom node
+// Connect to Vara mainnet for reads
 const gearApi = await GearApi.create({
-  providerAddress: 'wss://someIP:somePort'
+  providerAddress: 'wss://rpc.vara.network'
 });
 ```
+
+Use a local development node at `ws://127.0.0.1:9944` for tutorial deployments, messages and test transactions. The retired Vara Substrate testnet is no longer available. Mainnet transactions spend real VARA; the read connection above does not make tutorial writes safe to run on mainnet.
+
+View mainnet activity in [Vara Explorer](https://explorer.vara.network/). Direct links use `/account/<address>`, `/block/<number>` and `/extrinsic/<block>-<index>`.
 
 ## Node Information
 
@@ -44,6 +48,6 @@ import { VaraApiV1010 } from '@gear-js/api';
 
 // For networks with runtime version 1010 or higher
 const varaApi = await VaraApiV1010.create({
-  providerAddress: 'wss://testnet.vara.network'
+  providerAddress: 'wss://rpc.vara.network'
 });
 ```

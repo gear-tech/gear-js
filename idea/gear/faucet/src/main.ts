@@ -1,11 +1,7 @@
 import { FaucetApp } from './app.js';
 import config from './config.js';
 
-const app = new FaucetApp(
-  config.bridge.erc20Contracts.length > 0,
-  !!config.varaTestnet.genesis,
-  !!config.wvara.address,
-);
+const app = new FaucetApp(config.bridge.erc20Contracts.length > 0, !!config.wvara.address);
 
 app
   .init()

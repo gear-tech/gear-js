@@ -5,6 +5,7 @@ import { type ChangeEvent, type FormEvent, useState } from 'react';
 import type { ModalProps } from '@/entities/modal';
 import type { NodeSection } from '@/entities/node';
 import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { isRetiredVaraTestnet, RETIRED_NETWORK_MESSAGE } from '@/shared/config';
 import { isNodeAddressValid } from '@/shared/helpers';
 
 import styles from './NetworkModal.module.scss';
@@ -31,6 +32,11 @@ const NetworkModal = ({ nodeSections, addNetwork, onClose }: Props) => {
     event.preventDefault();
 
     const trimmedAddress = address.trim();
+
+    if (isRetiredVaraTestnet(trimmedAddress)) {
+      alert.error(RETIRED_NETWORK_MESSAGE);
+      return;
+    }
 
     if (!isNodeAddressValid(trimmedAddress)) {
       alert.error('Address not valid!');

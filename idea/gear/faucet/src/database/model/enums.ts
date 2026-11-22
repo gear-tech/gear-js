@@ -1,4 +1,5 @@
 export enum FaucetType {
+  // Retired types remain in the PostgreSQL enum for existing records. Never reuse these values.
   VaraTestnet = 0,
   BridgeErc20 = 1,
   BridgeVaraTestnet = 2,

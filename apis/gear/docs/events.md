@@ -9,7 +9,7 @@ Monitor all system events:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Subscribe to all events
 const unsubscribe = await api.query.system.events((events) => {
@@ -27,7 +27,7 @@ Filter and handle specific event types:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 api.query.system.events((events) => {
   // Handle Gear message events
@@ -53,7 +53,7 @@ Subscribe to specific Gear pallet events using the dedicated API:
 ```typescript
 import { GearApi } from '@gear-js/api';
 
-const api = await GearApi.create();
+const api = await GearApi.create({ providerAddress: 'wss://rpc.vara.network' });
 
 // Subscribe to UserMessageSent events
 const unsubscribe = api.gearEvents.subscribeToGearEvent(

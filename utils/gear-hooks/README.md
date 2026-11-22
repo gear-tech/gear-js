@@ -109,8 +109,10 @@ Provides Gear API context to the app.
 ```jsx
 import { ApiProvider } from '@gear-js/react-hooks';
 
-<ApiProvider initialArgs={{ endpoint: 'wss://testnet.vara.network' }}>{/* ... */}</ApiProvider>;
+<ApiProvider initialArgs={{ endpoint: 'wss://rpc.vara.network' }}>{/* ... */}</ApiProvider>;
 ```
+
+The mainnet endpoint above is suitable for reading state. For tutorial deployments, message sending and test transactions, use `initialArgs={{ endpoint: 'ws://127.0.0.1:9944' }}` with a running local development node. The Vara Substrate testnet has been retired. Mainnet writes spend real VARA.
 
 ## AccountProvider
 
@@ -151,7 +153,7 @@ import { AlertTemplate } from './alert-template';
 
 ```jsx
 <QueryClientProvider client={queryClient}>
-  <ApiProvider initialArgs={{ endpoint: 'wss://testnet.vara.network' }}>
+  <ApiProvider initialArgs={{ endpoint: 'wss://rpc.vara.network' }}>
     <AccountProvider appName="MyApp">
       <AlertProvider template={AlertTemplate}>
         <App />

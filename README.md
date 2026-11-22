@@ -66,7 +66,7 @@ Features:
 |---------|-------------|
 | [Explorer](idea/gear/explorer) | Node.js backend for indexed blockchain data |
 | [Squid](idea/gear/squid) | Data indexing service using Squid SDK |
-| [Faucet](idea/gear/faucet) | Testnet token distribution service |
+| [Faucet](idea/gear/faucet) | Bridge and WVARA test token distribution, with a separately configured mainnet faucet |
 | [Meta Storage](idea/gear/meta-storage) | Program metadata management service |
 
 ## 🚀 Getting Started
