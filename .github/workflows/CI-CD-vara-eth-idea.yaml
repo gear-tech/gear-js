@@ -72,6 +72,3 @@ jobs:
           docker_file: idea/vara-eth/frontend/Dockerfile
           docker_registry: ghcr.io/gear-tech/vara-eth-idea-frontend
           paths: idea/vara-eth/frontend/**
-    secrets:
-      CHARTS_REPO_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
-      ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
