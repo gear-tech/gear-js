@@ -5,6 +5,8 @@ import type { Hex } from 'viem';
 import { nodeAtom } from '@/app/store';
 
 import {
+  getInjectedTransaction,
+  getInjectedTransactions,
   getMessageRequest,
   getMessageRequests,
   getMessageSent,
@@ -92,12 +94,53 @@ export const useGetAllReplyRequestsQuery = (page: number, pageSize: number) => {
   });
 };
 
-export const useGetAllReplySentsQuery = (page: number, pageSize: number) => {
+export const useGetAllReplySentsQuery = (
+  page: number,
+  pageSize: number,
+  query?: { programId?: Hex; repliedToId?: Hex },
+  options?: { enabled?: boolean },
+) => {
   const { explorerUrl } = useAtomValue(nodeAtom);
 
   return useQuery({
-    queryKey: ['allSentReplies', page, pageSize, explorerUrl],
-    queryFn: () => getReplySents(explorerUrl, page, pageSize),
+    queryKey: ['allSentReplies', page, pageSize, query, explorerUrl],
+    queryFn: () => getReplySents(explorerUrl, page, pageSize, query),
     placeholderData: (previousData) => previousData,
+    ...options,
+  });
+};
+
+export const useGetInjectedTransactionByIdQuery = (id: Hex) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
+  return useQuery({
+    queryKey: ['injectedTransaction', id, explorerUrl],
+    queryFn: () => getInjectedTransaction(explorerUrl, id),
+  });
+};
+
+export const useGetInjectedTransactionsQuery = (
+  page: number,
+  pageSize: number,
+  destination?: Hex,
+  options?: { enabled?: boolean },
+) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
+  return useQuery({
+    queryKey: ['allInjectedTransactions', page, pageSize, destination, explorerUrl],
+    queryFn: () => getInjectedTransactions(explorerUrl, page, pageSize, { destination }),
+    placeholderData: (previousData) => previousData,
+    ...options,
+  });
+};
+
+export const useGetReplySentsByRepliedToIdQuery = (repliedToId: Hex, options?: { enabled?: boolean }) => {
+  const { explorerUrl } = useAtomValue(nodeAtom);
+
+  return useQuery({
+    queryKey: ['replySentsByRepliedToId', repliedToId, explorerUrl],
+    queryFn: () => getReplySents(explorerUrl, 1, 100, { repliedToId }),
+    ...options,
   });
 };
